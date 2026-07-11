@@ -193,17 +193,19 @@ class _QuestionCard extends StatelessWidget {
     final options = question.options ?? const [];
     switch (question.type) {
       case QuizQuestionType.single:
-        return Column(
-          children: [
-            for (var i = 0; i < options.length; i++)
-              RadioListTile<int>(
-                contentPadding: EdgeInsets.zero,
-                value: i,
-                groupValue: answer is int ? answer as int : -1,
-                title: Text(options[i]),
-                onChanged: (v) => onChanged(v),
-              ),
-          ],
+        return RadioGroup<int>(
+          groupValue: answer is int ? answer as int : -1,
+          onChanged: (v) => onChanged(v),
+          child: Column(
+            children: [
+              for (var i = 0; i < options.length; i++)
+                RadioListTile<int>(
+                  contentPadding: EdgeInsets.zero,
+                  value: i,
+                  title: Text(options[i]),
+                ),
+            ],
+          ),
         );
 
       case QuizQuestionType.multi:
@@ -300,9 +302,8 @@ class _OrderingInput extends StatelessWidget {
     return ReorderableListView(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      onReorder: (oldI, newI) {
+      onReorderItem: (oldI, newI) {
         final list = [...order];
-        if (newI > oldI) newI--;
         final item = list.removeAt(oldI);
         list.insert(newI, item);
         onChanged(list);
