@@ -58,6 +58,11 @@ final routerProvider = Provider<GoRouter>((ref) {
               RegisterScreen(phone: s.uri.queryParameters['phone'])),
       GoRoute(path: '/role', builder: (_, __) => const RoleSelectScreen()),
 
+      // Ваучер с QR — полноэкранный, без нижней навигации.
+      GoRoute(
+          path: '/app/wallet/voucher/:id',
+          builder: (_, s) => VoucherScreen(id: _intParam(s, 'id'))),
+
       // Основное приложение под оболочкой с нижней навигацией.
       ShellRoute(
         builder: (_, __, child) => AppShell(child: child),
@@ -81,9 +86,6 @@ final routerProvider = Provider<GoRouter>((ref) {
 
           // Кошелёк
           GoRoute(path: '/app/wallet', builder: (_, __) => const WalletScreen()),
-          GoRoute(
-              path: '/app/wallet/voucher/:id',
-              builder: (_, s) => VoucherScreen(id: _intParam(s, 'id'))),
 
           // Обучение
           GoRoute(path: '/app/learn', builder: (_, __) => const LearnScreen()),

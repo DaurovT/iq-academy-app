@@ -8,7 +8,9 @@ import 'token_store.dart';
 
 /// Защищённое хранилище (keystore/keychain).
 final secureStorageProvider = Provider<FlutterSecureStorage>((ref) {
-  return const FlutterSecureStorage();
+  return const FlutterSecureStorage(
+    iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock),
+  );
 });
 
 /// Хранилище токена и активной роли.

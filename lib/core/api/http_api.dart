@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import '../models/account.dart';
 import '../models/common.dart';
 import '../models/wallet.dart';
@@ -116,6 +117,8 @@ class HttpAuthApi implements AuthApi {
   @override
   Future<TgPollResult> telegramPoll(String nonce) async {
     final r = await _dio.post('/auth/telegram/poll', data: {'nonce': nonce});
+    // Диагностика: печатаем сырой ответ, чтобы видеть точную форму `done`.
+    if (kDebugMode) debugPrint('[tg/poll] raw response: ${r.data}');
     return TgPollResult.fromJson(_obj(r.data));
   }
 }

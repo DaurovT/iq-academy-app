@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/auth/auth_controller.dart';
+import '../../core/theme/app_colors.dart';
 import '../../core/uploads/upload_queue.dart';
 import 'nav_config.dart';
 
@@ -43,10 +45,12 @@ class AppShell extends ConsumerWidget {
         path: '/app/profile',
         label: 'Профиль',
         icon: Icons.person_outline,
+        iconAsset: 'assets/nav/profile.svg',
       ),
     ];
     final location = GoRouterState.of(context).uri.path;
     final selected = _selectedIndex(tabs, location);
+    final p = PharmPalette.of(context);
 
     return Scaffold(
       body: child,
@@ -55,9 +59,35 @@ class AppShell extends ConsumerWidget {
         onDestinationSelected: (i) => context.go(tabs[i].path),
         destinations: [
           for (final t in tabs)
-            NavigationDestination(icon: Icon(t.icon), label: t.label),
+            NavigationDestination(
+              icon: t.iconAsset != null
+                  ? _NavSvg(asset: t.iconAsset!, color: p.navInactive)
+                  : Icon(t.icon),
+              selectedIcon: t.iconAsset != null
+                  ? _NavSvg(asset: t.iconAsset!, color: p.navActiveIcon)
+                  : null,
+              label: t.label,
+            ),
         ],
       ),
+    );
+  }
+}
+
+/// SVG-значок навбара из макета, перекрашенный под состояние вкладки.
+class _NavSvg extends StatelessWidget {
+  const _NavSvg({required this.asset, required this.color});
+
+  final String asset;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset(
+      asset,
+      width: 24,
+      height: 24,
+      colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
     );
   }
 }

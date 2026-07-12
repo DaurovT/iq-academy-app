@@ -7,7 +7,6 @@ import '../../core/models/quest.dart';
 import '../../widgets/async_view.dart';
 import '../shared/widgets/home_app_bar.dart';
 import '../pharmacist/providers.dart';
-import '../pharmacist/quests_screen.dart' show QuestCard;
 
 /// Главная врача: баланс, загрузка рецепта, обучение, квесты (цель — рецепты).
 class DoctorHome extends ConsumerWidget {
@@ -80,9 +79,22 @@ class DoctorHome extends ConsumerWidget {
                       child: Center(child: Text('Нет активных квестов')))
                   : Column(children: [
                       for (final q in list.take(3))
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 12),
-                          child: QuestCard(quest: q),
+                        Card(
+                          child: ListTile(
+                            title: Text(q.name,
+                                maxLines: 2, overflow: TextOverflow.ellipsis),
+                            subtitle: Padding(
+                              padding: const EdgeInsets.only(top: 8),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: LinearProgressIndicator(
+                                    value: q.progress.clamp(0, 1), minHeight: 6),
+                              ),
+                            ),
+                            trailing:
+                                Text('${(q.progress * 100).round()}%'),
+                            onTap: () => context.push('/app/quests/${q.id}'),
+                          ),
                         ),
                     ]),
             ),

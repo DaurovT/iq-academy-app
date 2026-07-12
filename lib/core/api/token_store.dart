@@ -12,17 +12,23 @@ class TokenStore {
   static const _kThemeMode = 'themeMode';
 
   Future<String?> readToken() => _storage.read(key: _kToken);
-  Future<void> writeToken(String token) =>
-      _storage.write(key: _kToken, value: token);
+  Future<void> writeToken(String token) => _write(_kToken, token);
 
   Future<String?> readActiveRole() => _storage.read(key: _kActiveRole);
-  Future<void> writeActiveRole(String role) =>
-      _storage.write(key: _kActiveRole, value: role);
+  Future<void> writeActiveRole(String role) => _write(_kActiveRole, role);
 
   /// Тема ('light' | 'dark' | 'system'). Не чистится при выходе.
   Future<String?> readThemeMode() => _storage.read(key: _kThemeMode);
-  Future<void> writeThemeMode(String mode) =>
-      _storage.write(key: _kThemeMode, value: mode);
+  Future<void> writeThemeMode(String mode) => _write(_kThemeMode, mode);
+
+  /// Запись по схеме delete-then-write. На iOS обычный `write` при уже
+  /// существующем элементе может падать с errSecDuplicateItem (-25299),
+  /// особенно если менялся атрибут доступа (accessibility). Явное удаление
+  /// ищет элемент только по ключу и надёжно снимает эту проблему.
+  Future<void> _write(String key, String value) async {
+    await _storage.delete(key: key);
+    await _storage.write(key: key, value: value);
+  }
 
   /// Чистит только сессию (токен + роль); настройки (тема) остаются.
   Future<void> clear() async {

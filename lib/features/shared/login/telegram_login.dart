@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -63,8 +65,17 @@ class _TelegramLoginButtonState extends ConsumerState<TelegramLoginButton> {
             case TgPollPending():
               break; // ждём дальше
           }
-        } catch (_) {
+        } on DioException catch (_) {
           // сетевую ошибку одного тика игнорируем, продолжаем поллинг
+        } catch (e, st) {
+          // Ответ пришёл, но не разобрался (несовпадение схемы `done`).
+          // Это не самоисправится — прекращаем ожидание и показываем причину,
+          // иначе спиннер «Ожидание подтверждения…» висит вечно.
+          t.cancel();
+          if (kDebugMode) debugPrint('[tg/poll] parse error: $e\n$st');
+          if (mounted) setState(() => _busy = false);
+          messenger.showSnackBar(
+              SnackBar(content: Text('Не удалось обработать ответ входа: $e')));
         }
       });
     } catch (e) {
@@ -75,13 +86,29 @@ class _TelegramLoginButtonState extends ConsumerState<TelegramLoginButton> {
 
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton.icon(
-      onPressed: _busy ? null : _start,
-      icon: _busy
-          ? const SizedBox(
-              height: 18, width: 18, child: CircularProgressIndicator(strokeWidth: 2))
-          : const Icon(Icons.telegram),
-      label: Text(_busy ? 'Ожидание подтверждения…' : 'Войти через Telegram'),
+    return SizedBox(
+      height: 52,
+      width: double.infinity,
+      child: FilledButton.icon(
+        style: FilledButton.styleFrom(
+          backgroundColor: const Color(0xFF2AABEE),
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14)),
+        ),
+        onPressed: _busy ? null : _start,
+        icon: _busy
+            ? const SizedBox(
+                height: 18,
+                width: 18,
+                child: CircularProgressIndicator(
+                    strokeWidth: 2, color: Colors.white))
+            : const Icon(Icons.telegram, size: 22),
+        label: Text(
+          _busy ? 'Ожидание подтверждения…' : 'Войти через Telegram',
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        ),
+      ),
     );
   }
 }
