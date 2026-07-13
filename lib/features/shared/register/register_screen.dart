@@ -185,7 +185,7 @@ class _SchemaFormState extends ConsumerState<_SchemaForm> {
 
       case RegFieldType.select:
         return DropdownButtonFormField<String>(
-          initialValue: _values[f.name] as String?,
+          value: _values[f.name] as String?,
           decoration: InputDecoration(labelText: label),
           items: [
             for (final o in f.options ?? [])

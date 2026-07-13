@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/img.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/models/learn.dart';
@@ -86,6 +87,7 @@ class _CourseDetailState extends ConsumerState<CourseDetailScreen> {
                 height: 180,
                 width: double.infinity,
                 child: Stack(
+                  fit: StackFit.expand,
                   children: [
                     const DecoratedBox(
                       decoration: BoxDecoration(
@@ -93,6 +95,23 @@ class _CourseDetailState extends ConsumerState<CourseDetailScreen> {
                           begin: Alignment.centerLeft,
                           end: Alignment.centerRight,
                           colors: [Color(0xFFE8621A), Color(0xFFF59F30)],
+                        ),
+                      ),
+                      child: SizedBox.expand(),
+                    ),
+                    if (course.coverUrl != null && course.coverUrl!.isNotEmpty)
+                      Image.network(
+                        imgThumb(course.coverUrl, w: 900)!,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+                      ),
+                    const DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [Colors.transparent, Color(0x99000000)],
+                          stops: [0.45, 1.0],
                         ),
                       ),
                       child: SizedBox.expand(),
@@ -105,7 +124,8 @@ class _CourseDetailState extends ConsumerState<CourseDetailScreen> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 10, vertical: 6),
                           decoration: BoxDecoration(
-                            color: const Color(0x1AFFFFFF),
+                            // плотный тёмный фон — читаемо поверх обложки любого цвета
+                            color: const Color(0xCC0D1117),
                             borderRadius: BorderRadius.circular(999),
                             border: Border.all(color: const Color(0x33FFFFFF)),
                           ),
@@ -176,13 +196,17 @@ class _CourseDetailState extends ConsumerState<CourseDetailScreen> {
                   padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
                   child: Column(
                     children: [
-                      for (final l in course.lessons) ...[
+                      for (var i = 0; i < course.lessons.length; i++) ...[
                         _LessonRow(
                           c: c,
-                          lesson: l,
-                          onTap: l.locked == true
+                          lesson: course.lessons[i],
+                          videosBefore: course.lessons
+                              .take(i)
+                              .where((x) => x.kind != 'quiz')
+                              .length,
+                          onTap: course.lessons[i].locked == true
                               ? null
-                              : () => _openLesson(context, l),
+                              : () => _openLesson(context, course.lessons[i]),
                         ),
                         const SizedBox(height: 8),
                       ],
@@ -285,16 +309,28 @@ class _Tab extends StatelessWidget {
 }
 
 class _LessonRow extends StatelessWidget {
-  const _LessonRow({required this.c, required this.lesson, required this.onTap});
+  const _LessonRow(
+      {required this.c,
+      required this.lesson,
+      required this.onTap,
+      this.videosBefore = 0});
   final _CD c;
   final Lesson lesson;
   final VoidCallback? onTap;
+  final int videosBefore;
 
   @override
   Widget build(BuildContext context) {
     final locked = lesson.locked == true;
+    final isQuiz = lesson.kind == 'quiz';
+    const violet = Color(0xFF7C5CFF);
+    // подпись: для квиза — привязка «после урока N»; иначе длительность; награда только если >0
+    final sub = isQuiz
+        ? (videosBefore > 0 ? 'Тест после урока $videosBefore' : 'Тест по курсу')
+        : '${lesson.durationMin} мин';
+    final reward = (!lesson.completed && lesson.rewardIqc > 0) ? ' · +${lesson.rewardIqc} IQC' : '';
     return Material(
-      color: c.card,
+      color: isQuiz ? violet.withValues(alpha: 0.06) : c.card,
       borderRadius: BorderRadius.circular(12),
       child: InkWell(
         onTap: onTap,
@@ -303,37 +339,74 @@ class _LessonRow extends StatelessWidget {
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: c.border),
+            border: Border(
+              top: BorderSide(color: c.border),
+              right: BorderSide(color: c.border),
+              bottom: BorderSide(color: c.border),
+              left: BorderSide(
+                  color: isQuiz ? violet : c.border, width: isQuiz ? 3 : 1),
+            ),
           ),
           child: Row(
             children: [
               Icon(
                 locked
                     ? Icons.lock_outline
-                    : lesson.kind == 'quiz'
+                    : isQuiz
                         ? Icons.quiz_outlined
                         : Icons.play_circle_outline,
                 size: 22,
-                color: locked ? c.muted : const Color(0xFF6B9EF5),
+                color: locked
+                    ? c.muted
+                    : isQuiz
+                        ? violet
+                        : const Color(0xFF6B9EF5),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(lesson.title,
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: c.text)),
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(lesson.title,
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: c.text)),
+                        ),
+                        if (isQuiz) ...[
+                          const SizedBox(width: 6),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 7, vertical: 2),
+                            decoration: BoxDecoration(
+                                color: violet,
+                                borderRadius: BorderRadius.circular(999)),
+                            child: const Text('ТЕСТ',
+                                style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white)),
+                          ),
+                        ],
+                      ],
+                    ),
                     const SizedBox(height: 2),
-                    Text('${lesson.durationMin} мин · +${lesson.rewardIqc} IQC',
+                    Text('$sub$reward',
                         style: TextStyle(fontSize: 12, color: c.muted)),
                   ],
                 ),
               ),
-              if (lesson.completed)
-                const Icon(Icons.check_circle, size: 20, color: Color(0xFF22C55E)),
+              if (lesson.completed) ...[
+                const Icon(Icons.check_circle,
+                    size: 20, color: Color(0xFF22C55E)),
+                if (onTap != null) ...[
+                  const SizedBox(width: 6),
+                  Icon(Icons.refresh, size: 18, color: c.muted),
+                ],
+              ],
             ],
           ),
         ),

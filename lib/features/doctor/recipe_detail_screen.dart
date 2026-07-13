@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/format.dart';
 import '../../widgets/async_view.dart';
 import '../pharmacist/checks_screen.dart' show statusColor;
+import '../shared/widgets/photo_lightbox.dart';
 import 'providers.dart';
 
 class RecipeDetailScreen extends ConsumerWidget {
@@ -50,16 +51,21 @@ class RecipeDetailScreen extends ConsumerWidget {
                     scrollDirection: Axis.horizontal,
                     itemCount: r.photos.length,
                     separatorBuilder: (_, __) => const SizedBox(width: 8),
-                    itemBuilder: (_, i) => ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image.network(
-                        r.photos[i].url,
-                        width: 140,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => Container(
+                    itemBuilder: (_, i) => GestureDetector(
+                      onTap: () => showPhotoLightbox(
+                          context, [for (final p in r.photos) p.url],
+                          initialIndex: i),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.network(
+                          r.photos[i].url,
                           width: 140,
-                          color: scheme.surfaceContainerHighest,
-                          child: const Icon(Icons.broken_image_outlined),
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => Container(
+                            width: 140,
+                            color: scheme.surfaceContainerHighest,
+                            child: const Icon(Icons.broken_image_outlined),
+                          ),
                         ),
                       ),
                     ),

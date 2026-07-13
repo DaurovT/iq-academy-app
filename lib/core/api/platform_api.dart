@@ -9,6 +9,9 @@ import '../models/medrep.dart';
 import '../models/brand.dart';
 import '../models/registration.dart';
 import '../models/support.dart';
+import '../models/news.dart';
+import '../models/survey.dart';
+import '../models/sapper.dart';
 import 'upload.dart';
 
 /// Контракт платформы — прямое зеркало web/src/lib/api/contract.ts.
@@ -26,6 +29,31 @@ abstract interface class PlatformApi {
   MedrepApi get medrep;
   BrandApi get brand;
   SupportApi get support;
+  NewsApi get news;
+  SurveysApi get surveys;
+  MiniAppsApi get miniApps;
+  SapperApi get sapper;
+}
+
+abstract interface class MiniAppsApi {
+  Future<List<MiniApp>> list();
+}
+
+abstract interface class SapperApi {
+  Future<List<SapperDrawItem>> draws();
+  Future<SapperField> field(int id);
+  Future<SapperReserveResult> reserve(int id, int cellIndex);
+}
+
+abstract interface class NewsApi {
+  Future<List<NewsItem>> list();
+  Future<NewsDetail> get(int id);
+}
+
+abstract interface class SurveysApi {
+  Future<Survey?> next();
+  Future<SurveyAnswerResult> answer(int id,
+      {int? optionId, String? text, int? rating});
 }
 
 abstract interface class AuthApi {

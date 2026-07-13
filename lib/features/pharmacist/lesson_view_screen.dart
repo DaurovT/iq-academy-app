@@ -76,19 +76,23 @@ class _LessonViewScreenState extends ConsumerState<LessonViewScreen> {
   }
 
   void _goNext(CourseDetail course) {
-    Lesson? quiz;
-    for (final l in course.lessons) {
-      if (l.kind == 'quiz') {
-        quiz = l;
+    // Следующий ПО ПОРЯДКУ непройденный шаг после текущего (видео или квиз) — не прыгаем через
+    // промежуточные видео к первому квизу. Предыдущий шаг только что завершён → следующий открыт.
+    final ls = course.lessons;
+    final cur = ls.indexWhere((l) => l.id == widget.lessonId);
+    Lesson? next;
+    for (var i = cur + 1; i < ls.length; i++) {
+      if (!ls[i].completed) {
+        next = ls[i];
         break;
       }
     }
-    if (quiz != null) {
-      context.pushReplacement(
-          '/app/learn/${widget.courseId}/quiz/${quiz.id}');
-    } else {
-      context.pop();
+    if (next == null) {
+      context.pop(); // весь курс пройден
+      return;
     }
+    final path = next.kind == 'quiz' ? 'quiz' : 'lesson';
+    context.pushReplacement('/app/learn/${widget.courseId}/$path/${next.id}');
   }
 
   @override

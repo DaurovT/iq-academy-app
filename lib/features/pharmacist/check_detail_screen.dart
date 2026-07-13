@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/format.dart';
 import '../../core/models/check.dart';
 import '../../widgets/async_view.dart';
+import '../shared/widgets/photo_lightbox.dart';
 import 'providers.dart';
 
 /// Деталь чека. Перенесена один в один из макета Figma «detail-*»
@@ -172,19 +173,48 @@ class _PhotoBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasPhoto = detail.photos.isNotEmpty;
-    return Container(
+    final box = Container(
       height: 200,
       width: double.infinity,
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
           color: c.card, borderRadius: BorderRadius.circular(16)),
       child: hasPhoto
-          ? Image.network(
-              detail.photos.first.url,
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => _placeholder(),
+          ? Stack(
+              fit: StackFit.expand,
+              children: [
+                Image.network(
+                  detail.photos.first.url,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => _placeholder(),
+                ),
+                // подсказка «нажмите, чтобы открыть»
+                Positioned(
+                  right: 10,
+                  bottom: 10,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    decoration: BoxDecoration(
+                        color: const Color(0x99000000),
+                        borderRadius: BorderRadius.circular(999)),
+                    child: Row(mainAxisSize: MainAxisSize.min, children: [
+                      const Icon(Icons.zoom_in, size: 16, color: Colors.white),
+                      const SizedBox(width: 4),
+                      Text(
+                          detail.photos.length > 1 ? '1/${detail.photos.length}' : 'Открыть',
+                          style: const TextStyle(fontSize: 12, color: Colors.white)),
+                    ]),
+                  ),
+                ),
+              ],
             )
           : _placeholder(),
+    );
+    if (!hasPhoto) return box;
+    return GestureDetector(
+      onTap: () => showPhotoLightbox(
+          context, [for (final p in detail.photos) p.url]),
+      child: box,
     );
   }
 

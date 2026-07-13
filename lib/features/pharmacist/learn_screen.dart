@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/img.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/models/learn.dart';
@@ -210,6 +211,7 @@ class _CourseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final brand = course.ownerBrand ?? course.category;
+    final complete = course.progress >= 1;
     return Material(
       color: c.card,
       borderRadius: BorderRadius.circular(16),
@@ -224,6 +226,7 @@ class _CourseCard extends StatelessWidget {
               height: 160,
               width: double.infinity,
               child: Stack(
+                fit: StackFit.expand,
                 children: [
                   const DecoratedBox(
                     decoration: BoxDecoration(
@@ -231,6 +234,24 @@ class _CourseCard extends StatelessWidget {
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
                         colors: [Color(0xFFE8621A), Color(0xFFF59F30)],
+                      ),
+                    ),
+                    child: SizedBox.expand(),
+                  ),
+                  if (course.coverUrl != null && course.coverUrl!.isNotEmpty)
+                    Image.network(
+                      imgThumb(course.coverUrl, w: 560)!,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+                    ),
+                  // скрим для читаемости белого заголовка поверх обложки
+                  const DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [Colors.transparent, Color(0x99000000)],
+                        stops: [0.45, 1.0],
                       ),
                     ),
                     child: SizedBox.expand(),
@@ -318,17 +339,24 @@ class _CourseCard extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 12),
+                  // прогресс/статус — единообразно с веб-приложением
+                  _CourseProgress(c: c, progress: course.progress),
+                  const SizedBox(height: 12),
                   Container(
                     height: 44,
                     width: double.infinity,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                        color: const Color(0xFF1D4068),
+                        color: complete
+                            ? const Color(0xFF16A34A)
+                            : const Color(0xFF1D4068),
                         borderRadius: BorderRadius.circular(12)),
                     child: Text(
-                      course.progress > 0
-                          ? 'ПРОДОЛЖИТЬ ОБУЧЕНИЕ'
-                          : 'ПРОЙТИ КУРС',
+                      complete
+                          ? 'ПОВТОРИТЬ КУРС'
+                          : course.progress > 0
+                              ? 'ПРОДОЛЖИТЬ ОБУЧЕНИЕ'
+                              : 'ПРОЙТИ КУРС',
                       style: const TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
@@ -341,6 +369,46 @@ class _CourseCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _CourseProgress extends StatelessWidget {
+  const _CourseProgress({required this.c, required this.progress});
+  final _L c;
+  final double progress;
+
+  @override
+  Widget build(BuildContext context) {
+    final complete = progress >= 1;
+    final pct = (progress * 100).round();
+    const green = Color(0xFF16A34A);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(999),
+          child: LinearProgressIndicator(
+            value: progress.clamp(0, 1),
+            minHeight: 6,
+            backgroundColor: c.border,
+            valueColor: AlwaysStoppedAnimation(
+                complete ? green : const Color(0xFF1D4068)),
+          ),
+        ),
+        const SizedBox(height: 6),
+        complete
+            ? const Row(children: [
+                Icon(Icons.check_circle, size: 15, color: green),
+                SizedBox(width: 4),
+                Text('Пройден',
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: green)),
+              ])
+            : Text('$pct%', style: TextStyle(fontSize: 12, color: c.muted)),
+      ],
     );
   }
 }

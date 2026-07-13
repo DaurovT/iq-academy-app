@@ -7,6 +7,9 @@ import '../../core/models/check.dart';
 import '../../core/models/quest.dart';
 import '../../core/theme/app_colors.dart';
 import '../shared/widgets/pharm_top_bar.dart';
+import '../news/news_home_block.dart';
+import '../news/survey_home_block.dart';
+import '../mini_apps/mini_apps_home_block.dart';
 import 'providers.dart';
 
 /// Главная фармацевта. Дизайн перенесён из макета Figma «pharmiq-home-md3»
@@ -62,6 +65,12 @@ class PharmacistHome extends ConsumerWidget {
                       palette: p,
                       onTap: () => context.go('/app/checks'),
                     ),
+                    const SizedBox(height: 24),
+                    const MiniAppsHomeBlock(),
+                    const SizedBox(height: 12),
+                    const SurveyHomeBlock(),
+                    const SizedBox(height: 12),
+                    const NewsHomeBlock(),
                     const SizedBox(height: 24),
                     _StatsRow(
                       palette: p,

@@ -6,6 +6,9 @@ import '../../core/format.dart';
 import '../../core/models/quest.dart';
 import '../../widgets/async_view.dart';
 import '../shared/widgets/home_app_bar.dart';
+import '../news/news_home_block.dart';
+import '../news/survey_home_block.dart';
+import '../mini_apps/mini_apps_home_block.dart';
 import '../pharmacist/providers.dart';
 
 /// Главная врача: баланс, загрузка рецепта, обучение, квесты (цель — рецепты).
@@ -45,6 +48,12 @@ class DoctorHome extends ConsumerWidget {
                 ),
               ),
             ),
+            const SizedBox(height: 16),
+            const MiniAppsHomeBlock(),
+            const SizedBox(height: 12),
+            const SurveyHomeBlock(),
+            const SizedBox(height: 12),
+            const NewsHomeBlock(),
             const SizedBox(height: 16),
             Row(children: [
               Expanded(
