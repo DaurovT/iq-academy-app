@@ -6,11 +6,11 @@ import '../../core/auth/auth_controller.dart';
 import '../../core/models/common.dart';
 import '../../core/models/quest.dart';
 import '../shared/widgets/pharm_top_bar.dart';
+import '../shared/widgets/screen_decor.dart';
 import 'providers.dart';
 
 final _dm = DateFormat('dd.MM');
 final _dmy = DateFormat('dd.MM.yyyy');
-final _numFmt = NumberFormat.decimalPattern('ru');
 
 String _period(Quest q) {
   final s = q.startDate == null ? null : DateTime.tryParse(q.startDate!);
@@ -58,7 +58,7 @@ class _QuestsScreenState extends ConsumerState<QuestsScreen> {
 
     return Scaffold(
       backgroundColor: c.page,
-      body: Column(
+      body: Stack(children: [Positioned.fill(child: ScreenDecor(questsDecor)), Column(
         children: [
           const PharmTopBar(),
           // заголовок + «История участия»
@@ -112,18 +112,18 @@ class _QuestsScreenState extends ConsumerState<QuestsScreen> {
                   : ListView(
                       padding: const EdgeInsets.all(16),
                       children: [
+                        // Счётчик — над списком, а не между карточками.
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: Text(_countLabel(list.length),
+                              style: TextStyle(fontSize: 12, color: c.muted)),
+                        ),
                         for (var i = 0; i < list.length; i++) ...[
                           _QuestCard(
                             c: c,
                             quest: list[i],
                             onTap: () => context.push('/app/quests/${list[i].id}'),
                           ),
-                          if (i == 0)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 16),
-                              child: Text(_countLabel(list.length),
-                                  style: TextStyle(fontSize: 12, color: c.muted)),
-                            ),
                           const SizedBox(height: 16),
                         ],
                       ],
@@ -131,7 +131,7 @@ class _QuestsScreenState extends ConsumerState<QuestsScreen> {
             ),
           ),
         ],
-      ),
+      )]),
     );
   }
 
@@ -260,21 +260,33 @@ class _TabChip extends StatelessWidget {
 
 // ── Карточка квеста ─────────────────────────────────────────────────────
 
-class _QuestCard extends StatelessWidget {
+class _QuestCard extends ConsumerWidget {
   const _QuestCard({required this.c, required this.quest, required this.onTap});
   final _Q c;
   final Quest quest;
   final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isVoucher = quest.rewardType == RewardType.voucher;
     final pct = (quest.progress.clamp(0, 1) * 100).round();
-    final goal = quest.progress > 0
-        ? (quest.completedCount / quest.progress).round()
-        : null;
+
+    // Деталь квеста — чтобы показать цель покупок и упаковки прямо на карточке
+    // (в списочном ответе их нет; кэшируется, повторный заход в квест — мгновенно).
+    final detail = ref.watch(questDetailProvider(quest.id)).asData?.value;
+    final goal = detail?.goal ??
+        (quest.progress > 0
+            ? (quest.completedCount / quest.progress).round()
+            : null);
+    final packsText = (detail == null || detail.mechanics.isEmpty)
+        ? null
+        : detail.mechanics.map((m) => '${m.drug} × ${m.qty} уп.').join(', ');
+
+    // Сумма/магазин лежат в описании ("🛒 Korzinka — 100 000"), а не в prizeIqc.
+    final descClean =
+        quest.description.replaceFirst(RegExp(r'^\s*🛒\s*'), '').trim();
     final rewardLine = isVoucher
-        ? 'Korzinka · ${_numFmt.format(quest.prizeIqc * 1000)} сум'
+        ? (descClean.isNotEmpty ? descClean : 'Korzinka')
         : '+${quest.prizeIqc} IQC · без лимита';
 
     return Material(
@@ -338,6 +350,21 @@ class _QuestCard extends StatelessWidget {
                   ),
                 ],
               ),
+              if (packsText != null) ...[
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Icon(Icons.inventory_2_outlined, size: 14, color: c.muted),
+                    const SizedBox(width: 8),
+                    Flexible(
+                      child: Text(packsText,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(fontSize: 13, color: c.muted)),
+                    ),
+                  ],
+                ),
+              ],
               const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

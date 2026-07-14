@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/models/learn.dart';
 import '../../widgets/async_view.dart';
+import '../shared/widgets/screen_decor.dart';
 import 'providers.dart';
 
 /// Экран курса. Перенесён один в один из макета Figma
@@ -26,14 +27,14 @@ class _CourseDetailState extends ConsumerState<CourseDetailScreen> {
 
     return Scaffold(
       backgroundColor: c.page,
-      body: SafeArea(
+      body: Stack(children: [Positioned.fill(child: ScreenDecor(courseDetailDecor)), SafeArea(
         bottom: false,
         child: AsyncView(
           value: detail,
           onRetry: () => ref.invalidate(courseDetailProvider(widget.id)),
           data: (course) => _body(context, c, course),
         ),
-      ),
+      )]),
     );
   }
 

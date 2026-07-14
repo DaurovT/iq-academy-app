@@ -7,6 +7,7 @@ import '../../../core/models/support.dart';
 import '../../../widgets/async_view.dart';
 import '../providers.dart';
 import '../widgets/pharm_top_bar.dart';
+import '../widgets/screen_decor.dart';
 
 final _dt = DateFormat('dd.MM, HH:mm');
 
@@ -52,7 +53,7 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
 
     return Scaffold(
       backgroundColor: c.page,
-      body: Column(
+      body: Stack(children: [Positioned.fill(child: ScreenDecor(supportDecor)), Column(
         children: [
           const PharmTopBar(),
           // back-nav
@@ -166,7 +167,7 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
             ),
           ),
         ],
-      ),
+      )]),
     );
   }
 }

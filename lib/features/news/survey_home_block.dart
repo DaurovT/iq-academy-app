@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/api/providers.dart';
 import '../../core/models/survey.dart';
+import '../../core/theme/app_colors.dart';
 import '../pharmacist/providers.dart' show walletProvider;
 
-/// Опрос за IQC компактным блоком на главной. Ответил → +IQC, баланс обновлён, подтягивается следующий.
+/// Блок «Опрос» на главной. Перенесён 1:1 из макета Figma
+/// (survey-card, ноды 180:16 / 181:30): градиентная карточка с иконкой,
+/// значком награды, вопросом, выпадающим выбором ответа и кнопкой «Ответить».
+/// Ответил → +IQC, баланс обновлён, подтягивается следующий опрос.
 final surveyNextProvider = FutureProvider<Survey?>((ref) {
   return ref.watch(apiProvider).surveys.next();
 });
@@ -78,126 +82,305 @@ class _SurveyHomeBlockState extends ConsumerState<SurveyHomeBlock> {
       orElse: () => const SizedBox.shrink(),
       data: (s) {
         if (s == null) return const SizedBox.shrink();
-        final scheme = Theme.of(context).colorScheme;
-        return Card(
-          elevation: 0,
-          color: scheme.surface,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('ОПРОС',
-                        style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 0.5,
-                            color: scheme.onSurfaceVariant)),
-                    if (s.rewardIqc > 0)
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                        decoration: BoxDecoration(
-                            color: const Color(0xFF7C5CFF),
-                            borderRadius: BorderRadius.circular(999)),
-                        child: Text('+${s.rewardIqc} IQC',
-                            style: const TextStyle(
-                                fontSize: 11, fontWeight: FontWeight.w700, color: Colors.white)),
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Text(s.questionText,
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
-                const SizedBox(height: 12),
-                ..._buildInput(s, scheme),
-                const SizedBox(height: 14),
-                SizedBox(
-                  width: double.infinity,
-                  child: FilledButton(
-                    onPressed: _canSubmit(s) && !_busy ? () => _submit(s) : null,
-                    child: _busy
-                        ? const SizedBox(
-                            height: 18, width: 18, child: CircularProgressIndicator(strokeWidth: 2))
-                        : const Text('Ответить'),
-                  ),
-                ),
-              ],
+        final p = PharmPalette.of(context);
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+        return Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: p.surveyGradient,
+              stops: isDark ? const [0, 0.5, 1] : const [0, 0.55, 1],
             ),
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(color: p.surveyBorder),
+            boxShadow: [
+              BoxShadow(
+                color: isDark
+                    ? const Color(0x26A855F7)
+                    : const Color(0x0F000000),
+                blurRadius: isDark ? 24 : 10,
+                spreadRadius: isDark ? -8 : 0,
+                offset: Offset(0, isDark ? 8 : 4),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.auto_awesome,
+                      size: 18,
+                      color: isDark
+                          ? const Color(0xFFC4B5FD)
+                          : const Color(0xFF7C3AED)),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Опрос',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                        color: p.textPrimary,
+                      ),
+                    ),
+                  ),
+                  if (s.rewardIqc > 0)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: p.surveyBadgeBg,
+                        borderRadius: BorderRadius.circular(999),
+                      ),
+                      child: Text(
+                        '+ ${s.rewardIqc} IQC',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: p.surveyBadgeText,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Text(
+                s.questionText,
+                style: TextStyle(
+                  fontSize: 16,
+                  height: 1.4,
+                  fontWeight: FontWeight.w600,
+                  color: p.textPrimary,
+                ),
+              ),
+              const SizedBox(height: 16),
+              _buildInput(s, p),
+              const SizedBox(height: 12),
+              _SubmitButton(
+                palette: p,
+                busy: _busy,
+                enabled: _canSubmit(s) && !_busy,
+                onTap: () => _submit(s),
+              ),
+            ],
           ),
         );
       },
     );
   }
 
-  List<Widget> _buildInput(Survey s, ColorScheme scheme) {
+  Widget _buildInput(Survey s, PharmPalette p) {
     switch (s.questionType) {
       case 'single_choice':
-        return s.options.map((o) {
-          final sel = _optionId == o.id;
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: InkWell(
-              borderRadius: BorderRadius.circular(10),
-              onTap: () => setState(() => _optionId = o.id),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                      color: sel ? scheme.primary : scheme.outlineVariant,
-                      width: sel ? 2 : 1),
-                ),
-                child: Row(
-                  children: [
-                    Icon(sel ? Icons.radio_button_checked : Icons.radio_button_unchecked,
-                        size: 20, color: scheme.primary),
-                    const SizedBox(width: 10),
-                    Expanded(child: Text(o.text, style: const TextStyle(fontSize: 14))),
-                  ],
-                ),
-              ),
-            ),
-          );
-        }).toList();
+        final selected = _optionId == null
+            ? null
+            : s.options.firstWhere((o) => o.id == _optionId,
+                orElse: () => s.options.first);
+        return _PollSelect(
+          palette: p,
+          hint: 'Выберите вариант ответа',
+          value: selected?.text,
+          onTap: () => _pickOption(s, p),
+        );
       case 'open_text':
-        return [
-          TextField(
+        return Container(
+          height: 52,
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+            color: p.pollSelectBg,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: p.pollSelectBorder),
+          ),
+          child: TextField(
             controller: _textCtrl,
-            maxLines: 3,
+            maxLines: 1,
             maxLength: 4000,
             onChanged: (_) => setState(() {}),
-            decoration: const InputDecoration(
-              hintText: 'Ваш ответ…',
-              border: OutlineInputBorder(),
+            style: TextStyle(color: p.inputText, fontSize: 14),
+            decoration: InputDecoration(
+              isCollapsed: true,
+              hintText: 'Введите ответ вручную',
+              hintStyle: TextStyle(color: p.inputHint, fontSize: 14),
+              border: InputBorder.none,
               counterText: '',
             ),
           ),
-        ];
+        );
       case 'star_rating':
-        return [
-          Wrap(
-            spacing: 2,
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+        final starOff =
+            isDark ? const Color(0xFF6E6F7B) : const Color(0xFFD1D5DB);
+        return SizedBox(
+          height: 52,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: List.generate(10, (i) {
               final n = i + 1;
               final on = _rating != null && n <= _rating!;
-              return IconButton(
-                padding: const EdgeInsets.all(2),
-                constraints: const BoxConstraints(),
-                onPressed: () => setState(() => _rating = n),
-                icon: Icon(Icons.star,
-                    size: 26,
-                    color: on ? const Color(0xFFF5A623) : scheme.outlineVariant),
+              return GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => setState(() => _rating = n),
+                child: Icon(
+                  on ? Icons.star_rounded : Icons.star_outline_rounded,
+                  size: 24,
+                  color: on ? const Color(0xFFF5A623) : starOff,
+                ),
               );
             }),
           ),
-          if (_rating != null)
-            Text('$_rating/10', style: TextStyle(color: scheme.onSurfaceVariant, fontSize: 12)),
-        ];
+        );
     }
-    return const [];
+    return const SizedBox.shrink();
+  }
+
+  Future<void> _pickOption(Survey s, PharmPalette p) async {
+    final picked = await showModalBottomSheet<int>(
+      context: context,
+      backgroundColor: p.card,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 8),
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: p.textMuted.withValues(alpha: 0.4),
+                borderRadius: BorderRadius.circular(999),
+              ),
+            ),
+            const SizedBox(height: 8),
+            for (final o in s.options)
+              ListTile(
+                title: Text(o.text,
+                    style: TextStyle(color: p.textPrimary, fontSize: 15)),
+                trailing: _optionId == o.id
+                    ? Icon(Icons.check, color: p.accent)
+                    : null,
+                onTap: () => Navigator.pop(ctx, o.id),
+              ),
+            const SizedBox(height: 8),
+          ],
+        ),
+      ),
+    );
+    if (picked != null) setState(() => _optionId = picked);
+  }
+}
+
+// ── Поле выбора ответа (dropdown) ───────────────────────────────────────
+
+class _PollSelect extends StatelessWidget {
+  const _PollSelect({
+    required this.palette,
+    required this.hint,
+    required this.value,
+    required this.onTap,
+  });
+
+  final PharmPalette palette;
+  final String hint;
+  final String? value;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final has = value != null && value!.isNotEmpty;
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        height: 52,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        decoration: BoxDecoration(
+          color: palette.pollSelectBg,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: palette.pollSelectBorder),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                has ? value! : hint,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: has ? palette.inputText : palette.inputHint,
+                ),
+              ),
+            ),
+            Icon(Icons.keyboard_arrow_down,
+                size: 20, color: palette.inputHint),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── Кнопка «Ответить» ───────────────────────────────────────────────────
+
+class _SubmitButton extends StatelessWidget {
+  const _SubmitButton({
+    required this.palette,
+    required this.busy,
+    required this.enabled,
+    required this.onTap,
+  });
+
+  final PharmPalette palette;
+  final bool busy;
+  final bool enabled;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Opacity(
+      opacity: enabled || busy ? 1 : 0.5,
+      child: InkWell(
+        onTap: enabled ? onTap : null,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          height: 52,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: palette.submitGradient,
+            ),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: busy
+              ? SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(palette.submitText),
+                  ),
+                )
+              : Text(
+                  'Ответить',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: palette.submitText,
+                  ),
+                ),
+        ),
+      ),
+    );
   }
 }

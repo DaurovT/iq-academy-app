@@ -14,7 +14,7 @@ IconData _roleIcon(Role r) => switch (r) {
 
 String _roleSub(Role r) => switch (r) {
       Role.pharmacist => 'Чеки, квесты, обучение и кошелёк',
-      Role.doctor => 'Рецепты, квесты, обучение и кошелёк',
+      Role.doctor => 'Чеки, квесты, обучение и кошелёк',
       Role.medrep => 'Портфель провизоров и рейтинг',
       Role.productOwner => 'Дашборд, продукты и бренды',
     };
@@ -32,6 +32,10 @@ class RoleSelectScreen extends ConsumerWidget {
 
     return Scaffold(
       body: Container(
+        // Явные размеры: без них контейнер сжимается по контенту и снизу
+        // просвечивает белый фон Scaffold (проявлялось на Android).
+        width: double.infinity,
+        height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,

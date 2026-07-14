@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
 import '../../core/models/wallet.dart';
 import '../../widgets/async_view.dart';
+import '../shared/widgets/screen_decor.dart';
 import 'providers.dart';
 
 final _num = NumberFormat.decimalPattern('ru');
@@ -25,7 +26,7 @@ class VoucherScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: page,
-      body: SafeArea(
+      body: Stack(children: [Positioned.fill(child: ScreenDecor(voucherDecor)), SafeArea(
         child: AsyncView(
           value: mine,
           onRetry: () => ref.invalidate(myVouchersProvider),
@@ -35,7 +36,7 @@ class VoucherScreen extends ConsumerWidget {
             return _VoucherBody(voucher: v, isDark: isDark, page: page);
           },
         ),
-      ),
+      )]),
     );
   }
 }

@@ -25,6 +25,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _codeFocus = FocusNode();
   _Step _step = _Step.phone;
   bool _loading = false;
+  bool _phoneNotFound = false;
   String? _error;
   Timer? _resendTimer;
   int _resendLeft = 0;
@@ -74,9 +75,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         final api = ref.read(apiProvider).auth;
         final res = await api.checkNumber(_phone);
         if (!res.exists) {
-          if (mounted) {
-            context.go('/register?phone=${Uri.encodeComponent(_phone)}');
-          }
+          // Номер не зарегистрирован: сообщаем об этом и предлагаем выбор —
+          // ввести номер снова или пройти регистрацию (не редиректим сразу).
+          if (mounted) setState(() => _phoneNotFound = true);
           return;
         }
         await api.sendSms(_phone);
@@ -196,7 +197,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         decoration: BoxDecoration(
           color: _field,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: _fieldBorder),
+          border: Border.all(
+              color: _phoneNotFound ? const Color(0xFFF04452) : _fieldBorder),
         ),
         child: Row(
           children: [
@@ -209,6 +211,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp(r'[0-9+ ]')),
                 ],
+                onChanged: (_) {
+                  if (_phoneNotFound) setState(() => _phoneNotFound = false);
+                },
                 decoration: const InputDecoration(
                   isCollapsed: true,
                   filled: false,
@@ -219,24 +224,38 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           ],
         ),
       ),
+      if (_phoneNotFound) ...[
+        const SizedBox(height: 8),
+        const Text('Номер не найден в системе',
+            style: TextStyle(color: Color(0xFFF04452), fontSize: 13)),
+      ],
       const SizedBox(height: 16),
       _primaryButton(
-          label: 'Продолжить', onTap: _loading ? null : _submitPhone),
-      const SizedBox(height: 16),
-      _orDivider(),
-      const SizedBox(height: 16),
-      const TelegramLoginButton(),
-      const SizedBox(height: 8),
-      Center(
-        child: TextButton(
-          onPressed: () => context.go('/register'),
-          child: const Text('Зарегистрироваться',
-              style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                  color: Color(0xFFFEFEFE))),
+          label: 'Подтвердить', onTap: _loading ? null : _submitPhone),
+      if (_phoneNotFound) ...[
+        const SizedBox(height: 12),
+        _secondaryButton(
+          label: 'Пройти регистрацию',
+          onTap: () =>
+              context.go('/register?phone=${Uri.encodeComponent(_phone)}'),
         ),
-      ),
+      ] else ...[
+        const SizedBox(height: 16),
+        _orDivider(),
+        const SizedBox(height: 16),
+        const TelegramLoginButton(),
+        const SizedBox(height: 8),
+        Center(
+          child: TextButton(
+            onPressed: () => context.go('/register'),
+            child: const Text('Зарегистрироваться',
+                style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFFFEFEFE))),
+          ),
+        ),
+      ],
     ];
   }
 
@@ -349,6 +368,26 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             : Text(label,
                 style: const TextStyle(
                     fontSize: 16, fontWeight: FontWeight.w600)),
+      ),
+    );
+  }
+
+  Widget _secondaryButton({required String label, VoidCallback? onTap}) {
+    return SizedBox(
+      height: 52,
+      width: double.infinity,
+      child: OutlinedButton(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: const Color(0xFFFEFEFE),
+          backgroundColor: const Color(0xFF0E1428),
+          side: const BorderSide(color: _fieldBorder),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14)),
+        ),
+        onPressed: _loading ? null : onTap,
+        child: Text(label,
+            style: const TextStyle(
+                fontSize: 16, fontWeight: FontWeight.w600)),
       ),
     );
   }

@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../core/api/providers.dart';
 import '../../core/models/learn.dart';
 import '../../widgets/async_view.dart';
+import '../shared/widgets/screen_decor.dart';
 import 'providers.dart';
 
 /// Тест урока. Перенесён один в один из макета Figma
@@ -22,7 +23,7 @@ class QuizScreen extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF0D1117) : const Color(0xFFF5F6FA),
-      body: SafeArea(
+      body: Stack(children: [Positioned.fill(child: ScreenDecor(quizDecor)), SafeArea(
         bottom: false,
         child: AsyncView(
           value: quiz,
@@ -30,7 +31,7 @@ class QuizScreen extends ConsumerWidget {
           data: (q) => _QuizRunner(
               quiz: q, courseId: courseId, lessonId: lessonId),
         ),
-      ),
+      )]),
     );
   }
 }

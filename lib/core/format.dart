@@ -21,3 +21,13 @@ String formatDateTime(String iso) {
   if (d == null) return iso;
   return DateFormat('dd.MM.yyyy HH:mm').format(d.toLocal());
 }
+
+/// ISO-строка → «08.06, 13:16» (короткий формат без года).
+String formatShortDateTime(String iso) {
+  final d = DateTime.tryParse(iso);
+  if (d == null) return iso;
+  return DateFormat('dd.MM, HH:mm').format(d.toLocal());
+}
+
+/// «10 000» без суффикса — для строки под балансом кошелька.
+String formatUzsPlain(num v) => _uzs.format(v);

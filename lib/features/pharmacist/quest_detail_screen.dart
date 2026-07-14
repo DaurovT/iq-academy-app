@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../core/models/quest.dart';
 import '../../widgets/async_view.dart';
+import '../shared/widgets/screen_decor.dart';
 import 'providers.dart';
 
 final _dm = DateFormat('dd.MM');
@@ -28,14 +29,14 @@ class QuestDetailScreen extends ConsumerWidget {
     final detail = ref.watch(questDetailProvider(id));
     return Scaffold(
       backgroundColor: c.page,
-      body: SafeArea(
+      body: Stack(children: [Positioned.fill(child: ScreenDecor(questDetailDecor)), SafeArea(
         bottom: false,
         child: AsyncView(
           value: detail,
           onRetry: () => ref.invalidate(questDetailProvider(id)),
           data: (q) => _Body(c: c, q: q),
         ),
-      ),
+      )]),
     );
   }
 }

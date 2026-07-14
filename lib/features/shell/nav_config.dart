@@ -39,10 +39,10 @@ const Map<Role, List<NavItem>> kRoleNav = {
     NavItem(path: '/app/wallet', label: 'Кошелёк', icon: Icons.account_balance_wallet_outlined),
   ],
   Role.medrep: [
-    NavItem(path: '/app', label: 'Обзор', icon: Icons.insights_outlined, tab: true),
-    NavItem(path: '/app/portfolio', label: 'Аптеки', icon: Icons.people_alt_outlined, tab: true),
+    NavItem(path: '/app', label: 'Портфель', icon: Icons.insights_outlined, tab: true),
+    NavItem(path: '/app/portfolio', label: 'Форм.', icon: Icons.people_alt_outlined, tab: true),
     NavItem(path: '/app/medrep/quests', label: 'Квесты', icon: Icons.flag_outlined, tab: true),
-    NavItem(path: '/app/leaderboard', label: 'Рейтинг', icon: Icons.emoji_events_outlined, tab: true),
+    NavItem(path: '/app/leaderboard', label: 'Топ', icon: Icons.emoji_events_outlined, tab: true),
   ],
   Role.productOwner: [
     NavItem(path: '/app', label: 'Дашборд', icon: Icons.insights_outlined, tab: true),

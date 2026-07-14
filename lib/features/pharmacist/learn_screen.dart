@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/models/learn.dart';
 import '../shared/widgets/pharm_top_bar.dart';
+import '../shared/widgets/screen_decor.dart';
 import 'providers.dart';
 
 String _lessonsWord(int n) {
@@ -52,7 +53,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
 
     return Scaffold(
       backgroundColor: c.page,
-      body: Column(
+      body: Stack(children: [Positioned.fill(child: ScreenDecor(learnDecor)), Column(
         children: [
           const PharmTopBar(),
           Expanded(
@@ -161,7 +162,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
             ),
           ),
         ],
-      ),
+      )]),
     );
   }
 }

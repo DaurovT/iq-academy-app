@@ -5,10 +5,12 @@ import 'package:intl/intl.dart';
 import '../../../core/api/providers.dart';
 import '../../../core/auth/auth_controller.dart';
 import '../../../core/models/common.dart';
+import '../../../core/models/quest.dart';
 import '../../../core/theme/theme_controller.dart';
 import '../../pharmacist/providers.dart';
 import '../role_select/role_select_screen.dart';
 import '../widgets/pharm_top_bar.dart';
+import '../widgets/screen_decor.dart';
 
 /// Профиль пользователя. Перенесён один в один из макета Figma
 /// «pharmiq-profile-connected» (node 20:493 / 46:1147).
@@ -22,15 +24,19 @@ class ProfileScreen extends ConsumerWidget {
     final account = auth?.account;
     final themeMode = ref.watch(themeModeProvider);
     final iqc = ref.watch(walletProvider).asData?.value.balanceIqc ?? 0;
+    // Счётчик квестов — только для активной роли (врач: рецепты, иначе чеки).
+    final questTarget = auth?.activeRole == Role.doctor
+        ? QuestTarget.recipes
+        : QuestTarget.checks;
     final questsCount =
-        ref.watch(questsListProvider(null)).asData?.value.length ?? 0;
+        ref.watch(questsListProvider(questTarget)).asData?.value.length ?? 0;
     final multiRole = (account?.roles.length ?? 0) > 1;
     final roleLabel = auth?.activeRole?.label ?? '';
     final name = account?.fullName ?? '—';
 
     return Scaffold(
       backgroundColor: c.page,
-      body: Column(
+      body: Stack(children: [Positioned.fill(child: ScreenDecor(profileDecor)), Column(
         children: [
           const PharmTopBar(),
           Expanded(
@@ -259,7 +265,7 @@ class ProfileScreen extends ConsumerWidget {
             ),
           ),
         ],
-      ),
+      )]),
     );
   }
 

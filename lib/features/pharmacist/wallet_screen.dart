@@ -6,6 +6,7 @@ import '../../core/api/providers.dart';
 import '../../core/format.dart';
 import '../../core/models/wallet.dart';
 import '../shared/widgets/pharm_top_bar.dart';
+import '../shared/widgets/screen_decor.dart';
 import 'providers.dart';
 
 final _num = NumberFormat.decimalPattern('ru');
@@ -27,7 +28,7 @@ class WalletScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: c.page,
-      body: Column(
+      body: Stack(children: [Positioned.fill(child: ScreenDecor(walletDecor)), Column(
         children: [
           const PharmTopBar(),
           Expanded(
@@ -117,7 +118,7 @@ class WalletScreen extends ConsumerWidget {
             ),
           ),
         ],
-      ),
+      )]),
     );
   }
 

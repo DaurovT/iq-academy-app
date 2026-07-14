@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/img.dart';
+import '../../core/theme/app_colors.dart';
 import 'news_screen.dart';
 
-/// Последняя новость компактным превью на главной + кнопка «Все новости».
+/// Блок «Новости» на главной. Перенесён 1:1 из макета Figma
+/// (news-card, ноды 180:9 / 181:23): заголовок секции + карточка последней
+/// новости с превью, датой и ссылкой «Подробнее →».
 class NewsHomeBlock extends ConsumerWidget {
   const NewsHomeBlock({super.key});
 
@@ -16,66 +19,110 @@ class NewsHomeBlock extends ConsumerWidget {
       data: (items) {
         if (items.isEmpty) return const SizedBox.shrink();
         final n = items.first;
-        final scheme = Theme.of(context).colorScheme;
-        final cover = imgThumb(n.coverUrl, w: 160);
+        final p = PharmPalette.of(context);
+        final cover = imgThumb(n.coverUrl, w: 200);
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Новости', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700)),
-                TextButton(
-                  onPressed: () => context.push('/app/news'),
-                  style: TextButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 6), minimumSize: const Size(0, 32)),
-                  child: const Text('Все новости →'),
+                Text(
+                  'Новости',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: p.textPrimary,
+                  ),
+                ),
+                InkWell(
+                  onTap: () => context.push('/app/news'),
+                  borderRadius: BorderRadius.circular(8),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    child: Text(
+                      'Все новости',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: p.accent,
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 16),
             Material(
-              color: scheme.surface,
-              borderRadius: BorderRadius.circular(14),
+              color: p.newsCardBg,
+              borderRadius: BorderRadius.circular(20),
               clipBehavior: Clip.antiAlias,
               child: InkWell(
                 onTap: () => context.push('/app/news/${n.id}'),
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: p.softBorder),
+                  ),
+                  padding: const EdgeInsets.all(16),
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      if (cover != null)
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.network(cover, width: 60, height: 60, fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => Container(width: 60, height: 60, color: scheme.surfaceContainerHighest)),
-                        ),
-                      if (cover != null) const SizedBox(width: 12),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: cover != null
+                            ? Image.network(
+                                cover,
+                                width: 72,
+                                height: 72,
+                                fit: BoxFit.cover,
+                                errorBuilder: (_, __, ___) =>
+                                    _thumbPlaceholder(p),
+                              )
+                            : _thumbPlaceholder(p),
+                      ),
+                      const SizedBox(width: 14),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Row(children: [
-                              if (n.pinned)
-                                Container(
-                                  margin: const EdgeInsets.only(right: 6),
-                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                  decoration: BoxDecoration(color: const Color(0xFF7C5CFF), borderRadius: BorderRadius.circular(999)),
-                                  child: const Text('ВАЖНОЕ', style: TextStyle(fontSize: 9, fontWeight: FontWeight.w700, color: Colors.white)),
+                            Text(
+                              n.title,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 14,
+                                height: 1.4,
+                                fontWeight: FontWeight.w600,
+                                color: p.textPrimary,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  _formatNewsDate(n.publishedAt),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: p.textMuted,
+                                  ),
                                 ),
-                              Expanded(child: Text(n.title, maxLines: 1, overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700))),
-                            ]),
-                            if (n.summary != null && n.summary!.isNotEmpty) ...[
-                              const SizedBox(height: 3),
-                              Text(n.summary!, maxLines: 1, overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant)),
-                            ],
+                                Text(
+                                  'Подробнее →',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    color: p.accent,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       ),
-                      Icon(Icons.chevron_right, color: scheme.onSurfaceVariant),
                     ],
                   ),
                 ),
@@ -85,5 +132,20 @@ class NewsHomeBlock extends ConsumerWidget {
         );
       },
     );
+  }
+
+  Widget _thumbPlaceholder(PharmPalette p) => Container(
+        width: 72,
+        height: 72,
+        color: p.miniIconBg,
+        child: Icon(Icons.article_outlined, color: p.accent, size: 28),
+      );
+
+  String _formatNewsDate(String? raw) {
+    if (raw == null || raw.isEmpty) return '';
+    final dt = DateTime.tryParse(raw);
+    if (dt == null) return raw;
+    String two(int x) => x.toString().padLeft(2, '0');
+    return '${two(dt.day)}.${two(dt.month)}.${dt.year}';
   }
 }

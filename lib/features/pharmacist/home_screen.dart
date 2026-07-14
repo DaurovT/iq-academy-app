@@ -7,6 +7,7 @@ import '../../core/models/check.dart';
 import '../../core/models/quest.dart';
 import '../../core/theme/app_colors.dart';
 import '../shared/widgets/pharm_top_bar.dart';
+import 'checks_screen.dart';
 import '../news/news_home_block.dart';
 import '../news/survey_home_block.dart';
 import '../mini_apps/mini_apps_home_block.dart';
@@ -20,6 +21,7 @@ class PharmacistHome extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final p = PharmPalette.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final name = ref
             .watch(authControllerProvider)
@@ -44,76 +46,222 @@ class PharmacistHome extends ConsumerWidget {
         children: [
           const PharmTopBar(),
           Expanded(
-              child: RefreshIndicator(
-                onRefresh: () async {
-                  ref.invalidate(walletProvider);
-                  ref.invalidate(questsListProvider(QuestTarget.checks));
-                  ref.invalidate(checksProvider);
-                },
-                child: ListView(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+            child: RefreshIndicator(
+              onRefresh: () async {
+                ref.invalidate(walletProvider);
+                ref.invalidate(questsListProvider(QuestTarget.checks));
+                ref.invalidate(checksProvider);
+              },
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Stack(
                   children: [
-                    _Greeting(palette: p, name: name),
-                    const SizedBox(height: 24),
-                    _WalletCard(
-                      palette: p,
-                      iqc: iqc,
-                      onWallet: () => context.go('/app/wallet'),
+                    // Декоративные абстракции на фоне (только светлая тема),
+                    // растянуты на всю высоту контента и скроллятся вместе с ним.
+                    if (!isDark)
+                      const Positioned.fill(
+                        child: IgnorePointer(child: _HomeDecor()),
+                      ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                      _Greeting(palette: p, name: name),
+                      const SizedBox(height: 24),
+                      _WalletCard(
+                        palette: p,
+                        iqc: iqc,
+                        onWallet: () => context.go('/app/wallet'),
+                      ),
+                      const SizedBox(height: 16),
+                      _QuickAction(
+                        palette: p,
+                        onTap: () => showNewCheckSheet(context),
+                      ),
+                      const SizedBox(height: 24),
+                      _StatsRow(
+                        palette: p,
+                        activeQuests: quests.length,
+                        approvedChecks: approved,
+                        iqc: iqc,
+                      ),
+                      const SizedBox(height: 24),
+                      _SectionHeader(
+                        palette: p,
+                        title: 'Активные квесты',
+                        action: 'Все квесты',
+                        onAction: () => context.go('/app/quests'),
+                      ),
+                      const SizedBox(height: 16),
+                      if (quests.isEmpty)
+                        _EmptyCard(palette: p, text: 'Нет активных квестов')
+                      else
+                        for (final q in quests.take(3)) ...[
+                          _QuestCard(quest: q),
+                          const SizedBox(height: 12),
+                        ],
+                      const SizedBox(height: 12),
+                      const NewsHomeBlock(),
+                      const SizedBox(height: 24),
+                      const SurveyHomeBlock(),
+                      const SizedBox(height: 24),
+                      const MiniAppsHomeBlock(),
+                      const SizedBox(height: 24),
+                      _SectionHeader(
+                        palette: p,
+                        title: 'Последние чеки',
+                        action: 'Все чеки',
+                        onAction: () => context.go('/app/checks'),
+                      ),
+                      const SizedBox(height: 16),
+                      if (checks.isEmpty)
+                        _EmptyCard(palette: p, text: 'Пока нет чеков')
+                      else
+                        for (final c in checks.take(3)) ...[
+                          _ReceiptItem(palette: p, check: c),
+                          const SizedBox(height: 8),
+                        ],
+                        ],
+                      ),
                     ),
-                    const SizedBox(height: 16),
-                    _QuickAction(
-                      palette: p,
-                      onTap: () => context.go('/app/checks'),
-                    ),
-                    const SizedBox(height: 24),
-                    const MiniAppsHomeBlock(),
-                    const SizedBox(height: 12),
-                    const SurveyHomeBlock(),
-                    const SizedBox(height: 12),
-                    const NewsHomeBlock(),
-                    const SizedBox(height: 24),
-                    _StatsRow(
-                      palette: p,
-                      activeQuests: quests.length,
-                      approvedChecks: approved,
-                      iqc: iqc,
-                    ),
-                    const SizedBox(height: 24),
-                    _SectionHeader(
-                      palette: p,
-                      title: 'Активные квесты',
-                      action: 'Все квесты',
-                      onAction: () => context.go('/app/quests'),
-                    ),
-                    const SizedBox(height: 16),
-                    if (quests.isEmpty)
-                      _EmptyCard(palette: p, text: 'Нет активных квестов')
-                    else
-                      for (final q in quests.take(3)) ...[
-                        _QuestCard(quest: q),
-                        const SizedBox(height: 12),
-                      ],
-                    const SizedBox(height: 12),
-                    _SectionHeader(
-                      palette: p,
-                      title: 'Последние чеки',
-                      action: 'Все чеки',
-                      onAction: () => context.go('/app/checks'),
-                    ),
-                    const SizedBox(height: 16),
-                    if (checks.isEmpty)
-                      _EmptyCard(palette: p, text: 'Пока нет чеков')
-                    else
-                      for (final c in checks.take(3)) ...[
-                        _ReceiptItem(palette: p, check: c),
-                        const SizedBox(height: 8),
-                      ],
                   ],
                 ),
               ),
             ),
-          ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ── Декоративные абстракции (светлая тема) ──────────────────────────────
+
+/// Декоративный фон светлой темы. Перенесён 1:1 из макета Figma
+/// (bg-decorative-pattern, нода 164:4): плоские круги и скруглённые
+/// прямоугольники с низкой прозрачностью, слегка размытые для мягкости.
+class _HomeDecor extends StatelessWidget {
+  const _HomeDecor();
+
+  static const _blue = Color(0xFF2563EB);
+  static const _pink = Color(0xFFEC4899);
+  static const _purple = Color(0xFF7C3AED);
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRect(
+      child: Stack(
+        children: const [
+          // blob-blue
+          _Circle(top: -140, left: -120, size: 360, color: _blue, a: 0.20),
+          // rect-purple
+          _Rect(
+              top: -120,
+              right: -80,
+              width: 320,
+              height: 220,
+              radius: 56,
+              color: _purple,
+              a: 0.16),
+          // circle-pink
+          _Circle(top: 430, left: -200, size: 260, color: _pink, a: 0.22),
+          // blob-blue-soft
+          _Circle(top: 260, right: -110, size: 300, color: _blue, a: 0.16),
+          // rect-purple-soft
+          _Rect(
+              bottom: -81,
+              left: -154,
+              width: 280,
+              height: 180,
+              radius: 48,
+              color: _purple,
+              a: 0.14),
+          // circle-pink-small
+          _Circle(bottom: -140, right: -120, size: 180, color: _pink, a: 0.20),
+        ],
+      ),
+    );
+  }
+}
+
+class _Circle extends StatelessWidget {
+  const _Circle({
+    this.top,
+    this.bottom,
+    this.left,
+    this.right,
+    required this.size,
+    required this.color,
+    required this.a,
+  });
+
+  final double? top;
+  final double? bottom;
+  final double? left;
+  final double? right;
+  final double size;
+  final Color color;
+  final double a;
+
+  @override
+  Widget build(BuildContext context) {
+    // Плоский полупрозрачный круг без размытия и градиентов.
+    return Positioned(
+      top: top,
+      bottom: bottom,
+      left: left,
+      right: right,
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: color.withValues(alpha: a),
         ),
+      ),
+    );
+  }
+}
+
+class _Rect extends StatelessWidget {
+  const _Rect({
+    this.top,
+    this.bottom,
+    this.left,
+    this.right,
+    required this.width,
+    required this.height,
+    required this.radius,
+    required this.color,
+    required this.a,
+  });
+
+  final double? top;
+  final double? bottom;
+  final double? left;
+  final double? right;
+  final double width;
+  final double height;
+  final double radius;
+  final Color color;
+  final double a;
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      top: top,
+      bottom: bottom,
+      left: left,
+      right: right,
+      child: Container(
+        width: width,
+        height: height,
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: a),
+          borderRadius: BorderRadius.circular(radius),
+        ),
+      ),
     );
   }
 }
@@ -339,22 +487,27 @@ class _StatsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: _StatItem(
-              palette: palette, value: '$activeQuests', label: 'активных квестов'),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: _StatItem(
-              palette: palette, value: '$approvedChecks', label: 'одобренных чеков'),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: _StatItem(palette: palette, value: '$iqc', label: 'баллов IQC'),
-        ),
-      ],
+    // IntrinsicHeight + stretch: все плитки по высоте самой высокой, без
+    // жёсткого height (на Android шрифт выше, чем на iOS, — был overflow).
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            child: _StatItem(
+                palette: palette, value: '$activeQuests', label: 'активных квестов'),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: _StatItem(
+                palette: palette, value: '$approvedChecks', label: 'одобренных чеков'),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: _StatItem(palette: palette, value: '$iqc', label: 'баллов IQC'),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -374,7 +527,7 @@ class _StatItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
-      height: 100,
+      constraints: const BoxConstraints(minHeight: 100),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: palette.card,
@@ -636,44 +789,53 @@ class _ReceiptItem extends StatelessWidget {
     final iconColor =
         (isDark && approved) ? palette.approvedText : palette.textMuted;
 
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: palette.card,
-        borderRadius: BorderRadius.circular(16),
-        border: isDark ? null : Border.all(color: palette.cardBorder),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(color: iconBg, shape: BoxShape.circle),
-            child: Icon(Icons.description_outlined, size: 20, color: iconColor),
+    return Material(
+      color: palette.card,
+      borderRadius: BorderRadius.circular(16),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: () => context.push('/app/checks/${check.id}'),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            border: isDark ? null : Border.all(color: palette.cardBorder),
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Чек №${check.id}',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: palette.textPrimary,
-                  ),
+          child: Row(
+            children: [
+              Container(
+                width: 40,
+                height: 40,
+                decoration:
+                    BoxDecoration(color: iconBg, shape: BoxShape.circle),
+                child: Icon(Icons.description_outlined,
+                    size: 20, color: iconColor),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Чек №${check.id}',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: palette.textPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      formatDate(check.createdAt),
+                      style: TextStyle(fontSize: 12, color: palette.textMuted),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 2),
-                Text(
-                  formatDate(check.createdAt),
-                  style: TextStyle(fontSize: 12, color: palette.textMuted),
-                ),
-              ],
-            ),
+              ),
+              _Chip(label: status.label, bg: chipBg, fg: chipFg),
+            ],
           ),
-          _Chip(label: status.label, bg: chipBg, fg: chipFg),
-        ],
+        ),
       ),
     );
   }

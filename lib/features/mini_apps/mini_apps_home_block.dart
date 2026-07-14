@@ -1,67 +1,55 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../core/models/sapper.dart';
-import 'mini_apps_screens.dart';
+import '../../core/theme/app_colors.dart';
 
-/// Промо мини-приложений на главной: активный Супер Сапёр зовёт играть.
-class MiniAppsHomeBlock extends ConsumerWidget {
+/// CTA-карточка «Мини-приложения» на главной. Перенесена 1:1 из макета Figma
+/// (mini-apps-cta, ноды 180:34 / 181:46): иконка-сетка + подпись + шеврон.
+/// Всегда видна и ведёт в список мини-приложений.
+class MiniAppsHomeBlock extends StatelessWidget {
   const MiniAppsHomeBlock({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final v = ref.watch(miniAppsProvider);
-    return v.maybeWhen(
-      orElse: () => const SizedBox.shrink(),
-      data: (apps) {
-        MiniApp? sapper;
-        for (final a in apps) {
-          if (a.key == 'sapper') { sapper = a; break; }
-        }
-        if (sapper == null) return const SizedBox.shrink();
-        final active = sapper.activeDraws > 0;
-        final scheme = Theme.of(context).colorScheme;
-        return Material(
-          color: scheme.primaryContainer.withValues(alpha: 0.4),
-          borderRadius: BorderRadius.circular(16),
-          clipBehavior: Clip.antiAlias,
-          child: InkWell(
-            onTap: () => context.push(active ? '/app/sapper' : '/app/mini-apps'),
-            child: Padding(
-              padding: const EdgeInsets.all(14),
-              child: Row(
-                children: [
-                  const Text('💣', style: TextStyle(fontSize: 28)),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(children: [
-                          const Text('Супер Сапёр', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
-                          const SizedBox(width: 8),
-                          if (active)
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                              decoration: BoxDecoration(color: const Color(0xFF7C5CFF), borderRadius: BorderRadius.circular(999)),
-                              child: Text('${sapper.activeDraws} активн.',
-                                  style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: Colors.white)),
-                            ),
-                        ]),
-                        const SizedBox(height: 2),
-                        Text(active ? 'Занимай клетки за IQC — выигрывай призы' : 'Мини-приложения платформы',
-                            maxLines: 1, overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant)),
-                      ],
-                    ),
-                  ),
-                  Text('Играть →', style: TextStyle(color: scheme.primary, fontWeight: FontWeight.w700, fontSize: 13)),
-                ],
-              ),
-            ),
+  Widget build(BuildContext context) {
+    final p = PharmPalette.of(context);
+    return Material(
+      color: p.card,
+      borderRadius: BorderRadius.circular(24),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: () => context.push('/app/mini-apps'),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(color: p.softBorder),
           ),
-        );
-      },
+          padding: const EdgeInsets.all(20),
+          child: Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: p.miniIconBg,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Icon(Icons.grid_view_rounded, size: 24, color: p.accent),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  'Мини-приложения',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: p.textPrimary,
+                  ),
+                ),
+              ),
+              Icon(Icons.chevron_right, size: 20, color: p.textMuted),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

@@ -5,6 +5,7 @@ import '../../core/format.dart';
 import '../../core/models/check.dart';
 import '../../widgets/async_view.dart';
 import '../shared/widgets/photo_lightbox.dart';
+import '../shared/widgets/screen_decor.dart';
 import 'providers.dart';
 
 /// Деталь чека. Перенесена один в один из макета Figma «detail-*»
@@ -20,14 +21,14 @@ class CheckDetailScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: c.page,
-      body: SafeArea(
+      body: Stack(children: [Positioned.fill(child: ScreenDecor(checkDetailDecor)), SafeArea(
         bottom: false,
         child: AsyncView(
           value: detail,
           onRetry: () => ref.invalidate(checkDetailProvider(id)),
           data: (d) => _Body(c: c, id: id, detail: d),
         ),
-      ),
+      )]),
     );
   }
 }

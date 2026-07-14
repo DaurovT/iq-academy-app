@@ -5,6 +5,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import '../../core/api/providers.dart';
 import '../../core/models/learn.dart';
 import '../../widgets/async_view.dart';
+import '../shared/widgets/screen_decor.dart';
 import 'providers.dart';
 
 /// Приводит ссылку к встраиваемому виду (Vimeo/YouTube → embed-плеер).
@@ -102,7 +103,7 @@ class _LessonViewScreenState extends ConsumerState<LessonViewScreen> {
 
     return Scaffold(
       backgroundColor: c.page,
-      body: SafeArea(
+      body: Stack(children: [Positioned.fill(child: ScreenDecor(lessonDecor)), SafeArea(
         bottom: false,
         child: AsyncView(
           value: course,
@@ -121,7 +122,7 @@ class _LessonViewScreenState extends ConsumerState<LessonViewScreen> {
             return _body(context, c, course, lesson);
           },
         ),
-      ),
+      )]),
     );
   }
 

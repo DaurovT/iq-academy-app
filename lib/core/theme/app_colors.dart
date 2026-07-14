@@ -27,6 +27,19 @@ class PharmPalette {
     required this.rejectedChipBg,
     required this.rejectedText,
     required this.progressTrack,
+    required this.softBorder,
+    required this.newsCardBg,
+    required this.surveyGradient,
+    required this.surveyBorder,
+    required this.surveyBadgeBg,
+    required this.surveyBadgeText,
+    required this.pollSelectBg,
+    required this.pollSelectBorder,
+    required this.inputHint,
+    required this.inputText,
+    required this.submitGradient,
+    required this.submitText,
+    required this.miniIconBg,
     required this.navBg,
     required this.navPill,
     required this.navActiveIcon,
@@ -55,6 +68,22 @@ class PharmPalette {
   final Color rejectedChipBg;
   final Color rejectedText;
   final Color progressTrack;
+
+  /// Тонкая рамка карточек новостей / опроса / мини-приложений.
+  final Color softBorder;
+  final Color newsCardBg;
+  final List<Color> surveyGradient;
+  final Color surveyBorder;
+  final Color surveyBadgeBg;
+  final Color surveyBadgeText;
+  final Color pollSelectBg;
+  final Color pollSelectBorder;
+  final Color inputHint;
+  final Color inputText;
+  final List<Color> submitGradient;
+  final Color submitText;
+  final Color miniIconBg;
+
   final Color navBg;
   final Color navPill;
   final Color navActiveIcon;
@@ -86,6 +115,19 @@ class PharmPalette {
     rejectedChipBg: Color(0xFF5C1A28),
     rejectedText: Color(0xFFFFDAD6),
     progressTrack: Color(0xFF2D2E38),
+    softBorder: Color(0xFF2E2F3A),
+    newsCardBg: Color(0xFF1A1B23),
+    surveyGradient: [Color(0xFF1A0B2E), Color(0xFF1E1B4B), Color(0xFF0D1B3E)],
+    surveyBorder: Color(0x33A855F7), // purple 20%
+    surveyBadgeBg: Color(0xFF14421E),
+    surveyBadgeText: Color(0xFF79D384),
+    pollSelectBg: Color(0xFFFFFFFF),
+    pollSelectBorder: Color(0x00000000),
+    inputHint: Color(0xFF8F909A),
+    inputText: Color(0xFF0F0F14),
+    submitGradient: [Color(0xFF6B9EF5), Color(0xFF6B9EF5)],
+    submitText: Color(0xFF0F0F14),
+    miniIconBg: Color(0xFF1A3566),
     navBg: Color(0xFF22232B),
     navPill: Color(0xFF1A3566),
     navActiveIcon: Color(0xFF6B9EF5),
@@ -115,6 +157,19 @@ class PharmPalette {
     rejectedChipBg: Color(0xFFEF4444),
     rejectedText: Color(0xFFFFFFFF),
     progressTrack: Color(0xFFE8EBF0),
+    softBorder: Color(0xFFEBEDF0),
+    newsCardBg: Color(0xFFFFFFFF),
+    surveyGradient: [Color(0xFFFFFFFF), Color(0xFFFFFFFF), Color(0xFFFFFFFF)],
+    surveyBorder: Color(0xFFE5E7EB),
+    surveyBadgeBg: Color(0xFFDCFCE7),
+    surveyBadgeText: Color(0xFF166534),
+    pollSelectBg: Color(0xFFF9FAFB),
+    pollSelectBorder: Color(0xFFE5E7EB),
+    inputHint: Color(0xFF6B7280),
+    inputText: Color(0xFF111827),
+    submitGradient: [Color(0xFF3B82F6), Color(0xFF3B82F6)],
+    submitText: Color(0xFFFFFFFF),
+    miniIconBg: Color(0xFFDFE7F4),
     navBg: Color(0xFFFFFFFF),
     navPill: Color(0xFF2563EB),
     navActiveIcon: Color(0xFFFFFFFF),

@@ -8,6 +8,7 @@ import '../../core/format.dart';
 import '../../core/models/check.dart';
 import '../../core/theme/app_colors.dart';
 import '../shared/widgets/pharm_top_bar.dart';
+import '../shared/widgets/screen_decor.dart';
 import 'providers.dart';
 
 /// Цвет-статус чека/рецепта. Используется другими экранами (детали чека,
@@ -31,7 +32,10 @@ class ChecksScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: p.bg,
-      body: Column(
+      body: Stack(
+        children: [
+          const Positioned.fill(child: ScreenDecor(checksDecor)),
+          Column(
         children: [
           const PharmTopBar(),
           // Закреплённая шапка: заголовок, кнопка и счётчик не скроллятся.
@@ -80,18 +84,25 @@ class ChecksScreen extends ConsumerWidget {
             ),
           ),
         ],
+          ),
+        ],
       ),
     );
   }
 
-  Future<void> _submitFlow(BuildContext context, WidgetRef ref) {
-    return showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      builder: (_) => const _NewCheckSheet(),
-    );
-  }
+  Future<void> _submitFlow(BuildContext context, WidgetRef ref) =>
+      showNewCheckSheet(context);
+}
+
+/// Открывает модалку отправки нового чека. Используется на экране «Мои чеки»
+/// и на главной (кнопка «Отправить чек»).
+Future<void> showNewCheckSheet(BuildContext context) {
+  return showModalBottomSheet<void>(
+    context: context,
+    backgroundColor: Colors.transparent,
+    isScrollControlled: true,
+    builder: (_) => const _NewCheckSheet(),
+  );
 }
 
 // ── Модалка «Новый чек» ─────────────────────────────────────────────────
