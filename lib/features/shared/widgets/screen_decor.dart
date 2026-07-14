@@ -142,6 +142,14 @@ final questsDecor = <DecorShape>[
   _rt(decorPink, 784, 225, 174, 91),
 ];
 
+/// Фон экрана «История участия» (Figma 117:2213, слой abstract-bg-shapes).
+final questHistoryDecor = <DecorShape>[
+  _c(decorViolet, 38, -40, 89),
+  _c(decorPink, 255, 154, 116),
+  _c(decorPurple, 557, 65, 115),
+  _c(decorBlue, 704, 328, 210),
+];
+
 final questDetailDecor = <DecorShape>[
   _rt(decorPurple, 27, 50, 266, 144),
   _c(decorLightBlue, 315, 177, 87),

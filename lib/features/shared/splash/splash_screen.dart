@@ -28,33 +28,9 @@ class SplashScreen extends StatelessWidget {
             left: -80,
             child: _Blob(color: const Color(0xFF7C3AED).withValues(alpha: 0.3), size: 320),
           ),
-          // центр
-          Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 337,
-                  height: 140,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: const Color(0x0AFFFFFF),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: const Color(0x14FFFFFF)),
-                  ),
-                  child: const PharmAcademyLogo(height: 48),
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  'Учись. Зарабатывай. Расти.',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white.withValues(alpha: 0.7),
-                  ),
-                ),
-              ],
-            ),
+          // центр — только логотип (Figma 36:5: без карточки и слогана)
+          const Center(
+            child: PharmAcademyLogo(height: 64),
           ),
           // версия
           Positioned(

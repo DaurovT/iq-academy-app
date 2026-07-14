@@ -43,9 +43,11 @@ class NotificationsScreen extends ConsumerWidget {
                             fontSize: 28,
                             fontWeight: FontWeight.w700,
                             color: c.text)),
-                    const SizedBox(height: 4),
-                    Text(_unreadLabel(unread),
-                        style: TextStyle(fontSize: 13, color: c.sub)),
+                    if (unread > 0) ...[
+                      const SizedBox(height: 4),
+                      Text(_unreadLabel(unread),
+                          style: TextStyle(fontSize: 13, color: c.sub)),
+                    ],
                     const SizedBox(height: 12),
                     // action-row
                     SizedBox(

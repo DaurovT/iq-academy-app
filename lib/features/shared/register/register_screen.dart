@@ -486,7 +486,11 @@ class _SchemaFormState extends ConsumerState<_SchemaForm> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _fieldLabel('$label · Можно выбрать несколько', f.required),
+            _fieldLabel(
+                f.required
+                    ? '$label * · Можно выбрать несколько'
+                    : '$label · Можно выбрать несколько',
+                false),
             const SizedBox(height: 8),
             Wrap(
               spacing: 8,

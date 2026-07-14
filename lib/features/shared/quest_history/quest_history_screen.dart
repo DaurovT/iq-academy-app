@@ -5,6 +5,7 @@ import '../../../core/format.dart';
 import '../../../core/models/quest.dart';
 import '../../../widgets/async_view.dart';
 import '../../pharmacist/providers.dart';
+import '../widgets/screen_decor.dart';
 
 /// История участия в квестах. Перенесена один в один из макета Figma
 /// «quests-history».
@@ -18,133 +19,140 @@ class QuestHistoryScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: c.page,
-      body: SafeArea(
-        bottom: false,
-        child: Column(
-          children: [
-            // top-app-bar
-            SizedBox(
-              height: 56,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  children: [
-                    InkWell(
-                      onTap: () => context.canPop()
-                          ? context.pop()
-                          : context.go('/app/quests'),
-                      borderRadius: BorderRadius.circular(20),
-                      child: Padding(
-                        padding: const EdgeInsets.all(4),
-                        child: Icon(Icons.chevron_left, size: 24, color: c.muted),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text('История участия',
-                        style: TextStyle(fontSize: 16, color: c.muted)),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              child: RefreshIndicator(
-                onRefresh: () async =>
-                    ref.invalidate(questParticipationsProvider),
-                child: AsyncView(
-                  value: items,
-                  onRetry: () => ref.invalidate(questParticipationsProvider),
-                  data: (list) => list.isEmpty
-                      ? ListView(children: const [
-                          SizedBox(
-                              height: 320,
-                              child: EmptyState(text: 'История пуста')),
-                        ])
-                      : ListView.builder(
-                          itemCount: list.length,
-                          itemBuilder: (_, i) =>
-                              _Row(c: c, p: list[i], last: i == list.length - 1),
+      body: Stack(
+        children: [
+          Positioned.fill(child: ScreenDecor(questHistoryDecor)),
+          SafeArea(
+            bottom: false,
+            child: Column(
+              children: [
+                // top-app-bar
+                SizedBox(
+                  height: 56,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      children: [
+                        InkWell(
+                          onTap: () => context.canPop()
+                              ? context.pop()
+                              : context.go('/app/quests'),
+                          borderRadius: BorderRadius.circular(20),
+                          child: Padding(
+                            padding: const EdgeInsets.all(4),
+                            child:
+                                Icon(Icons.arrow_back, size: 22, color: c.text),
+                          ),
                         ),
+                        const SizedBox(width: 8),
+                        Text('История участия',
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                color: c.text)),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
+                Expanded(
+                  child: RefreshIndicator(
+                    onRefresh: () async =>
+                        ref.invalidate(questParticipationsProvider),
+                    child: AsyncView(
+                      value: items,
+                      onRetry: () => ref.invalidate(questParticipationsProvider),
+                      data: (list) => list.isEmpty
+                          ? ListView(children: const [
+                              SizedBox(
+                                  height: 320,
+                                  child: EmptyState(text: 'История пуста')),
+                            ])
+                          : ListView.builder(
+                              padding: const EdgeInsets.fromLTRB(16, 4, 16, 20),
+                              itemCount: list.length,
+                              itemBuilder: (_, i) => _Row(c: c, p: list[i]),
+                            ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
 
 class _Row extends StatelessWidget {
-  const _Row({required this.c, required this.p, required this.last});
+  const _Row({required this.c, required this.p});
   final _QH c;
   final QuestParticipation p;
-  final bool last;
 
   @override
   Widget build(BuildContext context) {
     final isVoucher = p.rewardType == RewardType.voucher;
-    return Column(
-      children: [
-        SizedBox(
-          height: 72,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
+    return Container(
+      height: 72,
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: c.card,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: c.cardBorder),
+        boxShadow: c.shadow,
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                color: c.iconBg, borderRadius: BorderRadius.circular(20)),
+            child: Icon(Icons.emoji_events_outlined, size: 20, color: c.accent),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      color: c.iconBg, borderRadius: BorderRadius.circular(20)),
-                  child: Icon(Icons.emoji_events_outlined,
-                      size: 20, color: c.muted),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(p.questName,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: c.text)),
-                      const SizedBox(height: 4),
-                      Text(formatDate(p.completedAt),
-                          style: TextStyle(fontSize: 12, color: c.muted)),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _Pill(
-                      text: isVoucher ? 'Ваучер' : 'IQC',
-                      bg: isVoucher
-                          ? const Color(0xFFF59E0B)
-                          : const Color(0xFF7C3AED),
-                      fg: isVoucher ? const Color(0xFF0D1117) : Colors.white,
-                    ),
-                    const SizedBox(height: 4),
-                    _Pill(
-                      text: isVoucher ? 'Активен' : 'Выполнен',
-                      bg: const Color(0xFF22C55E),
-                      fg: const Color(0xFF0D1117),
-                    ),
-                  ],
-                ),
+                Text(p.questName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: c.text)),
+                const SizedBox(height: 4),
+                Text(formatDate(p.completedAt),
+                    style: TextStyle(fontSize: 12, color: c.date)),
               ],
             ),
           ),
-        ),
-        if (!last) Container(height: 1, color: c.divider),
-      ],
+          const SizedBox(width: 12),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _Pill(
+                text: isVoucher ? 'Ваучер' : 'IQC',
+                bg: isVoucher
+                    ? const Color(0xFF7C3AED)
+                    : const Color(0xFFF59E0B),
+                fg: Colors.white,
+              ),
+              const SizedBox(height: 4),
+              _Pill(
+                text: isVoucher ? 'Активен' : 'Выполнен',
+                bg: isVoucher ? c.activeBg : c.doneBg,
+                fg: isVoucher ? c.activeText : c.doneText,
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
@@ -173,34 +181,65 @@ class _Pill extends StatelessWidget {
 class _QH {
   const _QH({
     required this.page,
+    required this.card,
+    required this.cardBorder,
     required this.iconBg,
+    required this.accent,
     required this.text,
-    required this.muted,
-    required this.divider,
+    required this.date,
+    required this.activeBg,
+    required this.activeText,
+    required this.doneBg,
+    required this.doneText,
+    required this.shadow,
   });
 
   final Color page;
+  final Color card;
+  final Color cardBorder;
   final Color iconBg;
+  final Color accent;
   final Color text;
-  final Color muted;
-  final Color divider;
+  final Color date;
+  final Color activeBg;
+  final Color activeText;
+  final Color doneBg;
+  final Color doneText;
+  final List<BoxShadow> shadow;
 
   static _QH of(BuildContext context) =>
       Theme.of(context).brightness == Brightness.dark ? _dark : _light;
 
   static const _dark = _QH(
     page: Color(0xFF0D1117),
-    iconBg: Color(0xFF151B2A),
+    card: Color(0xFF151B2A),
+    cardBorder: Color(0xFF1F2530),
+    iconBg: Color(0xFF1B2436),
+    accent: Color(0xFF6B9EF5),
     text: Color(0xFFE4E2ED),
-    muted: Color(0xFF8F909A),
-    divider: Color(0xFF1F2530),
+    date: Color(0xFF8F909A),
+    activeBg: Color(0xFF14421E),
+    activeText: Color(0xFF79D384),
+    doneBg: Color(0xFF1A3566),
+    doneText: Color(0xFFA0C4FF),
+    shadow: [],
   );
 
   static const _light = _QH(
     page: Color(0xFFF5F6FA),
-    iconBg: Color(0xFFF2F4F7),
+    card: Color(0xFFFFFFFF),
+    cardBorder: Color(0xFFEBEDF0),
+    iconBg: Color(0xFFEEF2FF),
+    accent: Color(0xFF2563EB),
     text: Color(0xFF1A1D26),
-    muted: Color(0xFF6B7280),
-    divider: Color(0xFFEBEDF0),
+    date: Color(0xFF9CA3AF),
+    activeBg: Color(0xFFECFDF5),
+    activeText: Color(0xFF059669),
+    doneBg: Color(0xFFEFF6FF),
+    doneText: Color(0xFF2563EB),
+    shadow: [
+      BoxShadow(
+          color: Color(0x0F000000), blurRadius: 4, offset: Offset(0, 2)),
+    ],
   );
 }

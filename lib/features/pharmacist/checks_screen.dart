@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../core/uploads/upload_queue.dart';
+import '../../core/uploads/pending_upload.dart';
 import '../../core/format.dart';
 import '../../core/models/check.dart';
 import '../../core/theme/app_colors.dart';
@@ -148,13 +149,14 @@ class _NewCheckSheetState extends ConsumerState<_NewCheckSheet> {
     final sheetBg = isDark ? const Color(0xFF22232B) : Colors.white; // как навбар
     final text = isDark ? Colors.white : const Color(0xFF1A1D26);
     final muted = isDark ? const Color(0xFF8F909A) : const Color(0xFF6B7280);
-    final zoneBg = isDark ? const Color(0xFF15161C) : const Color(0xFFF5F6FA);
-    final dashed = isDark ? const Color(0xFF2A3550) : const Color(0xFFD0D5DD);
+    final zoneBg = isDark ? const Color(0xFF15161C) : Colors.white;
+    final dashed = isDark ? const Color(0xFF2A3550) : const Color(0xFFD1D5DB);
+    final accent = isDark ? const Color(0xFF6B9EF5) : const Color(0xFF2563EB);
 
     return Container(
       decoration: BoxDecoration(
         color: sheetBg,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: SafeArea(
         top: false,
@@ -169,7 +171,8 @@ class _NewCheckSheetState extends ConsumerState<_NewCheckSheet> {
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                      color: dashed, borderRadius: BorderRadius.circular(2)),
+                      color: const Color(0xFF2A3550),
+                      borderRadius: BorderRadius.circular(2)),
                 ),
               ),
               const SizedBox(height: 16),
@@ -181,22 +184,22 @@ class _NewCheckSheetState extends ConsumerState<_NewCheckSheet> {
               InkWell(
                 onTap: _addGallery,
                 borderRadius: BorderRadius.circular(16),
-                child: Container(
+                child: CustomPaint(
+                  painter: _DashedRectPainter(color: dashed, radius: 16),
+                  child: Container(
                   height: 180,
                   width: double.infinity,
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: zoneBg,
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                        color: dashed, width: 2, style: BorderStyle.solid),
                   ),
                   child: _photos.isEmpty
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(Icons.add_photo_alternate_outlined,
-                                size: 40, color: dashed),
+                                size: 40, color: accent),
                             const SizedBox(height: 8),
                             Text('Нажмите чтобы добавить фото',
                                 style: TextStyle(fontSize: 13, color: muted)),
@@ -213,6 +216,7 @@ class _NewCheckSheetState extends ConsumerState<_NewCheckSheet> {
                           ),
                         ),
                 ),
+                ),
               ),
               const SizedBox(height: 16),
               // сделать фото
@@ -221,8 +225,11 @@ class _NewCheckSheetState extends ConsumerState<_NewCheckSheet> {
                 width: double.infinity,
                 child: DecoratedBox(
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                        colors: [Color(0xFF1A3566), Color(0xFF2D5A9E)]),
+                    color: isDark ? null : const Color(0xFF2563EB),
+                    gradient: isDark
+                        ? const LinearGradient(
+                            colors: [Color(0xFF1A3566), Color(0xFF2D5A9E)])
+                        : null,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Material(
@@ -254,11 +261,11 @@ class _NewCheckSheetState extends ConsumerState<_NewCheckSheet> {
               SizedBox(
                 height: 52,
                 width: double.infinity,
-                child: FilledButton(
-                  style: FilledButton.styleFrom(
-                    backgroundColor: const Color(0xFF1A3566),
-                    disabledBackgroundColor:
-                        const Color(0xFF1A3566).withValues(alpha: 0.4),
+                child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: accent,
+                    backgroundColor: isDark ? Colors.transparent : Colors.white,
+                    side: BorderSide(color: accent),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(14)),
                   ),
@@ -531,39 +538,204 @@ class _StatusChip extends StatelessWidget {
 
 // ── Вспомогательные ─────────────────────────────────────────────────────
 
-/// Баннер офлайн-очереди: сколько чеков ещё загружается + «повторить».
+/// Очередь загрузки фото. Дизайн перенесён из макета Figma
+/// «pharmiq-checks-uploading-light» (заголовок + строки с превью, прогрессом
+/// и статусом). Данные — из [uploadQueueProvider].
 class _PendingBanner extends ConsumerWidget {
   const _PendingBanner();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final count = ref.watch(pendingUploadCountProvider);
-    if (count == 0) return const SizedBox.shrink();
+    final queue =
+        ref.watch(uploadQueueProvider).asData?.value ?? const <PendingUpload>[];
+    if (queue.isEmpty) return const SizedBox.shrink();
     final p = PharmPalette.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cardBg = isDark ? const Color(0xFF2D2E38) : Colors.white;
+    final trackBg = isDark ? const Color(0xFF15161C) : const Color(0xFFF2F5F7);
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: p.accent.withValues(alpha: 0.12),
+        color: cardBg,
         borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: p.cardBorder),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(
-              height: 16, width: 16, child: CircularProgressIndicator(strokeWidth: 2)),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text('Загружается: $count',
-                style: TextStyle(color: p.textPrimary)),
-          ),
-          TextButton(
-            onPressed: () => ref.read(uploadQueueProvider.notifier).retryNow(),
-            child: const Text('Повторить'),
-          ),
+          Text('Загрузка фото',
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: p.textPrimary)),
+          const SizedBox(height: 12),
+          for (var i = 0; i < queue.length; i++) ...[
+            _QueueRow(
+              palette: p,
+              item: queue[i],
+              trackBg: trackBg,
+              // Первый в очереди грузится сейчас (если нет ошибки), остальные ждут.
+              active: i == 0 && queue[i].lastError == null,
+              onRetry: () =>
+                  ref.read(uploadQueueProvider.notifier).retryNow(),
+            ),
+            if (i != queue.length - 1) const SizedBox(height: 12),
+          ],
         ],
       ),
     );
   }
+}
+
+class _QueueRow extends StatelessWidget {
+  const _QueueRow({
+    required this.palette,
+    required this.item,
+    required this.trackBg,
+    required this.active,
+    required this.onRetry,
+  });
+
+  final PharmPalette palette;
+  final PendingUpload item;
+  final Color trackBg;
+  final bool active;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final path = item.filePaths.isNotEmpty ? item.filePaths.first : null;
+    final name = path == null ? 'Фото чека' : path.split('/').last;
+    final hasError = item.lastError != null;
+    return SizedBox(
+      height: 48,
+      child: Row(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: path != null
+                ? Image.file(File(path),
+                    width: 48, height: 48, fit: BoxFit.cover)
+                : Container(width: 48, height: 48, color: trackBg),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: palette.textPrimary)),
+                const SizedBox(height: 8),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(3),
+                  child: SizedBox(
+                    height: 6,
+                    child: active
+                        ? LinearProgressIndicator(
+                            backgroundColor: trackBg,
+                            valueColor: const AlwaysStoppedAnimation(
+                                Color(0xFF1A75FF)),
+                          )
+                        : Container(color: trackBg),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 12),
+          _StatusDot(active: active, hasError: hasError, onRetry: onRetry),
+        ],
+      ),
+    );
+  }
+}
+
+class _StatusDot extends StatelessWidget {
+  const _StatusDot({
+    required this.active,
+    required this.hasError,
+    required this.onRetry,
+  });
+
+  final bool active;
+  final bool hasError;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final Color bg;
+    final Widget child;
+    if (hasError) {
+      bg = const Color(0x1A1A75FF);
+      child = const Icon(Icons.refresh, size: 16, color: Color(0xFF1A75FF));
+    } else if (active) {
+      bg = const Color(0x1A1A75FF);
+      child = const SizedBox(
+        width: 14,
+        height: 14,
+        child: CircularProgressIndicator(
+            strokeWidth: 2,
+            valueColor: AlwaysStoppedAnimation(Color(0xFF1A75FF))),
+      );
+    } else {
+      bg = const Color(0x1A4A5568);
+      child = const Icon(Icons.schedule, size: 16, color: Color(0xFF6B7280));
+    }
+    final dot = Container(
+      width: 28,
+      height: 28,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(color: bg, shape: BoxShape.circle),
+      child: child,
+    );
+    return hasError ? GestureDetector(onTap: onRetry, child: dot) : dot;
+  }
+}
+
+/// Пунктирная рамка со скруглением (зона добавления фото в модалке «Новый чек»).
+class _DashedRectPainter extends CustomPainter {
+  const _DashedRectPainter({required this.color, required this.radius});
+
+  final Color color;
+  final double radius;
+
+  static const _stroke = 2.0;
+  static const _dash = 6.0;
+  static const _gap = 4.0;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = _stroke
+      ..style = PaintingStyle.stroke;
+    final rrect = RRect.fromRectAndRadius(
+      const Offset(_stroke / 2, _stroke / 2) &
+          Size(size.width - _stroke, size.height - _stroke),
+      Radius.circular(radius),
+    );
+    final source = Path()..addRRect(rrect);
+    final dashed = Path();
+    for (final metric in source.computeMetrics()) {
+      var dist = 0.0;
+      while (dist < metric.length) {
+        dashed.addPath(metric.extractPath(dist, dist + _dash), Offset.zero);
+        dist += _dash + _gap;
+      }
+    }
+    canvas.drawPath(dashed, paint);
+  }
+
+  @override
+  bool shouldRepaint(_DashedRectPainter old) =>
+      old.color != color || old.radius != radius;
 }
 
 class _InlineError extends StatelessWidget {

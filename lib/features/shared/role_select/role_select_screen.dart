@@ -217,8 +217,10 @@ class _RoleSheetState extends ConsumerState<_RoleSheet> {
             const <Role>[];
     final selected = _selected ?? (roles.isNotEmpty ? roles.first : null);
 
-    final sheetBg = p.navBg; // как у нижней навигации (тёмная — #22232B)
-    final divider = isDark ? const Color(0xFF3F4168) : const Color(0xFFEBEDF0);
+    // Figma 107:50 (тёмная) / 107:114 (светлая).
+    final sheetBg = isDark ? const Color(0xFF1E2039) : Colors.white;
+    final divider = isDark ? const Color(0xFF3F4168) : const Color(0xFFF3F4F6);
+    const brandBlue = Color(0xFF2563EB);
 
     return Container(
       width: double.infinity,
@@ -268,7 +270,7 @@ class _RoleSheetState extends ConsumerState<_RoleSheet> {
                 width: double.infinity,
                 child: FilledButton(
                   style: FilledButton.styleFrom(
-                    backgroundColor: p.accent,
+                    backgroundColor: brandBlue,
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -331,16 +333,23 @@ class _RoleRow extends StatelessWidget {
             Container(
               width: 24,
               height: 24,
+              alignment: Alignment.center,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: selected ? palette.accent : Colors.transparent,
                 border: Border.all(
-                  color: selected ? palette.accent : divider,
+                  color: selected ? const Color(0xFF2563EB) : divider,
                   width: 2,
                 ),
               ),
               child: selected
-                  ? const Icon(Icons.check, size: 14, color: Colors.white)
+                  ? Container(
+                      width: 12,
+                      height: 12,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color(0xFF2563EB),
+                      ),
+                    )
                   : null,
             ),
           ],

@@ -235,6 +235,10 @@ class _TabChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    // Светлая тема: выбранный таб — сплошной синий (#2563EB), текст белый.
+    // Тёмная тема: янтарная рамка и янтарный текст.
+    final filledLight = selected && !isDark;
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
@@ -243,16 +247,24 @@ class _TabChip extends StatelessWidget {
         alignment: Alignment.center,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
-          color: c.card,
+          color: filledLight ? const Color(0xFF2563EB) : c.card,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-              color: selected ? const Color(0xFFF59E0B) : c.border),
+              color: selected && isDark
+                  ? const Color(0xFFF59E0B)
+                  : filledLight
+                      ? const Color(0xFF2563EB)
+                      : c.border),
         ),
         child: Text(label,
             style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: selected ? const Color(0xFFF59E0B) : c.tabInactive)),
+                color: filledLight
+                    ? Colors.white
+                    : selected
+                        ? const Color(0xFFF59E0B)
+                        : c.tabInactive)),
       ),
     );
   }
@@ -448,6 +460,7 @@ class _EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final (title, sub) = switch (tab) {
       _Tab.archive => ('Нет архивных квестов', 'Завершённые квесты появятся здесь'),
       _Tab.active => ('Нет активных квестов', 'Новые квесты появятся здесь'),
@@ -479,18 +492,32 @@ class _EmptyState extends StatelessWidget {
                     style: TextStyle(fontSize: 13, color: c.muted)),
                 if (tab == _Tab.archive) ...[
                   const SizedBox(height: 20),
-                  OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: const Color(0xFF7C3AED),
-                      side: const BorderSide(color: Color(0xFF7C3AED)),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
-                    ),
-                    onPressed: onGoActive,
-                    child: const Text('Смотреть активные'),
-                  ),
+                  // Светлая тема: сплошная синяя кнопка. Тёмная: фиолетовый контур.
+                  isDark
+                      ? OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: const Color(0xFF7C3AED),
+                            side: const BorderSide(color: Color(0xFF7C3AED)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20)),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                          ),
+                          onPressed: onGoActive,
+                          child: const Text('Смотреть активные'),
+                        )
+                      : FilledButton(
+                          style: FilledButton.styleFrom(
+                            backgroundColor: const Color(0xFF2563EB),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20)),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 12),
+                          ),
+                          onPressed: onGoActive,
+                          child: const Text('Смотреть активные'),
+                        ),
                 ],
               ],
             ),
