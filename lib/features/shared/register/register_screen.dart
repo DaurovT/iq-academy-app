@@ -128,7 +128,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             const Text('Выберите роль для входа',
                 style: TextStyle(fontSize: 14, color: _kLabel)),
             const SizedBox(height: 20),
-            for (final r in Role.values) ...[
+            // При регистрации доступны только фармацевт и врач.
+            for (final r in const [Role.pharmacist, Role.doctor]) ...[
               _RolePickCard(
                 label: r.label,
                 onTap: () => setState(() => _role = r),
