@@ -49,6 +49,11 @@ dependencies:
   uuid: ^4.5.3
   connectivity_plus: ^7.2.0
   path_provider: ^2.1.5
+  # Пуш-уведомления (Android + iOS через Firebase Cloud Messaging)
+  firebase_core: ^3.8.0
+  firebase_messaging: ^15.1.5
+  # Показ уведомлений, когда приложение открыто (Android сам их не рисует в foreground)
+  flutter_local_notifications: ^18.0.1
 
 dev_dependencies:
   flutter_test:

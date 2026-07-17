@@ -33,6 +33,13 @@ abstract interface class PlatformApi {
   SurveysApi get surveys;
   MiniAppsApi get miniApps;
   SapperApi get sapper;
+  DevicesApi get devices;
+}
+
+/// Токены устройств для пуш-уведомлений (FCM).
+abstract interface class DevicesApi {
+  Future<void> register(String token, String platform);
+  Future<void> unregister(String token);
 }
 
 abstract interface class MiniAppsApi {

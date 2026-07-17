@@ -35,7 +35,8 @@ class HttpApi implements PlatformApi {
         news = HttpNewsApi(dio),
         surveys = HttpSurveysApi(dio),
         miniApps = HttpMiniAppsApi(dio),
-        sapper = HttpSapperApi(dio);
+        sapper = HttpSapperApi(dio),
+        devices = HttpDevicesApi(dio);
 
   @override
   final AuthApi auth;
@@ -69,6 +70,8 @@ class HttpApi implements PlatformApi {
   final MiniAppsApi miniApps;
   @override
   final SapperApi sapper;
+  @override
+  final DevicesApi devices;
 }
 
 /// Разбор JSON-массива в список моделей.
@@ -664,5 +667,20 @@ class HttpSapperApi implements SapperApi {
   Future<SapperReserveResult> reserve(int id, int cellIndex) async {
     final r = await _dio.post('/client/sapper/draws/$id/reserve', data: {'cellIndex': cellIndex});
     return SapperReserveResult.fromJson(_obj(r.data));
+  }
+}
+
+class HttpDevicesApi implements DevicesApi {
+  HttpDevicesApi(this._dio);
+  final Dio _dio;
+
+  @override
+  Future<void> register(String token, String platform) async {
+    await _dio.post('/client/devices/register', data: {'token': token, 'platform': platform});
+  }
+
+  @override
+  Future<void> unregister(String token) async {
+    await _dio.post('/client/devices/unregister', data: {'token': token});
   }
 }
