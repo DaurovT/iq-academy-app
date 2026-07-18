@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/auth/auth_controller.dart';
 import '../../core/format.dart';
 import '../../core/img.dart';
+import '../../core/l10n/l10n.dart';
 import '../../core/models/check.dart';
 import '../../core/models/learn.dart';
 import '../../core/models/quest.dart';
@@ -94,13 +95,15 @@ class DoctorHome extends ConsumerWidget {
                           const SizedBox(height: 24),
                           _SectionHeader(
                             palette: p,
-                            title: 'Активные квесты',
-                            action: 'Все квесты',
+                            title: context.l10n.docHomeActiveQuests,
+                            action: context.l10n.docHomeAllQuests,
                             onAction: () => context.go('/app/quests'),
                           ),
                           const SizedBox(height: 16),
                           if (quests.isEmpty)
-                            _EmptyCard(palette: p, text: 'Нет активных квестов')
+                            _EmptyCard(
+                                palette: p,
+                                text: context.l10n.docHomeNoActiveQuests)
                           else
                             for (final q in quests.take(3)) ...[
                               _QuestCard(quest: q),
@@ -109,13 +112,15 @@ class DoctorHome extends ConsumerWidget {
                           const SizedBox(height: 12),
                           _SectionHeader(
                             palette: p,
-                            title: 'Рекомендуемые курсы',
-                            action: 'Все курсы',
+                            title: context.l10n.docHomeRecommendedCourses,
+                            action: context.l10n.docHomeAllCourses,
                             onAction: () => context.go('/app/learn'),
                           ),
                           const SizedBox(height: 16),
                           if (recommended.isEmpty)
-                            _EmptyCard(palette: p, text: 'Пока нет курсов')
+                            _EmptyCard(
+                                palette: p,
+                                text: context.l10n.docHomeNoCourses)
                           else
                             for (final course in recommended) ...[
                               _CourseCard(
@@ -160,7 +165,9 @@ class _Greeting extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          name.isEmpty ? 'Привет!' : 'Привет, $name',
+          name.isEmpty
+              ? context.l10n.docHomeGreetingNoName
+              : context.l10n.docHomeGreeting(name),
           style: TextStyle(
             fontSize: 32,
             height: 1.1,
@@ -170,7 +177,7 @@ class _Greeting extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         Text(
-          'Отправляйте рецепты и получайте вознаграждение',
+          context.l10n.docHomeSubtitle,
           style: TextStyle(fontSize: 16, height: 1.3, color: palette.textMuted),
         ),
       ],
@@ -213,7 +220,7 @@ class _WalletCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'БАЛАНС КОШЕЛЬКА',
+                context.l10n.docHomeWalletBalance,
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
@@ -281,7 +288,7 @@ class _WalletPill extends StatelessWidget {
           border: Border.all(color: palette.walletPillBorder),
         ),
         child: Text(
-          'Кошелёк',
+          context.l10n.docHomeWallet,
           style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w600,
@@ -331,7 +338,7 @@ class _QuickAction extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Отправить рецепт',
+                    context.l10n.docHomeSendRecipe,
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -340,7 +347,7 @@ class _QuickAction extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Сфотографируйте рецепт — ИИ распознает препараты',
+                    context.l10n.docHomeSendRecipeHint,
                     style: TextStyle(fontSize: 14, color: palette.textMuted),
                   ),
                 ],
@@ -380,17 +387,21 @@ class _StatsRow extends StatelessWidget {
             child: _StatItem(
                 palette: palette,
                 value: '$recipesCount',
-                label: 'всего рецептов'),
+                label: context.l10n.docHomeStatRecipes),
           ),
           const SizedBox(width: 8),
           Expanded(
             child: _StatItem(
-                palette: palette, value: '$approved', label: 'одобрено'),
+                palette: palette,
+                value: '$approved',
+                label: context.l10n.docHomeStatApproved),
           ),
           const SizedBox(width: 8),
           Expanded(
-            child:
-                _StatItem(palette: palette, value: '$iqc', label: 'баллов IQC'),
+            child: _StatItem(
+                palette: palette,
+                value: '$iqc',
+                label: context.l10n.docHomeStatIqc),
           ),
         ],
       ),
@@ -570,7 +581,7 @@ class _QuestCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
-                        isVoucher ? 'ВАУЧЕР' : 'IQC',
+                        isVoucher ? context.l10n.docHomeVoucher : 'IQC',
                         style: TextStyle(
                           fontSize: 11,
                           letterSpacing: 0.4,
@@ -587,12 +598,12 @@ class _QuestCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Прогресс',
+                    Text(context.l10n.docHomeProgress,
                         style: TextStyle(
                             fontSize: 13,
                             color: Colors.white.withValues(alpha: 0.65))),
                     Text(
-                      '$pct% выполнено',
+                      context.l10n.docHomeProgressDone(pct),
                       style: const TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w700,
@@ -732,7 +743,7 @@ class _CourseCard extends StatelessWidget {
                     const SizedBox(height: 10),
                     Row(
                       children: [
-                        Text('Прогресс',
+                        Text(context.l10n.docHomeProgress,
                             style: TextStyle(
                                 fontSize: 12, color: palette.textMuted)),
                         const SizedBox(width: 10),

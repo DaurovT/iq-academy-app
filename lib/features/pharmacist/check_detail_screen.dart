@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/format.dart';
+import '../../core/l10n/l10n.dart';
 import '../../core/models/check.dart';
 import '../../widgets/async_view.dart';
 import '../shared/widgets/photo_lightbox.dart';
@@ -42,7 +43,7 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final status = detail.status;
-    final (chipBg, chipFg, chipLabel) = _chip(status);
+    final (chipBg, chipFg, chipLabel) = _chip(context.l10n, status);
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 40),
@@ -60,7 +61,7 @@ class _Body extends StatelessWidget {
                 children: [
                   Icon(Icons.chevron_left, size: 20, color: c.muted),
                   const SizedBox(width: 4),
-                  Text('Мои чеки',
+                  Text(context.l10n.checkDetailBackMyChecks,
                       style: TextStyle(fontSize: 14, color: c.muted)),
                 ],
               ),
@@ -74,7 +75,7 @@ class _Body extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Flexible(
-              child: Text('Чек №$id',
+              child: Text(context.l10n.checkDetailTitle(id),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -110,7 +111,10 @@ class _Body extends StatelessWidget {
         ..._statusCards(context, status),
 
         // quest-card
-        _QuestCard(c: c, text: _questText(status), positive: _questPositive(status)),
+        _QuestCard(
+            c: c,
+            text: _questText(context.l10n, status),
+            positive: _questPositive(status)),
       ],
     );
   }
@@ -121,7 +125,7 @@ class _Body extends StatelessWidget {
         return [
           _RejectionCard(
             c: c,
-            reason: detail.rejectReason ?? 'Чек отклонён',
+            reason: detail.rejectReason ?? context.l10n.checkDetailRejectedFallback,
             onResubmit: () => context.go('/app/checks'),
           ),
           const SizedBox(height: 24),
@@ -143,24 +147,31 @@ class _Body extends StatelessWidget {
     }
   }
 
-  String _questText(CheckStatus status) {
+  String _questText(AppLocalizations l10n, CheckStatus status) {
     if (detail.allocations.isNotEmpty) {
       final a = detail.allocations.first;
-      return '${a.questName} · Квест выполнен ✓';
+      return l10n.checkDetailQuestDone(a.questName);
     }
     return switch (status) {
       CheckStatus.pending || CheckStatus.aiDetected || CheckStatus.aiWrong =>
-        'Появится после одобрения чека',
-      _ => 'Пока не зачтён ни в один квест',
+        l10n.checkDetailQuestAfterApproval,
+      _ => l10n.checkDetailQuestNone,
     };
   }
 
   bool _questPositive(CheckStatus status) => detail.allocations.isNotEmpty;
 
-  (Color, Color, String) _chip(CheckStatus s) => switch (s) {
-        CheckStatus.approved => (c.approvedBg, c.approvedFg, 'Одобрен'),
-        CheckStatus.rejected => (c.rejectedBg, c.rejectedFg, 'Отклонён'),
-        _ => (const Color(0xFFF5A623), const Color(0xFF3A2A00), 'На проверке'),
+  (Color, Color, String) _chip(AppLocalizations l10n, CheckStatus s) =>
+      switch (s) {
+        CheckStatus.approved =>
+          (c.approvedBg, c.approvedFg, l10n.checkDetailChipApproved),
+        CheckStatus.rejected =>
+          (c.rejectedBg, c.rejectedFg, l10n.checkDetailChipRejected),
+        _ => (
+            const Color(0xFFF5A623),
+            const Color(0xFF3A2A00),
+            l10n.checkDetailChipPending
+          ),
       };
 }
 
@@ -187,7 +198,7 @@ class _PhotoBox extends StatelessWidget {
                 Image.network(
                   detail.photos.first.url,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => _placeholder(),
+                  errorBuilder: (_, __, ___) => _placeholder(context),
                 ),
                 // подсказка «нажмите, чтобы открыть»
                 Positioned(
@@ -202,14 +213,16 @@ class _PhotoBox extends StatelessWidget {
                       const Icon(Icons.zoom_in, size: 16, color: Colors.white),
                       const SizedBox(width: 4),
                       Text(
-                          detail.photos.length > 1 ? '1/${detail.photos.length}' : 'Открыть',
+                          detail.photos.length > 1
+                              ? '1/${detail.photos.length}'
+                              : context.l10n.checkDetailOpenPhoto,
                           style: const TextStyle(fontSize: 12, color: Colors.white)),
                     ]),
                   ),
                 ),
               ],
             )
-          : _placeholder(),
+          : _placeholder(context),
     );
     if (!hasPhoto) return box;
     return GestureDetector(
@@ -219,13 +232,13 @@ class _PhotoBox extends StatelessWidget {
     );
   }
 
-  Widget _placeholder() {
+  Widget _placeholder(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Icon(Icons.description_outlined, size: 48, color: c.muted),
         const SizedBox(height: 12),
-        Text('фото: ${detail.photoCount}',
+        Text(context.l10n.checkDetailPhotoCount(detail.photoCount),
             style: TextStyle(fontSize: 14, color: c.muted)),
       ],
     );
@@ -258,7 +271,7 @@ class _RejectionCard extends StatelessWidget {
               const Icon(Icons.error_outline,
                   size: 20, color: Color(0xFFCF6679)),
               const SizedBox(width: 8),
-              Text('Причина отклонения',
+              Text(context.l10n.checkDetailRejectReasonTitle,
                   style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
@@ -281,8 +294,9 @@ class _RejectionCard extends StatelessWidget {
               ),
               onPressed: onResubmit,
               icon: const Icon(Icons.refresh, size: 18),
-              label: const Text('Отправить повторно',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+              label: Text(context.l10n.checkDetailResubmit,
+                  style: const TextStyle(
+                      fontSize: 14, fontWeight: FontWeight.w600)),
             ),
           ),
         ],
@@ -311,24 +325,23 @@ class _PendingCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: const [
-              Icon(Icons.schedule, size: 20, color: Color(0xFFFFD770)),
-              SizedBox(width: 8),
-              Text('На проверке',
-                  style: TextStyle(
+            children: [
+              const Icon(Icons.schedule, size: 20, color: Color(0xFFFFD770)),
+              const SizedBox(width: 8),
+              Text(context.l10n.checkDetailPendingTitle,
+                  style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                       color: Color(0xFFFFD770))),
             ],
           ),
           const SizedBox(height: 12),
-          const Text(
-              'Ваш чек на проверке у специалиста. Обычно это занимает до 24 часов.',
-              style: TextStyle(fontSize: 13, color: Color(0xFFD4B86A))),
+          Text(context.l10n.checkDetailPendingBody,
+              style: const TextStyle(fontSize: 13, color: Color(0xFFD4B86A))),
           const SizedBox(height: 12),
           Opacity(
             opacity: 0.6,
-            child: Text('Отправлен: $sentAt',
+            child: Text(context.l10n.checkDetailSentAt(sentAt),
                 style: TextStyle(fontSize: 12, color: c.muted)),
           ),
         ],
@@ -357,7 +370,7 @@ class _AiDimmedCard extends StatelessWidget {
               children: [
                 Icon(Icons.auto_awesome, size: 20, color: c.text),
                 const SizedBox(width: 8),
-                Text('Ожидание распознавания ИИ',
+                Text(context.l10n.checkDetailAiWaitingTitle,
                     style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -365,7 +378,7 @@ class _AiDimmedCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 8),
-            Text('Результат появится после проверки',
+            Text(context.l10n.checkDetailAiWaitingBody,
                 style: TextStyle(fontSize: 14, color: c.muted)),
           ],
         ),
@@ -395,7 +408,7 @@ class _AiCard extends StatelessWidget {
             children: [
               const Icon(Icons.auto_awesome, size: 20, color: Color(0xFFC4B5FD)),
               const SizedBox(width: 8),
-              Text('Распознано ИИ',
+              Text(context.l10n.checkDetailAiTitle,
                   style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -412,7 +425,7 @@ class _AiCard extends StatelessWidget {
                       style: TextStyle(fontSize: 14, color: c.muted)),
                 ),
                 const SizedBox(width: 12),
-                Text('${d.packs} уп.',
+                Text(context.l10n.checkDetailPacks(d.packs),
                     style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -447,7 +460,7 @@ class _QuestCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Зачёт в квесты',
+          Text(context.l10n.checkDetailQuestCardTitle,
               style: TextStyle(
                   fontSize: 16, fontWeight: FontWeight.w600, color: c.text)),
           const SizedBox(height: 4),

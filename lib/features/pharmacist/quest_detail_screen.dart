@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import '../../core/l10n/l10n.dart';
 import '../../core/models/quest.dart';
 import '../../widgets/async_view.dart';
 import '../shared/widgets/screen_decor.dart';
@@ -54,8 +55,9 @@ class _Body extends StatelessWidget {
     final period =
         '${_fmt(q.startDate, _dm)} — ${_fmt(q.endDate, _dmy)}';
     final rewardLine = isVoucher
-        ? 'Korzinka · ${_numFmt.format(q.prizeIqc * 1000)} сум'
-        : 'Все аптеки · без лимита';
+        ? context.l10n
+            .questDetailRewardVoucherLine(_numFmt.format(q.prizeIqc * 1000))
+        : context.l10n.questDetailRewardIqcLine;
 
     return ListView(
       padding: const EdgeInsets.only(bottom: 24),
@@ -70,7 +72,8 @@ class _Body extends StatelessWidget {
               children: [
                 Icon(Icons.chevron_left, size: 24, color: c.muted),
                 const SizedBox(width: 8),
-                Text('Квесты', style: TextStyle(fontSize: 16, color: c.muted)),
+                Text(context.l10n.questDetailBackQuests,
+                    style: TextStyle(fontSize: 16, color: c.muted)),
               ],
             ),
           ),
@@ -91,7 +94,7 @@ class _Body extends StatelessWidget {
               Row(
                 children: [
                   _Pill(
-                    text: isVoucher ? 'Ваучер' : 'IQC',
+                    text: isVoucher ? context.l10n.questDetailPillVoucher : 'IQC',
                     bg: isVoucher
                         ? const Color(0xFFF59E0B)
                         : const Color(0xFF7C3AED),
@@ -100,8 +103,9 @@ class _Body extends StatelessWidget {
                   const SizedBox(width: 8),
                   _Pill(
                     text: q.status == QuestStatus.active
-                        ? 'Активен до ${_fmt(q.endDate, _dmy)}'
-                        : 'Завершён',
+                        ? context.l10n
+                            .questDetailActiveUntil(_fmt(q.endDate, _dmy))
+                        : context.l10n.questDetailFinished,
                     bg: q.status == QuestStatus.active
                         ? const Color(0xFF22C55E)
                         : c.card,
@@ -154,7 +158,10 @@ class _Body extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _StatBlock(c: c, value: '$left', label: 'осталось'),
+                    _StatBlock(
+                        c: c,
+                        value: '$left',
+                        label: context.l10n.questDetailLeftLabel),
                     Container(
                         height: 1,
                         margin: const EdgeInsets.symmetric(vertical: 12),
@@ -162,7 +169,7 @@ class _Body extends StatelessWidget {
                     _StatBlock(
                         c: c,
                         value: '$pct%',
-                        label: 'выполнено',
+                        label: context.l10n.questDetailDoneLabel,
                         valueColor: const Color(0xFFF59E0B)),
                   ],
                 ),
@@ -176,7 +183,7 @@ class _Body extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('НАГРАДА',
+              Text(context.l10n.questDetailRewardLabel,
                   style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
@@ -185,8 +192,8 @@ class _Body extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 isVoucher
-                    ? 'Ваучер выдаётся вручную после проверки'
-                    : '+${q.prizeIqc} IQC на баланс',
+                    ? context.l10n.questDetailVoucherManual
+                    : context.l10n.questDetailIqcToBalance(q.prizeIqc),
                 style: TextStyle(fontSize: 14, color: c.text),
               ),
             ],
@@ -218,14 +225,14 @@ class _Body extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Как засчитываются чеки',
+                      Text(context.l10n.questDetailHowTitle,
                           style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
                               color: c.text)),
                       const SizedBox(height: 2),
                       Text(
-                        'Отправляйте фото чеков с нужным препаратом. Проверка упаковки — автоматически.',
+                        context.l10n.questDetailHowBody,
                         style: TextStyle(
                             fontSize: 13, height: 1.4, color: c.muted),
                       ),
@@ -251,7 +258,7 @@ class _Body extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  child: Text('Что нужно сделать',
+                  child: Text(context.l10n.questDetailTodoTitle,
                       style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
@@ -260,7 +267,7 @@ class _Body extends StatelessWidget {
                 _rowDivider(c),
                 _TableRow(
                     c: c,
-                    label: 'Препарат',
+                    label: context.l10n.questDetailDrugLabel,
                     value: q.mechanics.isNotEmpty
                         ? q.mechanics
                             .map((m) => '${m.drug} × ${m.qty}')
@@ -269,12 +276,18 @@ class _Body extends StatelessWidget {
                 _rowDivider(c),
                 _TableRow(
                     c: c,
-                    label: 'Лимиты',
+                    label: context.l10n.questDetailLimitsLabel,
                     value: q.perUserLimit != null ? '${q.perUserLimit}' : '∞'),
                 _rowDivider(c),
-                _TableRow(c: c, label: 'Период', value: period),
+                _TableRow(
+                    c: c,
+                    label: context.l10n.questDetailPeriodLabel,
+                    value: period),
                 _rowDivider(c),
-                _TableRow(c: c, label: 'Участников', value: '${q.participants}'),
+                _TableRow(
+                    c: c,
+                    label: context.l10n.questDetailParticipantsLabel,
+                    value: '${q.participants}'),
               ],
             ),
           ),
@@ -396,7 +409,7 @@ class _Ring extends StatelessWidget {
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                       color: c.muted)),
-              Text('покупок',
+              Text(context.l10n.questDetailPurchases,
                   style: TextStyle(fontSize: 10, color: c.muted)),
             ],
           ),

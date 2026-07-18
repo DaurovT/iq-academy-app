@@ -10,6 +10,7 @@ class TokenStore {
   static const _kToken = 'token';
   static const _kActiveRole = 'activeRole';
   static const _kThemeMode = 'themeMode';
+  static const _kLocale = 'locale';
 
   Future<String?> readToken() => _storage.read(key: _kToken);
   Future<void> writeToken(String token) => _write(_kToken, token);
@@ -20,6 +21,10 @@ class TokenStore {
   /// Тема ('light' | 'dark' | 'system'). Не чистится при выходе.
   Future<String?> readThemeMode() => _storage.read(key: _kThemeMode);
   Future<void> writeThemeMode(String mode) => _write(_kThemeMode, mode);
+
+  /// Язык интерфейса ('ru' | 'uz' | 'kk' | 'tg' | 'ky'). Не чистится при выходе.
+  Future<String?> readLocale() => _storage.read(key: _kLocale);
+  Future<void> writeLocale(String code) => _write(_kLocale, code);
 
   /// Запись по схеме delete-then-write. На iOS обычный `write` при уже
   /// существующем элементе может падать с errSecDuplicateItem (-25299),

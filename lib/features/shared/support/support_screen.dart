@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/api/providers.dart';
+import '../../../core/l10n/l10n.dart';
 import '../../../core/models/support.dart';
 import '../../../widgets/async_view.dart';
 import '../providers.dart';
@@ -68,7 +69,7 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
                   children: [
                     Icon(Icons.arrow_back, size: 18, color: c.muted),
                     const SizedBox(width: 6),
-                    Text('Профиль',
+                    Text(context.l10n.supportBackProfile,
                         style: TextStyle(fontSize: 14, color: c.muted)),
                   ],
                 ),
@@ -80,7 +81,7 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Text('Поддержка',
+              child: Text(context.l10n.supportTitle,
                   style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w700,
@@ -100,7 +101,7 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
                   onRetry: () => ref.invalidate(supportThreadProvider),
                   data: (list) => list.isEmpty
                       ? Center(
-                          child: Text('Напишите нам — ответим здесь',
+                          child: Text(context.l10n.supportEmptyHint,
                               style: TextStyle(color: c.muted)))
                       : ListView(
                           padding: const EdgeInsets.all(16),
@@ -139,7 +140,7 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
                             isCollapsed: true,
                             filled: false,
                             border: InputBorder.none,
-                            hintText: 'Напишите сообщение...',
+                            hintText: context.l10n.supportInputHint,
                             hintStyle:
                                 TextStyle(fontSize: 14, color: c.muted),
                           ),
@@ -207,7 +208,8 @@ class _Bubble extends StatelessWidget {
                     color: isUser ? Colors.white : const Color(0xFF0D1117))),
           ),
           const SizedBox(height: 6),
-          Text('${isUser ? 'Вы' : 'Поддержка'} · $timeStr',
+          Text(
+              '${isUser ? context.l10n.supportYou : context.l10n.supportTeam} · $timeStr',
               style: const TextStyle(fontSize: 11, color: Color(0xFF8B949E))),
         ],
       ),

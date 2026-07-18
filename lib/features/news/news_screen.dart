@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/api/providers.dart';
+import '../../core/l10n/l10n.dart';
 import '../../core/models/news.dart';
 import '../../core/img.dart';
 import '../../widgets/async_view.dart';
@@ -13,12 +14,13 @@ final newsDetailProvider = FutureProvider.family<NewsDetail, int>((ref, id) {
   return ref.watch(apiProvider).news.get(id);
 });
 
-String _fmt(String? s) {
+String _fmt(AppLocalizations l10n, String? s) {
   if (s == null) return '';
   final d = DateTime.tryParse(s);
   if (d == null) return '';
-  const mon = ['', 'янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
-  return '${d.day} ${mon[d.month]} ${d.year}';
+  // Сокращённые названия месяцев одной строкой через запятую (12 штук).
+  final mon = l10n.newsDateMonths.split(',');
+  return '${d.day} ${mon[d.month - 1]} ${d.year}';
 }
 
 class NewsScreen extends ConsumerWidget {
@@ -28,7 +30,7 @@ class NewsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final v = ref.watch(newsListProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('Новости')),
+      appBar: AppBar(title: Text(context.l10n.newsTitle)),
       body: RefreshIndicator(
         onRefresh: () async => ref.invalidate(newsListProvider),
         child: AsyncView<List<NewsItem>>(
@@ -36,9 +38,11 @@ class NewsScreen extends ConsumerWidget {
           onRetry: () => ref.invalidate(newsListProvider),
           data: (items) {
             if (items.isEmpty) {
-              return ListView(children: const [
-                SizedBox(height: 120),
-                Center(child: Text('Пока нет новостей', style: TextStyle(color: Colors.grey))),
+              return ListView(children: [
+                const SizedBox(height: 120),
+                Center(
+                    child: Text(context.l10n.newsEmpty,
+                        style: const TextStyle(color: Colors.grey))),
               ]);
             }
             return ListView.separated(
@@ -86,7 +90,7 @@ class _NewsCard extends StatelessWidget {
                       margin: const EdgeInsets.only(bottom: 6),
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(color: const Color(0xFF7C5CFF), borderRadius: BorderRadius.circular(999)),
-                      child: const Text('ВАЖНОЕ', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: Colors.white)),
+                      child: Text(context.l10n.newsPinned, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: Colors.white)),
                     ),
                   Text(item.title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
                   if (item.summary != null && item.summary!.isNotEmpty) ...[
@@ -95,7 +99,7 @@ class _NewsCard extends StatelessWidget {
                         style: TextStyle(fontSize: 13, height: 1.4, color: scheme.onSurfaceVariant)),
                   ],
                   const SizedBox(height: 8),
-                  Text(_fmt(item.publishedAt), style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant)),
+                  Text(_fmt(context.l10n, item.publishedAt), style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant)),
                 ],
               ),
             ),
@@ -115,7 +119,7 @@ class NewsDetailScreen extends ConsumerWidget {
     final v = ref.watch(newsDetailProvider(id));
     final scheme = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBar(title: const Text('Новость')),
+      appBar: AppBar(title: Text(context.l10n.newsDetailTitle)),
       body: AsyncView<NewsDetail>(
         value: v,
         onRetry: () => ref.invalidate(newsDetailProvider(id)),
@@ -138,11 +142,11 @@ class NewsDetailScreen extends ConsumerWidget {
                       margin: const EdgeInsets.only(bottom: 8),
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(color: const Color(0xFF7C5CFF), borderRadius: BorderRadius.circular(999)),
-                      child: const Text('ВАЖНОЕ', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: Colors.white)),
+                      child: Text(context.l10n.newsPinned, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: Colors.white)),
                     ),
                   Text(n.title, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800)),
                   const SizedBox(height: 6),
-                  Text(_fmt(n.publishedAt), style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant)),
+                  Text(_fmt(context.l10n, n.publishedAt), style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant)),
                   if (n.summary != null && n.summary!.isNotEmpty) ...[
                     const SizedBox(height: 14),
                     Text(n.summary!, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, height: 1.4)),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/l10n/l10n.dart';
 import '../../core/models/medrep.dart';
 import '../../core/theme/app_colors.dart';
 import '../shared/widgets/pharm_top_bar.dart';
@@ -19,16 +20,10 @@ class LeaderboardScreen extends ConsumerStatefulWidget {
 class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
   String _metric = 'checks';
 
-  static const _tabs = [
-    ('checks', 'Чеков'),
-    ('pharm', 'Фармацевтов'),
-    ('quests', 'Квесты'),
-  ];
-
   String _unit(String metric) => switch (metric) {
-        'pharm' => 'аптек',
-        'quests' => 'квестов',
-        _ => 'чеков',
+        'pharm' => context.l10n.leaderboardUnitPharm,
+        'quests' => context.l10n.leaderboardUnitQuests,
+        _ => context.l10n.leaderboardUnitChecks,
       };
 
   @override
@@ -36,6 +31,11 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
     final p = PharmPalette.of(context);
     final board = ref.watch(leaderboardProvider(_metric));
     final unit = _unit(_metric);
+    final tabs = [
+      ('checks', context.l10n.leaderboardTabChecks),
+      ('pharm', context.l10n.leaderboardTabPharm),
+      ('quests', context.l10n.leaderboardTabQuests),
+    ];
 
     return Scaffold(
       backgroundColor: p.bg,
@@ -51,7 +51,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Рейтинг',
+                      context.l10n.leaderboardTitle,
                       style: TextStyle(
                         fontSize: 32,
                         fontWeight: FontWeight.w700,
@@ -62,7 +62,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
                     _Tabs(
                       palette: p,
                       value: _metric,
-                      tabs: _tabs,
+                      tabs: tabs,
                       onChanged: (v) => setState(() => _metric = v),
                     ),
                   ],
@@ -207,9 +207,10 @@ class _InfoBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final attribution =
-        board.mode == AttributionMode.primary ? 'Первичная' : 'Общая';
-    final company = board.company ?? 'Компания';
+    final attribution = board.mode == AttributionMode.primary
+        ? context.l10n.leaderboardAttributionPrimary
+        : context.l10n.leaderboardAttributionTotal;
+    final company = board.company ?? context.l10n.leaderboardCompanyFallback;
     final total = board.items.length;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -227,9 +228,10 @@ class _InfoBanner extends StatelessWidget {
               TextSpan(
                 style: TextStyle(fontSize: 13, color: palette.textMuted),
                 children: [
-                  TextSpan(text: '$company | Мой ранг: '),
                   TextSpan(
-                    text: '#${board.myRank} из $total',
+                      text: context.l10n.leaderboardMyRankLabel(company)),
+                  TextSpan(
+                    text: context.l10n.leaderboardMyRank(board.myRank, total),
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       color: palette.accent,
@@ -559,7 +561,8 @@ class _ErrorView extends StatelessWidget {
                 style: TextStyle(color: palette.textMuted)),
             const SizedBox(height: 12),
             FilledButton.tonal(
-                onPressed: onRetry, child: const Text('Повторить')),
+                onPressed: onRetry,
+                child: Text(context.l10n.leaderboardRetry)),
           ],
         ),
       ),

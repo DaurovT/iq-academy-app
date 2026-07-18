@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'core/l10n/l10n.dart';
+import 'core/l10n/locale_controller.dart';
 import 'core/push/push_service.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
@@ -31,6 +33,7 @@ class _IqAcademyAppState extends ConsumerState<IqAcademyApp> {
   Widget build(BuildContext context) {
     final router = ref.watch(routerProvider);
     final themeMode = ref.watch(themeModeProvider);
+    final locale = ref.watch(localeProvider);
 
     return MaterialApp.router(
       title: 'IQ Academy',
@@ -38,6 +41,9 @@ class _IqAcademyAppState extends ConsumerState<IqAcademyApp> {
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
       themeMode: themeMode,
+      locale: locale,
+      supportedLocales: supportedAppLocales,
+      localizationsDelegates: appLocalizationDelegates,
       routerConfig: router,
     );
   }

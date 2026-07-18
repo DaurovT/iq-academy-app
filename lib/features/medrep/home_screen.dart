@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/auth/auth_controller.dart';
+import '../../core/l10n/l10n.dart';
 import '../../core/models/medrep.dart';
 import '../../core/theme/app_colors.dart';
 import '../shared/widgets/pharm_top_bar.dart';
@@ -36,8 +37,9 @@ class _MedrepHomeState extends ConsumerState<MedrepHome> {
     final metrics = ref.watch(medrepMetricsProvider(_period));
     final link = ref.watch(medrepReflinkProvider).asData?.value ?? _fallbackLink;
     final mode = metrics.asData?.value.mode;
-    final attribution =
-        mode == AttributionMode.primary ? 'Первичная' : 'Общая';
+    final attribution = mode == AttributionMode.primary
+        ? context.l10n.medrepHomeAttributionPrimary
+        : context.l10n.medrepHomeAttributionTotal;
 
     return Scaffold(
       backgroundColor: p.bg,
@@ -85,28 +87,28 @@ class _MedrepHomeState extends ConsumerState<MedrepHome> {
                           _MenuRow(
                             palette: p,
                             icon: Icons.people_alt_outlined,
-                            label: 'Фармацевты',
+                            label: context.l10n.medrepHomeMenuPharmacists,
                             onTap: () => context.go('/app/portfolio'),
                           ),
                           const SizedBox(height: 12),
                           _MenuRow(
                             palette: p,
                             icon: Icons.person_add_alt_1_outlined,
-                            label: 'Ожидают подтверждения',
+                            label: context.l10n.medrepHomeMenuPending,
                             onTap: () => context.go('/app/referrals'),
                           ),
                           const SizedBox(height: 12),
                           _MenuRow(
                             palette: p,
                             icon: Icons.business_outlined,
-                            label: 'Компании',
+                            label: context.l10n.medrepHomeMenuCompanies,
                             onTap: () => context.go('/app/companies'),
                           ),
                           const SizedBox(height: 12),
                           _MenuRow(
                             palette: p,
                             icon: Icons.emoji_events_outlined,
-                            label: 'Рейтинг',
+                            label: context.l10n.medrepHomeMenuLeaderboard,
                             onTap: () => context.go('/app/leaderboard'),
                           ),
                         ],
@@ -142,7 +144,9 @@ class _Greeting extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          name.isEmpty ? 'Привет!' : 'Привет, $name',
+          name.isEmpty
+              ? context.l10n.medrepHomeGreetingNoName
+              : context.l10n.medrepHomeGreeting(name),
           style: TextStyle(
             fontSize: 32,
             height: 1.1,
@@ -152,7 +156,7 @@ class _Greeting extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         Text(
-          'Атрибуция: $attribution',
+          context.l10n.medrepHomeAttribution(attribution),
           style: TextStyle(fontSize: 15, color: palette.textMuted),
         ),
       ],
@@ -173,18 +177,17 @@ class _PeriodTabs extends StatelessWidget {
   final String value;
   final ValueChanged<String> onChanged;
 
-  static const _items = [
-    ('all', 'Все'),
-    ('30', '30 дн'),
-    ('7', '7 дн'),
-  ];
-
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final items = [
+      ('all', context.l10n.medrepHomePeriodAll),
+      ('30', context.l10n.medrepHomePeriod30d),
+      ('7', context.l10n.medrepHomePeriod7d),
+    ];
     return Row(
       children: [
-        for (final (key, label) in _items) ...[
+        for (final (key, label) in items) ...[
           _Pill(
             label: label,
             selected: value == key,
@@ -273,7 +276,7 @@ class _StatsGrid extends StatelessWidget {
               child: StatTile(
                 palette: palette,
                 value: '${metrics.pharmCount}',
-                label: 'Фармацевтов',
+                label: context.l10n.medrepHomeStatPharmacists,
                 icon: Icons.people_alt_outlined,
                 color: _tileBlue,
               ),
@@ -283,7 +286,7 @@ class _StatsGrid extends StatelessWidget {
               child: StatTile(
                 palette: palette,
                 value: '${metrics.checksCount}',
-                label: 'Чеков',
+                label: context.l10n.medrepHomeStatChecks,
                 icon: Icons.receipt_long_outlined,
                 color: _tileGreen,
               ),
@@ -297,7 +300,7 @@ class _StatsGrid extends StatelessWidget {
               child: StatTile(
                 palette: palette,
                 value: '${metrics.approvedPacksSum}',
-                label: 'Упаковок',
+                label: context.l10n.medrepHomeStatPacks,
                 icon: Icons.inventory_2_outlined,
                 color: _tileTeal,
               ),
@@ -307,7 +310,7 @@ class _StatsGrid extends StatelessWidget {
               child: StatTile(
                 palette: palette,
                 value: '${metrics.questsDone}',
-                label: 'Квестов',
+                label: context.l10n.medrepHomeStatQuests,
                 icon: Icons.adjust_outlined,
                 color: _tileAmber,
               ),
@@ -438,7 +441,7 @@ class _ReferralCard extends StatelessWidget {
     await Clipboard.setData(ClipboardData(text: link));
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Ссылка скопирована')),
+      SnackBar(content: Text(context.l10n.medrepHomeLinkCopied)),
     );
   }
 
@@ -456,7 +459,7 @@ class _ReferralCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Реферальная ссылка',
+            context.l10n.medrepHomeReferralTitle,
             style: TextStyle(
               fontSize: 17,
               fontWeight: FontWeight.w700,
@@ -465,7 +468,7 @@ class _ReferralCard extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            'Отправьте ссылку провизору — он привяжется к вам при регистрации',
+            context.l10n.medrepHomeReferralHint,
             style: TextStyle(fontSize: 13, height: 1.35, color: palette.textMuted),
           ),
           const SizedBox(height: 16),
@@ -491,7 +494,7 @@ class _ReferralCard extends StatelessWidget {
                 child: _OutlineButton(
                   palette: palette,
                   icon: Icons.copy_outlined,
-                  label: 'Копировать',
+                  label: context.l10n.medrepHomeCopy,
                   onTap: () => _copy(context),
                 ),
               ),
@@ -500,7 +503,7 @@ class _ReferralCard extends StatelessWidget {
                 child: _FilledButton(
                   color: palette.accent,
                   icon: Icons.share_outlined,
-                  label: 'Поделиться',
+                  label: context.l10n.medrepHomeShare,
                   onTap: () => _copy(context),
                 ),
               ),
@@ -693,7 +696,8 @@ class _ErrorCard extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(color: palette.textMuted)),
           const SizedBox(height: 12),
-          FilledButton.tonal(onPressed: onRetry, child: const Text('Повторить')),
+          FilledButton.tonal(
+              onPressed: onRetry, child: Text(context.l10n.medrepHomeRetry)),
         ],
       ),
     );

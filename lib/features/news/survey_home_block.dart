@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/api/providers.dart';
+import '../../core/l10n/l10n.dart';
 import '../../core/models/survey.dart';
 import '../../core/theme/app_colors.dart';
 import '../pharmacist/providers.dart' show walletProvider;
@@ -57,8 +58,8 @@ class _SurveyHomeBlockState extends ConsumerState<SurveyHomeBlock> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(res.rewardIqc > 0
-            ? '+${res.rewardIqc} IQC зачислено'
-            : 'Спасибо за ответ!'),
+            ? context.l10n.surveyRewardCredited(res.rewardIqc)
+            : context.l10n.surveyThanks),
       ));
       _optionId = null;
       _rating = null;
@@ -68,7 +69,7 @@ class _SurveyHomeBlockState extends ConsumerState<SurveyHomeBlock> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Не удалось отправить: $e')),
+        SnackBar(content: Text(context.l10n.surveySubmitError('$e'))),
       );
     } finally {
       if (mounted) setState(() => _busy = false);
@@ -119,7 +120,7 @@ class _SurveyHomeBlockState extends ConsumerState<SurveyHomeBlock> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      'Опрос',
+                      context.l10n.surveyTitle,
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
@@ -136,7 +137,7 @@ class _SurveyHomeBlockState extends ConsumerState<SurveyHomeBlock> {
                         borderRadius: BorderRadius.circular(999),
                       ),
                       child: Text(
-                        '+ ${s.rewardIqc} IQC',
+                        context.l10n.surveyRewardBadge(s.rewardIqc),
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w700,
@@ -181,7 +182,7 @@ class _SurveyHomeBlockState extends ConsumerState<SurveyHomeBlock> {
                 orElse: () => s.options.first);
         return _PollSelect(
           palette: p,
-          hint: 'Выберите вариант ответа',
+          hint: context.l10n.surveyChooseOption,
           value: selected?.text,
           onTap: () => _pickOption(s, p),
         );
@@ -206,7 +207,7 @@ class _SurveyHomeBlockState extends ConsumerState<SurveyHomeBlock> {
               // тема глобально включает filled+fillColor — без этого поверх
               // поля рисуется серая полоска заливки
               filled: false,
-              hintText: 'Введите ответ вручную',
+              hintText: context.l10n.surveyEnterAnswer,
               hintStyle: TextStyle(color: p.inputHint, fontSize: 14),
               border: InputBorder.none,
               counterText: '',
@@ -375,7 +376,7 @@ class _SubmitButton extends StatelessWidget {
                   ),
                 )
               : Text(
-                  'Ответить',
+                  context.l10n.surveySubmit,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,

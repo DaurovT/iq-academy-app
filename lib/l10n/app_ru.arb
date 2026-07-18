@@ -1,0 +1,1227 @@
+{
+  "@@locale": "ru",
+  "appTitle": "IQ Academy",
+  "apiNetworkError": "Ошибка сети",
+  "apiNoAccess": "Нет доступа",
+  "checkModelStatusPending": "На проверке",
+  "checkModelStatusAiDetected": "Распознан ИИ",
+  "checkModelStatusAiWrong": "ИИ не распознал",
+  "checkModelStatusApproved": "Одобрен",
+  "checkModelStatusRejected": "Отклонён",
+  "commonRolePharmacist": "Фармацевт",
+  "commonRoleDoctor": "Врач",
+  "commonRoleMedrep": "Мед. представитель",
+  "commonRoleProductOwner": "Бренд / Продукт-оунер",
+  "commonCancel": "Отмена",
+  "navHome": "Главная",
+  "navChecks": "Чеки",
+  "navQuests": "Квесты",
+  "navLearn": "Обучение",
+  "navWallet": "Кошелёк",
+  "navRecipes": "Рецепты",
+  "navPortfolio": "Портфель",
+  "navPharm": "Фарм.",
+  "navTop": "Топ",
+  "navDashboard": "Дашборд",
+  "navProducts": "Продукты",
+  "navBrands": "Бренды",
+  "navProfile": "Профиль",
+  "miniAppsTitle": "Мини-приложения",
+  "miniAppsSubtitle": "Играй и выигрывай призы за IQC",
+  "miniAppsSoon": "Скоро",
+  "sapperCountdownSoon": "скоро",
+  "sapperCountdownDaysHours": "{days}д {hours}ч",
+  "@sapperCountdownDaysHours": {
+    "placeholders": {
+      "days": {
+        "type": "Object"
+      },
+      "hours": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperCountdownHoursMinutes": "{hours}ч {minutes}м",
+  "@sapperCountdownHoursMinutes": {
+    "placeholders": {
+      "hours": {
+        "type": "Object"
+      },
+      "minutes": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperCountdownMinutesSeconds": "{minutes}м {seconds}с",
+  "@sapperCountdownMinutesSeconds": {
+    "placeholders": {
+      "minutes": {
+        "type": "Object"
+      },
+      "seconds": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperTitle": "Супер Сапёр",
+  "sapperSubtitle": "Занимай клетки за IQC — в час вскрытия узнаешь, что под ними",
+  "sapperNoDraws": "Нет розыгрышей",
+  "sapperRevealed": "Вскрыт",
+  "sapperPrizesAndPrice": "🎁 {prizeCount} призов  💎 {priceIqc} IQC/клетка  ",
+  "@sapperPrizesAndPrice": {
+    "placeholders": {
+      "prizeCount": {
+        "type": "Object"
+      },
+      "priceIqc": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperMyCells": "твоих клеток: {count}",
+  "@sapperMyCells": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperOccupancy": "занято {occupied} из {total} ({percent}%)",
+  "@sapperOccupancy": {
+    "placeholders": {
+      "occupied": {
+        "type": "Object"
+      },
+      "total": {
+        "type": "Object"
+      },
+      "percent": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperGoToGame": "Перейти к игре",
+  "sapperReserveTitle": "Занять клетку №{number}?",
+  "@sapperReserveTitle": {
+    "placeholders": {
+      "number": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperReserveBody": "Спишется {price} IQC. Отменить нельзя — клетка закрепится за вами до вскрытия.",
+  "@sapperReserveBody": {
+    "placeholders": {
+      "price": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperReserveConfirm": "Занять за {price} IQC",
+  "@sapperReserveConfirm": {
+    "placeholders": {
+      "price": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperCellReserved": "Клетка №{number} занята",
+  "@sapperCellReserved": {
+    "placeholders": {
+      "number": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperDraws": "Розыгрыши",
+  "sapperAcceptClosed": "Приём клеток закрыт — идёт подготовка к вскрытию",
+  "sapperHiddenTitle": "НА ПОЛЕ СПРЯТАНО",
+  "sapperRevealIn": "вскрытие через {time}",
+  "@sapperRevealIn": {
+    "placeholders": {
+      "time": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperNoPrizes": "призы не заявлены",
+  "sapperPrizeChip": "🎁 {count}× {label}",
+  "@sapperPrizeChip": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      },
+      "label": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperBalance": "Баланс: {balance} IQC",
+  "@sapperBalance": {
+    "placeholders": {
+      "balance": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperCellPrice": "цена клетки {price} IQC",
+  "@sapperCellPrice": {
+    "placeholders": {
+      "price": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperYourBalance": "Ваш баланс",
+  "sapperCellPriceLabel": "цена клетки",
+  "sapperWinBannerWin": "🎉 Вы выиграли {count} {word}!",
+  "@sapperWinBannerWin": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      },
+      "word": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperNoWin": "В этот раз без выигрыша",
+  "sapperPrizeOne": "приз",
+  "sapperPrizeFew": "приза",
+  "sapperPrizeMany": "призов",
+  "sapperLegendMine": "Мои",
+  "sapperLegendTheirs": "Чужие",
+  "sapperLegendEmpty": "Пустые",
+  "sapperLegendVoucher": "Ваучер",
+  "sapperLegendSelected": "Выбрано",
+  "sapperLegendOccupied": "Занято",
+  "sapperLegendFree": "Свободно",
+  "sapperWinners": "Победители",
+  "newsTitle": "Новости",
+  "newsAll": "Все новости",
+  "newsMore": "Подробнее →",
+  "newsDateMonths": "янв,фев,мар,апр,мая,июн,июл,авг,сен,окт,ноя,дек",
+  "newsEmpty": "Пока нет новостей",
+  "newsPinned": "ВАЖНОЕ",
+  "newsDetailTitle": "Новость",
+  "surveyRewardCredited": "+{amount} IQC зачислено",
+  "@surveyRewardCredited": {
+    "placeholders": {
+      "amount": {
+        "type": "Object"
+      }
+    }
+  },
+  "surveyThanks": "Спасибо за ответ!",
+  "surveySubmitError": "Не удалось отправить: {error}",
+  "@surveySubmitError": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "surveyTitle": "Опрос",
+  "surveyRewardBadge": "+ {amount} IQC",
+  "@surveyRewardBadge": {
+    "placeholders": {
+      "amount": {
+        "type": "Object"
+      }
+    }
+  },
+  "surveyChooseOption": "Выберите вариант ответа",
+  "surveyEnterAnswer": "Введите ответ вручную",
+  "surveySubmit": "Ответить",
+  "loginTagline": "Обучайся.\nПрименяй.\nДостигай.",
+  "loginTitle": "Вход",
+  "loginByPhone": "Войдите по номеру телефона",
+  "loginCodeSent": "Код из SMS на {phone}",
+  "@loginCodeSent": {
+    "placeholders": {
+      "phone": {
+        "type": "Object"
+      }
+    }
+  },
+  "loginPhoneLabel": "Номер телефона",
+  "loginPhoneNotFound": "Номер не найден в системе",
+  "loginConfirm": "Подтвердить",
+  "loginGoRegister": "Пройти регистрацию",
+  "loginRegister": "Зарегистрироваться",
+  "loginEnter": "Войти",
+  "loginResendIn": "Повтор через {seconds} с",
+  "@loginResendIn": {
+    "placeholders": {
+      "seconds": {
+        "type": "Object"
+      }
+    }
+  },
+  "loginResendAgain": "Отправить снова",
+  "loginChangeNumber": "‹ Изменить номер",
+  "loginOr": "или",
+  "tgLoginExpired": "Время входа истекло",
+  "tgLoginParseError": "Не удалось обработать ответ входа: {error}",
+  "@tgLoginParseError": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "tgWaitingConfirm": "Ожидание подтверждения…",
+  "tgLoginButton": "Войти через Telegram",
+  "notifTitle": "Уведомления",
+  "notifUnreadOne": "{count} непрочитанное",
+  "@notifUnreadOne": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "notifUnreadMany": "{count} непрочитанных",
+  "@notifUnreadMany": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "notifMarkAllRead": "Отметить все прочитанными",
+  "notifRead": "✓ Прочитано",
+  "notifMarkRead": "Отметить прочитанным",
+  "notifOpen": "Открыть",
+  "notifEmptyTitle": "Уведомлений нет",
+  "notifEmptyBody": "Здесь появятся статусы чеков, награды за квесты и новости обучения.",
+  "placeholderComingSoon": "Раздел появится в следующих фазах.",
+  "profileTitle": "Профиль",
+  "profileSettings": "Настройки",
+  "profileLanguage": "ЯЗЫК",
+  "profileAppearance": "ОФОРМЛЕНИЕ",
+  "profileThemeLight": "Светлая",
+  "profileThemeDark": "Тёмная",
+  "profileThemeSystem": "Система",
+  "profileAccount": "Аккаунт",
+  "profilePersonalData": "ЛИЧНЫЕ ДАННЫЕ",
+  "profileRole": "Роль",
+  "profileChange": "Сменить",
+  "profileLinkedServices": "ПРИВЯЗАННЫЕ СЕРВИСЫ",
+  "profilePhone": "Телефон",
+  "profileTgConnected": "Подключён",
+  "profileTgLinked": "Привязан",
+  "profileSupport": "Поддержка",
+  "profileSupportSubtitle": "Мы всегда на связи",
+  "profileLogout": "Выйти из аккаунта",
+  "profileDeleteTitle": "Удалить аккаунт и данные",
+  "profileDeleteIrreversible": "Действие необратимо",
+  "profileDelete": "Удалить",
+  "profileLanguageUpdated": "Язык обновлён",
+  "profileNewPhoneTitle": "Новый номер",
+  "profileCancel": "Отмена",
+  "profileNext": "Далее",
+  "profileSmsCodeTitle": "Код из SMS",
+  "profileCodeLabel": "Код",
+  "profileConfirm": "Подтвердить",
+  "profilePhoneChanged": "Телефон изменён",
+  "profileLogoutConfirmTitle": "Выйти из аккаунта?",
+  "profileLogoutAction": "Выйти",
+  "profileDeleteConfirmTitle": "Удалить аккаунт?",
+  "profileDeleteConfirmBody": "Действие необратимо. Все данные будут удалены.",
+  "profileStatQuests": "КВЕСТОВ",
+  "profileStatLevel": "УРОВЕНЬ",
+  "questHistoryTitle": "История участия",
+  "questHistoryEmpty": "История пуста",
+  "questHistoryVoucher": "Ваучер",
+  "questHistoryActive": "Активен",
+  "questHistoryDone": "Выполнен",
+  "registerStep1Of2": "ШАГ 1 ИЗ 2",
+  "registerStep2Of2": "ШАГ 2 ИЗ 2 · {role}",
+  "@registerStep2Of2": {
+    "placeholders": {
+      "role": {
+        "type": "Object"
+      }
+    }
+  },
+  "registerTitle": "Регистрация",
+  "registerChooseRole": "Выберите роль для входа",
+  "registerBack": "‹ Назад",
+  "registerConfirmField": "Подтвердите: {label}",
+  "@registerConfirmField": {
+    "placeholders": {
+      "label": {
+        "type": "Object"
+      }
+    }
+  },
+  "registerFillField": "Заполните: {label}",
+  "@registerFillField": {
+    "placeholders": {
+      "label": {
+        "type": "Object"
+      }
+    }
+  },
+  "registerFinish": "Завершить регистрацию",
+  "registerSuccessTitle": "Регистрация завершена!",
+  "registerWelcome": "Добро пожаловать в PharmIQ ACADEMY, {name}!",
+  "@registerWelcome": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "registerStartLearning": "Начать обучение",
+  "registerGoHome": "Перейти на главную",
+  "registerEnterField": "Введите {label}",
+  "@registerEnterField": {
+    "placeholders": {
+      "label": {
+        "type": "Object"
+      }
+    }
+  },
+  "registerRequiredField": "Обязательное поле",
+  "registerSelectPlaceholder": "— выберите —",
+  "registerMultiSelectHintRequired": "{label} * · Можно выбрать несколько",
+  "@registerMultiSelectHintRequired": {
+    "placeholders": {
+      "label": {
+        "type": "Object"
+      }
+    }
+  },
+  "registerMultiSelectHint": "{label} · Можно выбрать несколько",
+  "@registerMultiSelectHint": {
+    "placeholders": {
+      "label": {
+        "type": "Object"
+      }
+    }
+  },
+  "registerConsentText": "Я согласен на обработку персональных данных ",
+  "registerConsentMore": "подробнее",
+  "roleSelectTagline": "Обучайся.\nПрименяй.\nДостигай.",
+  "roleSelectGreeting": "Здравствуйте",
+  "roleSelectGreetingName": "Здравствуйте, {name}",
+  "@roleSelectGreetingName": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "roleSelectChooseRole": "Выберите роль для входа",
+  "roleSelectSubChecksQuests": "Чеки, квесты, обучение и кошелёк",
+  "roleSelectSubMedrep": "Портфель провизоров и рейтинг",
+  "roleSelectSubProductOwner": "Дашборд, продукты и бренды",
+  "roleSelectSheetTitle": "Выберите роль",
+  "roleSelectEnter": "Войти",
+  "notifSettingsTitle": "Настройки уведомлений",
+  "notifSettingsChecks": "Статусы чеков и рецептов",
+  "notifSettingsQuests": "Квесты и награды",
+  "notifSettingsLearning": "Обучение",
+  "notifSettingsMarketing": "Новости и акции",
+  "supportBackProfile": "Профиль",
+  "supportTitle": "Поддержка",
+  "supportEmptyHint": "Напишите нам — ответим здесь",
+  "supportInputHint": "Напишите сообщение...",
+  "supportYou": "Вы",
+  "supportTeam": "Поддержка",
+  "appBarSwitchRole": "Сменить роль",
+  "asyncRetry": "Повторить",
+  "brandProductsTitle": "Продукты",
+  "brandProductsEmpty": "Продуктов нет",
+  "brandProductsQuestCount": "{p1} квест.",
+  "@brandProductsQuestCount": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "brandProductsDetailTitle": "Продукт",
+  "brandQuestsTitle": "Квесты бренда",
+  "brandQuestsEmpty": "Квестов нет",
+  "brandQuestsSubtitle": "{p1} · {p2}/{p3} вып.",
+  "@brandQuestsSubtitle": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      },
+      "p2": {
+        "type": "Object"
+      },
+      "p3": {
+        "type": "Object"
+      }
+    }
+  },
+  "brandQuestsStatusActive": "Активен",
+  "brandQuestsStatusOff": "Выкл",
+  "brandQuestsDetailTitle": "Квест бренда",
+  "brandQuestsSponsor": "Спонсор: {p1}",
+  "@brandQuestsSponsor": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "brandQuestsParticipants": "Участников",
+  "brandQuestsCompletions": "Выполнений",
+  "brandQuestsBudget": "Бюджет",
+  "brandQuestsSpent": "Потрачено",
+  "brandQuestsProducts": "Продукты",
+  "brandQuestsMxik": "МХИК",
+  "brandQuestsReward": "Награда",
+  "brandQuestsPeriod": "Период",
+  "brandsTitle": "Бренды",
+  "brandsEmpty": "Брендов нет",
+  "brandsQuestCount": "{p1} квест.",
+  "@brandsQuestCount": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "brandsDetailTitle": "Бренд",
+  "brandsSubBrands": "Суббренды",
+  "brandDashTitle": "Дашборд",
+  "brandDashChecks": "Чеков",
+  "brandDashPacks": "Упаковок",
+  "brandDashActiveQuests": "Активных квестов",
+  "brandDashParticipants": "Участников",
+  "brandDashSegmentation": "Сегментация",
+  "brandDashRetail": "Розница",
+  "brandDashChain": "Сети",
+  "brandDashTopProducts": "Топ продуктов",
+  "brandDashTopSellers": "Топ продавцов",
+  "brandDashRegions": "Регионы",
+  "brandDashSalesLogs": "Логи продаж",
+  "salesLogTitle": "Логи продаж",
+  "salesLogEmpty": "Записей нет",
+  "docHomeActiveQuests": "Активные квесты",
+  "docHomeAllQuests": "Все квесты",
+  "docHomeNoActiveQuests": "Нет активных квестов",
+  "docHomeRecommendedCourses": "Рекомендуемые курсы",
+  "docHomeAllCourses": "Все курсы",
+  "docHomeNoCourses": "Пока нет курсов",
+  "docHomeGreetingNoName": "Привет!",
+  "docHomeGreeting": "Привет, {name}",
+  "@docHomeGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "docHomeSubtitle": "Отправляйте рецепты и получайте вознаграждение",
+  "docHomeWalletBalance": "БАЛАНС КОШЕЛЬКА",
+  "docHomeWallet": "Кошелёк",
+  "docHomeSendRecipe": "Отправить рецепт",
+  "docHomeSendRecipeHint": "Сфотографируйте рецепт — ИИ распознает препараты",
+  "docHomeStatRecipes": "всего рецептов",
+  "docHomeStatApproved": "одобрено",
+  "docHomeStatIqc": "баллов IQC",
+  "docHomeVoucher": "ВАУЧЕР",
+  "docHomeProgress": "Прогресс",
+  "docHomeProgressDone": "{pct}% выполнено",
+  "@docHomeProgressDone": {
+    "placeholders": {
+      "pct": {
+        "type": "Object"
+      }
+    }
+  },
+  "recipeDetailMyRecipes": "Мои рецепты",
+  "recipeDetailTitle": "Рецепт №{id}",
+  "@recipeDetailTitle": {
+    "placeholders": {
+      "id": {
+        "type": "Object"
+      }
+    }
+  },
+  "recipeDetailPhotoCount": "Фото {p1}",
+  "@recipeDetailPhotoCount": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "recipeDetailStatusApproved": "Одобрен",
+  "recipeDetailStatusRejected": "Отклонён",
+  "recipeDetailStatusPending": "На проверке",
+  "recipeDetailAiRecognized": "Распознано ИИ",
+  "recipeDetailNoDrugs": "Препараты не распознаны",
+  "recipesTitle": "Мои рецепты",
+  "recipesTotal": "{p1} всего",
+  "@recipesTotal": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "recipesTabAll": "Все",
+  "recipesTabActive": "Активные",
+  "recipesTabDone": "Завершенные",
+  "recipesEmpty": "Рецептов пока нет",
+  "recipesTakePhoto": "Сделать фото",
+  "recipesFromGallery": "Выбрать из галереи",
+  "recipesUploading": "Рецепт добавлен — загружается",
+  "recipesDoctorInfoTitle": "Данные врача (по желанию)",
+  "recipesDoctorName": "ФИО",
+  "recipesDoctorWorkplace": "Место работы",
+  "recipesDoctorCity": "Город",
+  "recipesDoctorPhone": "Телефон",
+  "recipesSkip": "Пропустить",
+  "recipesSend": "Отправить",
+  "recipesSubmitButton": "Отправить рецепт",
+  "recipesPhotoCount": "фото: {p1}",
+  "@recipesPhotoCount": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "recipesStatusApproved": "Одобрен",
+  "recipesStatusRejected": "Отклонён",
+  "recipesStatusPending": "На проверке",
+  "recipesUploadingBanner": "Загружается: {count}",
+  "@recipesUploadingBanner": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "recipesRetry": "Повторить",
+  "companiesTitle": "Компании",
+  "companiesEmpty": "Компаний нет",
+  "companiesCode": "Код: {p1}",
+  "@companiesCode": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "medrepHomeAttributionPrimary": "Первичная",
+  "medrepHomeAttributionTotal": "Общая",
+  "medrepHomeMenuPharmacists": "Фармацевты",
+  "medrepHomeMenuPending": "Ожидают подтверждения",
+  "medrepHomeMenuCompanies": "Компании",
+  "medrepHomeMenuLeaderboard": "Рейтинг",
+  "medrepHomeGreetingNoName": "Привет!",
+  "medrepHomeGreeting": "Привет, {name}",
+  "@medrepHomeGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "medrepHomeAttribution": "Атрибуция: {attribution}",
+  "@medrepHomeAttribution": {
+    "placeholders": {
+      "attribution": {
+        "type": "Object"
+      }
+    }
+  },
+  "medrepHomeStatPharmacists": "Фармацевтов",
+  "medrepHomeStatChecks": "Чеков",
+  "medrepHomeStatPacks": "Упаковок",
+  "medrepHomeStatQuests": "Квестов",
+  "medrepHomeLinkCopied": "Ссылка скопирована",
+  "medrepHomeReferralTitle": "Реферальная ссылка",
+  "medrepHomeReferralHint": "Отправьте ссылку провизору — он привяжется к вам при регистрации",
+  "medrepHomeCopy": "Копировать",
+  "medrepHomeShare": "Поделиться",
+  "medrepHomeRetry": "Повторить",
+  "leaderboardUnitPharm": "аптек",
+  "leaderboardUnitQuests": "квестов",
+  "leaderboardUnitChecks": "чеков",
+  "leaderboardTitle": "Рейтинг",
+  "leaderboardAttributionPrimary": "Первичная",
+  "leaderboardAttributionTotal": "Общая",
+  "leaderboardCompanyFallback": "Компания",
+  "leaderboardRetry": "Повторить",
+  "pharmDetailIncentivizeTitle": "Поощрить фармацевта",
+  "pharmDetailRating": "Оценка: {p1}",
+  "@pharmDetailRating": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "pharmDetailComment": "Комментарий",
+  "pharmDetailCancel": "Отмена",
+  "pharmDetailSend": "Отправить",
+  "pharmDetailSent": "Отправлено",
+  "pharmDetailBack": "Фармацевты",
+  "pharmDetailChecks": "Чеков",
+  "pharmDetailPacks": "Упаковок",
+  "pharmDetailQuests": "Квестов",
+  "pharmDetailIqcPoints": "IQC Очков",
+  "pharmDetailRecentChecks": "Последние чеки",
+  "pharmDetailNoChecks": "Чеков пока нет",
+  "pharmDetailActive": "Активный",
+  "pharmDetailPassive": "Пассивный",
+  "pharmDetailIncentivize": "Поощрить",
+  "pharmDetailRetry": "Повторить",
+  "portfolioTitle": "Фармацевты",
+  "portfolioUpdated": "Обновлено",
+  "portfolioInPortfolio": "{total} в портфеле",
+  "@portfolioInPortfolio": {
+    "placeholders": {
+      "total": {
+        "type": "Object"
+      }
+    }
+  },
+  "portfolioSearchHint": "Поиск фармацевта…",
+  "portfolioTabAll": "Все ({all})",
+  "@portfolioTabAll": {
+    "placeholders": {
+      "all": {
+        "type": "Object"
+      }
+    }
+  },
+  "portfolioTabActive": "Активные ({active})",
+  "@portfolioTabActive": {
+    "placeholders": {
+      "active": {
+        "type": "Object"
+      }
+    }
+  },
+  "portfolioTabPassive": "Пассивные ({passive})",
+  "@portfolioTabPassive": {
+    "placeholders": {
+      "passive": {
+        "type": "Object"
+      }
+    }
+  },
+  "portfolioNotFound": "Фармацевтов не найдено",
+  "portfolioRetry": "Повторить",
+  "medrepQuestsTitle": "Квесты компании",
+  "medrepQuestsEmpty": "Квестов нет",
+  "medrepQuestsSubtitle": "Цель: {p1} · участников: {p2}",
+  "@medrepQuestsSubtitle": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      },
+      "p2": {
+        "type": "Object"
+      }
+    }
+  },
+  "medrepQuestsNoParticipants": "Пока нет участников",
+  "referralsAccepted": "Заявка принята",
+  "referralsRejected": "Заявка отклонена",
+  "referralsTitle": "Заявки рефералов",
+  "referralsEmpty": "Нет новых заявок",
+  "referralsDecline": "Отклонить",
+  "referralsAccept": "Принять",
+  "checkDetailBackMyChecks": "Мои чеки",
+  "checkDetailTitle": "Чек №{id}",
+  "@checkDetailTitle": {
+    "placeholders": {
+      "id": {
+        "type": "Object"
+      }
+    }
+  },
+  "checkDetailRejectedFallback": "Чек отклонён",
+  "checkDetailQuestDone": "{p1} · Квест выполнен ✓",
+  "@checkDetailQuestDone": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "checkDetailQuestAfterApproval": "Появится после одобрения чека",
+  "checkDetailQuestNone": "Пока не зачтён ни в один квест",
+  "checkDetailChipApproved": "Одобрен",
+  "checkDetailChipRejected": "Отклонён",
+  "checkDetailChipPending": "На проверке",
+  "checkDetailOpenPhoto": "Открыть",
+  "checkDetailPhotoCount": "фото: {p1}",
+  "@checkDetailPhotoCount": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "checkDetailRejectReasonTitle": "Причина отклонения",
+  "checkDetailResubmit": "Отправить повторно",
+  "checkDetailPendingTitle": "На проверке",
+  "checkDetailPendingBody": "Ваш чек на проверке у специалиста. Обычно это занимает до 24 часов.",
+  "checkDetailSentAt": "Отправлен: {sentAt}",
+  "@checkDetailSentAt": {
+    "placeholders": {
+      "sentAt": {
+        "type": "Object"
+      }
+    }
+  },
+  "checkDetailAiWaitingTitle": "Ожидание распознавания ИИ",
+  "checkDetailAiWaitingBody": "Результат появится после проверки",
+  "checkDetailAiTitle": "Распознано ИИ",
+  "checkDetailPacks": "{p1} уп.",
+  "@checkDetailPacks": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "checkDetailQuestCardTitle": "Зачёт в квесты",
+  "checksEmpty": "Чеков пока нет",
+  "checksAddedUploading": "Чек добавлен — загружается",
+  "checksNewCheckTitle": "Новый чек",
+  "checksTapToAddPhoto": "Нажмите чтобы добавить фото",
+  "checksTakePhoto": "Сделать фото",
+  "checksSubmitForReview": "Отправить на проверку",
+  "checksTitle": "Мои чеки",
+  "checksTotalCount": "{p1} всего",
+  "@checksTotalCount": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "checksSendPhoto": "Отправить фото",
+  "checksCardMeta": "{p1} · фото: {p2}",
+  "@checksCardMeta": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      },
+      "p2": {
+        "type": "Object"
+      }
+    }
+  },
+  "checksAwaitUsually24h": "Ожидайте — обычно 24 часа",
+  "checksUploadingTitle": "Загрузка фото",
+  "checksPhotoFallback": "Фото чека",
+  "checksRetry": "Повторить",
+  "courseDetailTabDescription": "ОПИСАНИЕ",
+  "courseDetailTabContent": "СОДЕРЖАНИЕ",
+  "courseDetailMinutes": "~{totalMin} минут",
+  "@courseDetailMinutes": {
+    "placeholders": {
+      "totalMin": {
+        "type": "Object"
+      }
+    }
+  },
+  "courseDetailContinueLearning": "ПРОДОЛЖИТЬ ОБУЧЕНИЕ",
+  "courseDetailStartLearning": "НАЧАТЬ ОБУЧЕНИЕ",
+  "courseDetailVideoLessonOne": "видеоурок",
+  "courseDetailVideoLessonFew": "видеоурока",
+  "courseDetailVideoLessonMany": "видеоуроков",
+  "courseDetailQuizAfterLesson": "Тест после урока {videosBefore}",
+  "@courseDetailQuizAfterLesson": {
+    "placeholders": {
+      "videosBefore": {
+        "type": "Object"
+      }
+    }
+  },
+  "courseDetailQuizForCourse": "Тест по курсу",
+  "courseDetailLessonMin": "{p1} мин",
+  "@courseDetailLessonMin": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "courseDetailQuizBadge": "ТЕСТ",
+  "homePhActiveQuests": "Активные квесты",
+  "homePhAllQuests": "Все квесты",
+  "homePhNoActiveQuests": "Нет активных квестов",
+  "homePhRecentChecks": "Последние чеки",
+  "homePhAllChecks": "Все чеки",
+  "homePhNoChecks": "Пока нет чеков",
+  "homePhGreeting": "Привет!",
+  "homePhGreetingName": "Привет, {name}!",
+  "@homePhGreetingName": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "homePhGreetingSub": "Готовы к новым знаниям?",
+  "homePhWalletBalanceLabel": "БАЛАНС КОШЕЛЬКА",
+  "homePhWalletButton": "Кошелёк",
+  "homePhSendCheck": "Отправить чек",
+  "homePhSendCheckSub": "Сфотографируйте чек — ИИ распознает препараты",
+  "homePhStatActiveQuests": "активных квестов",
+  "homePhStatApprovedChecks": "одобренных чеков",
+  "homePhStatIqcPoints": "баллов IQC",
+  "homePhVoucherBadge": "ВАУЧЕР",
+  "homePhProgress": "Прогресс",
+  "homePhPctDone": "{pct}% выполнено",
+  "@homePhPctDone": {
+    "placeholders": {
+      "pct": {
+        "type": "Object"
+      }
+    }
+  },
+  "homePhCheckNumber": "Чек №{p1}",
+  "@homePhCheckNumber": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "learnLessonOne": "урок",
+  "learnLessonFew": "урока",
+  "learnLessonMany": "уроков",
+  "learnTitle": "Обучение",
+  "learnSearchHint": "Поиск по курсам...",
+  "learnTabAll": "Все",
+  "learnTabMine": "Мои курсы",
+  "learnTabDone": "Пройденные",
+  "learnNewBadge": "НОВЫЙ",
+  "learnRepeatCourse": "ПОВТОРИТЬ КУРС",
+  "learnContinueLearning": "ПРОДОЛЖИТЬ ОБУЧЕНИЕ",
+  "learnStartCourse": "ПРОЙТИ КУРС",
+  "learnCompleted": "Пройден",
+  "learnNotFoundTitle": "Курсы не найдены",
+  "learnTryChangeFilters": "Попробуйте изменить фильтры",
+  "learnNothingForQuery": "По запросу «{query}» ничего не нашлось.\\nПопробуйте изменить запрос или сбросить фильтры.",
+  "@learnNothingForQuery": {
+    "placeholders": {
+      "query": {
+        "type": "Object"
+      }
+    }
+  },
+  "learnResetFilters": "Сбросить фильтры",
+  "lessonCompletedReward": "Урок завершён · +{p1} IQC",
+  "@lessonCompletedReward": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "lessonNotFound": "Урок не найден",
+  "lessonTabText": "ТЕКСТ УРОКА",
+  "lessonTabMaterials": "МАТЕРИАЛЫ УРОКА",
+  "lessonNoMaterials": "Материалов пока нет",
+  "lessonStartQuiz": "НАЧАТЬ ТЕСТИРОВАНИЕ",
+  "lessonComplete": "ЗАВЕРШИТЬ УРОК",
+  "questDetailBackQuests": "Квесты",
+  "questDetailPillVoucher": "Ваучер",
+  "questDetailLeftLabel": "осталось",
+  "questDetailDoneLabel": "выполнено",
+  "questDetailRewardLabel": "НАГРАДА",
+  "questDetailVoucherManual": "Ваучер выдаётся вручную после проверки",
+  "questDetailIqcToBalance": "+{p1} IQC на баланс",
+  "@questDetailIqcToBalance": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "questDetailHowTitle": "Как засчитываются чеки",
+  "questDetailHowBody": "Отправляйте фото чеков с нужным препаратом. Проверка упаковки — автоматически.",
+  "questDetailTodoTitle": "Что нужно сделать",
+  "questDetailDrugLabel": "Препарат",
+  "questDetailLimitsLabel": "Лимиты",
+  "questDetailPeriodLabel": "Период",
+  "questDetailParticipantsLabel": "Участников",
+  "questDetailPurchases": "покупок",
+  "questsPeriodUntil": "до {p1}",
+  "@questsPeriodUntil": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "questsPeriodFrom": "с {p1}",
+  "@questsPeriodFrom": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "questsPeriodNone": "Без срока",
+  "questsTitle": "Квесты",
+  "questsTabActive": "Активные",
+  "questsTabArchive": "Архив",
+  "questsTabAll": "Все",
+  "questsCountWordActive": "активных",
+  "questsCountWordArchive": "архивных",
+  "questsCountQuestOne": "квест",
+  "questsCountQuestFew": "квеста",
+  "questsHistoryChip": "История участия",
+  "questsSearchHint": "Поиск",
+  "questsPacksItem": "{p1} × {p2} уп.",
+  "@questsPacksItem": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      },
+      "p2": {
+        "type": "Object"
+      }
+    }
+  },
+  "questsIqcNoLimit": "+{p1} IQC · без лимита",
+  "@questsIqcNoLimit": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "questsPillVoucher": "Ваучер",
+  "questsActive": "Активен",
+  "questsFinished": "Завершён",
+  "questsEmptyArchiveTitle": "Нет архивных квестов",
+  "questsEmptyArchiveSub": "Завершённые квесты появятся здесь",
+  "questsEmptyActiveTitle": "Нет активных квестов",
+  "questsEmptyActiveSub": "Новые квесты появятся здесь",
+  "questsEmptyAllTitle": "Квестов нет",
+  "questsEmptyAllSub": "Загляните позже",
+  "questsViewActive": "Смотреть активные",
+  "quizTitle": "Тестирование",
+  "quizQuestionOf": "Вопрос {p1} из {n}",
+  "@quizQuestionOf": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      },
+      "n": {
+        "type": "Object"
+      }
+    }
+  },
+  "quizFinish": "ЗАВЕРШИТЬ ТЕСТ",
+  "quizNext": "СЛЕДУЮЩИЙ ВОПРОС →",
+  "quizAnswerLabel": "Ответ",
+  "quizCongrats": "Поздравляем!",
+  "quizPassed": "Тест успешно пройден!",
+  "quizYouEarned": "Вы заработали",
+  "quizCorrectLabel": "ПРАВИЛЬНЫХ",
+  "quizResultLabel": "РЕЗУЛЬТАТ",
+  "quizToHome": "НА ГЛАВНЫЙ ЭКРАН",
+  "quizViewCertificate": "Посмотреть сертификат →",
+  "quizTryAgainTitle": "Попробуйте ещё раз",
+  "quizFailed": "Тест не пройден",
+  "quizYourResult": "Ваш результат",
+  "quizCorrectLower": "правильных",
+  "quizPassMinimum": "Минимум для прохождения: {passScore}/{total} ({passPct}%)",
+  "@quizPassMinimum": {
+    "placeholders": {
+      "passScore": {
+        "type": "Object"
+      },
+      "total": {
+        "type": "Object"
+      },
+      "passPct": {
+        "type": "Object"
+      }
+    }
+  },
+  "quizRetry": "↺ ПРОЙТИ ЗАНОВО",
+  "quizBackToLesson": "Вернуться к уроку →",
+  "voucherNotFound": "Ваучер не найден",
+  "voucherTitle": "Мой ваучер",
+  "voucherCodeCopied": "Код скопирован",
+  "voucherUsed": "Использован",
+  "voucherActive": "Активен",
+  "voucherIssuedAt": "Выпущен {p1}",
+  "@voucherIssuedAt": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "voucherGiftCardLabel": "UZS · ПОДАРОЧНАЯ КАРТА",
+  "voucherShowQr": "Покажите QR-код кассиру или назовите код",
+  "voucherStores": "Магазины Korzinka.uz",
+  "voucherSupport": "Служба поддержки",
+  "walletPendingVouchers": "Ваучеры в очереди",
+  "walletUseIqc": "Использовать IQC",
+  "walletMyVouchers": "Мои ваучеры",
+  "walletNoVouchers": "Пока нет ваучеров",
+  "walletRedeemTitle": "Обменять баллы?",
+  "walletRedeemBody": "{p1} за {p2} IQC",
+  "@walletRedeemBody": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      },
+      "p2": {
+        "type": "Object"
+      }
+    }
+  },
+  "walletCancel": "Отмена",
+  "walletRedeem": "Обменять",
+  "walletVoucherIssued": "Ваучер оформлен",
+  "walletTitle": "Кошелёк",
+  "walletBalanceLabel": "БАЛАНС",
+  "walletTotalAccrued": "Всего начислено: {p1} IQC",
+  "@walletTotalAccrued": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "walletHistoryArrow": "История →",
+  "walletQuestDoneAwaiting": "Квест выполнен — ваучер ждёт выдачи",
+  "walletForIqc": "за {p1} IQC",
+  "@walletForIqc": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "walletGetVoucher": "Получить ваучер",
+  "walletNotEnoughIqc": "Недостаточно IQC",
+  "walletCodeMeta": "Код: {p1} · {p2}",
+  "@walletCodeMeta": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      },
+      "p2": {
+        "type": "Object"
+      }
+    }
+  },
+  "walletVoucherUsed": "Использован",
+  "walletVoucherActive": "Активен",
+  "walletHistoryTitle": "История",
+  "walletNoTransactions": "Операций пока нет",
+  "brandProductsBrand": "Бренд",
+  "brandProductsFormat": "Формат",
+  "brandProductsMxik": "МХИК",
+  "brandProductsDivisible": "Делимый",
+  "brandProductsYes": "Да",
+  "brandProductsNo": "Нет",
+  "brandProductsQuests": "Квестов",
+  "medrepHomePeriodAll": "Все",
+  "medrepHomePeriod30d": "30 дн",
+  "medrepHomePeriod7d": "7 дн",
+  "leaderboardTabChecks": "Чеков",
+  "leaderboardTabPharm": "Фармацевтов",
+  "leaderboardTabQuests": "Квесты",
+  "leaderboardMyRankLabel": "{company} | Мой ранг: ",
+  "@leaderboardMyRankLabel": {
+    "placeholders": {
+      "company": {
+        "type": "Object"
+      }
+    }
+  },
+  "leaderboardMyRank": "#{rank} из {total}",
+  "@leaderboardMyRank": {
+    "placeholders": {
+      "rank": {
+        "type": "Object"
+      },
+      "total": {
+        "type": "Object"
+      }
+    }
+  },
+  "portfolioChecksChip": "Чеков: {count}",
+  "@portfolioChecksChip": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "portfolioQuestsChip": "Квестов: {count}",
+  "@portfolioQuestsChip": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "referralsDate": "Заявка: {date}",
+  "@referralsDate": {
+    "placeholders": {
+      "date": {
+        "type": "Object"
+      }
+    }
+  },
+  "checksStatusApproved": "Одобрен",
+  "checksStatusRejected": "Отклонён",
+  "checksStatusPending": "На проверке",
+  "questDetailRewardVoucherLine": "Korzinka · {amount} сум",
+  "@questDetailRewardVoucherLine": {
+    "placeholders": {
+      "amount": {
+        "type": "Object"
+      }
+    }
+  },
+  "questDetailRewardIqcLine": "Все аптеки · без лимита",
+  "questDetailActiveUntil": "Активен до {date}",
+  "@questDetailActiveUntil": {
+    "placeholders": {
+      "date": {
+        "type": "Object"
+      }
+    }
+  },
+  "questDetailFinished": "Завершён",
+  "questsPurchasesOfGoal": "{completed} / {goal} покупок",
+  "@questsPurchasesOfGoal": {
+    "placeholders": {
+      "completed": {
+        "type": "Object"
+      },
+      "goal": {
+        "type": "Object"
+      }
+    }
+  },
+  "questsPurchases": "{completed} покупок",
+  "@questsPurchases": {
+    "placeholders": {
+      "completed": {
+        "type": "Object"
+      }
+    }
+  }
+}

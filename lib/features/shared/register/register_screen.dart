@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../core/api/providers.dart';
 import '../../../core/auth/auth_controller.dart';
+import '../../../core/l10n/l10n.dart';
 import '../../../core/models/account.dart';
 import '../../../core/models/common.dart';
 import '../../../core/models/registration.dart';
@@ -114,24 +115,24 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             const SizedBox(height: 20),
             const _ProgressBar(step: 1),
             const SizedBox(height: 12),
-            const Text('ШАГ 1 ИЗ 2',
-                style: TextStyle(
+            Text(context.l10n.registerStep1Of2,
+                style: const TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 0.5,
                     color: _kLabel)),
             const SizedBox(height: 12),
-            const Text('Регистрация',
-                style: TextStyle(
+            Text(context.l10n.registerTitle,
+                style: const TextStyle(
                     fontSize: 28, fontWeight: FontWeight.w700, color: _kWhite)),
             const SizedBox(height: 6),
-            const Text('Выберите роль для входа',
-                style: TextStyle(fontSize: 14, color: _kLabel)),
+            Text(context.l10n.registerChooseRole,
+                style: const TextStyle(fontSize: 14, color: _kLabel)),
             const SizedBox(height: 20),
             // При регистрации доступны только фармацевт и врач.
             for (final r in const [Role.pharmacist, Role.doctor]) ...[
               _RolePickCard(
-                label: r.label,
+                label: r.label(context.l10n),
                 onTap: () => setState(() => _role = r),
               ),
               const SizedBox(height: 12),
@@ -140,8 +141,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             Center(
               child: TextButton(
                 onPressed: () => context.go('/login'),
-                child: const Text('‹ Назад',
-                    style: TextStyle(fontSize: 15, color: _kLabel)),
+                child: Text(context.l10n.registerBack,
+                    style: const TextStyle(fontSize: 15, color: _kLabel)),
               ),
             ),
           ],
@@ -255,13 +256,15 @@ class _SchemaFormState extends ConsumerState<_SchemaForm> {
       if (!f.required) continue;
       final v = _values[f.name];
       if (f.type == RegFieldType.consent && v != true) {
-        setState(() => _error = 'Подтвердите: ${f.label.resolve()}');
+        setState(
+            () => _error = context.l10n.registerConfirmField(f.label.resolve()));
         return;
       }
       if ((f.type == RegFieldType.select ||
               f.type == RegFieldType.multiselect) &&
           (v == null || (v is List && v.isEmpty))) {
-        setState(() => _error = 'Заполните: ${f.label.resolve()}');
+        setState(
+            () => _error = context.l10n.registerFillField(f.label.resolve()));
         return;
       }
     }
@@ -315,15 +318,17 @@ class _SchemaFormState extends ConsumerState<_SchemaForm> {
               const SizedBox(height: 20),
               const _ProgressBar(step: 2),
               const SizedBox(height: 12),
-              Text('ШАГ 2 ИЗ 2 · ${widget.role.label.toUpperCase()}',
+              Text(
+                  context.l10n.registerStep2Of2(
+                      widget.role.label(context.l10n).toUpperCase()),
                   style: const TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w700,
                       letterSpacing: 0.5,
                       color: _kLabel)),
               const SizedBox(height: 12),
-              const Text('Регистрация',
-                  style: TextStyle(
+              Text(context.l10n.registerTitle,
+                  style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.w700,
                       color: _kWhite)),
@@ -338,7 +343,7 @@ class _SchemaFormState extends ConsumerState<_SchemaForm> {
                 const SizedBox(height: 12),
               ],
               _PrimaryButton(
-                label: 'Завершить регистрацию',
+                label: context.l10n.registerFinish,
                 loading: _loading,
                 color: _kAccent,
                 onPressed: _loading ? null : () => _submit(s),
@@ -347,8 +352,8 @@ class _SchemaFormState extends ConsumerState<_SchemaForm> {
               Center(
                 child: TextButton(
                   onPressed: widget.onBack,
-                  child: const Text('‹ Назад',
-                      style: TextStyle(fontSize: 15, color: _kLabel)),
+                  child: Text(context.l10n.registerBack,
+                      style: const TextStyle(fontSize: 15, color: _kLabel)),
                 ),
               ),
             ],
@@ -379,15 +384,15 @@ class _SchemaFormState extends ConsumerState<_SchemaForm> {
                     size: 32, color: _kSuccessBlue),
               ),
               const SizedBox(height: 34),
-              const Text('Регистрация завершена!',
+              Text(context.l10n.registerSuccessTitle,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontSize: 26,
                       fontWeight: FontWeight.w700,
                       color: Colors.white)),
               const SizedBox(height: 12),
               Text(
-                'Добро пожаловать в PharmIQ ACADEMY, $_firstName!',
+                context.l10n.registerWelcome(_firstName),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: 16,
@@ -395,7 +400,7 @@ class _SchemaFormState extends ConsumerState<_SchemaForm> {
               ),
               const SizedBox(height: 26),
               _PrimaryButton(
-                label: 'Начать обучение',
+                label: context.l10n.registerStartLearning,
                 loading: _completing,
                 color: _kSuccessBlue,
                 onPressed: _completing ? null : () => _finish('/app/learn'),
@@ -403,8 +408,8 @@ class _SchemaFormState extends ConsumerState<_SchemaForm> {
               const SizedBox(height: 20),
               TextButton(
                 onPressed: _completing ? null : () => _finish('/app'),
-                child: const Text('Перейти на главную',
-                    style: TextStyle(fontSize: 15, color: _kLabel)),
+                child: Text(context.l10n.registerGoHome,
+                    style: const TextStyle(fontSize: 15, color: _kLabel)),
               ),
             ],
           ),
@@ -429,10 +434,10 @@ class _SchemaFormState extends ConsumerState<_SchemaForm> {
             style: const TextStyle(color: _kWhite, fontSize: 16),
             decoration: _inputDecoration(f.type == RegFieldType.phone
                 ? '+998 90 123 45 67'
-                : 'Введите ${label.toLowerCase()}'),
+                : context.l10n.registerEnterField(label.toLowerCase())),
             onChanged: (v) => _values[f.name] = v,
             validator: (v) => f.required && (v == null || v.trim().isEmpty)
-                ? 'Обязательное поле'
+                ? context.l10n.registerRequiredField
                 : null,
           ),
         );
@@ -441,12 +446,12 @@ class _SchemaFormState extends ConsumerState<_SchemaForm> {
         final options = f.options ?? const <RegOption>[];
         final current = _values[f.name] as String?;
         final selectedLabel = current == null
-            ? '— выберите —'
+            ? context.l10n.registerSelectPlaceholder
             : options
                 .where((o) => o.value == current)
                 .map((o) => o.label.resolve())
                 .firstOrNull ??
-                '— выберите —';
+                context.l10n.registerSelectPlaceholder;
         return _LabeledField(
           label: label,
           required: f.required,
@@ -488,8 +493,8 @@ class _SchemaFormState extends ConsumerState<_SchemaForm> {
           children: [
             _fieldLabel(
                 f.required
-                    ? '$label * · Можно выбрать несколько'
-                    : '$label · Можно выбрать несколько',
+                    ? context.l10n.registerMultiSelectHintRequired(label)
+                    : context.l10n.registerMultiSelectHint(label),
                 false),
             const SizedBox(height: 8),
             Wrap(
@@ -540,14 +545,14 @@ class _SchemaFormState extends ConsumerState<_SchemaForm> {
               child: Wrap(
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
-                  const Text('Я согласен на обработку персональных данных ',
-                      style: TextStyle(fontSize: 13, color: _kLabel)),
+                  Text(context.l10n.registerConsentText,
+                      style: const TextStyle(fontSize: 13, color: _kLabel)),
                   if (f.consentUrl != null)
                     GestureDetector(
                       onTap: () => launchUrl(Uri.parse(f.consentUrl!),
                           mode: LaunchMode.externalApplication),
-                      child: const Text('подробнее',
-                          style: TextStyle(
+                      child: Text(context.l10n.registerConsentMore,
+                          style: const TextStyle(
                               fontSize: 13,
                               color: _kAccent,
                               decoration: TextDecoration.underline,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/auth/auth_controller.dart';
+import '../../../core/l10n/l10n.dart';
 import '../../../core/models/common.dart';
 import '../../../core/theme/app_colors.dart';
 import '../widgets/pharm_academy_logo.dart';
@@ -12,11 +13,11 @@ IconData _roleIcon(Role r) => switch (r) {
       Role.productOwner => Icons.storefront_outlined,
     };
 
-String _roleSub(Role r) => switch (r) {
-      Role.pharmacist => 'Чеки, квесты, обучение и кошелёк',
-      Role.doctor => 'Чеки, квесты, обучение и кошелёк',
-      Role.medrep => 'Портфель провизоров и рейтинг',
-      Role.productOwner => 'Дашборд, продукты и бренды',
+String _roleSub(AppLocalizations l10n, Role r) => switch (r) {
+      Role.pharmacist => l10n.roleSelectSubChecksQuests,
+      Role.doctor => l10n.roleSelectSubChecksQuests,
+      Role.medrep => l10n.roleSelectSubMedrep,
+      Role.productOwner => l10n.roleSelectSubProductOwner,
     };
 
 /// Полноэкранный выбор роли при входе (маршрут `/role`). Перенесён один в
@@ -68,8 +69,8 @@ class RoleSelectScreen extends ConsumerWidget {
                   children: [
                     const PharmAcademyLogo(height: 34),
                     const SizedBox(height: 40),
-                    const Text('Обучайся.\nПрименяй.\nДостигай.',
-                        style: TextStyle(
+                    Text(context.l10n.roleSelectTagline,
+                        style: const TextStyle(
                             fontSize: 38,
                             height: 1.05,
                             fontWeight: FontWeight.w700,
@@ -80,7 +81,9 @@ class RoleSelectScreen extends ConsumerWidget {
                       children: [
                         Flexible(
                           child: Text(
-                            name.isEmpty ? 'Здравствуйте' : 'Здравствуйте, $name',
+                            name.isEmpty
+                                ? context.l10n.roleSelectGreeting
+                                : context.l10n.roleSelectGreetingName(name),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
@@ -107,8 +110,9 @@ class RoleSelectScreen extends ConsumerWidget {
                       ],
                     ),
                     const SizedBox(height: 8),
-                    const Text('Выберите роль для входа',
-                        style: TextStyle(fontSize: 14, color: Color(0xFF6B7A99))),
+                    Text(context.l10n.roleSelectChooseRole,
+                        style: const TextStyle(
+                            fontSize: 14, color: Color(0xFF6B7A99))),
                     const SizedBox(height: 24),
                     for (final role in roles) ...[
                       _RoleCard(
@@ -166,13 +170,13 @@ class _RoleCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(role.label,
+                    Text(role.label(context.l10n),
                         style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w700,
                             color: Color(0xFFFEFEFE))),
                     const SizedBox(height: 4),
-                    Text(_roleSub(role),
+                    Text(_roleSub(context.l10n, role),
                         style: const TextStyle(
                             fontSize: 13, color: Color(0xFF6B7A99))),
                   ],
@@ -248,7 +252,7 @@ class _RoleSheetState extends ConsumerState<_RoleSheet> {
                 ),
               ),
               Text(
-                'Выберите роль',
+                context.l10n.roleSelectSheetTitle,
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
@@ -260,7 +264,7 @@ class _RoleSheetState extends ConsumerState<_RoleSheet> {
                 _RoleRow(
                   palette: p,
                   divider: divider,
-                  label: role.label,
+                  label: role.label(context.l10n),
                   selected: role == selected,
                   onTap: () => setState(() => _selected = role),
                 ),
@@ -284,9 +288,10 @@ class _RoleSheetState extends ConsumerState<_RoleSheet> {
                               .setActiveRole(selected);
                           if (widget.isModal) Navigator.of(context).pop();
                         },
-                  child: const Text(
-                    'Войти',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  child: Text(
+                    context.l10n.roleSelectEnter,
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.w600),
                   ),
                 ),
               ),

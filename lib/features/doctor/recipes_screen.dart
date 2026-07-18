@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../core/uploads/upload_queue.dart';
 import '../../core/format.dart';
+import '../../core/l10n/l10n.dart';
 import '../../core/models/check.dart';
 import '../../core/theme/app_colors.dart';
 import '../shared/widgets/pharm_top_bar.dart';
@@ -52,7 +53,7 @@ class _RecipesScreenState extends ConsumerState<RecipesScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Мои рецепты',
+                      context.l10n.recipesTitle,
                       style: TextStyle(
                         fontSize: 32,
                         fontWeight: FontWeight.w700,
@@ -61,7 +62,7 @@ class _RecipesScreenState extends ConsumerState<RecipesScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '${count ?? 0} всего',
+                      context.l10n.recipesTotal(count ?? 0),
                       style: TextStyle(fontSize: 14, color: p.textMuted),
                     ),
                     const SizedBox(height: 16),
@@ -71,10 +72,10 @@ class _RecipesScreenState extends ConsumerState<RecipesScreen> {
                     const SizedBox(height: 16),
                     Row(
                       children: [
-                        for (final (t, label) in const [
-                          (_Tab.all, 'Все'),
-                          (_Tab.active, 'Активные'),
-                          (_Tab.done, 'Завершенные'),
+                        for (final (t, label) in [
+                          (_Tab.all, context.l10n.recipesTabAll),
+                          (_Tab.active, context.l10n.recipesTabActive),
+                          (_Tab.done, context.l10n.recipesTabDone),
                         ]) ...[
                           _TabChip(
                             palette: p,
@@ -109,7 +110,7 @@ class _RecipesScreenState extends ConsumerState<RecipesScreen> {
                         data: (_) {
                           if (list.isEmpty) {
                             return _EmptyCard(
-                                palette: p, text: 'Рецептов пока нет');
+                                palette: p, text: context.l10n.recipesEmpty);
                           }
                           return Column(
                             children: [
@@ -151,12 +152,12 @@ Future<void> showNewRecipeSheet(BuildContext context, WidgetRef ref) async {
         children: [
           ListTile(
             leading: const Icon(Icons.camera_alt_outlined),
-            title: const Text('Сделать фото'),
+            title: Text(context.l10n.recipesTakePhoto),
             onTap: () => Navigator.pop(context, ImageSource.camera),
           ),
           ListTile(
             leading: const Icon(Icons.photo_library_outlined),
-            title: const Text('Выбрать из галереи'),
+            title: Text(context.l10n.recipesFromGallery),
             onTap: () => Navigator.pop(context, ImageSource.gallery),
           ),
         ],
@@ -184,7 +185,7 @@ Future<void> showNewRecipeSheet(BuildContext context, WidgetRef ref) async {
       .enqueueRecipe(picked.map((x) => x.path).toList(), doctor);
   if (!context.mounted) return;
   ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Рецепт добавлен — загружается')));
+      SnackBar(content: Text(context.l10n.recipesUploading)));
 }
 
 Future<DoctorRecipeInfo?> _askDoctorInfo(BuildContext context) {
@@ -195,24 +196,27 @@ Future<DoctorRecipeInfo?> _askDoctorInfo(BuildContext context) {
   return showDialog<DoctorRecipeInfo>(
     context: context,
     builder: (_) => AlertDialog(
-      title: const Text('Данные врача (по желанию)'),
+      title: Text(context.l10n.recipesDoctorInfoTitle),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
                 controller: name,
-                decoration: const InputDecoration(labelText: 'ФИО')),
+                decoration: InputDecoration(
+                    labelText: context.l10n.recipesDoctorName)),
             TextField(
                 controller: workplace,
-                decoration:
-                    const InputDecoration(labelText: 'Место работы')),
+                decoration: InputDecoration(
+                    labelText: context.l10n.recipesDoctorWorkplace)),
             TextField(
                 controller: city,
-                decoration: const InputDecoration(labelText: 'Город')),
+                decoration: InputDecoration(
+                    labelText: context.l10n.recipesDoctorCity)),
             TextField(
                 controller: phone,
-                decoration: const InputDecoration(labelText: 'Телефон'),
+                decoration: InputDecoration(
+                    labelText: context.l10n.recipesDoctorPhone),
                 keyboardType: TextInputType.phone),
           ],
         ),
@@ -220,7 +224,7 @@ Future<DoctorRecipeInfo?> _askDoctorInfo(BuildContext context) {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context, const DoctorRecipeInfo()),
-          child: const Text('Пропустить'),
+          child: Text(context.l10n.recipesSkip),
         ),
         FilledButton(
           onPressed: () => Navigator.pop(
@@ -233,7 +237,7 @@ Future<DoctorRecipeInfo?> _askDoctorInfo(BuildContext context) {
               phone: phone.text.trim().isEmpty ? null : phone.text.trim(),
             ),
           ),
-          child: const Text('Отправить'),
+          child: Text(context.l10n.recipesSend),
         ),
       ],
     ),
@@ -254,17 +258,18 @@ class _SubmitButton extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
-        child: const SizedBox(
+        child: SizedBox(
           height: 48,
           width: double.infinity,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.photo_camera_outlined, size: 18, color: Colors.white),
-              SizedBox(width: 8),
+              const Icon(Icons.photo_camera_outlined,
+                  size: 18, color: Colors.white),
+              const SizedBox(width: 8),
               Text(
-                'Отправить рецепт',
-                style: TextStyle(
+                context.l10n.recipesSubmitButton,
+                style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
                   color: Colors.white,
@@ -383,7 +388,7 @@ class _RecipeCard extends StatelessWidget {
                       size: 14, color: palette.textMuted),
                   const SizedBox(width: 6),
                   Text(
-                    'фото: ${recipe.photoCount}',
+                    context.l10n.recipesPhotoCount(recipe.photoCount),
                     style: TextStyle(fontSize: 12, color: palette.textMuted),
                   ),
                 ],
@@ -428,11 +433,12 @@ class _StatusChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (String label, Color bg) = switch (status) {
-      CheckStatus.approved => ('Одобрен', const Color(0xFF16A34A)),
+      CheckStatus.approved =>
+        (context.l10n.recipesStatusApproved, const Color(0xFF16A34A)),
       CheckStatus.rejected ||
       CheckStatus.aiWrong =>
-        ('Отклонён', const Color(0xFFEF4444)),
-      _ => ('На проверке', const Color(0xFFF59E0B)),
+        (context.l10n.recipesStatusRejected, const Color(0xFFEF4444)),
+      _ => (context.l10n.recipesStatusPending, const Color(0xFFF59E0B)),
     };
     return Container(
       height: 23,
@@ -478,12 +484,12 @@ class _PendingBanner extends ConsumerWidget {
               child: CircularProgressIndicator(strokeWidth: 2)),
           const SizedBox(width: 12),
           Expanded(
-            child: Text('Загружается: $count',
+            child: Text(context.l10n.recipesUploadingBanner(count),
                 style: TextStyle(color: p.textPrimary)),
           ),
           TextButton(
             onPressed: () => ref.read(uploadQueueProvider.notifier).retryNow(),
-            child: const Text('Повторить'),
+            child: Text(context.l10n.recipesRetry),
           ),
         ],
       ),
@@ -516,7 +522,7 @@ class _InlineError extends StatelessWidget {
               style: TextStyle(color: palette.textMuted)),
           const SizedBox(height: 12),
           FilledButton.tonal(
-              onPressed: onRetry, child: const Text('Повторить')),
+              onPressed: onRetry, child: Text(context.l10n.recipesRetry)),
         ],
       ),
     );

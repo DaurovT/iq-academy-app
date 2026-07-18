@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../core/auth/auth_controller.dart';
+import '../../core/l10n/l10n.dart';
 import '../../core/models/common.dart';
 import '../../core/models/quest.dart';
 import '../shared/widgets/pharm_top_bar.dart';
@@ -12,13 +13,13 @@ import 'providers.dart';
 final _dm = DateFormat('dd.MM');
 final _dmy = DateFormat('dd.MM.yyyy');
 
-String _period(Quest q) {
+String _period(AppLocalizations l10n, Quest q) {
   final s = q.startDate == null ? null : DateTime.tryParse(q.startDate!);
   final e = q.endDate == null ? null : DateTime.tryParse(q.endDate!);
   if (s != null && e != null) return '${_dm.format(s)} — ${_dmy.format(e)}';
-  if (e != null) return 'до ${_dmy.format(e)}';
-  if (s != null) return 'с ${_dmy.format(s)}';
-  return 'Без срока';
+  if (e != null) return l10n.questsPeriodUntil(_dmy.format(e));
+  if (s != null) return l10n.questsPeriodFrom(_dmy.format(s));
+  return l10n.questsPeriodNone;
 }
 
 enum _Tab { active, archive, all }
@@ -67,7 +68,7 @@ class _QuestsScreenState extends ConsumerState<QuestsScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Квесты',
+                Text(context.l10n.questsTitle,
                     style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w700,
@@ -86,10 +87,10 @@ class _QuestsScreenState extends ConsumerState<QuestsScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Row(
               children: [
-                for (final (t, label) in const [
-                  (_Tab.active, 'Активные'),
-                  (_Tab.archive, 'Архив'),
-                  (_Tab.all, 'Все'),
+                for (final (t, label) in [
+                  (_Tab.active, context.l10n.questsTabActive),
+                  (_Tab.archive, context.l10n.questsTabArchive),
+                  (_Tab.all, context.l10n.questsTabAll),
                 ]) ...[
                   _TabChip(
                     c: c,
@@ -115,7 +116,7 @@ class _QuestsScreenState extends ConsumerState<QuestsScreen> {
                         // Счётчик — над списком, а не между карточками.
                         Padding(
                           padding: const EdgeInsets.only(bottom: 12),
-                          child: Text(_countLabel(list.length),
+                          child: Text(_countLabel(context.l10n, list.length),
                               style: TextStyle(fontSize: 12, color: c.muted)),
                         ),
                         for (var i = 0; i < list.length; i++) ...[
@@ -135,13 +136,15 @@ class _QuestsScreenState extends ConsumerState<QuestsScreen> {
     );
   }
 
-  String _countLabel(int n) {
+  String _countLabel(AppLocalizations l10n, int n) {
     final word = switch (_tab) {
-      _Tab.active => 'активных',
-      _Tab.archive => 'архивных',
+      _Tab.active => l10n.questsCountWordActive,
+      _Tab.archive => l10n.questsCountWordArchive,
       _Tab.all => '',
     };
-    final tail = n % 10 == 1 && n % 100 != 11 ? 'квест' : 'квеста';
+    final tail = n % 10 == 1 && n % 100 != 11
+        ? l10n.questsCountQuestOne
+        : l10n.questsCountQuestFew;
     return '$n ${word.isEmpty ? '' : '$word '}$tail'.replaceAll('  ', ' ');
   }
 }
@@ -170,7 +173,7 @@ class _HistoryChip extends StatelessWidget {
           children: [
             Icon(Icons.history, size: 16, color: c.muted),
             const SizedBox(width: 6),
-            Text('История участия',
+            Text(context.l10n.questsHistoryChip,
                 style: TextStyle(fontSize: 13, color: c.muted)),
           ],
         ),
@@ -209,7 +212,7 @@ class _SearchField extends StatelessWidget {
                 enabledBorder: InputBorder.none,
                 focusedBorder: InputBorder.none,
                 contentPadding: EdgeInsets.zero,
-                hintText: 'Поиск',
+                hintText: context.l10n.questsSearchHint,
                 hintStyle: TextStyle(fontSize: 16, color: c.muted),
               ),
             ),
@@ -292,14 +295,16 @@ class _QuestCard extends ConsumerWidget {
             : null);
     final packsText = (detail == null || detail.mechanics.isEmpty)
         ? null
-        : detail.mechanics.map((m) => '${m.drug} × ${m.qty} уп.').join(', ');
+        : detail.mechanics
+            .map((m) => context.l10n.questsPacksItem(m.drug, m.qty))
+            .join(', ');
 
     // Сумма/магазин лежат в описании ("🛒 Korzinka — 100 000"), а не в prizeIqc.
     final descClean =
         quest.description.replaceFirst(RegExp(r'^\s*🛒\s*'), '').trim();
     final rewardLine = isVoucher
         ? (descClean.isNotEmpty ? descClean : 'Korzinka')
-        : '+${quest.prizeIqc} IQC · без лимита';
+        : context.l10n.questsIqcNoLimit(quest.prizeIqc);
 
     return Material(
       color: c.card,
@@ -339,7 +344,7 @@ class _QuestCard extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(999),
                     ),
                     child: Text(
-                      isVoucher ? 'Ваучер' : 'IQC',
+                      isVoucher ? context.l10n.questsPillVoucher : 'IQC',
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
@@ -386,7 +391,7 @@ class _QuestCard extends ConsumerWidget {
                       Icon(Icons.calendar_today_outlined,
                           size: 14, color: c.muted),
                       const SizedBox(width: 8),
-                      Text(_period(quest),
+                      Text(_period(context.l10n, quest),
                           style: TextStyle(fontSize: 12, color: c.muted)),
                     ],
                   ),
@@ -401,8 +406,8 @@ class _QuestCard extends ConsumerWidget {
                       const SizedBox(width: 4),
                       Text(
                         quest.status == QuestStatus.active
-                            ? 'Активен'
-                            : 'Завершён',
+                            ? context.l10n.questsActive
+                            : context.l10n.questsFinished,
                         style: TextStyle(
                             fontSize: 11,
                             color: quest.status == QuestStatus.active
@@ -434,8 +439,9 @@ class _QuestCard extends ConsumerWidget {
                 children: [
                   Text(
                     goal != null
-                        ? '${quest.completedCount} / $goal покупок'
-                        : '${quest.completedCount} покупок',
+                        ? context.l10n
+                            .questsPurchasesOfGoal(quest.completedCount, goal)
+                        : context.l10n.questsPurchases(quest.completedCount),
                     style: TextStyle(fontSize: 11, color: c.muted),
                   ),
                   Text('$pct%',
@@ -462,9 +468,18 @@ class _EmptyState extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final (title, sub) = switch (tab) {
-      _Tab.archive => ('Нет архивных квестов', 'Завершённые квесты появятся здесь'),
-      _Tab.active => ('Нет активных квестов', 'Новые квесты появятся здесь'),
-      _Tab.all => ('Квестов нет', 'Загляните позже'),
+      _Tab.archive => (
+          context.l10n.questsEmptyArchiveTitle,
+          context.l10n.questsEmptyArchiveSub
+        ),
+      _Tab.active => (
+          context.l10n.questsEmptyActiveTitle,
+          context.l10n.questsEmptyActiveSub
+        ),
+      _Tab.all => (
+          context.l10n.questsEmptyAllTitle,
+          context.l10n.questsEmptyAllSub
+        ),
     };
     return ListView(
       children: [
@@ -504,7 +519,7 @@ class _EmptyState extends StatelessWidget {
                                 horizontal: 20, vertical: 10),
                           ),
                           onPressed: onGoActive,
-                          child: const Text('Смотреть активные'),
+                          child: Text(context.l10n.questsViewActive),
                         )
                       : FilledButton(
                           style: FilledButton.styleFrom(
@@ -516,7 +531,7 @@ class _EmptyState extends StatelessWidget {
                                 horizontal: 20, vertical: 12),
                           ),
                           onPressed: onGoActive,
-                          child: const Text('Смотреть активные'),
+                          child: Text(context.l10n.questsViewActive),
                         ),
                 ],
               ],

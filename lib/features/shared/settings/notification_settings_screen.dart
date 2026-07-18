@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/api/providers.dart';
+import '../../../core/l10n/l10n.dart';
 import '../../../core/models/notification.dart';
 import '../../../widgets/async_view.dart';
 import '../providers.dart';
@@ -82,7 +83,7 @@ class _SettingsSheet extends ConsumerWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Настройки уведомлений',
+                    Text(context.l10n.notifSettingsTitle,
                         style: TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.w700,
@@ -111,7 +112,7 @@ class _SettingsSheet extends ConsumerWidget {
                     _Row(
                       text: text,
                       border: border,
-                      label: 'Статусы чеков и рецептов',
+                      label: context.l10n.notifSettingsChecks,
                       value: s.checks,
                       onChanged: (v) =>
                           _save(context, ref, s.copyWith(checks: v)),
@@ -119,7 +120,7 @@ class _SettingsSheet extends ConsumerWidget {
                     _Row(
                       text: text,
                       border: border,
-                      label: 'Квесты и награды',
+                      label: context.l10n.notifSettingsQuests,
                       value: s.quests,
                       onChanged: (v) =>
                           _save(context, ref, s.copyWith(quests: v)),
@@ -127,7 +128,7 @@ class _SettingsSheet extends ConsumerWidget {
                     _Row(
                       text: text,
                       border: border,
-                      label: 'Обучение',
+                      label: context.l10n.notifSettingsLearning,
                       value: s.learning,
                       onChanged: (v) =>
                           _save(context, ref, s.copyWith(learning: v)),
@@ -135,7 +136,7 @@ class _SettingsSheet extends ConsumerWidget {
                     _Row(
                       text: text,
                       border: border,
-                      label: 'Новости и акции',
+                      label: context.l10n.notifSettingsMarketing,
                       value: s.marketing,
                       last: true,
                       onChanged: (v) =>

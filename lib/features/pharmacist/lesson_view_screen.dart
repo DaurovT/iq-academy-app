@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import '../../core/api/providers.dart';
+import '../../core/l10n/l10n.dart';
 import '../../core/models/learn.dart';
 import '../../widgets/async_view.dart';
 import '../shared/widgets/screen_decor.dart';
@@ -86,6 +87,7 @@ class _LessonViewScreenState extends ConsumerState<LessonViewScreen> {
   Future<void> _complete(CourseDetail course) async {
     setState(() => _loading = true);
     final messenger = ScaffoldMessenger.of(context);
+    final l10n = context.l10n;
     try {
       final res = await ref
           .read(apiProvider)
@@ -94,7 +96,7 @@ class _LessonViewScreenState extends ConsumerState<LessonViewScreen> {
       ref.invalidate(courseDetailProvider(widget.courseId));
       ref.invalidate(walletProvider);
       messenger.showSnackBar(
-          SnackBar(content: Text('Урок завершён · +${res.rewardIqc} IQC')));
+          SnackBar(content: Text(l10n.lessonCompletedReward(res.rewardIqc))));
       if (mounted) _goNext(course);
     } catch (e) {
       messenger.showSnackBar(SnackBar(content: Text(e.toString())));
@@ -144,7 +146,7 @@ class _LessonViewScreenState extends ConsumerState<LessonViewScreen> {
               }
             }
             if (lesson == null) {
-              return const EmptyState(text: 'Урок не найден');
+              return EmptyState(text: context.l10n.lessonNotFound);
             }
             return _body(context, c, course, lesson);
           },
@@ -250,13 +252,13 @@ class _LessonViewScreenState extends ConsumerState<LessonViewScreen> {
                   children: [
                     _Tab(
                         c: c,
-                        label: 'ТЕКСТ УРОКА',
+                        label: context.l10n.lessonTabText,
                         selected: _tab == 0,
                         onTap: () => setState(() => _tab = 0)),
                     const SizedBox(width: 8),
                     _Tab(
                         c: c,
-                        label: 'МАТЕРИАЛЫ УРОКА',
+                        label: context.l10n.lessonTabMaterials,
                         selected: _tab == 1,
                         onTap: () => setState(() => _tab = 1)),
                   ],
@@ -269,7 +271,7 @@ class _LessonViewScreenState extends ConsumerState<LessonViewScreen> {
                     ? Text(course.description,
                         style: TextStyle(
                             fontSize: 14, height: 1.5, color: c.muted))
-                    : Text('Материалов пока нет',
+                    : Text(context.l10n.lessonNoMaterials,
                         style: TextStyle(fontSize: 14, color: c.muted)),
               ),
             ],
@@ -314,8 +316,8 @@ class _LessonViewScreenState extends ConsumerState<LessonViewScreen> {
                           const SizedBox(width: 8),
                           Text(
                             lesson.completed
-                                ? 'НАЧАТЬ ТЕСТИРОВАНИЕ'
-                                : 'ЗАВЕРШИТЬ УРОК',
+                                ? context.l10n.lessonStartQuiz
+                                : context.l10n.lessonComplete,
                             style: const TextStyle(
                                 fontSize: 15, fontWeight: FontWeight.w700),
                           ),

@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../core/uploads/upload_queue.dart';
 import '../../core/uploads/pending_upload.dart';
 import '../../core/format.dart';
+import '../../core/l10n/l10n.dart';
 import '../../core/models/check.dart';
 import '../../core/theme/app_colors.dart';
 import '../shared/widgets/pharm_top_bar.dart';
@@ -68,7 +69,8 @@ class ChecksScreen extends ConsumerWidget {
                     ),
                     data: (list) {
                       if (list.isEmpty) {
-                        return _EmptyCard(palette: p, text: 'Чеков пока нет');
+                        return _EmptyCard(
+                            palette: p, text: context.l10n.checksEmpty);
                       }
                       return Column(
                         children: [
@@ -135,12 +137,13 @@ class _NewCheckSheetState extends ConsumerState<_NewCheckSheet> {
     setState(() => _busy = true);
     final nav = Navigator.of(context);
     final messenger = ScaffoldMessenger.of(context);
+    final l10n = context.l10n;
     await ref
         .read(uploadQueueProvider.notifier)
         .enqueueCheck(_photos.map((x) => x.path).toList());
     nav.pop();
     messenger.showSnackBar(
-        const SnackBar(content: Text('Чек добавлен — загружается')));
+        SnackBar(content: Text(l10n.checksAddedUploading)));
   }
 
   @override
@@ -176,7 +179,7 @@ class _NewCheckSheetState extends ConsumerState<_NewCheckSheet> {
                 ),
               ),
               const SizedBox(height: 16),
-              Text('Новый чек',
+              Text(context.l10n.checksNewCheckTitle,
                   style: TextStyle(
                       fontSize: 22, fontWeight: FontWeight.w700, color: text)),
               const SizedBox(height: 16),
@@ -201,7 +204,7 @@ class _NewCheckSheetState extends ConsumerState<_NewCheckSheet> {
                             Icon(Icons.add_photo_alternate_outlined,
                                 size: 40, color: accent),
                             const SizedBox(height: 8),
-                            Text('Нажмите чтобы добавить фото',
+                            Text(context.l10n.checksTapToAddPhoto,
                                 style: TextStyle(fontSize: 13, color: muted)),
                           ],
                         )
@@ -237,15 +240,15 @@ class _NewCheckSheetState extends ConsumerState<_NewCheckSheet> {
                     child: InkWell(
                       onTap: _addCamera,
                       borderRadius: BorderRadius.circular(12),
-                      child: const Center(
+                      child: Center(
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.photo_camera_outlined,
+                            const Icon(Icons.photo_camera_outlined,
                                 size: 18, color: Colors.white),
-                            SizedBox(width: 8),
-                            Text('Сделать фото',
-                                style: TextStyle(
+                            const SizedBox(width: 8),
+                            Text(context.l10n.checksTakePhoto,
+                                style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
                                     color: Colors.white)),
@@ -270,8 +273,8 @@ class _NewCheckSheetState extends ConsumerState<_NewCheckSheet> {
                         borderRadius: BorderRadius.circular(14)),
                   ),
                   onPressed: _photos.isEmpty || _busy ? null : _submit,
-                  child: const Text('Отправить на проверку',
-                      style: TextStyle(
+                  child: Text(context.l10n.checksSubmitForReview,
+                      style: const TextStyle(
                           fontSize: 15, fontWeight: FontWeight.w600)),
                 ),
               ),
@@ -338,7 +341,7 @@ class _Header extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                'Мои чеки',
+                context.l10n.checksTitle,
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.w700,
@@ -352,7 +355,7 @@ class _Header extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Text(
-          '${count ?? 0} всего',
+          context.l10n.checksTotalCount(count ?? 0),
           style: TextStyle(fontSize: 14, color: palette.textMuted),
         ),
       ],
@@ -390,7 +393,7 @@ class _SendButton extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           alignment: Alignment.center,
           child: Text(
-            'Отправить фото',
+            context.l10n.checksSendPhoto,
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w600,
@@ -415,7 +418,7 @@ class _CheckCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardBg = isDark ? const Color(0xFF2D2E38) : palette.card;
-    final detail = _detail(check);
+    final detail = _detail(context.l10n, check);
 
     return Material(
       color: cardBg,
@@ -444,7 +447,8 @@ class _CheckCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      '${formatDate(check.createdAt)} · фото: ${check.photoCount}',
+                      context.l10n.checksCardMeta(
+                          formatDate(check.createdAt), check.photoCount),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(fontSize: 12, color: palette.textMuted),
@@ -470,7 +474,7 @@ class _CheckCard extends StatelessWidget {
     );
   }
 
-  String _detail(Check c) {
+  String _detail(AppLocalizations l10n, Check c) {
     if (c.status == CheckStatus.rejected &&
         (c.rejectReason?.isNotEmpty ?? false)) {
       return c.rejectReason!;
@@ -479,7 +483,7 @@ class _CheckCard extends StatelessWidget {
       return c.drugs.map((d) => '${d.name} ×${d.packs}').join(', ');
     }
     if (c.status == CheckStatus.pending || c.status == CheckStatus.aiDetected) {
-      return 'Ожидайте — обычно 24 часа';
+      return l10n.checksAwaitUsually24h;
     }
     return '';
   }
@@ -498,7 +502,7 @@ class _StatusChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (String label, Color bg, Color fg) = _style();
+    final (String label, Color bg, Color fg) = _style(context.l10n);
     return Container(
       height: 22,
       padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -516,22 +520,28 @@ class _StatusChip extends StatelessWidget {
     );
   }
 
-  (String, Color, Color) _style() {
+  (String, Color, Color) _style(AppLocalizations l10n) {
     switch (status) {
       case CheckStatus.approved:
         return isDark
-            ? ('Одобрен', const Color(0xFF173F20), const Color(0xFF79D384))
-            : ('Одобрен', const Color(0xFF10B981), Colors.white);
+            ? (l10n.checksStatusApproved, const Color(0xFF173F20),
+                const Color(0xFF79D384))
+            : (l10n.checksStatusApproved, const Color(0xFF10B981),
+                Colors.white);
       case CheckStatus.rejected:
       case CheckStatus.aiWrong:
         return isDark
-            ? ('Отклонён', const Color(0xFF5C1A28), const Color(0xFFFFD9D6))
-            : ('Отклонён', const Color(0xFFEF4444), Colors.white);
+            ? (l10n.checksStatusRejected, const Color(0xFF5C1A28),
+                const Color(0xFFFFD9D6))
+            : (l10n.checksStatusRejected, const Color(0xFFEF4444),
+                Colors.white);
       case CheckStatus.pending:
       case CheckStatus.aiDetected:
         return isDark
-            ? ('На проверке', const Color(0xFF4A3000), const Color(0xFFFFD770))
-            : ('На проверке', const Color(0xFFF59E0B), Colors.white);
+            ? (l10n.checksStatusPending, const Color(0xFF4A3000),
+                const Color(0xFFFFD770))
+            : (l10n.checksStatusPending, const Color(0xFFF59E0B),
+                Colors.white);
     }
   }
 }
@@ -564,7 +574,7 @@ class _PendingBanner extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Загрузка фото',
+          Text(context.l10n.checksUploadingTitle,
               style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
@@ -606,7 +616,8 @@ class _QueueRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final path = item.filePaths.isNotEmpty ? item.filePaths.first : null;
-    final name = path == null ? 'Фото чека' : path.split('/').last;
+    final name =
+        path == null ? context.l10n.checksPhotoFallback : path.split('/').last;
     final hasError = item.lastError != null;
     return SizedBox(
       height: 48,
@@ -762,7 +773,8 @@ class _InlineError extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(color: palette.textMuted)),
           const SizedBox(height: 12),
-          FilledButton.tonal(onPressed: onRetry, child: const Text('Повторить')),
+          FilledButton.tonal(
+              onPressed: onRetry, child: Text(context.l10n.checksRetry)),
         ],
       ),
     );

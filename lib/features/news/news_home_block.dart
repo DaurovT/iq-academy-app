@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/img.dart';
+import '../../core/l10n/l10n.dart';
 import '../../core/theme/app_colors.dart';
 import 'news_screen.dart';
 
@@ -28,7 +29,7 @@ class NewsHomeBlock extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Новости',
+                  context.l10n.newsTitle,
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w600,
@@ -42,7 +43,7 @@ class NewsHomeBlock extends ConsumerWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     child: Text(
-                      'Все новости',
+                      context.l10n.newsAll,
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
@@ -111,7 +112,7 @@ class NewsHomeBlock extends ConsumerWidget {
                                   ),
                                 ),
                                 Text(
-                                  'Подробнее →',
+                                  context.l10n.newsMore,
                                   style: TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.w600,

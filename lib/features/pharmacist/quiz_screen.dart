@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../core/api/providers.dart';
+import '../../core/l10n/l10n.dart';
 import '../../core/models/learn.dart';
 import '../../widgets/async_view.dart';
 import '../shared/widgets/screen_decor.dart';
@@ -157,7 +158,7 @@ class _QuizRunnerState extends ConsumerState<_QuizRunner> {
                   ),
                 ),
               ),
-              Text('Тестирование',
+              Text(context.l10n.quizTitle,
                   style: TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.w600,
@@ -178,7 +179,7 @@ class _QuizRunnerState extends ConsumerState<_QuizRunner> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Вопрос ${_index + 1} из $n',
+                        Text(context.l10n.quizQuestionOf(_index + 1, n),
                             style: TextStyle(fontSize: 13, color: muted)),
                         Text('${(frac * 100).round()}%',
                             style: TextStyle(fontSize: 13, color: muted)),
@@ -261,7 +262,8 @@ class _QuizRunnerState extends ConsumerState<_QuizRunner> {
                         height: 22,
                         width: 22,
                         child: CircularProgressIndicator(strokeWidth: 2))
-                    : Text(isLast ? 'ЗАВЕРШИТЬ ТЕСТ' : 'СЛЕДУЮЩИЙ ВОПРОС →',
+                    : Text(
+                        isLast ? context.l10n.quizFinish : context.l10n.quizNext,
                         style: const TextStyle(
                             fontSize: 15, fontWeight: FontWeight.w600)),
               ),
@@ -298,7 +300,7 @@ class _Options extends StatelessWidget {
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
         style: TextStyle(color: text),
         decoration: InputDecoration(
-          labelText: 'Ответ',
+          labelText: context.l10n.quizAnswerLabel,
           suffixText: question.numericHint,
           border: const OutlineInputBorder(),
         ),
@@ -438,21 +440,23 @@ class _SuccessView extends StatelessWidget {
               child: const Icon(Icons.school, size: 64, color: Colors.white),
             ),
             const SizedBox(height: 24),
-            const Text('Поздравляем!',
-                style: TextStyle(
+            Text(context.l10n.quizCongrats,
+                style: const TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.w800,
                     color: Colors.white)),
             const SizedBox(height: 8),
-            const Text('Тест успешно пройден!',
-                style: TextStyle(fontSize: 16, color: Color(0xFF9CA3AF))),
+            Text(context.l10n.quizPassed,
+                style: const TextStyle(
+                    fontSize: 16, color: Color(0xFF9CA3AF))),
             const SizedBox(height: 24),
             // reward card
             _Card(
               child: Column(
                 children: [
-                  const Text('Вы заработали',
-                      style: TextStyle(fontSize: 13, color: Color(0xFF9CA3AF))),
+                  Text(context.l10n.quizYouEarned,
+                      style: const TextStyle(
+                          fontSize: 13, color: Color(0xFF9CA3AF))),
                   const SizedBox(height: 12),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -488,13 +492,13 @@ class _SuccessView extends StatelessWidget {
                 Expanded(
                     child: _Stat(
                         value: '${result.score}/${result.total}',
-                        label: 'ПРАВИЛЬНЫХ',
+                        label: context.l10n.quizCorrectLabel,
                         color: Colors.white)),
                 const SizedBox(width: 16),
                 Expanded(
                     child: _Stat(
                         value: '$pct%',
-                        label: 'РЕЗУЛЬТАТ',
+                        label: context.l10n.quizResultLabel,
                         color: const Color(0xFFF59E0B))),
               ],
             ),
@@ -513,9 +517,9 @@ class _SuccessView extends StatelessWidget {
                   child: InkWell(
                     onTap: onHome,
                     borderRadius: BorderRadius.circular(14),
-                    child: const Center(
-                      child: Text('НА ГЛАВНЫЙ ЭКРАН',
-                          style: TextStyle(
+                    child: Center(
+                      child: Text(context.l10n.quizToHome,
+                          style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w800,
                               color: Colors.white)),
@@ -529,8 +533,8 @@ class _SuccessView extends StatelessWidget {
               onTap: () => launchUrl(
                   Uri.parse('https://pharmiq.uz/certificates'),
                   mode: LaunchMode.externalApplication),
-              child: const Text('Посмотреть сертификат →',
-                  style: TextStyle(
+              child: Text(context.l10n.quizViewCertificate,
+                  style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                       color: Color(0xFFF59E0B),
@@ -586,20 +590,22 @@ class _FailView extends StatelessWidget {
               child: const Icon(Icons.close, size: 36, color: Colors.white),
             ),
             const SizedBox(height: 24),
-            const Text('Попробуйте ещё раз',
-                style: TextStyle(
+            Text(context.l10n.quizTryAgainTitle,
+                style: const TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.w800,
                     color: Colors.white)),
             const SizedBox(height: 8),
-            const Text('Тест не пройден',
-                style: TextStyle(fontSize: 16, color: Color(0xFF9CA3AF))),
+            Text(context.l10n.quizFailed,
+                style: const TextStyle(
+                    fontSize: 16, color: Color(0xFF9CA3AF))),
             const SizedBox(height: 24),
             _Card(
               child: Column(
                 children: [
-                  const Text('Ваш результат',
-                      style: TextStyle(fontSize: 13, color: Color(0xFF9CA3AF))),
+                  Text(context.l10n.quizYourResult,
+                      style: const TextStyle(
+                          fontSize: 13, color: Color(0xFF9CA3AF))),
                   const SizedBox(height: 12),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -612,8 +618,8 @@ class _FailView extends StatelessWidget {
                               fontWeight: FontWeight.w800,
                               color: Color(0xFFEF4444))),
                       const SizedBox(width: 10),
-                      const Text('правильных',
-                          style: TextStyle(
+                      Text(context.l10n.quizCorrectLower,
+                          style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
                               color: Color(0xFFEF4444))),
@@ -622,7 +628,7 @@ class _FailView extends StatelessWidget {
                   const SizedBox(height: 12),
                   const Divider(color: Color(0x1AFFFFFF), height: 1),
                   const SizedBox(height: 12),
-                  Text('Минимум для прохождения: $passScore/$total ($passPct%)',
+                  Text(context.l10n.quizPassMinimum(passScore, total, passPct),
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                           fontSize: 13, color: Color(0xFF9CA3AF))),
@@ -635,13 +641,13 @@ class _FailView extends StatelessWidget {
                 Expanded(
                     child: _Stat(
                         value: '${result.score}/$total',
-                        label: 'ПРАВИЛЬНЫХ',
+                        label: context.l10n.quizCorrectLabel,
                         color: const Color(0xFFEF4444))),
                 const SizedBox(width: 16),
                 Expanded(
                     child: _Stat(
                         value: '$pct%',
-                        label: 'РЕЗУЛЬТАТ',
+                        label: context.l10n.quizResultLabel,
                         color: const Color(0xFFEF4444))),
               ],
             ),
@@ -657,16 +663,16 @@ class _FailView extends StatelessWidget {
                       borderRadius: BorderRadius.circular(14)),
                 ),
                 onPressed: onRetry,
-                child: const Text('↺ ПРОЙТИ ЗАНОВО',
-                    style: TextStyle(
+                child: Text(context.l10n.quizRetry,
+                    style: const TextStyle(
                         fontSize: 16, fontWeight: FontWeight.w800)),
               ),
             ),
             const SizedBox(height: 16),
             InkWell(
               onTap: onBack,
-              child: const Text('Вернуться к уроку →',
-                  style: TextStyle(
+              child: Text(context.l10n.quizBackToLesson,
+                  style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                       color: Color(0xFF9CA3AF),

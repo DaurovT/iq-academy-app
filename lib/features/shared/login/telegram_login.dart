@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../core/api/providers.dart';
 import '../../../core/auth/auth_controller.dart';
+import '../../../core/l10n/l10n.dart';
 import '../../../core/models/account.dart';
 
 /// Кнопка входа через Telegram-бота: открывает deep-link и опрашивает статус
@@ -30,6 +31,7 @@ class _TelegramLoginButtonState extends ConsumerState<TelegramLoginButton> {
   Future<void> _start() async {
     setState(() => _busy = true);
     final messenger = ScaffoldMessenger.of(context);
+    final l10n = context.l10n;
     try {
       final api = ref.read(apiProvider).auth;
       final start = await api.telegramStart();
@@ -46,7 +48,7 @@ class _TelegramLoginButtonState extends ConsumerState<TelegramLoginButton> {
           t.cancel();
           if (mounted) setState(() => _busy = false);
           messenger.showSnackBar(
-              const SnackBar(content: Text('Время входа истекло')));
+              SnackBar(content: Text(l10n.tgLoginExpired)));
           return;
         }
         try {
@@ -61,7 +63,7 @@ class _TelegramLoginButtonState extends ConsumerState<TelegramLoginButton> {
               t.cancel();
               if (mounted) setState(() => _busy = false);
               messenger.showSnackBar(
-                  const SnackBar(content: Text('Время входа истекло')));
+                  SnackBar(content: Text(l10n.tgLoginExpired)));
             case TgPollPending():
               break; // ждём дальше
           }
@@ -75,7 +77,7 @@ class _TelegramLoginButtonState extends ConsumerState<TelegramLoginButton> {
           if (kDebugMode) debugPrint('[tg/poll] parse error: $e\n$st');
           if (mounted) setState(() => _busy = false);
           messenger.showSnackBar(
-              SnackBar(content: Text('Не удалось обработать ответ входа: $e')));
+              SnackBar(content: Text(l10n.tgLoginParseError(e))));
         }
       });
     } catch (e) {
@@ -105,7 +107,7 @@ class _TelegramLoginButtonState extends ConsumerState<TelegramLoginButton> {
                     strokeWidth: 2, color: Colors.white))
             : const Icon(Icons.telegram, size: 22),
         label: Text(
-          _busy ? 'Ожидание подтверждения…' : 'Войти через Telegram',
+          _busy ? context.l10n.tgWaitingConfirm : context.l10n.tgLoginButton,
           style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
       ),

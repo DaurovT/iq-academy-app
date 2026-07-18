@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../core/img.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/l10n/l10n.dart';
 import '../../core/models/learn.dart';
 import '../../widgets/async_view.dart';
 import '../shared/widgets/screen_decor.dart';
@@ -159,13 +160,13 @@ class _CourseDetailState extends ConsumerState<CourseDetailScreen> {
                   children: [
                     _Tab(
                         c: c,
-                        label: 'ОПИСАНИЕ',
+                        label: context.l10n.courseDetailTabDescription,
                         selected: _tab == 0,
                         onTap: () => setState(() => _tab = 0)),
                     const SizedBox(width: 8),
                     _Tab(
                         c: c,
-                        label: 'СОДЕРЖАНИЕ',
+                        label: context.l10n.courseDetailTabContent,
                         selected: _tab == 1,
                         onTap: () => setState(() => _tab = 1)),
                   ],
@@ -177,11 +178,15 @@ class _CourseDetailState extends ConsumerState<CourseDetailScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _infoRow(c, Icons.play_circle_outline,
-                          '${course.lessonCount} ${_word(course.lessonCount)}'),
+                      _infoRow(
+                          c,
+                          Icons.play_circle_outline,
+                          '${course.lessonCount} '
+                          '${_word(context.l10n, course.lessonCount)}'),
                       if (totalMin > 0) ...[
                         const SizedBox(height: 8),
-                        _infoRow(c, Icons.schedule, '~$totalMin минут'),
+                        _infoRow(c, Icons.schedule,
+                            context.l10n.courseDetailMinutes(totalMin)),
                       ],
                     ],
                   ),
@@ -234,7 +239,9 @@ class _CourseDetailState extends ConsumerState<CourseDetailScreen> {
                 ),
                 onPressed: next == null ? null : () => _openLesson(context, next!),
                 child: Text(
-                  course.progress > 0 ? 'ПРОДОЛЖИТЬ ОБУЧЕНИЕ' : 'НАЧАТЬ ОБУЧЕНИЕ',
+                  course.progress > 0
+                      ? context.l10n.courseDetailContinueLearning
+                      : context.l10n.courseDetailStartLearning,
                   style: const TextStyle(
                       fontSize: 15, fontWeight: FontWeight.w700),
                 ),
@@ -264,12 +271,12 @@ class _CourseDetailState extends ConsumerState<CourseDetailScreen> {
     );
   }
 
-  static String _word(int n) {
-    if (n % 10 == 1 && n % 100 != 11) return 'видеоурок';
+  static String _word(AppLocalizations l10n, int n) {
+    if (n % 10 == 1 && n % 100 != 11) return l10n.courseDetailVideoLessonOne;
     if ([2, 3, 4].contains(n % 10) && !(n % 100 >= 12 && n % 100 <= 14)) {
-      return 'видеоурока';
+      return l10n.courseDetailVideoLessonFew;
     }
-    return 'видеоуроков';
+    return l10n.courseDetailVideoLessonMany;
   }
 }
 
@@ -327,8 +334,10 @@ class _LessonRow extends StatelessWidget {
     const violet = Color(0xFF7C5CFF);
     // подпись: для квиза — привязка «после урока N»; иначе длительность; награда только если >0
     final sub = isQuiz
-        ? (videosBefore > 0 ? 'Тест после урока $videosBefore' : 'Тест по курсу')
-        : '${lesson.durationMin} мин';
+        ? (videosBefore > 0
+            ? context.l10n.courseDetailQuizAfterLesson(videosBefore)
+            : context.l10n.courseDetailQuizForCourse)
+        : context.l10n.courseDetailLessonMin(lesson.durationMin);
     final reward = (!lesson.completed && lesson.rewardIqc > 0) ? ' · +${lesson.rewardIqc} IQC' : '';
     return Material(
       color: isQuiz ? violet.withValues(alpha: 0.06) : c.card,
@@ -385,8 +394,8 @@ class _LessonRow extends StatelessWidget {
                             decoration: BoxDecoration(
                                 color: violet,
                                 borderRadius: BorderRadius.circular(999)),
-                            child: const Text('ТЕСТ',
-                                style: TextStyle(
+                            child: Text(context.l10n.courseDetailQuizBadge,
+                                style: const TextStyle(
                                     fontSize: 10,
                                     fontWeight: FontWeight.w700,
                                     color: Colors.white)),

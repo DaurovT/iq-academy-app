@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/format.dart';
 import '../../core/img.dart';
+import '../../core/l10n/l10n.dart';
 import '../../core/models/check.dart';
 import '../../widgets/async_view.dart';
 import '../shared/widgets/photo_lightbox.dart';
@@ -47,7 +48,7 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (chipLabel, chipBg) = _chip(detail.status);
+    final (chipLabel, chipBg) = _chip(context, detail.status);
     final aiText = detail.aiText?.trim() ?? '';
 
     return ListView(
@@ -64,7 +65,7 @@ class _Body extends StatelessWidget {
               children: [
                 Icon(Icons.chevron_left, size: 20, color: c.accent),
                 const SizedBox(width: 4),
-                Text('Мои рецепты',
+                Text(context.l10n.recipeDetailMyRecipes,
                     style: TextStyle(fontSize: 14, color: c.accent)),
               ],
             ),
@@ -77,7 +78,7 @@ class _Body extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Flexible(
-              child: Text('Рецепт №$id',
+              child: Text(context.l10n.recipeDetailTitle(id),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -107,7 +108,7 @@ class _Body extends StatelessWidget {
         const SizedBox(height: 24),
 
         // photos
-        Text('Фото ${detail.photoCount}',
+        Text(context.l10n.recipeDetailPhotoCount(detail.photoCount),
             style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
@@ -128,12 +129,13 @@ class _Body extends StatelessWidget {
     );
   }
 
-  (String, Color) _chip(CheckStatus s) => switch (s) {
-        CheckStatus.approved => ('Одобрен', const Color(0xFF16A34A)),
+  (String, Color) _chip(BuildContext context, CheckStatus s) => switch (s) {
+        CheckStatus.approved =>
+          (context.l10n.recipeDetailStatusApproved, const Color(0xFF16A34A)),
         CheckStatus.rejected ||
         CheckStatus.aiWrong =>
-          ('Отклонён', const Color(0xFFEF4444)),
-        _ => ('На проверке', const Color(0xFFF59E0B)),
+          (context.l10n.recipeDetailStatusRejected, const Color(0xFFEF4444)),
+        _ => (context.l10n.recipeDetailStatusPending, const Color(0xFFF59E0B)),
       };
 }
 
@@ -207,7 +209,7 @@ class _AiCard extends StatelessWidget {
             children: [
               const Icon(Icons.auto_awesome, size: 20, color: Color(0xFF6B9EF5)),
               const SizedBox(width: 8),
-              Text('Распознано ИИ',
+              Text(context.l10n.recipeDetailAiRecognized,
                   style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -217,7 +219,7 @@ class _AiCard extends StatelessWidget {
           if (drugs.isEmpty)
             Padding(
               padding: const EdgeInsets.only(top: 16),
-              child: Text('Препараты не распознаны',
+              child: Text(context.l10n.recipeDetailNoDrugs,
                   style: TextStyle(fontSize: 14, color: c.muted)),
             )
           else

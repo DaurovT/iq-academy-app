@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/api/providers.dart';
 import '../../../core/auth/auth_controller.dart';
+import '../../../core/l10n/l10n.dart';
 import '../../../core/models/common.dart';
 import '../../../core/models/quest.dart';
 import '../../../core/theme/theme_controller.dart';
@@ -31,7 +32,7 @@ class ProfileScreen extends ConsumerWidget {
     final questsCount =
         ref.watch(questsListProvider(questTarget)).asData?.value.length ?? 0;
     final multiRole = (account?.roles.length ?? 0) > 1;
-    final roleLabel = auth?.activeRole?.label ?? '';
+    final roleLabel = auth?.activeRole?.label(context.l10n) ?? '';
     final name = account?.fullName ?? '—';
 
     return Scaffold(
@@ -43,7 +44,7 @@ class ProfileScreen extends ConsumerWidget {
             child: ListView(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
               children: [
-                Text('Профиль',
+                Text(context.l10n.profileTitle,
                     style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w700,
@@ -62,7 +63,7 @@ class ProfileScreen extends ConsumerWidget {
                 const SizedBox(height: 15),
 
                 // ── Настройки ──
-                Text('Настройки',
+                Text(context.l10n.profileSettings,
                     style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
@@ -73,7 +74,7 @@ class ProfileScreen extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _MiniLabel(c: c, text: 'ЯЗЫК'),
+                      _MiniLabel(c: c, text: context.l10n.profileLanguage),
                       const SizedBox(height: 8),
                       Row(
                         children: [
@@ -91,14 +92,14 @@ class ProfileScreen extends ConsumerWidget {
                       const SizedBox(height: 12),
                       _Divider(c: c),
                       const SizedBox(height: 12),
-                      _MiniLabel(c: c, text: 'ОФОРМЛЕНИЕ'),
+                      _MiniLabel(c: c, text: context.l10n.profileAppearance),
                       const SizedBox(height: 8),
                       Row(
                         children: [
-                          for (final (m, label) in const [
-                            (ThemeMode.light, 'Светлая'),
-                            (ThemeMode.dark, 'Тёмная'),
-                            (ThemeMode.system, 'Система'),
+                          for (final (m, label) in [
+                            (ThemeMode.light, context.l10n.profileThemeLight),
+                            (ThemeMode.dark, context.l10n.profileThemeDark),
+                            (ThemeMode.system, context.l10n.profileThemeSystem),
                           ]) ...[
                             _Pill(
                               c: c,
@@ -119,7 +120,7 @@ class ProfileScreen extends ConsumerWidget {
                 // ── Аккаунт ──
                 Padding(
                   padding: const EdgeInsets.only(top: 12, bottom: 8),
-                  child: Text('Аккаунт',
+                  child: Text(context.l10n.profileAccount,
                       style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
@@ -130,7 +131,7 @@ class ProfileScreen extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _MiniLabel(c: c, text: 'ЛИЧНЫЕ ДАННЫЕ'),
+                      _MiniLabel(c: c, text: context.l10n.profilePersonalData),
                       const SizedBox(height: 12),
                       _AccountRow(
                         c: c,
@@ -146,12 +147,12 @@ class ProfileScreen extends ConsumerWidget {
                         circle: c.circleRole,
                         icon: Icons.work_outline,
                         iconColor: c.iconOnNavy,
-                        title: 'Роль',
+                        title: context.l10n.profileRole,
                         subtitle: roleLabel,
                         trailing: multiRole
                             ? _ChangeBtn(
                                 c: c,
-                                text: 'Сменить',
+                                text: context.l10n.profileChange,
                                 border: c.changeAccent,
                                 textColor: c.changeAccentText,
                                 onTap: () => showRoleSelectSheet(context),
@@ -161,18 +162,19 @@ class ProfileScreen extends ConsumerWidget {
                       const SizedBox(height: 12),
                       _Divider(c: c),
                       const SizedBox(height: 12),
-                      _MiniLabel(c: c, text: 'ПРИВЯЗАННЫЕ СЕРВИСЫ'),
+                      _MiniLabel(
+                          c: c, text: context.l10n.profileLinkedServices),
                       const SizedBox(height: 12),
                       _AccountRow(
                         c: c,
                         circle: c.circlePhone,
                         icon: Icons.phone_outlined,
                         iconColor: c.iconOnNavy,
-                        title: 'Телефон',
+                        title: context.l10n.profilePhone,
                         subtitle: account?.phone ?? '—',
                         trailing: _ChangeBtn(
                           c: c,
-                          text: 'Сменить',
+                          text: context.l10n.profileChange,
                           border: c.changeNeutral,
                           textColor: c.text,
                           onTap: () => _changePhone(context, ref),
@@ -187,10 +189,10 @@ class ProfileScreen extends ConsumerWidget {
                         icon: Icons.send,
                         iconColor: Colors.white,
                         title: 'Telegram',
-                        subtitle: 'Подключён',
+                        subtitle: context.l10n.profileTgConnected,
                         trailing: _StatusPill(
                           bg: c.tgPillBg,
-                          text: 'Привязан',
+                          text: context.l10n.profileTgLinked,
                         ),
                       ),
                     ],
@@ -204,8 +206,8 @@ class ProfileScreen extends ConsumerWidget {
                   circle: const Color(0xFF1A3566),
                   icon: Icons.headset_mic_outlined,
                   iconColor: Colors.white,
-                  title: 'Поддержка',
-                  subtitle: 'Мы всегда на связи',
+                  title: context.l10n.profileSupport,
+                  subtitle: context.l10n.profileSupportSubtitle,
                   chevron: true,
                   onTap: () => context.push('/app/support'),
                 ),
@@ -215,7 +217,7 @@ class ProfileScreen extends ConsumerWidget {
                   circle: c.circlePlain,
                   icon: Icons.logout,
                   iconColor: c.iconOnNavy,
-                  title: 'Выйти из аккаунта',
+                  title: context.l10n.profileLogout,
                   onTap: () => _confirmLogout(context, ref),
                 ),
                 const SizedBox(height: 15),
@@ -229,13 +231,13 @@ class ProfileScreen extends ConsumerWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Удалить аккаунт и данные',
+                            Text(context.l10n.profileDeleteTitle,
                                 style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
                                     color: c.deleteText)),
                             const SizedBox(height: 2),
-                            Text('Действие необратимо',
+                            Text(context.l10n.profileDeleteIrreversible,
                                 style: TextStyle(
                                     fontSize: 11, color: c.deleteSub)),
                           ],
@@ -247,11 +249,11 @@ class ProfileScreen extends ConsumerWidget {
                         child: InkWell(
                           borderRadius: BorderRadius.circular(20),
                           onTap: () => _deleteAccount(context, ref),
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
                                 horizontal: 16, vertical: 8),
-                            child: Text('Удалить',
-                                style: TextStyle(
+                            child: Text(context.l10n.profileDelete,
+                                style: const TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.w700,
                                     color: Colors.white)),
@@ -278,10 +280,12 @@ class ProfileScreen extends ConsumerWidget {
   Future<void> _setLanguage(
       BuildContext context, WidgetRef ref, Language lang) async {
     final messenger = ScaffoldMessenger.of(context);
+    final l10n = context.l10n;
     try {
       await ref.read(apiProvider).account.setLanguage(lang);
       ref.invalidate(authControllerProvider);
-      messenger.showSnackBar(const SnackBar(content: Text('Язык обновлён')));
+      messenger
+          .showSnackBar(SnackBar(content: Text(l10n.profileLanguageUpdated)));
     } catch (e) {
       messenger.showSnackBar(SnackBar(content: Text(e.toString())));
     }
@@ -292,19 +296,19 @@ class ProfileScreen extends ConsumerWidget {
     final started = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Новый номер'),
+        title: Text(ctx.l10n.profileNewPhoneTitle),
         content: TextField(
           controller: phone,
           keyboardType: TextInputType.phone,
-          decoration: const InputDecoration(labelText: 'Телефон'),
+          decoration: InputDecoration(labelText: ctx.l10n.profilePhone),
         ),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx, false),
-              child: const Text('Отмена')),
+              child: Text(ctx.l10n.profileCancel)),
           FilledButton(
               onPressed: () => Navigator.pop(ctx, true),
-              child: const Text('Далее')),
+              child: Text(ctx.l10n.profileNext)),
         ],
       ),
     );
@@ -323,19 +327,19 @@ class ProfileScreen extends ConsumerWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Код из SMS'),
+        title: Text(ctx.l10n.profileSmsCodeTitle),
         content: TextField(
           controller: code,
           keyboardType: TextInputType.number,
-          decoration: const InputDecoration(labelText: 'Код'),
+          decoration: InputDecoration(labelText: ctx.l10n.profileCodeLabel),
         ),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx, false),
-              child: const Text('Отмена')),
+              child: Text(ctx.l10n.profileCancel)),
           FilledButton(
               onPressed: () => Navigator.pop(ctx, true),
-              child: const Text('Подтвердить')),
+              child: Text(ctx.l10n.profileConfirm)),
         ],
       ),
     );
@@ -346,7 +350,10 @@ class ProfileScreen extends ConsumerWidget {
           .account
           .changePhoneConfirm(phone.text.trim(), code.text.trim());
       ref.invalidate(authControllerProvider);
-      messenger.showSnackBar(const SnackBar(content: Text('Телефон изменён')));
+      if (context.mounted) {
+        messenger.showSnackBar(
+            SnackBar(content: Text(context.l10n.profilePhoneChanged)));
+      }
     } catch (e) {
       messenger.showSnackBar(SnackBar(content: Text(e.toString())));
     }
@@ -356,14 +363,14 @@ class ProfileScreen extends ConsumerWidget {
     final ok = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Выйти из аккаунта?'),
+        title: Text(ctx.l10n.profileLogoutConfirmTitle),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx, false),
-              child: const Text('Отмена')),
+              child: Text(ctx.l10n.profileCancel)),
           FilledButton(
               onPressed: () => Navigator.pop(ctx, true),
-              child: const Text('Выйти')),
+              child: Text(ctx.l10n.profileLogoutAction)),
         ],
       ),
     );
@@ -374,17 +381,17 @@ class ProfileScreen extends ConsumerWidget {
     final ok = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Удалить аккаунт?'),
-        content: const Text('Действие необратимо. Все данные будут удалены.'),
+        title: Text(ctx.l10n.profileDeleteConfirmTitle),
+        content: Text(ctx.l10n.profileDeleteConfirmBody),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx, false),
-              child: const Text('Отмена')),
+              child: Text(ctx.l10n.profileCancel)),
           FilledButton(
             style: FilledButton.styleFrom(
                 backgroundColor: Theme.of(ctx).colorScheme.error),
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Удалить'),
+            child: Text(ctx.l10n.profileDelete),
           ),
         ],
       ),
@@ -503,9 +510,17 @@ class _ProfileCard extends StatelessWidget {
             children: [
               Expanded(child: _Stat(c: c, value: fmt.format(iqc), label: 'IQC')),
               _statDivider(c),
-              Expanded(child: _Stat(c: c, value: '$quests', label: 'КВЕСТОВ')),
+              Expanded(
+                  child: _Stat(
+                      c: c,
+                      value: '$quests',
+                      label: context.l10n.profileStatQuests)),
               _statDivider(c),
-              Expanded(child: _Stat(c: c, value: '1', label: 'УРОВЕНЬ')),
+              Expanded(
+                  child: _Stat(
+                      c: c,
+                      value: '1',
+                      label: context.l10n.profileStatLevel)),
             ],
           ),
         ],

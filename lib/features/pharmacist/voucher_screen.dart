@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
+import '../../core/l10n/l10n.dart';
 import '../../core/models/wallet.dart';
 import '../../widgets/async_view.dart';
 import '../shared/widgets/screen_decor.dart';
@@ -32,7 +33,9 @@ class VoucherScreen extends ConsumerWidget {
           onRetry: () => ref.invalidate(myVouchersProvider),
           data: (list) {
             final v = list.where((e) => e.id == id).firstOrNull;
-            if (v == null) return const EmptyState(text: 'Ваучер не найден');
+            if (v == null) {
+              return EmptyState(text: context.l10n.voucherNotFound);
+            }
             return _VoucherBody(voucher: v, isDark: isDark, page: page);
           },
         ),
@@ -77,7 +80,7 @@ class _VoucherBody extends StatelessWidget {
                       children: [
                         Icon(Icons.chevron_left, size: 24, color: titleColor),
                         const SizedBox(width: 8),
-                        Text('Мой ваучер',
+                        Text(context.l10n.voucherTitle,
                             style: TextStyle(fontSize: 16, color: titleColor)),
                       ],
                     ),
@@ -89,8 +92,8 @@ class _VoucherBody extends StatelessWidget {
                     ClipboardData(text: voucher.code),
                   ).then((_) {
                     if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Код скопирован')));
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(context.l10n.voucherCodeCopied)));
                     }
                   }),
                 ),
@@ -122,7 +125,10 @@ class _VoucherBody extends StatelessWidget {
                                   ? const Color(0xFF6B7280)
                                   : const Color(0xFF22C55E)),
                         ),
-                        child: Text(used ? 'Использован' : 'Активен',
+                        child: Text(
+                            used
+                                ? context.l10n.voucherUsed
+                                : context.l10n.voucherActive,
                             style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
@@ -130,7 +136,7 @@ class _VoucherBody extends StatelessWidget {
                                     ? const Color(0xFF9CA3AF)
                                     : const Color(0xFF22C55E))),
                       ),
-                      Text('Выпущен ${_date(voucher.issuedAt)}',
+                      Text(context.l10n.voucherIssuedAt(_date(voucher.issuedAt)),
                           style: TextStyle(fontSize: 12, color: muted)),
                     ],
                   ),
@@ -213,7 +219,7 @@ class _KorzinkaCard extends StatelessWidget {
                         fontWeight: FontWeight.w800,
                         color: Colors.white)),
                 const SizedBox(height: 2),
-                Text('UZS · ПОДАРОЧНАЯ КАРТА',
+                Text(context.l10n.voucherGiftCardLabel,
                     style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
@@ -253,7 +259,7 @@ class _KorzinkaCard extends StatelessWidget {
                 const SizedBox(height: 12),
                 SizedBox(
                   width: 260,
-                  child: Text('Покажите QR-код кассиру или назовите код',
+                  child: Text(context.l10n.voucherShowQr,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontSize: 12,
@@ -318,7 +324,7 @@ class _BottomInfo extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Магазины Korzinka.uz',
+                Text(context.l10n.voucherStores,
                     style: TextStyle(fontSize: 13, color: muted)),
                 Icon(Icons.open_in_new, size: 16, color: muted),
               ],
@@ -331,7 +337,7 @@ class _BottomInfo extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Служба поддержки',
+              Text(context.l10n.voucherSupport,
                   style: TextStyle(fontSize: 13, color: muted)),
               GestureDetector(
                 onTap: () => launchUrl(Uri.parse('tel:1155')),

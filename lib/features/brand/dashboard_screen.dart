@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/l10n/l10n.dart';
 import '../../widgets/async_view.dart';
 import '../../widgets/stat_tile.dart';
 import '../shared/widgets/home_app_bar.dart';
@@ -23,21 +24,34 @@ class BrandDashboardScreen extends ConsumerWidget {
           data: (d) => ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              Text('Дашборд', style: Theme.of(context).textTheme.headlineSmall),
+              Text(context.l10n.brandDashTitle,
+                  style: Theme.of(context).textTheme.headlineSmall),
               const SizedBox(height: 12),
               StatGrid(tiles: [
-                StatTile(value: '${d.checksTotal}', label: 'Чеков', icon: Icons.receipt_long_outlined),
-                StatTile(value: '${d.packsTotal}', label: 'Упаковок', icon: Icons.inventory_2_outlined),
-                StatTile(value: '${d.activeQuests}', label: 'Активных квестов', icon: Icons.flag_outlined),
-                StatTile(value: '${d.participants}', label: 'Участников', icon: Icons.people_alt_outlined),
+                StatTile(
+                    value: '${d.checksTotal}',
+                    label: context.l10n.brandDashChecks,
+                    icon: Icons.receipt_long_outlined),
+                StatTile(
+                    value: '${d.packsTotal}',
+                    label: context.l10n.brandDashPacks,
+                    icon: Icons.inventory_2_outlined),
+                StatTile(
+                    value: '${d.activeQuests}',
+                    label: context.l10n.brandDashActiveQuests,
+                    icon: Icons.flag_outlined),
+                StatTile(
+                    value: '${d.participants}',
+                    label: context.l10n.brandDashParticipants,
+                    icon: Icons.people_alt_outlined),
               ]),
               const SizedBox(height: 16),
               _Section(
-                title: 'Сегментация',
+                title: context.l10n.brandDashSegmentation,
                 child: Row(children: [
                   Expanded(
                     child: _SegBar(
-                      label: 'Розница',
+                      label: context.l10n.brandDashRetail,
                       count: d.segmentation.retail.count,
                       pct: d.segmentation.retail.pct,
                     ),
@@ -45,7 +59,7 @@ class BrandDashboardScreen extends ConsumerWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: _SegBar(
-                      label: 'Сети',
+                      label: context.l10n.brandDashChain,
                       count: d.segmentation.chain.count,
                       pct: d.segmentation.chain.pct,
                     ),
@@ -54,7 +68,7 @@ class BrandDashboardScreen extends ConsumerWidget {
               ),
               if (d.topProducts.isNotEmpty)
                 _Section(
-                  title: 'Топ продуктов',
+                  title: context.l10n.brandDashTopProducts,
                   child: Column(children: [
                     for (final p in d.topProducts)
                       ListTile(
@@ -67,7 +81,7 @@ class BrandDashboardScreen extends ConsumerWidget {
                 ),
               if (d.topSellers.isNotEmpty)
                 _Section(
-                  title: 'Топ продавцов',
+                  title: context.l10n.brandDashTopSellers,
                   child: Column(children: [
                     for (final t in d.topSellers)
                       ListTile(
@@ -81,7 +95,7 @@ class BrandDashboardScreen extends ConsumerWidget {
                 ),
               if (d.regions.isNotEmpty)
                 _Section(
-                  title: 'Регионы',
+                  title: context.l10n.brandDashRegions,
                   child: Column(children: [
                     for (final r in d.regions)
                       ListTile(
@@ -95,7 +109,7 @@ class BrandDashboardScreen extends ConsumerWidget {
               Card(
                 child: ListTile(
                   leading: const Icon(Icons.list_alt_outlined),
-                  title: const Text('Логи продаж'),
+                  title: Text(context.l10n.brandDashSalesLogs),
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () => context.go('/app/brand/logs'),
                 ),

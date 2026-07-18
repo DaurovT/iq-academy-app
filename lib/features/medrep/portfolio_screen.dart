@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/l10n/l10n.dart';
 import '../../core/models/medrep.dart';
 import '../../core/theme/app_colors.dart';
 import '../shared/widgets/pharm_top_bar.dart';
@@ -162,7 +163,7 @@ class _Header extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                'Фармацевты',
+                context.l10n.portfolioTitle,
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.w700,
@@ -177,7 +178,7 @@ class _Header extends StatelessWidget {
                 borderRadius: BorderRadius.circular(999),
               ),
               child: Text(
-                'Обновлено',
+                context.l10n.portfolioUpdated,
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
@@ -189,7 +190,7 @@ class _Header extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         Text(
-          '$total в портфеле',
+          context.l10n.portfolioInPortfolio(total),
           style: TextStyle(fontSize: 14, color: palette.textMuted),
         ),
       ],
@@ -219,7 +220,7 @@ class _SearchField extends StatelessWidget {
         style: TextStyle(fontSize: 15, color: palette.textPrimary),
         decoration: InputDecoration(
           isDense: true,
-          hintText: 'Поиск фармацевта…',
+          hintText: context.l10n.portfolioSearchHint,
           hintStyle: TextStyle(fontSize: 15, color: palette.textMuted),
           prefixIcon: Icon(Icons.search, size: 20, color: palette.textMuted),
           border: InputBorder.none,
@@ -257,19 +258,19 @@ class _Tabs extends StatelessWidget {
       runSpacing: 8,
       children: [
         _TabPill(
-            label: 'Все ($all)',
+            label: context.l10n.portfolioTabAll(all),
             selected: tab == 0,
             palette: palette,
             isDark: isDark,
             onTap: () => onTab(0)),
         _TabPill(
-            label: 'Активные ($active)',
+            label: context.l10n.portfolioTabActive(active),
             selected: tab == 1,
             palette: palette,
             isDark: isDark,
             onTap: () => onTab(1)),
         _TabPill(
-            label: 'Пассивные ($passive)',
+            label: context.l10n.portfolioTabPassive(passive),
             selected: tab == 2,
             palette: palette,
             isDark: isDark,
@@ -428,13 +429,15 @@ class _PharmacistCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       _MiniChip(
-                        label: 'Чеков: ${pharmacist.checks}',
+                        label: context.l10n
+                            .portfolioChecksChip(pharmacist.checks),
                         color: const Color(0xFF3B82F6),
                         isDark: isDark,
                       ),
                       const SizedBox(height: 6),
                       _MiniChip(
-                        label: 'Квестов: ${pharmacist.quests}',
+                        label: context.l10n
+                            .portfolioQuestsChip(pharmacist.quests),
                         color: const Color(0xFF10B981),
                         isDark: isDark,
                       ),
@@ -525,7 +528,7 @@ class _EmptyCard extends StatelessWidget {
         border: isDark ? null : Border.all(color: palette.cardBorder),
       ),
       child: Text(
-        'Фармацевтов не найдено',
+        context.l10n.portfolioNotFound,
         textAlign: TextAlign.center,
         style: TextStyle(color: palette.textMuted),
       ),
@@ -560,7 +563,7 @@ class _ErrorView extends StatelessWidget {
                 style: TextStyle(color: palette.textMuted)),
             const SizedBox(height: 12),
             FilledButton.tonal(
-                onPressed: onRetry, child: const Text('Повторить')),
+                onPressed: onRetry, child: Text(context.l10n.portfolioRetry)),
           ],
         ),
       ),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/api/providers.dart';
+import '../../core/l10n/l10n.dart';
 import '../../core/models/sapper.dart';
 import '../../core/theme/app_colors.dart';
 import '../../widgets/async_view.dart';
@@ -13,16 +14,16 @@ final miniAppsProvider = FutureProvider<List<MiniApp>>((ref) => ref.watch(apiPro
 final sapperDrawsProvider = FutureProvider<List<SapperDrawItem>>((ref) => ref.watch(apiProvider).sapper.draws());
 final sapperFieldProvider = FutureProvider.family<SapperField, int>((ref, id) => ref.watch(apiProvider).sapper.field(id));
 
-String _countdown(String? iso) {
+String _countdown(AppLocalizations l10n, String? iso) {
   if (iso == null) return '';
   final t = DateTime.tryParse(iso);
   if (t == null) return '';
   final ms = t.difference(DateTime.now()).inSeconds;
-  if (ms <= 0) return 'скоро';
+  if (ms <= 0) return l10n.sapperCountdownSoon;
   final d = ms ~/ 86400, h = (ms % 86400) ~/ 3600, m = (ms % 3600) ~/ 60, s = ms % 60;
-  if (d > 0) return '${d}д ${h}ч';
-  if (h > 0) return '${h}ч ${m}м';
-  return '${m}м ${s}с';
+  if (d > 0) return l10n.sapperCountdownDaysHours(d, h);
+  if (h > 0) return l10n.sapperCountdownHoursMinutes(h, m);
+  return l10n.sapperCountdownMinutesSeconds(m, s);
 }
 
 // ── Хаб мини-приложений ───────────────────────────────────────────────────────
@@ -47,7 +48,7 @@ class MiniAppsHubScreen extends ConsumerWidget {
                 padding: const EdgeInsets.fromLTRB(16, 28, 16, 100),
                 children: [
                   Text(
-                    'Мини-приложения',
+                    context.l10n.miniAppsTitle,
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.w700,
@@ -55,9 +56,9 @@ class MiniAppsHubScreen extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(height: 6),
-                  const Text(
-                    'Играй и выигрывай призы за IQC',
-                    style: TextStyle(fontSize: 15, color: Color(0xFF6B6C78)),
+                  Text(
+                    context.l10n.miniAppsSubtitle,
+                    style: const TextStyle(fontSize: 15, color: Color(0xFF6B6C78)),
                   ),
                   const SizedBox(height: 32),
                   for (final a in apps) ...[
@@ -226,9 +227,9 @@ class _SoonPill extends StatelessWidget {
         border: Border.all(
             color: isDark ? const Color(0x14FFFFFF) : const Color(0xFFE0E2E8)),
       ),
-      child: const Text(
-        'Скоро',
-        style: TextStyle(
+      child: Text(
+        context.l10n.miniAppsSoon,
+        style: const TextStyle(
             fontSize: 12, fontWeight: FontWeight.w500, color: Color(0xFF6B6C78)),
       ),
     );
@@ -260,17 +261,17 @@ class SapperDrawsScreen extends ConsumerWidget {
                   padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
                   children: [
                     _BackLink(
-                        label: 'Мини-приложения',
+                        label: context.l10n.miniAppsTitle,
                         onTap: () => _back(context, '/app/mini-apps')),
                     const SizedBox(height: 24),
-                    Text('Супер Сапёр',
+                    Text(context.l10n.sapperTitle,
                         style: TextStyle(
                             fontSize: 34,
                             fontWeight: FontWeight.w800,
                             color: p.textPrimary)),
                     const SizedBox(height: 8),
                     Text(
-                        'Занимай клетки за IQC — в час вскрытия узнаешь, что под ними',
+                        context.l10n.sapperSubtitle,
                         style: TextStyle(
                             fontSize: 16, height: 1.4, color: p.textMuted)),
                     const SizedBox(height: 24),
@@ -278,7 +279,7 @@ class SapperDrawsScreen extends ConsumerWidget {
                       Padding(
                         padding: const EdgeInsets.only(top: 40),
                         child: Center(
-                            child: Text('Нет розыгрышей',
+                            child: Text(context.l10n.sapperNoDraws,
                                 style: TextStyle(color: p.textMuted))),
                       )
                     else
@@ -477,20 +478,22 @@ class _DrawCard extends StatelessWidget {
               const SizedBox(width: 12),
               _TimePill(
                   active: active,
-                  text: active ? _countdown(d.revealAt) : 'Вскрыт'),
+                  text: active
+                      ? _countdown(context.l10n, d.revealAt)
+                      : context.l10n.sapperRevealed),
             ],
           ),
           const SizedBox(height: 16),
           Wrap(
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              Text('🎁 ${d.prizeCount} призов  💎 ${d.priceIqc} IQC/клетка  ',
+              Text(context.l10n.sapperPrizesAndPrice(d.prizeCount, d.priceIqc),
                   style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                       color: p.textPrimary)),
               if (d.myCells > 0)
-                Text('твоих клеток: ${d.myCells}',
+                Text(context.l10n.sapperMyCells(d.myCells),
                     style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
@@ -500,11 +503,13 @@ class _DrawCard extends StatelessWidget {
           const SizedBox(height: 10),
           _SapperProgress(value: fill),
           const SizedBox(height: 8),
-          Text('занято ${d.occupied} из ${d.cellCount} (${(fill * 100).round()}%)',
+          Text(
+              context.l10n.sapperOccupancy(
+                  d.occupied, d.cellCount, (fill * 100).round()),
               style: TextStyle(fontSize: 13, color: p.textMuted)),
           const SizedBox(height: 16),
           _GradientButton(
-              text: 'Перейти к игре',
+              text: context.l10n.sapperGoToGame,
               onTap: () => context.push('/app/sapper/${d.id}')),
         ],
       ),
@@ -542,11 +547,15 @@ class _SapperGameScreenState extends ConsumerState<SapperGameScreen> {
     final ok = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
-        title: Text('Занять клетку №${cell + 1}?'),
-        content: Text('Спишется ${f.priceIqc} IQC. Отменить нельзя — клетка закрепится за вами до вскрытия.'),
+        title: Text(context.l10n.sapperReserveTitle(cell + 1)),
+        content: Text(context.l10n.sapperReserveBody(f.priceIqc)),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Отмена')),
-          FilledButton(onPressed: () => Navigator.pop(context, true), child: Text('Занять за ${f.priceIqc} IQC')),
+          TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(context.l10n.commonCancel)),
+          FilledButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: Text(context.l10n.sapperReserveConfirm(f.priceIqc))),
         ],
       ),
     );
@@ -555,7 +564,8 @@ class _SapperGameScreenState extends ConsumerState<SapperGameScreen> {
     try {
       final r = await ref.read(apiProvider).sapper.reserve(widget.id, cell);
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Клетка №${r.cellIndex + 1} занята')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(context.l10n.sapperCellReserved(r.cellIndex + 1))));
       ref.invalidate(walletProvider);
       ref.invalidate(sapperFieldProvider(widget.id));
     } catch (e) {
@@ -612,7 +622,8 @@ class _SapperGameScreenState extends ConsumerState<SapperGameScreen> {
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
       children: [
         _BackLink(
-            label: 'Розыгрыши', onTap: () => _back(context, '/app/sapper')),
+            label: context.l10n.sapperDraws,
+            onTap: () => _back(context, '/app/sapper')),
         const SizedBox(height: 16),
         _HiddenPrizesCard(f: f, isDark: isDark),
         const SizedBox(height: 16),
@@ -631,7 +642,7 @@ class _SapperGameScreenState extends ConsumerState<SapperGameScreen> {
             decoration: BoxDecoration(
                 color: availBg, borderRadius: BorderRadius.circular(12)),
             child: Center(
-              child: Text('Приём клеток закрыт — идёт подготовка к вскрытию',
+              child: Text(context.l10n.sapperAcceptClosed,
                   textAlign: TextAlign.center,
                   style: TextStyle(color: p.textMuted)),
             ),
@@ -724,7 +735,7 @@ class _HiddenPrizesCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('НА ПОЛЕ СПРЯТАНО',
+              Text(context.l10n.sapperHiddenTitle,
                   style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w700,
@@ -733,14 +744,16 @@ class _HiddenPrizesCard extends StatelessWidget {
                           ? const Color(0xFF8F909A)
                           : const Color(0xFF6B7280))),
               if (active)
-                _HiddenTimePill(text: 'вскрытие через ${_countdown(f.revealAt)}')
+                _HiddenTimePill(
+                    text: context.l10n
+                        .sapperRevealIn(_countdown(context.l10n, f.revealAt)))
               else if (f.revealed)
-                const _TimePill(active: false, text: 'Вскрыт'),
+                _TimePill(active: false, text: context.l10n.sapperRevealed),
             ],
           ),
           const SizedBox(height: 14),
           if (f.legend.isEmpty)
-            Text('призы не заявлены',
+            Text(context.l10n.sapperNoPrizes,
                 style: TextStyle(
                     fontSize: 13,
                     color: isDark
@@ -756,8 +769,8 @@ class _HiddenPrizesCard extends StatelessWidget {
                   for (var i = 0; i < f.legend.length; i++) ...[
                     if (i > 0) const SizedBox(width: 8),
                     _PrizeChip(
-                        text:
-                            '🎁 ${f.legend[i].count}× ${f.legend[i].label}',
+                        text: context.l10n.sapperPrizeChip(
+                            f.legend[i].count, f.legend[i].label),
                         isDark: isDark),
                   ],
                 ],
@@ -851,12 +864,12 @@ class _BalanceRow extends StatelessWidget {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text('Баланс: ${f.balanceIqc} IQC',
+          Text(context.l10n.sapperBalance(f.balanceIqc),
               style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w700,
                   color: p.textPrimary)),
-          Text('цена клетки ${f.priceIqc} IQC',
+          Text(context.l10n.sapperCellPrice(f.priceIqc),
               style: TextStyle(fontSize: 13, color: p.textMuted)),
         ],
       );
@@ -871,8 +884,10 @@ class _BalanceRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _balanceCell('Ваш баланс', '${f.balanceIqc}', CrossAxisAlignment.start),
-          _balanceCell('цена клетки', '${f.priceIqc}', CrossAxisAlignment.end),
+          _balanceCell(context.l10n.sapperYourBalance, '${f.balanceIqc}',
+              CrossAxisAlignment.start),
+          _balanceCell(context.l10n.sapperCellPriceLabel, '${f.priceIqc}',
+              CrossAxisAlignment.end),
         ],
       ),
     );
@@ -934,18 +949,21 @@ class _WinBanner extends StatelessWidget {
       decoration:
           BoxDecoration(color: bg, borderRadius: BorderRadius.circular(12)),
       child: Text(
-        win ? '🎉 Вы выиграли $wins ${_prizeWord(wins)}!' : 'В этот раз без выигрыша',
+        win
+            ? context.l10n
+                .sapperWinBannerWin(wins, _prizeWord(context.l10n, wins))
+            : context.l10n.sapperNoWin,
         style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: fg),
       ),
     );
   }
 }
 
-String _prizeWord(int n) {
+String _prizeWord(AppLocalizations l10n, int n) {
   final m10 = n % 10, m100 = n % 100;
-  if (m10 == 1 && m100 != 11) return 'приз';
-  if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return 'приза';
-  return 'призов';
+  if (m10 == 1 && m100 != 11) return l10n.sapperPrizeOne;
+  if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return l10n.sapperPrizeFew;
+  return l10n.sapperPrizeMany;
 }
 
 // ── Клетка активного поля ────────────────────────────────────────────────
@@ -1006,19 +1024,20 @@ class _SapperLegend extends StatelessWidget {
     final availBg = isDark ? const Color(0xFF252838) : const Color(0xFFEEF0F4);
     final emptyBg = isDark ? const Color(0xFF252838) : const Color(0xFFE9EBF0);
     final theirsBg = isDark ? const Color(0xFF343850) : const Color(0xFFCFD3DD);
+    final l10n = context.l10n;
     final items = revealed
         ? <(Color, String)>[
-            (const Color(0xFF3B82F6), 'Мои'),
-            (theirsBg, 'Чужие'),
-            (emptyBg, 'Пустые'),
+            (const Color(0xFF3B82F6), l10n.sapperLegendMine),
+            (theirsBg, l10n.sapperLegendTheirs),
+            (emptyBg, l10n.sapperLegendEmpty),
             (const Color(0xFFEAB308), 'IQC'),
-            (const Color(0xFFF5C842), 'Ваучер'),
+            (const Color(0xFFF5C842), l10n.sapperLegendVoucher),
           ]
         : <(Color, String)>[
-            (const Color(0xFF9947FF), 'Выбрано'),
-            (const Color(0xFF3B82F6), 'Мои'),
-            (theirsBg, 'Занято'),
-            (availBg, 'Свободно'),
+            (const Color(0xFF9947FF), l10n.sapperLegendSelected),
+            (const Color(0xFF3B82F6), l10n.sapperLegendMine),
+            (theirsBg, l10n.sapperLegendOccupied),
+            (availBg, l10n.sapperLegendFree),
           ];
     return Wrap(
       spacing: 14,
@@ -1064,7 +1083,7 @@ class _WinnersCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Победители',
+          Text(context.l10n.sapperWinners,
               style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,

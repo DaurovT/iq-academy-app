@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/l10n/l10n.dart';
 import '../../widgets/async_view.dart';
 import 'providers.dart';
 
@@ -11,15 +12,18 @@ class BrandProductsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final products = ref.watch(brandProductsProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('Продукты')),
+      appBar: AppBar(title: Text(context.l10n.brandProductsTitle)),
       body: RefreshIndicator(
         onRefresh: () async => ref.invalidate(brandProductsProvider),
         child: AsyncView(
           value: products,
           onRetry: () => ref.invalidate(brandProductsProvider),
           data: (list) => list.isEmpty
-              ? ListView(children: const [
-                  SizedBox(height: 300, child: EmptyState(text: 'Продуктов нет')),
+              ? ListView(children: [
+                  SizedBox(
+                      height: 300,
+                      child:
+                          EmptyState(text: context.l10n.brandProductsEmpty)),
                 ])
               : ListView.separated(
                   padding: const EdgeInsets.all(16),
@@ -40,7 +44,8 @@ class BrandProductsScreen extends ConsumerWidget {
                             : const Icon(Icons.medication_outlined),
                         title: Text(p.name),
                         subtitle: Text('${p.brand} · ${p.format}'),
-                        trailing: Text('${p.questCount} квест.'),
+                        trailing: Text(
+                            context.l10n.brandProductsQuestCount(p.questCount)),
                         onTap: () => context.go('/app/brand/products/${p.id}'),
                       ),
                     );
@@ -60,7 +65,7 @@ class BrandProductDetailScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final product = ref.watch(brandProductProvider(id));
     return Scaffold(
-      appBar: AppBar(title: const Text('Продукт')),
+      appBar: AppBar(title: Text(context.l10n.brandProductsDetailTitle)),
       body: AsyncView(
         value: product,
         onRetry: () => ref.invalidate(brandProductProvider(id)),
@@ -77,16 +82,27 @@ class BrandProductDetailScreen extends ConsumerWidget {
             const SizedBox(height: 12),
             Text(p.name, style: Theme.of(context).textTheme.headlineSmall),
             const SizedBox(height: 8),
-            ListTile(dense: true, title: const Text('Бренд'), trailing: Text(p.brand)),
-            ListTile(dense: true, title: const Text('Формат'), trailing: Text(p.format)),
-            ListTile(dense: true, title: const Text('МХИК'), trailing: Text(p.mxik)),
             ListTile(
                 dense: true,
-                title: const Text('Делимый'),
-                trailing: Text(p.divisible ? 'Да' : 'Нет')),
+                title: Text(context.l10n.brandProductsBrand),
+                trailing: Text(p.brand)),
             ListTile(
                 dense: true,
-                title: const Text('Квестов'),
+                title: Text(context.l10n.brandProductsFormat),
+                trailing: Text(p.format)),
+            ListTile(
+                dense: true,
+                title: Text(context.l10n.brandProductsMxik),
+                trailing: Text(p.mxik)),
+            ListTile(
+                dense: true,
+                title: Text(context.l10n.brandProductsDivisible),
+                trailing: Text(p.divisible
+                    ? context.l10n.brandProductsYes
+                    : context.l10n.brandProductsNo)),
+            ListTile(
+                dense: true,
+                title: Text(context.l10n.brandProductsQuests),
                 trailing: Text('${p.questCount}')),
           ],
         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/l10n/l10n.dart';
 import '../../core/theme/app_colors.dart';
 
 /// CTA-карточка «Мини-приложения» на главной. Перенесена 1:1 из макета Figma
@@ -37,7 +38,7 @@ class MiniAppsHomeBlock extends StatelessWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  'Мини-приложения',
+                  context.l10n.miniAppsTitle,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/format.dart';
+import '../../core/l10n/l10n.dart';
 import '../../widgets/async_view.dart';
 import '../../widgets/stat_tile.dart';
 import 'providers.dart';
@@ -13,15 +14,17 @@ class BrandQuestsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final quests = ref.watch(brandQuestsProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('Квесты бренда')),
+      appBar: AppBar(title: Text(context.l10n.brandQuestsTitle)),
       body: RefreshIndicator(
         onRefresh: () async => ref.invalidate(brandQuestsProvider),
         child: AsyncView(
           value: quests,
           onRetry: () => ref.invalidate(brandQuestsProvider),
           data: (list) => list.isEmpty
-              ? ListView(children: const [
-                  SizedBox(height: 300, child: EmptyState(text: 'Квестов нет')),
+              ? ListView(children: [
+                  SizedBox(
+                      height: 300,
+                      child: EmptyState(text: context.l10n.brandQuestsEmpty)),
                 ])
               : ListView.separated(
                   padding: const EdgeInsets.all(16),
@@ -32,9 +35,12 @@ class BrandQuestsScreen extends ConsumerWidget {
                     return Card(
                       child: ListTile(
                         title: Text(q.name),
-                        subtitle: Text('${q.sponsor} · ${q.completions}/${q.participants} вып.'),
+                        subtitle: Text(context.l10n.brandQuestsSubtitle(
+                            q.sponsor, q.completions, q.participants)),
                         trailing: Chip(
-                          label: Text(q.status.name == 'active' ? 'Активен' : 'Выкл'),
+                          label: Text(q.status.name == 'active'
+                              ? context.l10n.brandQuestsStatusActive
+                              : context.l10n.brandQuestsStatusOff),
                           visualDensity: VisualDensity.compact,
                         ),
                         onTap: () => context.go('/app/brand/quests/${q.id}'),
@@ -56,7 +62,7 @@ class BrandQuestDetailScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final quest = ref.watch(brandQuestProvider(id));
     return Scaffold(
-      appBar: AppBar(title: const Text('Квест бренда')),
+      appBar: AppBar(title: Text(context.l10n.brandQuestsDetailTitle)),
       body: AsyncView(
         value: quest,
         onRetry: () => ref.invalidate(brandQuestProvider(id)),
@@ -64,16 +70,25 @@ class BrandQuestDetailScreen extends ConsumerWidget {
           padding: const EdgeInsets.all(16),
           children: [
             Text(q.name, style: Theme.of(context).textTheme.headlineSmall),
-            Text('Спонсор: ${q.sponsor}'),
+            Text(context.l10n.brandQuestsSponsor(q.sponsor)),
             const SizedBox(height: 16),
             StatGrid(tiles: [
-              StatTile(value: '${q.participants}', label: 'Участников'),
-              StatTile(value: '${q.completions}', label: 'Выполнений'),
-              StatTile(value: formatUzs(q.budgetFunded), label: 'Бюджет'),
-              StatTile(value: formatUzs(q.budgetSpent), label: 'Потрачено'),
+              StatTile(
+                  value: '${q.participants}',
+                  label: context.l10n.brandQuestsParticipants),
+              StatTile(
+                  value: '${q.completions}',
+                  label: context.l10n.brandQuestsCompletions),
+              StatTile(
+                  value: formatUzs(q.budgetFunded),
+                  label: context.l10n.brandQuestsBudget),
+              StatTile(
+                  value: formatUzs(q.budgetSpent),
+                  label: context.l10n.brandQuestsSpent),
             ]),
             const SizedBox(height: 16),
-            Text('Продукты', style: Theme.of(context).textTheme.titleMedium),
+            Text(context.l10n.brandQuestsProducts,
+                style: Theme.of(context).textTheme.titleMedium),
             Wrap(
               spacing: 8,
               children: [for (final p in q.products) Chip(label: Text(p))],
@@ -81,17 +96,17 @@ class BrandQuestDetailScreen extends ConsumerWidget {
             const SizedBox(height: 12),
             ListTile(
               dense: true,
-              title: const Text('МХИК'),
+              title: Text(context.l10n.brandQuestsMxik),
               trailing: Text(q.mxik),
             ),
             ListTile(
               dense: true,
-              title: const Text('Награда'),
+              title: Text(context.l10n.brandQuestsReward),
               trailing: Text('+${q.prizeIqc} IQC'),
             ),
             ListTile(
               dense: true,
-              title: const Text('Период'),
+              title: Text(context.l10n.brandQuestsPeriod),
               trailing: Text('${formatDate(q.startDate)}'
                   '${q.endDate != null ? ' – ${formatDate(q.endDate!)}' : ''}'),
             ),

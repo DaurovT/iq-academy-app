@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/l10n/l10n.dart';
 import '../../widgets/async_view.dart';
 import 'providers.dart';
 
@@ -11,15 +12,17 @@ class BrandsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final brands = ref.watch(brandsProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('Бренды')),
+      appBar: AppBar(title: Text(context.l10n.brandsTitle)),
       body: RefreshIndicator(
         onRefresh: () async => ref.invalidate(brandsProvider),
         child: AsyncView(
           value: brands,
           onRetry: () => ref.invalidate(brandsProvider),
           data: (list) => list.isEmpty
-              ? ListView(children: const [
-                  SizedBox(height: 300, child: EmptyState(text: 'Брендов нет')),
+              ? ListView(children: [
+                  SizedBox(
+                      height: 300,
+                      child: EmptyState(text: context.l10n.brandsEmpty)),
                 ])
               : ListView.separated(
                   padding: const EdgeInsets.all(16),
@@ -32,7 +35,8 @@ class BrandsScreen extends ConsumerWidget {
                         leading: const Icon(Icons.sell_outlined),
                         title: Text(b.name),
                         subtitle: Text(b.manufacturer),
-                        trailing: Text('${b.questCount} квест.'),
+                        trailing:
+                            Text(context.l10n.brandsQuestCount(b.questCount)),
                         onTap: () => context.go('/app/brand/brands/${b.id}'),
                       ),
                     );
@@ -52,7 +56,7 @@ class BrandDetailScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final brand = ref.watch(brandInfoProvider(id));
     return Scaffold(
-      appBar: AppBar(title: const Text('Бренд')),
+      appBar: AppBar(title: Text(context.l10n.brandsDetailTitle)),
       body: AsyncView(
         value: brand,
         onRetry: () => ref.invalidate(brandInfoProvider(id)),
@@ -71,7 +75,8 @@ class BrandDetailScreen extends ConsumerWidget {
             Text(b.manufacturer),
             const SizedBox(height: 16),
             if (b.subBrands.isNotEmpty) ...[
-              Text('Суббренды', style: Theme.of(context).textTheme.titleMedium),
+              Text(context.l10n.brandsSubBrands,
+                  style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(height: 8),
               Wrap(
                 spacing: 8,

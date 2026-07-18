@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import '../../l10n/gen/app_localizations.dart';
 import 'api_exception.dart';
 import 'token_store.dart';
 
@@ -8,7 +9,9 @@ const kApiBase = 'http://194.5.157.183:4000/api/1.0';
 
 /// Собирает настроенный Dio: подставляет Bearer-токен и превращает
 /// ошибки бэка в [ApiException] с текстом из поля `detail`.
-Dio createDio(TokenStore tokens) {
+/// [l10n] отдаёт строки на текущем языке интерфейса (читается лениво,
+/// чтобы смена локали действовала без пересоздания Dio).
+Dio createDio(TokenStore tokens, AppLocalizations Function() l10n) {
   final dio = Dio(BaseOptions(
     baseUrl: kApiBase,
     connectTimeout: const Duration(seconds: 20),
@@ -25,16 +28,16 @@ Dio createDio(TokenStore tokens) {
       handler.next(options);
     },
     onError: (e, handler) {
-      handler.reject(_toApiException(e));
+      handler.reject(_toApiException(e, l10n()));
     },
   ));
 
   return dio;
 }
 
-DioException _toApiException(DioException e) {
+DioException _toApiException(DioException e, AppLocalizations l10n) {
   final status = e.response?.statusCode;
-  var message = e.message ?? 'Ошибка сети';
+  var message = e.message ?? l10n.apiNetworkError;
 
   // FastAPI отдаёт {detail: "..."} или {detail: [{msg: "..."}]}.
   final data = e.response?.data;
@@ -44,7 +47,7 @@ DioException _toApiException(DioException e) {
     final first = (data['detail'] as List).first;
     if (first is Map && first['msg'] is String) message = first['msg'] as String;
   } else if (status == 401) {
-    message = 'Нет доступа';
+    message = l10n.apiNoAccess;
   }
 
   return e.copyWith(

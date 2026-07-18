@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/api/providers.dart';
 import '../../../core/auth/auth_controller.dart';
+import '../../../core/l10n/l10n.dart';
 import '../widgets/pharm_academy_logo.dart';
 import 'telegram_login.dart';
 
@@ -128,8 +129,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 children: [
                   const PharmAcademyLogo(height: 34),
                   const SizedBox(height: 40),
-                  const Text('Обучайся.\nПрименяй.\nДостигай.',
-                      style: TextStyle(
+                  Text(context.l10n.loginTagline,
+                      style: const TextStyle(
                           fontSize: 38,
                           height: 1.05,
                           fontWeight: FontWeight.w700,
@@ -138,8 +139,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Вход',
-                          style: TextStyle(
+                      Text(context.l10n.loginTitle,
+                          style: const TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.w700,
                               color: Color(0xFFFEFEFE))),
@@ -162,8 +163,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   const SizedBox(height: 8),
                   Text(
                     _step == _Step.phone
-                        ? 'Войдите по номеру телефона'
-                        : 'Код из SMS на $_phone',
+                        ? context.l10n.loginByPhone
+                        : context.l10n.loginCodeSent(_phone),
                     style: const TextStyle(fontSize: 14, color: _sub),
                   ),
                   const SizedBox(height: 24),
@@ -185,8 +186,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   List<Widget> _phoneStep() {
     return [
-      const Text('Номер телефона',
-          style: TextStyle(
+      Text(context.l10n.loginPhoneLabel,
+          style: const TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w500,
               color: Color(0xFFFEFEFE))),
@@ -226,16 +227,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       ),
       if (_phoneNotFound) ...[
         const SizedBox(height: 8),
-        const Text('Номер не найден в системе',
-            style: TextStyle(color: Color(0xFFF04452), fontSize: 13)),
+        Text(context.l10n.loginPhoneNotFound,
+            style: const TextStyle(color: Color(0xFFF04452), fontSize: 13)),
       ],
       const SizedBox(height: 16),
       _primaryButton(
-          label: 'Подтвердить', onTap: _loading ? null : _submitPhone),
+          label: context.l10n.loginConfirm,
+          onTap: _loading ? null : _submitPhone),
       if (_phoneNotFound) ...[
         const SizedBox(height: 12),
         _secondaryButton(
-          label: 'Пройти регистрацию',
+          label: context.l10n.loginGoRegister,
           onTap: () =>
               context.go('/register?phone=${Uri.encodeComponent(_phone)}'),
         ),
@@ -248,8 +250,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         Center(
           child: TextButton(
             onPressed: () => context.go('/register'),
-            child: const Text('Зарегистрироваться',
-                style: TextStyle(
+            child: Text(context.l10n.loginRegister,
+                style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
                     color: Color(0xFFFEFEFE))),
@@ -263,16 +265,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     return [
       _codeBoxes(),
       const SizedBox(height: 20),
-      _primaryButton(label: 'Войти', onTap: _loading ? null : _submitCode),
+      _primaryButton(
+          label: context.l10n.loginEnter, onTap: _loading ? null : _submitCode),
       const SizedBox(height: 16),
       Center(
         child: _resendLeft > 0
-            ? Text('Повтор через $_resendLeft с',
+            ? Text(context.l10n.loginResendIn(_resendLeft),
                 style: const TextStyle(fontSize: 13, color: _sub))
             : TextButton(
                 onPressed: _loading ? null : _resend,
-                child: const Text('Отправить снова',
-                    style: TextStyle(fontSize: 14, color: _blue)),
+                child: Text(context.l10n.loginResendAgain,
+                    style: const TextStyle(fontSize: 14, color: _blue)),
               ),
       ),
       Center(
@@ -282,8 +285,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             _error = null;
             _codeCtrl.clear();
           }),
-          child: const Text('‹ Изменить номер',
-              style: TextStyle(fontSize: 14, color: _sub)),
+          child: Text(context.l10n.loginChangeNumber,
+              style: const TextStyle(fontSize: 14, color: _sub)),
         ),
       ),
     ];
@@ -396,9 +399,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     return Row(
       children: [
         const Expanded(child: Divider(color: Color(0xFF253152))),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 12),
-          child: Text('или', style: TextStyle(fontSize: 13, color: Color(0xFF4A5568))),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Text(context.l10n.loginOr,
+              style: const TextStyle(fontSize: 13, color: Color(0xFF4A5568))),
         ),
         const Expanded(child: Divider(color: Color(0xFF253152))),
       ],

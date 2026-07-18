@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../core/api/providers.dart';
+import '../../../core/l10n/l10n.dart';
 import '../../../core/models/notification.dart';
 import '../../../widgets/async_view.dart';
 import '../providers.dart';
@@ -38,14 +39,14 @@ class NotificationsScreen extends ConsumerWidget {
                   padding: const EdgeInsets.fromLTRB(16, 11, 16, 20),
                   children: [
                     // page-header
-                    Text('Уведомления',
+                    Text(context.l10n.notifTitle,
                         style: TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.w700,
                             color: c.text)),
                     if (unread > 0) ...[
                       const SizedBox(height: 4),
-                      Text(_unreadLabel(unread),
+                      Text(_unreadLabel(context, unread),
                           style: TextStyle(fontSize: 13, color: c.sub)),
                     ],
                     const SizedBox(height: 12),
@@ -80,7 +81,7 @@ class NotificationsScreen extends ConsumerWidget {
                                 borderRadius: BorderRadius.circular(999),
                                 border: Border.all(color: c.markBorder),
                               ),
-                              child: Text('Отметить все прочитанными',
+                              child: Text(context.l10n.notifMarkAllRead,
                                   style: TextStyle(fontSize: 12, color: c.text)),
                             ),
                           ),
@@ -115,9 +116,10 @@ class NotificationsScreen extends ConsumerWidget {
     );
   }
 
-  String _unreadLabel(int n) {
-    final w = n % 10 == 1 && n % 100 != 11 ? 'непрочитанное' : 'непрочитанных';
-    return '$n $w';
+  String _unreadLabel(BuildContext context, int n) {
+    return n % 10 == 1 && n % 100 != 11
+        ? context.l10n.notifUnreadOne(n)
+        : context.l10n.notifUnreadMany(n);
   }
 
   Future<void> _markAll(WidgetRef ref) async {
@@ -196,11 +198,11 @@ class _Card extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               n.isRead
-                  ? Text('✓ Прочитано',
+                  ? Text(context.l10n.notifRead,
                       style: TextStyle(fontSize: 12, color: c.readText))
                   : InkWell(
                       onTap: onMarkRead,
-                      child: Text('Отметить прочитанным',
+                      child: Text(context.l10n.notifMarkRead,
                           style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
@@ -216,15 +218,16 @@ class _Card extends StatelessWidget {
                     decoration: BoxDecoration(
                         color: const Color(0xFF1D4ED8),
                         borderRadius: BorderRadius.circular(20)),
-                    child: const Row(
+                    child: Row(
                       children: [
-                        Text('Открыть',
-                            style: TextStyle(
+                        Text(context.l10n.notifOpen,
+                            style: const TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.white)),
-                        SizedBox(width: 6),
-                        Icon(Icons.chevron_right, size: 14, color: Colors.white),
+                        const SizedBox(width: 6),
+                        const Icon(Icons.chevron_right,
+                            size: 14, color: Colors.white),
                       ],
                     ),
                   ),
@@ -257,11 +260,11 @@ class _Empty extends StatelessWidget {
         children: [
           Icon(Icons.notifications_none, size: 40, color: c.sub),
           const SizedBox(height: 12),
-          Text('Уведомлений нет',
+          Text(context.l10n.notifEmptyTitle,
               style: TextStyle(
                   fontSize: 16, fontWeight: FontWeight.w600, color: c.text)),
           const SizedBox(height: 4),
-          Text('Здесь появятся статусы чеков, награды за квесты и новости обучения.',
+          Text(context.l10n.notifEmptyBody,
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 13, color: c.sub)),
         ],

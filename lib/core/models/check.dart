@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import '../../l10n/gen/app_localizations.dart';
 
 part 'check.freezed.dart';
 part 'check.g.dart';
@@ -14,14 +15,17 @@ enum CheckStatus {
   @JsonValue('approved')
   approved,
   @JsonValue('rejected')
-  rejected;
+  rejected,
+}
 
-  String get label => switch (this) {
-        CheckStatus.pending => 'На проверке',
-        CheckStatus.aiDetected => 'Распознан ИИ',
-        CheckStatus.aiWrong => 'ИИ не распознал',
-        CheckStatus.approved => 'Одобрен',
-        CheckStatus.rejected => 'Отклонён',
+/// Человекочитаемая метка статуса на языке интерфейса.
+extension CheckStatusL10n on CheckStatus {
+  String label(AppLocalizations l10n) => switch (this) {
+        CheckStatus.pending => l10n.checkModelStatusPending,
+        CheckStatus.aiDetected => l10n.checkModelStatusAiDetected,
+        CheckStatus.aiWrong => l10n.checkModelStatusAiWrong,
+        CheckStatus.approved => l10n.checkModelStatusApproved,
+        CheckStatus.rejected => l10n.checkModelStatusRejected,
       };
 }
 

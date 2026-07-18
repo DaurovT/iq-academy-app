@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/l10n/l10n.dart';
 import '../widgets/home_app_bar.dart';
 
 /// Заглушка раздела, который ещё не собран (роли врача/медпреда/бренда,
@@ -31,7 +32,7 @@ class PlaceholderScreen extends StatelessWidget {
               const SizedBox(height: 12),
               Text(title, style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: 8),
-              Text('Раздел появится в следующих фазах.',
+              Text(context.l10n.placeholderComingSoon,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyMedium),
             ],

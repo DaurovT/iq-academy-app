@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 import '../../core/img.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/l10n/l10n.dart';
 import '../../core/models/learn.dart';
 import '../shared/widgets/pharm_top_bar.dart';
 import '../shared/widgets/screen_decor.dart';
 import 'providers.dart';
 
-String _lessonsWord(int n) {
-  if (n % 10 == 1 && n % 100 != 11) return 'урок';
+String _lessonsWord(AppLocalizations l10n, int n) {
+  if (n % 10 == 1 && n % 100 != 11) return l10n.learnLessonOne;
   if ([2, 3, 4].contains(n % 10) && !(n % 100 >= 12 && n % 100 <= 14)) {
-    return 'урока';
+    return l10n.learnLessonFew;
   }
-  return 'уроков';
+  return l10n.learnLessonMany;
 }
 
 enum _Tab { all, mine, done }
@@ -64,7 +65,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
-                    child: Text('Обучение',
+                    child: Text(context.l10n.learnTitle,
                         style: TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.w700,
@@ -93,7 +94,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                                 isCollapsed: true,
                                 filled: false,
                                 border: InputBorder.none,
-                                hintText: 'Поиск по курсам...',
+                                hintText: context.l10n.learnSearchHint,
                                 hintStyle:
                                     TextStyle(fontSize: 13, color: c.muted),
                               ),
@@ -118,10 +119,10 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Row(
                       children: [
-                        for (final (t, label) in const [
-                          (_Tab.all, 'Все'),
-                          (_Tab.mine, 'Мои курсы'),
-                          (_Tab.done, 'Пройденные'),
+                        for (final (t, label) in [
+                          (_Tab.all, context.l10n.learnTabAll),
+                          (_Tab.mine, context.l10n.learnTabMine),
+                          (_Tab.done, context.l10n.learnTabDone),
                         ]) ...[
                           _Chip(
                             c: c,
@@ -314,8 +315,8 @@ class _CourseCard extends StatelessWidget {
                           decoration: BoxDecoration(
                               color: const Color(0xFFF59F30),
                               borderRadius: BorderRadius.circular(999)),
-                          child: const Text('НОВЫЙ',
-                              style: TextStyle(
+                          child: Text(context.l10n.learnNewBadge,
+                              style: const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w700,
                                   color: Color(0xFF0D1117))),
@@ -335,7 +336,8 @@ class _CourseCard extends StatelessWidget {
                       Icon(Icons.play_circle_outline, size: 14, color: c.muted),
                       const SizedBox(width: 6),
                       Text(
-                          '${course.lessonCount} ${_lessonsWord(course.lessonCount)}',
+                          '${course.lessonCount} '
+                          '${_lessonsWord(context.l10n, course.lessonCount)}',
                           style: TextStyle(fontSize: 12, color: c.muted)),
                     ],
                   ),
@@ -354,10 +356,10 @@ class _CourseCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12)),
                     child: Text(
                       complete
-                          ? 'ПОВТОРИТЬ КУРС'
+                          ? context.l10n.learnRepeatCourse
                           : course.progress > 0
-                              ? 'ПРОДОЛЖИТЬ ОБУЧЕНИЕ'
-                              : 'ПРОЙТИ КУРС',
+                              ? context.l10n.learnContinueLearning
+                              : context.l10n.learnStartCourse,
                       style: const TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
@@ -399,11 +401,11 @@ class _CourseProgress extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         complete
-            ? const Row(children: [
-                Icon(Icons.check_circle, size: 15, color: green),
-                SizedBox(width: 4),
-                Text('Пройден',
-                    style: TextStyle(
+            ? Row(children: [
+                const Icon(Icons.check_circle, size: 15, color: green),
+                const SizedBox(width: 4),
+                Text(context.l10n.learnCompleted,
+                    style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: green)),
@@ -436,14 +438,14 @@ class _EmptySearch extends StatelessWidget {
             child: Icon(Icons.search, size: 32, color: c.muted),
           ),
           const SizedBox(height: 16),
-          Text('Курсы не найдены',
+          Text(context.l10n.learnNotFoundTitle,
               style: TextStyle(
                   fontSize: 17, fontWeight: FontWeight.w700, color: c.text)),
           const SizedBox(height: 8),
           Text(
             query.isEmpty
-                ? 'Попробуйте изменить фильтры'
-                : 'По запросу «$query» ничего не нашлось.\nПопробуйте изменить запрос или сбросить фильтры.',
+                ? context.l10n.learnTryChangeFilters
+                : context.l10n.learnNothingForQuery(query),
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 13, color: c.muted),
           ),
@@ -458,7 +460,7 @@ class _EmptySearch extends StatelessWidget {
                   const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             ),
             onPressed: onReset,
-            child: const Text('Сбросить фильтры'),
+            child: Text(context.l10n.learnResetFilters),
           ),
         ],
       ),

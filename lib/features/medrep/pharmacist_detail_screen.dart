@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/api/providers.dart';
 import '../../core/format.dart';
+import '../../core/l10n/l10n.dart';
 import '../../core/models/check.dart';
 import '../../core/models/medrep.dart';
 import '../../core/theme/app_colors.dart';
@@ -25,11 +26,11 @@ class MedrepPharmacistDetailScreen extends ConsumerWidget {
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setState) => AlertDialog(
-          title: const Text('Поощрить фармацевта'),
+          title: Text(ctx.l10n.pharmDetailIncentivizeTitle),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Оценка: ${rating.round()}'),
+              Text(ctx.l10n.pharmDetailRating(rating.round())),
               Slider(
                 value: rating,
                 min: 1,
@@ -40,17 +41,18 @@ class MedrepPharmacistDetailScreen extends ConsumerWidget {
               ),
               TextField(
                 controller: note,
-                decoration: const InputDecoration(labelText: 'Комментарий'),
+                decoration: InputDecoration(
+                    labelText: ctx.l10n.pharmDetailComment),
               ),
             ],
           ),
           actions: [
             TextButton(
                 onPressed: () => Navigator.pop(ctx, false),
-                child: const Text('Отмена')),
+                child: Text(ctx.l10n.pharmDetailCancel)),
             FilledButton(
                 onPressed: () => Navigator.pop(ctx, true),
-                child: const Text('Отправить')),
+                child: Text(ctx.l10n.pharmDetailSend)),
           ],
         ),
       ),
@@ -58,12 +60,14 @@ class MedrepPharmacistDetailScreen extends ConsumerWidget {
     if (ok != true) return;
     if (!context.mounted) return;
     final messenger = ScaffoldMessenger.of(context);
+    final l10n = context.l10n;
     try {
       await ref
           .read(apiProvider)
           .medrep
           .incentivize(telegramId, rating.round(), note.text.trim());
-      messenger.showSnackBar(const SnackBar(content: Text('Отправлено')));
+      messenger.showSnackBar(
+          SnackBar(content: Text(l10n.pharmDetailSent)));
     } catch (e) {
       messenger.showSnackBar(SnackBar(content: Text(e.toString())));
     }
@@ -149,7 +153,7 @@ class _DetailTopBar extends StatelessWidget {
                       Icon(Icons.arrow_back, size: 20, color: palette.textPrimary),
                       const SizedBox(width: 8),
                       Text(
-                        'Фармацевты',
+                        context.l10n.pharmDetailBack,
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -273,7 +277,7 @@ class _Body extends StatelessWidget {
                 child: StatTile(
                   palette: palette,
                   value: '${detail.checks}',
-                  label: 'Чеков',
+                  label: context.l10n.pharmDetailChecks,
                   icon: Icons.receipt_long_outlined,
                   color: _tileBlue,
                 ),
@@ -283,7 +287,7 @@ class _Body extends StatelessWidget {
                 child: StatTile(
                   palette: palette,
                   value: '${detail.approvedPacks}',
-                  label: 'Упаковок',
+                  label: context.l10n.pharmDetailPacks,
                   icon: Icons.inventory_2_outlined,
                   color: _tileGreen,
                 ),
@@ -297,7 +301,7 @@ class _Body extends StatelessWidget {
                 child: StatTile(
                   palette: palette,
                   value: '${detail.quests}',
-                  label: 'Квестов',
+                  label: context.l10n.pharmDetailQuests,
                   icon: Icons.flag_outlined,
                   color: _tileTeal,
                 ),
@@ -307,7 +311,7 @@ class _Body extends StatelessWidget {
                 child: StatTile(
                   palette: palette,
                   value: '${detail.recentChecks.fold<int>(0, (s, c) => s + c.packs)}',
-                  label: 'IQC Очков',
+                  label: context.l10n.pharmDetailIqcPoints,
                   icon: Icons.adjust_outlined,
                   color: _tileAmber,
                 ),
@@ -317,7 +321,7 @@ class _Body extends StatelessWidget {
           const SizedBox(height: 24),
 
           Text(
-            'Последние чеки',
+            context.l10n.pharmDetailRecentChecks,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,
@@ -326,7 +330,7 @@ class _Body extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           if (detail.recentChecks.isEmpty)
-            Text('Чеков пока нет',
+            Text(context.l10n.pharmDetailNoChecks,
                 style: TextStyle(fontSize: 14, color: palette.textMuted))
           else
             Container(
@@ -368,7 +372,9 @@ class _StatusPill extends StatelessWidget {
         border: Border.all(color: color),
       ),
       child: Text(
-        active ? 'Активный' : 'Пассивный',
+        active
+            ? context.l10n.pharmDetailActive
+            : context.l10n.pharmDetailPassive,
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w600,
@@ -392,16 +398,16 @@ class _RewardButton extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
-        child: const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.star, size: 16, color: Colors.white),
-              SizedBox(width: 6),
+              const Icon(Icons.star, size: 16, color: Colors.white),
+              const SizedBox(width: 6),
               Text(
-                'Поощрить',
-                style: TextStyle(
+                context.l10n.pharmDetailIncentivize,
+                style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                   color: Colors.white,
@@ -492,7 +498,7 @@ class _StatusChip extends StatelessWidget {
         borderRadius: BorderRadius.circular(999),
       ),
       child: Text(
-        status.label.toUpperCase(),
+        status.label(context.l10n).toUpperCase(),
         style: TextStyle(
           fontSize: 10,
           fontWeight: FontWeight.w700,
@@ -531,7 +537,8 @@ class _ErrorView extends StatelessWidget {
                 style: TextStyle(color: palette.textMuted)),
             const SizedBox(height: 12),
             FilledButton.tonal(
-                onPressed: onRetry, child: const Text('Повторить')),
+                onPressed: onRetry,
+                child: Text(context.l10n.pharmDetailRetry)),
           ],
         ),
       ),

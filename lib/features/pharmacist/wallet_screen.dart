@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../core/api/providers.dart';
 import '../../core/format.dart';
+import '../../core/l10n/l10n.dart';
 import '../../core/models/wallet.dart';
 import '../shared/widgets/pharm_top_bar.dart';
 import '../shared/widgets/screen_decor.dart';
@@ -60,7 +61,10 @@ class WalletScreen extends ConsumerWidget {
 
                   // ── Ваучеры в очереди ──
                   if (pending.isNotEmpty) ...[
-                    _SectionHeader(c: c, title: 'Ваучеры в очереди', count: pending.length),
+                    _SectionHeader(
+                        c: c,
+                        title: context.l10n.walletPendingVouchers,
+                        count: pending.length),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Column(
@@ -75,7 +79,7 @@ class WalletScreen extends ConsumerWidget {
                   ],
 
                   // ── Использовать IQC ──
-                  _SectionHeader(c: c, title: 'Использовать IQC'),
+                  _SectionHeader(c: c, title: context.l10n.walletUseIqc),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Column(
@@ -94,11 +98,11 @@ class WalletScreen extends ConsumerWidget {
                   ),
 
                   // ── Мои ваучеры ──
-                  _SectionHeader(c: c, title: 'Мои ваучеры'),
+                  _SectionHeader(c: c, title: context.l10n.walletMyVouchers),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: mine.isEmpty
-                        ? _EmptyCard(c: c, text: 'Пока нет ваучеров')
+                        ? _EmptyCard(c: c, text: context.l10n.walletNoVouchers)
                         : Column(
                             children: [
                               for (final v in mine) ...[
@@ -127,15 +131,15 @@ class WalletScreen extends ConsumerWidget {
     final ok = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('Обменять баллы?'),
-        content: Text('${v.label} за ${v.costIqc} IQC'),
+        title: Text(context.l10n.walletRedeemTitle),
+        content: Text(context.l10n.walletRedeemBody(v.label, v.costIqc)),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('Отмена')),
+              child: Text(context.l10n.walletCancel)),
           FilledButton(
               onPressed: () => Navigator.pop(context, true),
-              child: const Text('Обменять')),
+              child: Text(context.l10n.walletRedeem)),
         ],
       ),
     );
@@ -146,8 +150,8 @@ class WalletScreen extends ConsumerWidget {
       ref.invalidate(myVouchersProvider);
       ref.invalidate(availableVouchersProvider);
       if (context.mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('Ваучер оформлен')));
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(context.l10n.walletVoucherIssued)));
       }
     } catch (e) {
       if (context.mounted) {
@@ -163,7 +167,7 @@ class _Title extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = _W.of(context);
-    return Text('Кошелёк',
+    return Text(context.l10n.walletTitle,
         style: TextStyle(
             fontSize: 24, fontWeight: FontWeight.w700, color: c.text));
   }
@@ -200,7 +204,7 @@ class _BalanceCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('БАЛАНС',
+          Text(context.l10n.walletBalanceLabel,
               style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
@@ -233,7 +237,8 @@ class _BalanceCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Flexible(
-                  child: Text('Всего начислено: ${_num.format(iqc)} IQC',
+                  child: Text(
+                      context.l10n.walletTotalAccrued(_num.format(iqc)),
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(fontSize: 12, color: c.balLabel)),
                 ),
@@ -247,7 +252,7 @@ class _BalanceCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(color: c.balChipBorder),
                     ),
-                    child: Text('История →',
+                    child: Text(context.l10n.walletHistoryArrow,
                         style: TextStyle(fontSize: 12, color: c.balLabel)),
                   ),
                 ),
@@ -331,7 +336,7 @@ class _PendingRow extends StatelessWidget {
                         fontWeight: FontWeight.w500,
                         color: c.text)),
                 const SizedBox(height: 3),
-                Text('Квест выполнен — ваучер ждёт выдачи',
+                Text(context.l10n.walletQuestDoneAwaiting,
                     style: TextStyle(fontSize: 12, color: c.muted)),
                 const SizedBox(height: 3),
                 Text(formatDate(accrual.requestedAt),
@@ -392,7 +397,7 @@ class _DenomCard extends StatelessWidget {
               style: TextStyle(
                   fontSize: 20, fontWeight: FontWeight.w700, color: c.text)),
           const SizedBox(height: 2),
-          Text('за ${denom.costIqc} IQC',
+          Text(context.l10n.walletForIqc(denom.costIqc),
               style: TextStyle(fontSize: 14, color: c.muted)),
           const SizedBox(height: 12),
           SizedBox(
@@ -407,14 +412,15 @@ class _DenomCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12)),
               ),
               onPressed: enough ? onRedeem : null,
-              child: const Text('Получить ваучер',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+              child: Text(context.l10n.walletGetVoucher,
+                  style: const TextStyle(
+                      fontSize: 15, fontWeight: FontWeight.w600)),
             ),
           ),
           if (!enough) ...[
             const SizedBox(height: 8),
             Center(
-              child: Text('Недостаточно IQC',
+              child: Text(context.l10n.walletNotEnoughIqc,
                   style: TextStyle(fontSize: 12, color: c.muted)),
             ),
           ],
@@ -466,7 +472,9 @@ class _MyVoucherRow extends StatelessWidget {
                             fontWeight: FontWeight.w500,
                             color: c.text)),
                     const SizedBox(height: 3),
-                    Text('Код: ${voucher.code} · ${formatDateTime(voucher.issuedAt)}',
+                    Text(
+                        context.l10n.walletCodeMeta(
+                            voucher.code, formatDateTime(voucher.issuedAt)),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(fontSize: 12, color: c.muted)),
@@ -481,7 +489,10 @@ class _MyVoucherRow extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: used ? c.usedFg : c.activeFg),
                 ),
-                child: Text(used ? 'Использован' : 'Активен',
+                child: Text(
+                    used
+                        ? context.l10n.walletVoucherUsed
+                        : context.l10n.walletVoucherActive,
                     style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
@@ -528,12 +539,12 @@ class _HistoryScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final txns = ref.watch(walletTxnsProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('История')),
+      appBar: AppBar(title: Text(context.l10n.walletHistoryTitle)),
       body: txns.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text(e.toString())),
         data: (list) => list.isEmpty
-            ? const Center(child: Text('Операций пока нет'))
+            ? Center(child: Text(context.l10n.walletNoTransactions))
             : ListView.separated(
                 padding: const EdgeInsets.all(16),
                 itemCount: list.length,

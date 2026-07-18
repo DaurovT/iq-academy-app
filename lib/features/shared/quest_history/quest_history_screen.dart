@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/format.dart';
+import '../../../core/l10n/l10n.dart';
 import '../../../core/models/quest.dart';
 import '../../../widgets/async_view.dart';
 import '../../pharmacist/providers.dart';
@@ -45,7 +46,7 @@ class QuestHistoryScreen extends ConsumerWidget {
                           ),
                         ),
                         const SizedBox(width: 8),
-                        Text('История участия',
+                        Text(context.l10n.questHistoryTitle,
                             style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
@@ -62,10 +63,11 @@ class QuestHistoryScreen extends ConsumerWidget {
                       value: items,
                       onRetry: () => ref.invalidate(questParticipationsProvider),
                       data: (list) => list.isEmpty
-                          ? ListView(children: const [
+                          ? ListView(children: [
                               SizedBox(
                                   height: 320,
-                                  child: EmptyState(text: 'История пуста')),
+                                  child: EmptyState(
+                                      text: context.l10n.questHistoryEmpty)),
                             ])
                           : ListView.builder(
                               padding: const EdgeInsets.fromLTRB(16, 4, 16, 20),
@@ -137,7 +139,7 @@ class _Row extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _Pill(
-                text: isVoucher ? 'Ваучер' : 'IQC',
+                text: isVoucher ? context.l10n.questHistoryVoucher : 'IQC',
                 bg: isVoucher
                     ? const Color(0xFF7C3AED)
                     : const Color(0xFFF59E0B),
@@ -145,7 +147,9 @@ class _Row extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               _Pill(
-                text: isVoucher ? 'Активен' : 'Выполнен',
+                text: isVoucher
+                    ? context.l10n.questHistoryActive
+                    : context.l10n.questHistoryDone,
                 bg: isVoucher ? c.activeBg : c.doneBg,
                 fg: isVoucher ? c.activeText : c.doneText,
               ),

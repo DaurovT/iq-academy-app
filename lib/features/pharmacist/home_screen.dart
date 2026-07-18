@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/auth/auth_controller.dart';
 import '../../core/format.dart';
+import '../../core/l10n/l10n.dart';
 import '../../core/models/check.dart';
 import '../../core/models/quest.dart';
 import '../../core/theme/app_colors.dart';
@@ -89,13 +90,14 @@ class PharmacistHome extends ConsumerWidget {
                       const SizedBox(height: 24),
                       _SectionHeader(
                         palette: p,
-                        title: 'Активные квесты',
-                        action: 'Все квесты',
+                        title: context.l10n.homePhActiveQuests,
+                        action: context.l10n.homePhAllQuests,
                         onAction: () => context.go('/app/quests'),
                       ),
                       const SizedBox(height: 16),
                       if (quests.isEmpty)
-                        _EmptyCard(palette: p, text: 'Нет активных квестов')
+                        _EmptyCard(
+                            palette: p, text: context.l10n.homePhNoActiveQuests)
                       else
                         for (final q in quests.take(3)) ...[
                           _QuestCard(quest: q),
@@ -110,13 +112,13 @@ class PharmacistHome extends ConsumerWidget {
                       const SizedBox(height: 24),
                       _SectionHeader(
                         palette: p,
-                        title: 'Последние чеки',
-                        action: 'Все чеки',
+                        title: context.l10n.homePhRecentChecks,
+                        action: context.l10n.homePhAllChecks,
                         onAction: () => context.go('/app/checks'),
                       ),
                       const SizedBox(height: 16),
                       if (checks.isEmpty)
-                        _EmptyCard(palette: p, text: 'Пока нет чеков')
+                        _EmptyCard(palette: p, text: context.l10n.homePhNoChecks)
                       else
                         for (final c in checks.take(3)) ...[
                           _ReceiptItem(palette: p, check: c),
@@ -280,7 +282,9 @@ class _Greeting extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          name.isEmpty ? 'Привет!' : 'Привет, $name!',
+          name.isEmpty
+              ? context.l10n.homePhGreeting
+              : context.l10n.homePhGreetingName(name),
           style: TextStyle(
             fontSize: 32,
             height: 1.1,
@@ -290,7 +294,7 @@ class _Greeting extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          'Готовы к новым знаниям?',
+          context.l10n.homePhGreetingSub,
           style: TextStyle(fontSize: 16, color: palette.textMuted),
         ),
       ],
@@ -331,7 +335,7 @@ class _WalletCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'БАЛАНС КОШЕЛЬКА',
+                context.l10n.homePhWalletBalanceLabel,
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
@@ -394,7 +398,7 @@ class _WalletPill extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'Кошелёк',
+              context.l10n.homePhWalletButton,
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
@@ -448,7 +452,7 @@ class _QuickAction extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Отправить чек',
+                    context.l10n.homePhSendCheck,
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -457,7 +461,7 @@ class _QuickAction extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Сфотографируйте чек — ИИ распознает препараты',
+                    context.l10n.homePhSendCheckSub,
                     style: TextStyle(fontSize: 14, color: palette.textMuted),
                   ),
                 ],
@@ -495,16 +499,23 @@ class _StatsRow extends StatelessWidget {
         children: [
           Expanded(
             child: _StatItem(
-                palette: palette, value: '$activeQuests', label: 'активных квестов'),
+                palette: palette,
+                value: '$activeQuests',
+                label: context.l10n.homePhStatActiveQuests),
           ),
           const SizedBox(width: 8),
           Expanded(
             child: _StatItem(
-                palette: palette, value: '$approvedChecks', label: 'одобренных чеков'),
+                palette: palette,
+                value: '$approvedChecks',
+                label: context.l10n.homePhStatApprovedChecks),
           ),
           const SizedBox(width: 8),
           Expanded(
-            child: _StatItem(palette: palette, value: '$iqc', label: 'баллов IQC'),
+            child: _StatItem(
+                palette: palette,
+                value: '$iqc',
+                label: context.l10n.homePhStatIqcPoints),
           ),
         ],
       ),
@@ -686,7 +697,7 @@ class _QuestCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
-                        isVoucher ? 'ВАУЧЕР' : 'IQC',
+                        isVoucher ? context.l10n.homePhVoucherBadge : 'IQC',
                         style: TextStyle(
                           fontSize: 11,
                           letterSpacing: 0.4,
@@ -703,12 +714,12 @@ class _QuestCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Прогресс',
+                    Text(context.l10n.homePhProgress,
                         style: TextStyle(
                             fontSize: 13,
                             color: Colors.white.withValues(alpha: 0.65))),
                     Text(
-                      '$pct% выполнено',
+                      context.l10n.homePhPctDone(pct),
                       style: const TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w700,
@@ -820,7 +831,7 @@ class _ReceiptItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Чек №${check.id}',
+                      context.l10n.homePhCheckNumber(check.id),
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
@@ -835,7 +846,7 @@ class _ReceiptItem extends StatelessWidget {
                   ],
                 ),
               ),
-              _Chip(label: status.label, bg: chipBg, fg: chipFg),
+              _Chip(label: status.label(context.l10n), bg: chipBg, fg: chipFg),
             ],
           ),
         ),

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/auth/auth_controller.dart';
+import '../../core/l10n/l10n.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/uploads/upload_queue.dart';
 import 'nav_config.dart';
@@ -39,11 +40,12 @@ class AppShell extends ConsumerWidget {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
+    final l10n = context.l10n;
     final tabs = [
-      ...kRoleNav[role]!.where((i) => i.tab),
-      const NavItem(
+      ...navConfig(l10n)[role]!.where((i) => i.tab),
+      NavItem(
         path: '/app/profile',
-        label: 'Профиль',
+        label: l10n.navProfile,
         icon: Icons.person_outline,
         iconAsset: 'assets/nav/profile.svg',
       ),
