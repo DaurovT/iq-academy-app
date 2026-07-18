@@ -115,17 +115,19 @@ class PushService {
       });
 
       _ref = ref;
-      // токен привязываем/отвязываем вслед за авторизацией
-      ref.listen<AsyncValue<AuthState>>(authControllerProvider, (prev, next) {
+      // Токен привязываем/отвязываем вслед за авторизацией.
+      // ВАЖНО: listenManual, а НЕ ref.listen — ref.listen разрешён только внутри build()
+      // и вне его кидает исключение, обрывая регистрацию. fireImmediately сразу отдаёт
+      // текущее состояние (уже вошёл на старте) и все последующие изменения (вход/выход).
+      ref.listenManual<AsyncValue<AuthState>>(authControllerProvider, (prev, next) {
         final wasAuthed = prev?.asData?.value.isAuthed ?? false;
         final isAuthed = next.asData?.value.isAuthed ?? false;
-        if (isAuthed && !wasAuthed) syncToken(ref);
-        if (!isAuthed && wasAuthed) dropToken(ref);
-      });
-      // если уже авторизованы на старте — привязать сразу
-      if (ref.read(authControllerProvider).asData?.value.isAuthed ?? false) {
-        syncToken(ref);
-      }
+        if (isAuthed && !wasAuthed) {
+          syncToken(ref);
+        } else if (!isAuthed && wasAuthed) {
+          dropToken(ref);
+        }
+      }, fireImmediately: true);
 
       FirebaseMessaging.instance.onTokenRefresh.listen((t) {
         _token = t;
