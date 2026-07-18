@@ -203,6 +203,9 @@ class _SurveyHomeBlockState extends ConsumerState<SurveyHomeBlock> {
             style: TextStyle(color: p.inputText, fontSize: 14),
             decoration: InputDecoration(
               isCollapsed: true,
+              // тема глобально включает filled+fillColor — без этого поверх
+              // поля рисуется серая полоска заливки
+              filled: false,
               hintText: 'Введите ответ вручную',
               hintStyle: TextStyle(color: p.inputHint, fontSize: 14),
               border: InputBorder.none,

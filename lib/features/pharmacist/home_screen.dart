@@ -617,7 +617,9 @@ class _QuestCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final pct = (quest.progress.clamp(0, 1) * 100).round();
     final isVoucher = quest.rewardType == RewardType.voucher;
-    return Container(
+    return GestureDetector(
+      onTap: () => context.go('/app/quests'),
+      child: Container(
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         gradient: const LinearGradient(
@@ -721,6 +723,7 @@ class _QuestCard extends StatelessWidget {
             ),
           ),
         ],
+      ),
       ),
     );
   }

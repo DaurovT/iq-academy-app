@@ -22,12 +22,33 @@ String _embedUrl(String url) {
   return url;
 }
 
-String _dur(int? sec) {
-  final s = sec ?? 0;
-  final m = (s ~/ 60).toString().padLeft(2, '0');
-  final r = (s % 60).toString().padLeft(2, '0');
-  return '$m:$r';
-}
+/// true, если ссылка ведёт на Vimeo/YouTube (там играем их embed-плеером).
+bool _isEmbeddable(String url) =>
+    RegExp(r'vimeo\.com|youtu\.be/|youtube\.com').hasMatch(url);
+
+/// HTML-обёртка для прямых видеофайлов: стандартные контролы, но перемотка
+/// вперёд заблокирована — можно мотать только в пределах уже просмотренного.
+String _noSeekHtml(String url) => '''
+<!DOCTYPE html><html><head>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<style>html,body{margin:0;padding:0;background:#0B0F1A;height:100%;overflow:hidden}
+video{width:100%;height:100%;object-fit:contain;background:#0B0F1A}</style></head>
+<body>
+<video src="$url" controls autoplay playsinline
+  controlsList="nodownload noplaybackrate"></video>
+<script>
+  var v = document.querySelector('video');
+  var watched = 0; // максимальная просмотренная позиция
+  v.addEventListener('timeupdate', function () {
+    if (!v.seeking) watched = Math.max(watched, v.currentTime);
+  });
+  v.addEventListener('seeking', function () {
+    // вперёд дальше просмотренного нельзя; назад — можно
+    if (v.currentTime > watched + 0.5) v.currentTime = watched;
+  });
+</script>
+</body></html>
+''';
 
 /// Просмотр урока. Перенесён один в один из макета Figma
 /// «pharmiq-learning-lesson».
@@ -49,10 +70,16 @@ class _LessonViewScreenState extends ConsumerState<LessonViewScreen> {
 
   void _startVideo(String url) {
     setState(() {
-      _webCtrl = WebViewController()
+      final ctrl = WebViewController()
         ..setJavaScriptMode(JavaScriptMode.unrestricted)
-        ..setBackgroundColor(const Color(0xFF0B0F1A))
-        ..loadRequest(Uri.parse(_embedUrl(url)));
+        ..setBackgroundColor(const Color(0xFF0B0F1A));
+      if (_isEmbeddable(url)) {
+        ctrl.loadRequest(Uri.parse(_embedUrl(url)));
+      } else {
+        // прямой файл — свой плеер с запретом перемотки вперёд
+        ctrl.loadHtmlString(_noSeekHtml(url));
+      }
+      _webCtrl = ctrl;
     });
   }
 
@@ -212,45 +239,6 @@ class _LessonViewScreenState extends ConsumerState<LessonViewScreen> {
                               ),
                             ),
                           ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 12),
-              // audio-progress
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Container(
-                  height: 48,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  decoration: BoxDecoration(
-                      color: const Color(0xFF060A12),
-                      borderRadius: BorderRadius.circular(12)),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.play_arrow,
-                          size: 18, color: Color(0xFF8E9BAE)),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(2),
-                          child: Container(
-                            height: 4,
-                            color: const Color(0xFF1E2535),
-                            child: const Align(
-                              alignment: Alignment.centerLeft,
-                              child: FractionallySizedBox(
-                                widthFactor: 0.0,
-                                child: ColoredBox(color: Color(0xFF1D4068)),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Text('00:00 · ${_dur(lesson.videoDurationSec)}',
-                          style: const TextStyle(
-                              fontSize: 12, color: Color(0xFF8E9BAE))),
-                    ],
                   ),
                 ),
               ),

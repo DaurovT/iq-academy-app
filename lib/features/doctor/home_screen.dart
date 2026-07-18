@@ -281,7 +281,7 @@ class _WalletPill extends StatelessWidget {
           border: Border.all(color: palette.walletPillBorder),
         ),
         child: Text(
-          'Погасить',
+          'Кошелёк',
           style: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w600,
@@ -370,25 +370,30 @@ class _StatsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: _StatItem(
-              palette: palette,
-              value: '$recipesCount',
-              label: 'всего рецептов'),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: _StatItem(
-              palette: palette, value: '$approved', label: 'одобрено'),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child:
-              _StatItem(palette: palette, value: '$iqc', label: 'баллов IQC'),
-        ),
-      ],
+    // IntrinsicHeight + stretch: плитки одной высоты, но растут, если подпись
+    // на узком экране переносится на 2 строки (иначе bottom overflow).
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            child: _StatItem(
+                palette: palette,
+                value: '$recipesCount',
+                label: 'всего рецептов'),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: _StatItem(
+                palette: palette, value: '$approved', label: 'одобрено'),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child:
+                _StatItem(palette: palette, value: '$iqc', label: 'баллов IQC'),
+          ),
+        ],
+      ),
     );
   }
 }
