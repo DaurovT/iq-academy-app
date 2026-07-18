@@ -156,9 +156,29 @@ class PushService {
   }
 
   /// Получить токен устройства и отправить на сервер.
+  ///
+  /// iOS: FCM-токен доступен ТОЛЬКО после того, как Apple выдаст APNs-токен.
+  /// Регистрация в APNs асинхронна и завершается уже после логина, поэтому
+  /// первый getToken() часто возвращает null. Ждём APNs-токен с ретраями,
+  /// иначе токен никогда не уйдёт на бэкенд (баг «на iOS пуши не приходят»).
   static Future<void> syncToken(WidgetRef ref) async {
     try {
-      final t = await FirebaseMessaging.instance.getToken();
+      final fm = FirebaseMessaging.instance;
+      if (Platform.isIOS) {
+        // iOS: FCM-токен доступен только после APNs-токена от Apple. Регистрация
+        // асинхронна и завершается уже после логина — ждём токен с ретраями,
+        // иначе на iOS он никогда не уйдёт на бэкенд.
+        var apns = await fm.getAPNSToken();
+        for (var i = 0; i < 20 && apns == null; i++) {
+          await Future.delayed(const Duration(seconds: 1));
+          apns = await fm.getAPNSToken();
+        }
+        if (apns == null) {
+          debugPrint('PushService.syncToken: APNs-токен не получен');
+          return;
+        }
+      }
+      final t = await fm.getToken();
       if (t == null) return;
       _token = t;
       await _sendToken(ref, t);
