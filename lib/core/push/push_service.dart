@@ -197,6 +197,8 @@ class PushService {
         return refId.isNotEmpty ? '/app/news/$refId' : '/app/news';
       case 'survey':
         return '/app'; // блок опроса живёт на главной
+      case 'support':
+        return '/app/support';
       case 'reward':
       case 'voucher':
         return '/app/wallet';
