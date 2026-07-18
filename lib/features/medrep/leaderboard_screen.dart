@@ -389,7 +389,7 @@ class _Column extends StatelessWidget {
         Container(
           width: double.infinity,
           height: pedestalHeight,
-          padding: const EdgeInsets.symmetric(vertical: 12),
+          padding: const EdgeInsets.symmetric(vertical: 8),
           decoration: BoxDecoration(
             gradient: isFirst
                 ? const LinearGradient(
@@ -403,28 +403,35 @@ class _Column extends StatelessWidget {
                 : color.withValues(alpha: isDark ? 0.24 : 0.14),
             borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                '${row.value}',
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.w800,
-                  color: isFirst ? Colors.white : color,
-                ),
+          // FittedBox: на низком пьедестале (3-е место, 72px) цифра+подпись
+          // не влезали и давали bottom overflow — ужимаем контент по месту.
+          child: Center(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '${row.value}',
+                    style: TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.w800,
+                      color: isFirst ? Colors.white : color,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    unit,
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: isFirst
+                          ? Colors.white.withValues(alpha: 0.9)
+                          : color.withValues(alpha: 0.9),
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 2),
-              Text(
-                unit,
-                style: TextStyle(
-                  fontSize: 11,
-                  color: isFirst
-                      ? Colors.white.withValues(alpha: 0.9)
-                      : color.withValues(alpha: 0.9),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ],

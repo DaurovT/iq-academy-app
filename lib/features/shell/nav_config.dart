@@ -40,7 +40,7 @@ const Map<Role, List<NavItem>> kRoleNav = {
   ],
   Role.medrep: [
     NavItem(path: '/app', label: 'Портфель', icon: Icons.insights_outlined, tab: true),
-    NavItem(path: '/app/portfolio', label: 'Форм.', icon: Icons.people_alt_outlined, tab: true),
+    NavItem(path: '/app/portfolio', label: 'Фарм.', icon: Icons.people_alt_outlined, tab: true),
     NavItem(path: '/app/medrep/quests', label: 'Квесты', icon: Icons.flag_outlined, tab: true),
     NavItem(path: '/app/leaderboard', label: 'Топ', icon: Icons.emoji_events_outlined, tab: true),
   ],
