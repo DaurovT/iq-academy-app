@@ -1,0 +1,1227 @@
+{
+  "@@locale": "ky",
+  "appTitle": "IQ Academy",
+  "apiNetworkError": "Тармак катасы",
+  "apiNoAccess": "Кирүү мүмкүн эмес",
+  "checkModelStatusPending": "Текшерилүүдө",
+  "checkModelStatusAiDetected": "AI тааныды",
+  "checkModelStatusAiWrong": "AI тааныган жок",
+  "checkModelStatusApproved": "Жактырылды",
+  "checkModelStatusRejected": "Четке кагылды",
+  "commonRolePharmacist": "Фармацевт",
+  "commonRoleDoctor": "Дарыгер",
+  "commonRoleMedrep": "Медициналык өкүл",
+  "commonRoleProductOwner": "Бренд / Продукт ээси",
+  "commonCancel": "Жокко чыгаруу",
+  "navHome": "Башкы бет",
+  "navChecks": "Чектер",
+  "navQuests": "Квесттер",
+  "navLearn": "Окуу",
+  "navWallet": "Капчык",
+  "navRecipes": "Рецепттер",
+  "navPortfolio": "Портфель",
+  "navPharm": "Фарм.",
+  "navTop": "Топ",
+  "navDashboard": "Дашборд",
+  "navProducts": "Продукттар",
+  "navBrands": "Бренддер",
+  "navProfile": "Профиль",
+  "miniAppsTitle": "Мини-колдонмолор",
+  "miniAppsSubtitle": "Ойноп, IQC үчүн байге утуп алыңыз",
+  "miniAppsSoon": "Жакында",
+  "sapperCountdownSoon": "жакында",
+  "sapperCountdownDaysHours": "{days}к {hours}с",
+  "@sapperCountdownDaysHours": {
+    "placeholders": {
+      "days": {
+        "type": "Object"
+      },
+      "hours": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperCountdownHoursMinutes": "{hours}с {minutes}м",
+  "@sapperCountdownHoursMinutes": {
+    "placeholders": {
+      "hours": {
+        "type": "Object"
+      },
+      "minutes": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperCountdownMinutesSeconds": "{minutes}м {seconds}с",
+  "@sapperCountdownMinutesSeconds": {
+    "placeholders": {
+      "minutes": {
+        "type": "Object"
+      },
+      "seconds": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperTitle": "Супер Сапёр",
+  "sapperSubtitle": "IQC үчүн клеткаларды ээлеңиз — ачылуу саатында алардын астында эмне бар экенин билесиз",
+  "sapperNoDraws": "Оюндар жок",
+  "sapperRevealed": "Ачылды",
+  "sapperPrizesAndPrice": "🎁 {prizeCount} байге  💎 {priceIqc} IQC/клетка  ",
+  "@sapperPrizesAndPrice": {
+    "placeholders": {
+      "prizeCount": {
+        "type": "Object"
+      },
+      "priceIqc": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperMyCells": "сиздин клеткалар: {count}",
+  "@sapperMyCells": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperOccupancy": "{total} ичинен {occupied} ээленген ({percent}%)",
+  "@sapperOccupancy": {
+    "placeholders": {
+      "occupied": {
+        "type": "Object"
+      },
+      "total": {
+        "type": "Object"
+      },
+      "percent": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperGoToGame": "Оюнга өтүү",
+  "sapperReserveTitle": "№{number} клетканы ээлейсизби?",
+  "@sapperReserveTitle": {
+    "placeholders": {
+      "number": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperReserveBody": "{price} IQC алынат. Жокко чыгарууга болбойт — клетка ачылганга чейин сизге бекитилет.",
+  "@sapperReserveBody": {
+    "placeholders": {
+      "price": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperReserveConfirm": "{price} IQC үчүн ээлөө",
+  "@sapperReserveConfirm": {
+    "placeholders": {
+      "price": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperCellReserved": "№{number} клетка ээленди",
+  "@sapperCellReserved": {
+    "placeholders": {
+      "number": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperDraws": "Байге оюндары",
+  "sapperAcceptClosed": "Клетка кабыл алуу жабылды — ачылууга даярдык жүрүп жатат",
+  "sapperHiddenTitle": "ТАЛААДА КАТЫЛГАН",
+  "sapperRevealIn": "ачылууга {time} калды",
+  "@sapperRevealIn": {
+    "placeholders": {
+      "time": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperNoPrizes": "байгелер жарыяланган жок",
+  "sapperPrizeChip": "🎁 {count}× {label}",
+  "@sapperPrizeChip": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      },
+      "label": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperBalance": "Баланс: {balance} IQC",
+  "@sapperBalance": {
+    "placeholders": {
+      "balance": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperCellPrice": "клетка баасы {price} IQC",
+  "@sapperCellPrice": {
+    "placeholders": {
+      "price": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperYourBalance": "Сиздин баланс",
+  "sapperCellPriceLabel": "клетка баасы",
+  "sapperWinBannerWin": "🎉 Сиз {count} {word} уттуңуз!",
+  "@sapperWinBannerWin": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      },
+      "word": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperNoWin": "Бул жолу утушсуз",
+  "sapperPrizeOne": "байге",
+  "sapperPrizeFew": "байге",
+  "sapperPrizeMany": "байге",
+  "sapperLegendMine": "Меники",
+  "sapperLegendTheirs": "Башкалардыкы",
+  "sapperLegendEmpty": "Бош",
+  "sapperLegendVoucher": "Ваучер",
+  "sapperLegendSelected": "Тандалды",
+  "sapperLegendOccupied": "Ээленген",
+  "sapperLegendFree": "Бош",
+  "sapperWinners": "Жеңүүчүлөр",
+  "newsTitle": "Жаңылыктар",
+  "newsAll": "Бардык жаңылыктар",
+  "newsMore": "Толугураак →",
+  "newsDateMonths": "янв,фев,мар,апр,май,июн,июл,авг,сен,окт,ноя,дек",
+  "newsEmpty": "Азырынча жаңылыктар жок",
+  "newsPinned": "МААНИЛҮҮ",
+  "newsDetailTitle": "Жаңылык",
+  "surveyRewardCredited": "+{amount} IQC эсепке кошулду",
+  "@surveyRewardCredited": {
+    "placeholders": {
+      "amount": {
+        "type": "Object"
+      }
+    }
+  },
+  "surveyThanks": "Жообуңуз үчүн рахмат!",
+  "surveySubmitError": "Жөнөтүлгөн жок: {error}",
+  "@surveySubmitError": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "surveyTitle": "Сурамжылоо",
+  "surveyRewardBadge": "+ {amount} IQC",
+  "@surveyRewardBadge": {
+    "placeholders": {
+      "amount": {
+        "type": "Object"
+      }
+    }
+  },
+  "surveyChooseOption": "Жооп вариантын тандаңыз",
+  "surveyEnterAnswer": "Жоопту кол менен жазыңыз",
+  "surveySubmit": "Жооп берүү",
+  "loginTagline": "Үйрөн.\nКолдон.\nЖет.",
+  "loginTitle": "Кирүү",
+  "loginByPhone": "Телефон номери аркылуу кириңиз",
+  "loginCodeSent": "{phone} номерине SMS-код жөнөтүлдү",
+  "@loginCodeSent": {
+    "placeholders": {
+      "phone": {
+        "type": "Object"
+      }
+    }
+  },
+  "loginPhoneLabel": "Телефон номери",
+  "loginPhoneNotFound": "Номер системадан табылган жок",
+  "loginConfirm": "Ырастоо",
+  "loginGoRegister": "Каттоодон өтүү",
+  "loginRegister": "Катталуу",
+  "loginEnter": "Кирүү",
+  "loginResendIn": "{seconds} секунддан кийин кайталоо",
+  "@loginResendIn": {
+    "placeholders": {
+      "seconds": {
+        "type": "Object"
+      }
+    }
+  },
+  "loginResendAgain": "Кайра жөнөтүү",
+  "loginChangeNumber": "‹ Номерди өзгөртүү",
+  "loginOr": "же",
+  "tgLoginExpired": "Кирүү убактысы бүттү",
+  "tgLoginParseError": "Кирүү жообун иштетүү мүмкүн болгон жок: {error}",
+  "@tgLoginParseError": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "tgWaitingConfirm": "Ырастоо күтүлүүдө…",
+  "tgLoginButton": "Telegram аркылуу кирүү",
+  "notifTitle": "Билдирмелер",
+  "notifUnreadOne": "{count} окула элек",
+  "@notifUnreadOne": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "notifUnreadMany": "{count} окула элек",
+  "@notifUnreadMany": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "notifMarkAllRead": "Баарын окулду деп белгилөө",
+  "notifRead": "✓ Окулду",
+  "notifMarkRead": "Окулду деп белгилөө",
+  "notifOpen": "Ачуу",
+  "notifEmptyTitle": "Билдирмелер жок",
+  "notifEmptyBody": "Бул жерде чектердин абалы, квест сыйлыктары жана окуу жаңылыктары пайда болот.",
+  "placeholderComingSoon": "Бөлүм кийинки этаптарда пайда болот.",
+  "profileTitle": "Профиль",
+  "profileSettings": "Жөндөөлөр",
+  "profileLanguage": "ТИЛ",
+  "profileAppearance": "КӨРҮНҮШ",
+  "profileThemeLight": "Жарык",
+  "profileThemeDark": "Караңгы",
+  "profileThemeSystem": "Система",
+  "profileAccount": "Аккаунт",
+  "profilePersonalData": "ЖЕКЕ МААЛЫМАТ",
+  "profileRole": "Роль",
+  "profileChange": "Алмаштыруу",
+  "profileLinkedServices": "БАЙЛАНЫШКАН КЫЗМАТТАР",
+  "profilePhone": "Телефон",
+  "profileTgConnected": "Кошулган",
+  "profileTgLinked": "Байланышкан",
+  "profileSupport": "Колдоо кызматы",
+  "profileSupportSubtitle": "Биз ар дайым байланыштабыз",
+  "profileLogout": "Аккаунттан чыгуу",
+  "profileDeleteTitle": "Аккаунт менен маалыматты өчүрүү",
+  "profileDeleteIrreversible": "Бул аракетти кайтарууга болбойт",
+  "profileDelete": "Өчүрүү",
+  "profileLanguageUpdated": "Тил жаңыланды",
+  "profileNewPhoneTitle": "Жаңы номер",
+  "profileCancel": "Жокко чыгаруу",
+  "profileNext": "Андан ары",
+  "profileSmsCodeTitle": "SMS-код",
+  "profileCodeLabel": "Код",
+  "profileConfirm": "Ырастоо",
+  "profilePhoneChanged": "Телефон өзгөртүлдү",
+  "profileLogoutConfirmTitle": "Аккаунттан чыгасызбы?",
+  "profileLogoutAction": "Чыгуу",
+  "profileDeleteConfirmTitle": "Аккаунт өчүрүлсүнбү?",
+  "profileDeleteConfirmBody": "Бул аракетти кайтарууга болбойт. Бардык маалымат өчүрүлөт.",
+  "profileStatQuests": "КВЕСТТЕР",
+  "profileStatLevel": "ДЕҢГЭЭЛ",
+  "questHistoryTitle": "Катышуу тарыхы",
+  "questHistoryEmpty": "Тарых бош",
+  "questHistoryVoucher": "Ваучер",
+  "questHistoryActive": "Активдүү",
+  "questHistoryDone": "Аткарылды",
+  "registerStep1Of2": "1-КАДАМ / 2",
+  "registerStep2Of2": "2-КАДАМ / 2 · {role}",
+  "@registerStep2Of2": {
+    "placeholders": {
+      "role": {
+        "type": "Object"
+      }
+    }
+  },
+  "registerTitle": "Каттоо",
+  "registerChooseRole": "Кирүү үчүн ролду тандаңыз",
+  "registerBack": "‹ Артка",
+  "registerConfirmField": "Ырастаңыз: {label}",
+  "@registerConfirmField": {
+    "placeholders": {
+      "label": {
+        "type": "Object"
+      }
+    }
+  },
+  "registerFillField": "Толтуруңуз: {label}",
+  "@registerFillField": {
+    "placeholders": {
+      "label": {
+        "type": "Object"
+      }
+    }
+  },
+  "registerFinish": "Каттоону аяктоо",
+  "registerSuccessTitle": "Каттоо аяктады!",
+  "registerWelcome": "PharmIQ ACADEMY'ге кош келиңиз, {name}!",
+  "@registerWelcome": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "registerStartLearning": "Окууну баштоо",
+  "registerGoHome": "Башкы бетке өтүү",
+  "registerEnterField": "{label} жазыңыз",
+  "@registerEnterField": {
+    "placeholders": {
+      "label": {
+        "type": "Object"
+      }
+    }
+  },
+  "registerRequiredField": "Милдеттүү талаа",
+  "registerSelectPlaceholder": "— тандаңыз —",
+  "registerMultiSelectHintRequired": "{label} * · Бир нечесин тандоого болот",
+  "@registerMultiSelectHintRequired": {
+    "placeholders": {
+      "label": {
+        "type": "Object"
+      }
+    }
+  },
+  "registerMultiSelectHint": "{label} · Бир нечесин тандоого болот",
+  "@registerMultiSelectHint": {
+    "placeholders": {
+      "label": {
+        "type": "Object"
+      }
+    }
+  },
+  "registerConsentText": "Жеке маалыматтарды иштетүүгө макулмун ",
+  "registerConsentMore": "толугураак",
+  "roleSelectTagline": "Үйрөн.\nКолдон.\nЖет.",
+  "roleSelectGreeting": "Саламатсызбы",
+  "roleSelectGreetingName": "Саламатсызбы, {name}",
+  "@roleSelectGreetingName": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "roleSelectChooseRole": "Кирүү үчүн ролду тандаңыз",
+  "roleSelectSubChecksQuests": "Чектер, квесттер, окуу жана капчык",
+  "roleSelectSubMedrep": "Провизорлор портфели жана рейтинг",
+  "roleSelectSubProductOwner": "Дашборд, продукттар жана бренддер",
+  "roleSelectSheetTitle": "Ролду тандаңыз",
+  "roleSelectEnter": "Кирүү",
+  "notifSettingsTitle": "Билдирме жөндөөлөрү",
+  "notifSettingsChecks": "Чек жана рецепт абалдары",
+  "notifSettingsQuests": "Квесттер жана сыйлыктар",
+  "notifSettingsLearning": "Окуу",
+  "notifSettingsMarketing": "Жаңылыктар жана акциялар",
+  "supportBackProfile": "Профиль",
+  "supportTitle": "Колдоо кызматы",
+  "supportEmptyHint": "Бизге жазыңыз — ушул жерден жооп беребиз",
+  "supportInputHint": "Билдирүү жазыңыз...",
+  "supportYou": "Сиз",
+  "supportTeam": "Колдоо кызматы",
+  "appBarSwitchRole": "Ролду алмаштыруу",
+  "asyncRetry": "Кайталоо",
+  "brandProductsTitle": "Продукттар",
+  "brandProductsEmpty": "Продукттар жок",
+  "brandProductsQuestCount": "{p1} квест",
+  "@brandProductsQuestCount": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "brandProductsDetailTitle": "Продукт",
+  "brandQuestsTitle": "Бренд квесттери",
+  "brandQuestsEmpty": "Квесттер жок",
+  "brandQuestsSubtitle": "{p1} · {p2}/{p3} атк.",
+  "@brandQuestsSubtitle": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      },
+      "p2": {
+        "type": "Object"
+      },
+      "p3": {
+        "type": "Object"
+      }
+    }
+  },
+  "brandQuestsStatusActive": "Активдүү",
+  "brandQuestsStatusOff": "Өчүк",
+  "brandQuestsDetailTitle": "Бренд квести",
+  "brandQuestsSponsor": "Демөөрчү: {p1}",
+  "@brandQuestsSponsor": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "brandQuestsParticipants": "Катышуучулар",
+  "brandQuestsCompletions": "Аткаруулар",
+  "brandQuestsBudget": "Бюджет",
+  "brandQuestsSpent": "Сарпталды",
+  "brandQuestsProducts": "Продукттар",
+  "brandQuestsMxik": "МХИК",
+  "brandQuestsReward": "Сыйлык",
+  "brandQuestsPeriod": "Мезгил",
+  "brandsTitle": "Бренддер",
+  "brandsEmpty": "Бренддер жок",
+  "brandsQuestCount": "{p1} квест",
+  "@brandsQuestCount": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "brandsDetailTitle": "Бренд",
+  "brandsSubBrands": "Суббренддер",
+  "brandDashTitle": "Дашборд",
+  "brandDashChecks": "Чектер",
+  "brandDashPacks": "Таңгактар",
+  "brandDashActiveQuests": "Активдүү квесттер",
+  "brandDashParticipants": "Катышуучулар",
+  "brandDashSegmentation": "Сегментация",
+  "brandDashRetail": "Чекене",
+  "brandDashChain": "Тармактар",
+  "brandDashTopProducts": "Топ продукттар",
+  "brandDashTopSellers": "Топ сатуучулар",
+  "brandDashRegions": "Аймактар",
+  "brandDashSalesLogs": "Сатуу журналдары",
+  "salesLogTitle": "Сатуу журналдары",
+  "salesLogEmpty": "Жазуулар жок",
+  "docHomeActiveQuests": "Активдүү квесттер",
+  "docHomeAllQuests": "Бардык квесттер",
+  "docHomeNoActiveQuests": "Активдүү квесттер жок",
+  "docHomeRecommendedCourses": "Сунушталган курстар",
+  "docHomeAllCourses": "Бардык курстар",
+  "docHomeNoCourses": "Азырынча курстар жок",
+  "docHomeGreetingNoName": "Салам!",
+  "docHomeGreeting": "Салам, {name}",
+  "@docHomeGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "docHomeSubtitle": "Рецепттерди жөнөтүп, сыйлык алыңыз",
+  "docHomeWalletBalance": "КАПЧЫК БАЛАНСЫ",
+  "docHomeWallet": "Капчык",
+  "docHomeSendRecipe": "Рецепт жөнөтүү",
+  "docHomeSendRecipeHint": "Рецептти сүрөткө тартыңыз — AI дарыларды тааныйт",
+  "docHomeStatRecipes": "бардык рецепттер",
+  "docHomeStatApproved": "жактырылды",
+  "docHomeStatIqc": "IQC упай",
+  "docHomeVoucher": "ВАУЧЕР",
+  "docHomeProgress": "Жүрүш",
+  "docHomeProgressDone": "{pct}% аткарылды",
+  "@docHomeProgressDone": {
+    "placeholders": {
+      "pct": {
+        "type": "Object"
+      }
+    }
+  },
+  "recipeDetailMyRecipes": "Менин рецепттерим",
+  "recipeDetailTitle": "Рецепт №{id}",
+  "@recipeDetailTitle": {
+    "placeholders": {
+      "id": {
+        "type": "Object"
+      }
+    }
+  },
+  "recipeDetailPhotoCount": "Сүрөт {p1}",
+  "@recipeDetailPhotoCount": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "recipeDetailStatusApproved": "Жактырылды",
+  "recipeDetailStatusRejected": "Четке кагылды",
+  "recipeDetailStatusPending": "Текшерилүүдө",
+  "recipeDetailAiRecognized": "AI тааныды",
+  "recipeDetailNoDrugs": "Дарылар таанылган жок",
+  "recipesTitle": "Менин рецепттерим",
+  "recipesTotal": "бардыгы {p1}",
+  "@recipesTotal": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "recipesTabAll": "Баары",
+  "recipesTabActive": "Активдүү",
+  "recipesTabDone": "Аякталган",
+  "recipesEmpty": "Азырынча рецепттер жок",
+  "recipesTakePhoto": "Сүрөткө тартуу",
+  "recipesFromGallery": "Галереядан тандоо",
+  "recipesUploading": "Рецепт кошулду — жүктөлүүдө",
+  "recipesDoctorInfoTitle": "Дарыгер маалыматы (каалоо боюнча)",
+  "recipesDoctorName": "А.Ж.А.",
+  "recipesDoctorWorkplace": "Иш орду",
+  "recipesDoctorCity": "Шаар",
+  "recipesDoctorPhone": "Телефон",
+  "recipesSkip": "Өткөрүп жиберүү",
+  "recipesSend": "Жөнөтүү",
+  "recipesSubmitButton": "Рецепт жөнөтүү",
+  "recipesPhotoCount": "сүрөт: {p1}",
+  "@recipesPhotoCount": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "recipesStatusApproved": "Жактырылды",
+  "recipesStatusRejected": "Четке кагылды",
+  "recipesStatusPending": "Текшерилүүдө",
+  "recipesUploadingBanner": "Жүктөлүүдө: {count}",
+  "@recipesUploadingBanner": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "recipesRetry": "Кайталоо",
+  "companiesTitle": "Компаниялар",
+  "companiesEmpty": "Компаниялар жок",
+  "companiesCode": "Код: {p1}",
+  "@companiesCode": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "medrepHomeAttributionPrimary": "Алгачкы",
+  "medrepHomeAttributionTotal": "Жалпы",
+  "medrepHomeMenuPharmacists": "Фармацевттер",
+  "medrepHomeMenuPending": "Ырастоону күтүүдө",
+  "medrepHomeMenuCompanies": "Компаниялар",
+  "medrepHomeMenuLeaderboard": "Рейтинг",
+  "medrepHomeGreetingNoName": "Салам!",
+  "medrepHomeGreeting": "Салам, {name}",
+  "@medrepHomeGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "medrepHomeAttribution": "Атрибуция: {attribution}",
+  "@medrepHomeAttribution": {
+    "placeholders": {
+      "attribution": {
+        "type": "Object"
+      }
+    }
+  },
+  "medrepHomeStatPharmacists": "Фармацевттер",
+  "medrepHomeStatChecks": "Чектер",
+  "medrepHomeStatPacks": "Таңгактар",
+  "medrepHomeStatQuests": "Квесттер",
+  "medrepHomeLinkCopied": "Шилтеме көчүрүлдү",
+  "medrepHomeReferralTitle": "Реферал шилтемеси",
+  "medrepHomeReferralHint": "Шилтемени провизорго жөнөтүңүз — ал катталууда сизге байланат",
+  "medrepHomeCopy": "Көчүрүү",
+  "medrepHomeShare": "Бөлүшүү",
+  "medrepHomeRetry": "Кайталоо",
+  "leaderboardUnitPharm": "дарыкана",
+  "leaderboardUnitQuests": "квест",
+  "leaderboardUnitChecks": "чек",
+  "leaderboardTitle": "Рейтинг",
+  "leaderboardAttributionPrimary": "Алгачкы",
+  "leaderboardAttributionTotal": "Жалпы",
+  "leaderboardCompanyFallback": "Компания",
+  "leaderboardRetry": "Кайталоо",
+  "pharmDetailIncentivizeTitle": "Фармацевтти сыйлоо",
+  "pharmDetailRating": "Баа: {p1}",
+  "@pharmDetailRating": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "pharmDetailComment": "Комментарий",
+  "pharmDetailCancel": "Жокко чыгаруу",
+  "pharmDetailSend": "Жөнөтүү",
+  "pharmDetailSent": "Жөнөтүлдү",
+  "pharmDetailBack": "Фармацевттер",
+  "pharmDetailChecks": "Чектер",
+  "pharmDetailPacks": "Таңгактар",
+  "pharmDetailQuests": "Квесттер",
+  "pharmDetailIqcPoints": "IQC упайлары",
+  "pharmDetailRecentChecks": "Акыркы чектер",
+  "pharmDetailNoChecks": "Азырынча чектер жок",
+  "pharmDetailActive": "Активдүү",
+  "pharmDetailPassive": "Пассивдүү",
+  "pharmDetailIncentivize": "Сыйлоо",
+  "pharmDetailRetry": "Кайталоо",
+  "portfolioTitle": "Фармацевттер",
+  "portfolioUpdated": "Жаңыланды",
+  "portfolioInPortfolio": "портфелде {total}",
+  "@portfolioInPortfolio": {
+    "placeholders": {
+      "total": {
+        "type": "Object"
+      }
+    }
+  },
+  "portfolioSearchHint": "Фармацевт издөө…",
+  "portfolioTabAll": "Баары ({all})",
+  "@portfolioTabAll": {
+    "placeholders": {
+      "all": {
+        "type": "Object"
+      }
+    }
+  },
+  "portfolioTabActive": "Активдүү ({active})",
+  "@portfolioTabActive": {
+    "placeholders": {
+      "active": {
+        "type": "Object"
+      }
+    }
+  },
+  "portfolioTabPassive": "Пассивдүү ({passive})",
+  "@portfolioTabPassive": {
+    "placeholders": {
+      "passive": {
+        "type": "Object"
+      }
+    }
+  },
+  "portfolioNotFound": "Фармацевттер табылган жок",
+  "portfolioRetry": "Кайталоо",
+  "medrepQuestsTitle": "Компания квесттери",
+  "medrepQuestsEmpty": "Квесттер жок",
+  "medrepQuestsSubtitle": "Максат: {p1} · катышуучулар: {p2}",
+  "@medrepQuestsSubtitle": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      },
+      "p2": {
+        "type": "Object"
+      }
+    }
+  },
+  "medrepQuestsNoParticipants": "Азырынча катышуучулар жок",
+  "referralsAccepted": "Өтүнмө кабыл алынды",
+  "referralsRejected": "Өтүнмө четке кагылды",
+  "referralsTitle": "Реферал өтүнмөлөрү",
+  "referralsEmpty": "Жаңы өтүнмөлөр жок",
+  "referralsDecline": "Четке кагуу",
+  "referralsAccept": "Кабыл алуу",
+  "checkDetailBackMyChecks": "Менин чектерим",
+  "checkDetailTitle": "Чек №{id}",
+  "@checkDetailTitle": {
+    "placeholders": {
+      "id": {
+        "type": "Object"
+      }
+    }
+  },
+  "checkDetailRejectedFallback": "Чек четке кагылды",
+  "checkDetailQuestDone": "{p1} · Квест аткарылды ✓",
+  "@checkDetailQuestDone": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "checkDetailQuestAfterApproval": "Чек жактырылгандан кийин пайда болот",
+  "checkDetailQuestNone": "Азырынча бир дагы квестке эсептелген жок",
+  "checkDetailChipApproved": "Жактырылды",
+  "checkDetailChipRejected": "Четке кагылды",
+  "checkDetailChipPending": "Текшерилүүдө",
+  "checkDetailOpenPhoto": "Ачуу",
+  "checkDetailPhotoCount": "сүрөт: {p1}",
+  "@checkDetailPhotoCount": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "checkDetailRejectReasonTitle": "Четке кагуунун себеби",
+  "checkDetailResubmit": "Кайра жөнөтүү",
+  "checkDetailPendingTitle": "Текшерилүүдө",
+  "checkDetailPendingBody": "Сиздин чек адистин текшерүүсүндө. Адатта бул 24 саатка чейин созулат.",
+  "checkDetailSentAt": "Жөнөтүлдү: {sentAt}",
+  "@checkDetailSentAt": {
+    "placeholders": {
+      "sentAt": {
+        "type": "Object"
+      }
+    }
+  },
+  "checkDetailAiWaitingTitle": "AI таануусу күтүлүүдө",
+  "checkDetailAiWaitingBody": "Жыйынтык текшерүүдөн кийин пайда болот",
+  "checkDetailAiTitle": "AI тааныды",
+  "checkDetailPacks": "{p1} таңг.",
+  "@checkDetailPacks": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "checkDetailQuestCardTitle": "Квесттерге эсептөө",
+  "checksEmpty": "Азырынча чектер жок",
+  "checksAddedUploading": "Чек кошулду — жүктөлүүдө",
+  "checksNewCheckTitle": "Жаңы чек",
+  "checksTapToAddPhoto": "Сүрөт кошуу үчүн басыңыз",
+  "checksTakePhoto": "Сүрөткө тартуу",
+  "checksSubmitForReview": "Текшерүүгө жөнөтүү",
+  "checksTitle": "Менин чектерим",
+  "checksTotalCount": "бардыгы {p1}",
+  "@checksTotalCount": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "checksSendPhoto": "Сүрөт жөнөтүү",
+  "checksCardMeta": "{p1} · сүрөт: {p2}",
+  "@checksCardMeta": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      },
+      "p2": {
+        "type": "Object"
+      }
+    }
+  },
+  "checksAwaitUsually24h": "Күтүңүз — адатта 24 саат",
+  "checksUploadingTitle": "Сүрөт жүктөлүүдө",
+  "checksPhotoFallback": "Чектин сүрөтү",
+  "checksRetry": "Кайталоо",
+  "courseDetailTabDescription": "СҮРӨТТӨМӨ",
+  "courseDetailTabContent": "МАЗМУНУ",
+  "courseDetailMinutes": "~{totalMin} мүнөт",
+  "@courseDetailMinutes": {
+    "placeholders": {
+      "totalMin": {
+        "type": "Object"
+      }
+    }
+  },
+  "courseDetailContinueLearning": "ОКУУНУ УЛАНТУУ",
+  "courseDetailStartLearning": "ОКУУНУ БАШТОО",
+  "courseDetailVideoLessonOne": "видеосабак",
+  "courseDetailVideoLessonFew": "видеосабак",
+  "courseDetailVideoLessonMany": "видеосабак",
+  "courseDetailQuizAfterLesson": "{videosBefore}-сабактан кийинки тест",
+  "@courseDetailQuizAfterLesson": {
+    "placeholders": {
+      "videosBefore": {
+        "type": "Object"
+      }
+    }
+  },
+  "courseDetailQuizForCourse": "Курс боюнча тест",
+  "courseDetailLessonMin": "{p1} мүн",
+  "@courseDetailLessonMin": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "courseDetailQuizBadge": "ТЕСТ",
+  "homePhActiveQuests": "Активдүү квесттер",
+  "homePhAllQuests": "Бардык квесттер",
+  "homePhNoActiveQuests": "Активдүү квесттер жок",
+  "homePhRecentChecks": "Акыркы чектер",
+  "homePhAllChecks": "Бардык чектер",
+  "homePhNoChecks": "Азырынча чектер жок",
+  "homePhGreeting": "Салам!",
+  "homePhGreetingName": "Салам, {name}!",
+  "@homePhGreetingName": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "homePhGreetingSub": "Жаңы билимге даярсызбы?",
+  "homePhWalletBalanceLabel": "КАПЧЫК БАЛАНСЫ",
+  "homePhWalletButton": "Капчык",
+  "homePhSendCheck": "Чек жөнөтүү",
+  "homePhSendCheckSub": "Чекти сүрөткө тартыңыз — AI дарыларды тааныйт",
+  "homePhStatActiveQuests": "активдүү квест",
+  "homePhStatApprovedChecks": "жактырылган чек",
+  "homePhStatIqcPoints": "IQC упай",
+  "homePhVoucherBadge": "ВАУЧЕР",
+  "homePhProgress": "Жүрүш",
+  "homePhPctDone": "{pct}% аткарылды",
+  "@homePhPctDone": {
+    "placeholders": {
+      "pct": {
+        "type": "Object"
+      }
+    }
+  },
+  "homePhCheckNumber": "Чек №{p1}",
+  "@homePhCheckNumber": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "learnLessonOne": "сабак",
+  "learnLessonFew": "сабак",
+  "learnLessonMany": "сабак",
+  "learnTitle": "Окуу",
+  "learnSearchHint": "Курстар боюнча издөө...",
+  "learnTabAll": "Баары",
+  "learnTabMine": "Менин курстарым",
+  "learnTabDone": "Өтүлгөн",
+  "learnNewBadge": "ЖАҢЫ",
+  "learnRepeatCourse": "КУРСТУ КАЙТАЛОО",
+  "learnContinueLearning": "ОКУУНУ УЛАНТУУ",
+  "learnStartCourse": "КУРСТАН ӨТҮҮ",
+  "learnCompleted": "Өтүлдү",
+  "learnNotFoundTitle": "Курстар табылган жок",
+  "learnTryChangeFilters": "Чыпкаларды өзгөртүп көрүңүз",
+  "learnNothingForQuery": "«{query}» сурамы боюнча эч нерсе табылган жок.\nСурамды өзгөртүңүз же чыпкаларды алып салыңыз.",
+  "@learnNothingForQuery": {
+    "placeholders": {
+      "query": {
+        "type": "Object"
+      }
+    }
+  },
+  "learnResetFilters": "Чыпкаларды алып салуу",
+  "lessonCompletedReward": "Сабак аяктады · +{p1} IQC",
+  "@lessonCompletedReward": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "lessonNotFound": "Сабак табылган жок",
+  "lessonTabText": "САБАКТЫН ТЕКСТИ",
+  "lessonTabMaterials": "САБАКТЫН МАТЕРИАЛДАРЫ",
+  "lessonNoMaterials": "Азырынча материалдар жок",
+  "lessonStartQuiz": "ТЕСТТИ БАШТОО",
+  "lessonComplete": "САБАКТЫ АЯКТОО",
+  "questDetailBackQuests": "Квесттер",
+  "questDetailPillVoucher": "Ваучер",
+  "questDetailLeftLabel": "калды",
+  "questDetailDoneLabel": "аткарылды",
+  "questDetailRewardLabel": "СЫЙЛЫК",
+  "questDetailVoucherManual": "Ваучер текшерүүдөн кийин кол менен берилет",
+  "questDetailIqcToBalance": "Баланска +{p1} IQC",
+  "@questDetailIqcToBalance": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "questDetailHowTitle": "Чектер кантип эсептелет",
+  "questDetailHowBody": "Керектүү дары бар чектердин сүрөтүн жөнөтүңүз. Таңгакты текшерүү — автоматтык түрдө.",
+  "questDetailTodoTitle": "Эмне кылуу керек",
+  "questDetailDrugLabel": "Дары",
+  "questDetailLimitsLabel": "Лимиттер",
+  "questDetailPeriodLabel": "Мезгил",
+  "questDetailParticipantsLabel": "Катышуучулар",
+  "questDetailPurchases": "сатып алуу",
+  "questsPeriodUntil": "{p1} чейин",
+  "@questsPeriodUntil": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "questsPeriodFrom": "{p1} баштап",
+  "@questsPeriodFrom": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "questsPeriodNone": "Мөөнөтсүз",
+  "questsTitle": "Квесттер",
+  "questsTabActive": "Активдүү",
+  "questsTabArchive": "Архив",
+  "questsTabAll": "Баары",
+  "questsCountWordActive": "активдүү",
+  "questsCountWordArchive": "архивдеги",
+  "questsCountQuestOne": "квест",
+  "questsCountQuestFew": "квест",
+  "questsHistoryChip": "Катышуу тарыхы",
+  "questsSearchHint": "Издөө",
+  "questsPacksItem": "{p1} × {p2} таңг.",
+  "@questsPacksItem": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      },
+      "p2": {
+        "type": "Object"
+      }
+    }
+  },
+  "questsIqcNoLimit": "+{p1} IQC · чексиз",
+  "@questsIqcNoLimit": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "questsPillVoucher": "Ваучер",
+  "questsActive": "Активдүү",
+  "questsFinished": "Аяктады",
+  "questsEmptyArchiveTitle": "Архивдеги квесттер жок",
+  "questsEmptyArchiveSub": "Аяктаган квесттер ушул жерде пайда болот",
+  "questsEmptyActiveTitle": "Активдүү квесттер жок",
+  "questsEmptyActiveSub": "Жаңы квесттер ушул жерде пайда болот",
+  "questsEmptyAllTitle": "Квесттер жок",
+  "questsEmptyAllSub": "Кийинчерээк караңыз",
+  "questsViewActive": "Активдүүлөрдү көрүү",
+  "quizTitle": "Тестирлөө",
+  "quizQuestionOf": "Суроо {p1} / {n}",
+  "@quizQuestionOf": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      },
+      "n": {
+        "type": "Object"
+      }
+    }
+  },
+  "quizFinish": "ТЕСТТИ АЯКТОО",
+  "quizNext": "КИЙИНКИ СУРОО →",
+  "quizAnswerLabel": "Жооп",
+  "quizCongrats": "Куттуктайбыз!",
+  "quizPassed": "Тест ийгиликтүү тапшырылды!",
+  "quizYouEarned": "Сиз таптыңыз",
+  "quizCorrectLabel": "ТУУРА ЖООПТОР",
+  "quizResultLabel": "ЖЫЙЫНТЫК",
+  "quizToHome": "БАШКЫ ЭКРАНГА",
+  "quizViewCertificate": "Сертификатты көрүү →",
+  "quizTryAgainTitle": "Дагы бир жолу аракет кылыңыз",
+  "quizFailed": "Тест тапшырылган жок",
+  "quizYourResult": "Сиздин жыйынтык",
+  "quizCorrectLower": "туура",
+  "quizPassMinimum": "Өтүү үчүн минимум: {passScore}/{total} ({passPct}%)",
+  "@quizPassMinimum": {
+    "placeholders": {
+      "passScore": {
+        "type": "Object"
+      },
+      "total": {
+        "type": "Object"
+      },
+      "passPct": {
+        "type": "Object"
+      }
+    }
+  },
+  "quizRetry": "↺ КАЙРА ТАПШЫРУУ",
+  "quizBackToLesson": "Сабакка кайтуу →",
+  "voucherNotFound": "Ваучер табылган жок",
+  "voucherTitle": "Менин ваучерим",
+  "voucherCodeCopied": "Код көчүрүлдү",
+  "voucherUsed": "Колдонулду",
+  "voucherActive": "Активдүү",
+  "voucherIssuedAt": "Берилди: {p1}",
+  "@voucherIssuedAt": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "voucherGiftCardLabel": "UZS · БЕЛЕК КАРТАСЫ",
+  "voucherShowQr": "QR-кодду кассирге көрсөтүңүз же кодду айтыңыз",
+  "voucherStores": "Korzinka.uz дүкөндөрү",
+  "voucherSupport": "Колдоо кызматы",
+  "walletPendingVouchers": "Кезектеги ваучерлер",
+  "walletUseIqc": "IQC колдонуу",
+  "walletMyVouchers": "Менин ваучерлерим",
+  "walletNoVouchers": "Азырынча ваучерлер жок",
+  "walletRedeemTitle": "Упайлар алмаштырылсынбы?",
+  "walletRedeemBody": "{p1} — {p2} IQC үчүн",
+  "@walletRedeemBody": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      },
+      "p2": {
+        "type": "Object"
+      }
+    }
+  },
+  "walletCancel": "Жокко чыгаруу",
+  "walletRedeem": "Алмаштыруу",
+  "walletVoucherIssued": "Ваучер таризделди",
+  "walletTitle": "Капчык",
+  "walletBalanceLabel": "БАЛАНС",
+  "walletTotalAccrued": "Бардыгы эсептелди: {p1} IQC",
+  "@walletTotalAccrued": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "walletHistoryArrow": "Тарых →",
+  "walletQuestDoneAwaiting": "Квест аткарылды — ваучер берилүүнү күтүүдө",
+  "walletForIqc": "{p1} IQC үчүн",
+  "@walletForIqc": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "walletGetVoucher": "Ваучер алуу",
+  "walletNotEnoughIqc": "IQC жетишсиз",
+  "walletCodeMeta": "Код: {p1} · {p2}",
+  "@walletCodeMeta": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      },
+      "p2": {
+        "type": "Object"
+      }
+    }
+  },
+  "walletVoucherUsed": "Колдонулду",
+  "walletVoucherActive": "Активдүү",
+  "walletHistoryTitle": "Тарых",
+  "walletNoTransactions": "Азырынча операциялар жок",
+  "brandProductsBrand": "Бренд",
+  "brandProductsFormat": "Формат",
+  "brandProductsMxik": "МХИК",
+  "brandProductsDivisible": "Бөлүнүүчү",
+  "brandProductsYes": "Ооба",
+  "brandProductsNo": "Жок",
+  "brandProductsQuests": "Квесттер",
+  "medrepHomePeriodAll": "Баары",
+  "medrepHomePeriod30d": "30 күн",
+  "medrepHomePeriod7d": "7 күн",
+  "leaderboardTabChecks": "Чектер",
+  "leaderboardTabPharm": "Фармацевттер",
+  "leaderboardTabQuests": "Квесттер",
+  "leaderboardMyRankLabel": "{company} | Менин ордум: ",
+  "@leaderboardMyRankLabel": {
+    "placeholders": {
+      "company": {
+        "type": "Object"
+      }
+    }
+  },
+  "leaderboardMyRank": "#{rank} / {total}",
+  "@leaderboardMyRank": {
+    "placeholders": {
+      "rank": {
+        "type": "Object"
+      },
+      "total": {
+        "type": "Object"
+      }
+    }
+  },
+  "portfolioChecksChip": "Чектер: {count}",
+  "@portfolioChecksChip": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "portfolioQuestsChip": "Квесттер: {count}",
+  "@portfolioQuestsChip": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "referralsDate": "Өтүнмө: {date}",
+  "@referralsDate": {
+    "placeholders": {
+      "date": {
+        "type": "Object"
+      }
+    }
+  },
+  "checksStatusApproved": "Жактырылды",
+  "checksStatusRejected": "Четке кагылды",
+  "checksStatusPending": "Текшерилүүдө",
+  "questDetailRewardVoucherLine": "Korzinka · {amount} сум",
+  "@questDetailRewardVoucherLine": {
+    "placeholders": {
+      "amount": {
+        "type": "Object"
+      }
+    }
+  },
+  "questDetailRewardIqcLine": "Бардык дарыканалар · чексиз",
+  "questDetailActiveUntil": "{date} чейин активдүү",
+  "@questDetailActiveUntil": {
+    "placeholders": {
+      "date": {
+        "type": "Object"
+      }
+    }
+  },
+  "questDetailFinished": "Аяктады",
+  "questsPurchasesOfGoal": "{completed} / {goal} сатып алуу",
+  "@questsPurchasesOfGoal": {
+    "placeholders": {
+      "completed": {
+        "type": "Object"
+      },
+      "goal": {
+        "type": "Object"
+      }
+    }
+  },
+  "questsPurchases": "{completed} сатып алуу",
+  "@questsPurchases": {
+    "placeholders": {
+      "completed": {
+        "type": "Object"
+      }
+    }
+  }
+}

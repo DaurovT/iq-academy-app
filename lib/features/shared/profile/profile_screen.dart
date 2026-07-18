@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../../../core/api/providers.dart';
 import '../../../core/auth/auth_controller.dart';
 import '../../../core/l10n/l10n.dart';
+import '../../../core/l10n/locale_controller.dart';
 import '../../../core/models/common.dart';
 import '../../../core/models/quest.dart';
 import '../../../core/theme/theme_controller.dart';
@@ -76,17 +77,20 @@ class ProfileScreen extends ConsumerWidget {
                     children: [
                       _MiniLabel(c: c, text: context.l10n.profileLanguage),
                       const SizedBox(height: 8),
-                      Row(
+                      // Язык интерфейса приложения (5 языков). Wrap — пилюли
+                      // не влезают в одну строку на узких экранах.
+                      Wrap(
+                        spacing: 4,
+                        runSpacing: 8,
                         children: [
-                          for (final l in Language.values) ...[
+                          for (final l in supportedAppLocales)
                             _Pill(
                               c: c,
-                              label: _langName(l),
-                              selected: account?.language == l,
-                              onTap: () => _setLanguage(context, ref, l),
+                              label: _localeName(l.languageCode),
+                              selected: ref.watch(localeProvider).languageCode ==
+                                  l.languageCode,
+                              onTap: () => _setLocale(context, ref, l),
                             ),
-                            const SizedBox(width: 4),
-                          ],
                         ],
                       ),
                       const SizedBox(height: 12),
@@ -271,23 +275,39 @@ class ProfileScreen extends ConsumerWidget {
     );
   }
 
-  static String _langName(Language l) => switch (l) {
-        Language.ru => 'Русский',
-        Language.uz => "O'zbekcha",
-        Language.kz => 'Қазақша',
+  /// Названия языков всегда пишутся на самом языке — не локализуются.
+  static String _localeName(String code) => switch (code) {
+        'ru' => 'Русский',
+        'uz' => "O'zbekcha",
+        'kk' => 'Қазақша',
+        'tg' => 'Тоҷикӣ',
+        'ky' => 'Кыргызча',
+        _ => code,
       };
 
-  Future<void> _setLanguage(
-      BuildContext context, WidgetRef ref, Language lang) async {
+  Future<void> _setLocale(
+      BuildContext context, WidgetRef ref, Locale locale) async {
     final messenger = ScaffoldMessenger.of(context);
-    final l10n = context.l10n;
+    // Интерфейс переключаем сразу и локально — это главное действие.
+    ref.read(localeProvider.notifier).set(locale);
+    // Снекбар — уже на новом языке (context ещё не перестроен, берём напрямую).
+    messenger.showSnackBar(SnackBar(
+        content:
+            Text(lookupAppLocalizations(locale).profileLanguageUpdated)));
+    // Бэкенд знает только ru/uz/kz — синхронизируем, где возможно (для
+    // рассылок/контента). tg и ky на сервере не представлены — пропускаем.
+    final backendLang = switch (locale.languageCode) {
+      'ru' => Language.ru,
+      'uz' => Language.uz,
+      'kk' => Language.kz,
+      _ => null,
+    };
+    if (backendLang == null) return;
     try {
-      await ref.read(apiProvider).account.setLanguage(lang);
+      await ref.read(apiProvider).account.setLanguage(backendLang);
       ref.invalidate(authControllerProvider);
-      messenger
-          .showSnackBar(SnackBar(content: Text(l10n.profileLanguageUpdated)));
-    } catch (e) {
-      messenger.showSnackBar(SnackBar(content: Text(e.toString())));
+    } catch (_) {
+      // Синхронизация с сервером — best effort; язык приложения уже сменён.
     }
   }
 

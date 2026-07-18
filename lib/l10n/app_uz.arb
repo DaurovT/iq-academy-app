@@ -1,0 +1,1227 @@
+{
+  "@@locale": "uz",
+  "appTitle": "IQ Academy",
+  "apiNetworkError": "Tarmoq xatosi",
+  "apiNoAccess": "Ruxsat yo'q",
+  "checkModelStatusPending": "Tekshirilmoqda",
+  "checkModelStatusAiDetected": "AI tanidi",
+  "checkModelStatusAiWrong": "AI tanimadi",
+  "checkModelStatusApproved": "Tasdiqlangan",
+  "checkModelStatusRejected": "Rad etilgan",
+  "commonRolePharmacist": "Farmatsevt",
+  "commonRoleDoctor": "Shifokor",
+  "commonRoleMedrep": "Tibbiy vakil",
+  "commonRoleProductOwner": "Brend / Mahsulot egasi",
+  "commonCancel": "Bekor qilish",
+  "navHome": "Asosiy",
+  "navChecks": "Cheklar",
+  "navQuests": "Kvestlar",
+  "navLearn": "Ta'lim",
+  "navWallet": "Hamyon",
+  "navRecipes": "Retseptlar",
+  "navPortfolio": "Portfel",
+  "navPharm": "Farm.",
+  "navTop": "Top",
+  "navDashboard": "Boshqaruv",
+  "navProducts": "Mahsulotlar",
+  "navBrands": "Brendlar",
+  "navProfile": "Profil",
+  "miniAppsTitle": "Mini-ilovalar",
+  "miniAppsSubtitle": "O'ynang va IQC evaziga sovg'alar yutib oling",
+  "miniAppsSoon": "Tez orada",
+  "sapperCountdownSoon": "tez orada",
+  "sapperCountdownDaysHours": "{days}k {hours}s",
+  "@sapperCountdownDaysHours": {
+    "placeholders": {
+      "days": {
+        "type": "Object"
+      },
+      "hours": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperCountdownHoursMinutes": "{hours}s {minutes}d",
+  "@sapperCountdownHoursMinutes": {
+    "placeholders": {
+      "hours": {
+        "type": "Object"
+      },
+      "minutes": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperCountdownMinutesSeconds": "{minutes}d {seconds}s",
+  "@sapperCountdownMinutesSeconds": {
+    "placeholders": {
+      "minutes": {
+        "type": "Object"
+      },
+      "seconds": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperTitle": "Super Sapyor",
+  "sapperSubtitle": "IQC evaziga kataklarni egallang — ochilish soatida ular ostida nima borligini bilib olasiz",
+  "sapperNoDraws": "O'yinlar yo'q",
+  "sapperRevealed": "Ochilgan",
+  "sapperPrizesAndPrice": "🎁 {prizeCount} ta sovg'a  💎 {priceIqc} IQC/katak  ",
+  "@sapperPrizesAndPrice": {
+    "placeholders": {
+      "prizeCount": {
+        "type": "Object"
+      },
+      "priceIqc": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperMyCells": "sizning kataklaringiz: {count}",
+  "@sapperMyCells": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperOccupancy": "band {occupied} / {total} ({percent}%)",
+  "@sapperOccupancy": {
+    "placeholders": {
+      "occupied": {
+        "type": "Object"
+      },
+      "total": {
+        "type": "Object"
+      },
+      "percent": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperGoToGame": "O'yinga o'tish",
+  "sapperReserveTitle": "{number}-katakni egallaysizmi?",
+  "@sapperReserveTitle": {
+    "placeholders": {
+      "number": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperReserveBody": "{price} IQC yechiladi. Bekor qilib bo'lmaydi — katak ochilishgacha sizniki bo'lib qoladi.",
+  "@sapperReserveBody": {
+    "placeholders": {
+      "price": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperReserveConfirm": "{price} IQC evaziga egallash",
+  "@sapperReserveConfirm": {
+    "placeholders": {
+      "price": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperCellReserved": "{number}-katak band qilindi",
+  "@sapperCellReserved": {
+    "placeholders": {
+      "number": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperDraws": "Yutuq o'yinlari",
+  "sapperAcceptClosed": "Kataklarni band qilish yopildi — ochilishga tayyorgarlik ketmoqda",
+  "sapperHiddenTitle": "MAYDONDA YASHIRINGAN",
+  "sapperRevealIn": "ochilishgacha {time}",
+  "@sapperRevealIn": {
+    "placeholders": {
+      "time": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperNoPrizes": "sovg'alar e'lon qilinmagan",
+  "sapperPrizeChip": "🎁 {count}× {label}",
+  "@sapperPrizeChip": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      },
+      "label": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperBalance": "Balans: {balance} IQC",
+  "@sapperBalance": {
+    "placeholders": {
+      "balance": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperCellPrice": "katak narxi {price} IQC",
+  "@sapperCellPrice": {
+    "placeholders": {
+      "price": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperYourBalance": "Sizning balansingiz",
+  "sapperCellPriceLabel": "katak narxi",
+  "sapperWinBannerWin": "🎉 Siz {count} {word} yutdingiz!",
+  "@sapperWinBannerWin": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      },
+      "word": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperNoWin": "Bu safar yutuqsiz",
+  "sapperPrizeOne": "sovg'a",
+  "sapperPrizeFew": "sovg'a",
+  "sapperPrizeMany": "sovg'a",
+  "sapperLegendMine": "Meniki",
+  "sapperLegendTheirs": "Boshqalarniki",
+  "sapperLegendEmpty": "Bo'sh",
+  "sapperLegendVoucher": "Vaucher",
+  "sapperLegendSelected": "Tanlangan",
+  "sapperLegendOccupied": "Band",
+  "sapperLegendFree": "Bo'sh",
+  "sapperWinners": "G'oliblar",
+  "newsTitle": "Yangiliklar",
+  "newsAll": "Barcha yangiliklar",
+  "newsMore": "Batafsil →",
+  "newsDateMonths": "yan,fev,mar,apr,may,iyn,iyl,avg,sen,okt,noy,dek",
+  "newsEmpty": "Hozircha yangiliklar yo'q",
+  "newsPinned": "MUHIM",
+  "newsDetailTitle": "Yangilik",
+  "surveyRewardCredited": "+{amount} IQC hisobga qo'shildi",
+  "@surveyRewardCredited": {
+    "placeholders": {
+      "amount": {
+        "type": "Object"
+      }
+    }
+  },
+  "surveyThanks": "Javobingiz uchun rahmat!",
+  "surveySubmitError": "Yuborib bo'lmadi: {error}",
+  "@surveySubmitError": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "surveyTitle": "So'rovnoma",
+  "surveyRewardBadge": "+ {amount} IQC",
+  "@surveyRewardBadge": {
+    "placeholders": {
+      "amount": {
+        "type": "Object"
+      }
+    }
+  },
+  "surveyChooseOption": "Javob variantini tanlang",
+  "surveyEnterAnswer": "Javobni qo'lda kiriting",
+  "surveySubmit": "Javob berish",
+  "loginTagline": "O'rgan.\nQo'lla.\nErish.",
+  "loginTitle": "Kirish",
+  "loginByPhone": "Telefon raqami orqali kiring",
+  "loginCodeSent": "{phone} raqamiga SMS-kod yuborildi",
+  "@loginCodeSent": {
+    "placeholders": {
+      "phone": {
+        "type": "Object"
+      }
+    }
+  },
+  "loginPhoneLabel": "Telefon raqami",
+  "loginPhoneNotFound": "Raqam tizimda topilmadi",
+  "loginConfirm": "Tasdiqlash",
+  "loginGoRegister": "Ro'yxatdan o'tish",
+  "loginRegister": "Ro'yxatdan o'tish",
+  "loginEnter": "Kirish",
+  "loginResendIn": "{seconds} soniyadan so'ng qayta yuborish",
+  "@loginResendIn": {
+    "placeholders": {
+      "seconds": {
+        "type": "Object"
+      }
+    }
+  },
+  "loginResendAgain": "Qayta yuborish",
+  "loginChangeNumber": "‹ Raqamni o'zgartirish",
+  "loginOr": "yoki",
+  "tgLoginExpired": "Kirish vaqti tugadi",
+  "tgLoginParseError": "Kirish javobini qayta ishlab bo'lmadi: {error}",
+  "@tgLoginParseError": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "tgWaitingConfirm": "Tasdiqlash kutilmoqda…",
+  "tgLoginButton": "Telegram orqali kirish",
+  "notifTitle": "Bildirishnomalar",
+  "notifUnreadOne": "{count} ta o'qilmagan",
+  "@notifUnreadOne": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "notifUnreadMany": "{count} ta o'qilmagan",
+  "@notifUnreadMany": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "notifMarkAllRead": "Hammasini o'qilgan deb belgilash",
+  "notifRead": "✓ O'qilgan",
+  "notifMarkRead": "O'qilgan deb belgilash",
+  "notifOpen": "Ochish",
+  "notifEmptyTitle": "Bildirishnomalar yo'q",
+  "notifEmptyBody": "Bu yerda chek holatlari, kvest mukofotlari va ta'lim yangiliklari paydo bo'ladi.",
+  "placeholderComingSoon": "Bo'lim keyingi bosqichlarda paydo bo'ladi.",
+  "profileTitle": "Profil",
+  "profileSettings": "Sozlamalar",
+  "profileLanguage": "TIL",
+  "profileAppearance": "KO'RINISH",
+  "profileThemeLight": "Yorug'",
+  "profileThemeDark": "Tungi",
+  "profileThemeSystem": "Tizim",
+  "profileAccount": "Hisob",
+  "profilePersonalData": "SHAXSIY MA'LUMOTLAR",
+  "profileRole": "Rol",
+  "profileChange": "O'zgartirish",
+  "profileLinkedServices": "ULANGAN XIZMATLAR",
+  "profilePhone": "Telefon",
+  "profileTgConnected": "Ulangan",
+  "profileTgLinked": "Bog'langan",
+  "profileSupport": "Yordam xizmati",
+  "profileSupportSubtitle": "Biz doim aloqadamiz",
+  "profileLogout": "Hisobdan chiqish",
+  "profileDeleteTitle": "Hisob va ma'lumotlarni o'chirish",
+  "profileDeleteIrreversible": "Bu amalni qaytarib bo'lmaydi",
+  "profileDelete": "O'chirish",
+  "profileLanguageUpdated": "Til yangilandi",
+  "profileNewPhoneTitle": "Yangi raqam",
+  "profileCancel": "Bekor qilish",
+  "profileNext": "Davom etish",
+  "profileSmsCodeTitle": "SMS-kod",
+  "profileCodeLabel": "Kod",
+  "profileConfirm": "Tasdiqlash",
+  "profilePhoneChanged": "Telefon o'zgartirildi",
+  "profileLogoutConfirmTitle": "Hisobdan chiqasizmi?",
+  "profileLogoutAction": "Chiqish",
+  "profileDeleteConfirmTitle": "Hisob o'chirilsinmi?",
+  "profileDeleteConfirmBody": "Bu amalni qaytarib bo'lmaydi. Barcha ma'lumotlar o'chiriladi.",
+  "profileStatQuests": "KVESTLAR",
+  "profileStatLevel": "DARAJA",
+  "questHistoryTitle": "Ishtirok tarixi",
+  "questHistoryEmpty": "Tarix bo'sh",
+  "questHistoryVoucher": "Vaucher",
+  "questHistoryActive": "Faol",
+  "questHistoryDone": "Bajarilgan",
+  "registerStep1Of2": "1-QADAM / 2",
+  "registerStep2Of2": "2-QADAM / 2 · {role}",
+  "@registerStep2Of2": {
+    "placeholders": {
+      "role": {
+        "type": "Object"
+      }
+    }
+  },
+  "registerTitle": "Ro'yxatdan o'tish",
+  "registerChooseRole": "Kirish uchun rolni tanlang",
+  "registerBack": "‹ Orqaga",
+  "registerConfirmField": "Tasdiqlang: {label}",
+  "@registerConfirmField": {
+    "placeholders": {
+      "label": {
+        "type": "Object"
+      }
+    }
+  },
+  "registerFillField": "To'ldiring: {label}",
+  "@registerFillField": {
+    "placeholders": {
+      "label": {
+        "type": "Object"
+      }
+    }
+  },
+  "registerFinish": "Ro'yxatdan o'tishni yakunlash",
+  "registerSuccessTitle": "Ro'yxatdan o'tish yakunlandi!",
+  "registerWelcome": "PharmIQ ACADEMY'ga xush kelibsiz, {name}!",
+  "@registerWelcome": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "registerStartLearning": "O'qishni boshlash",
+  "registerGoHome": "Asosiy sahifaga o'tish",
+  "registerEnterField": "{label} kiriting",
+  "@registerEnterField": {
+    "placeholders": {
+      "label": {
+        "type": "Object"
+      }
+    }
+  },
+  "registerRequiredField": "Majburiy maydon",
+  "registerSelectPlaceholder": "— tanlang —",
+  "registerMultiSelectHintRequired": "{label} * · Bir nechtasini tanlash mumkin",
+  "@registerMultiSelectHintRequired": {
+    "placeholders": {
+      "label": {
+        "type": "Object"
+      }
+    }
+  },
+  "registerMultiSelectHint": "{label} · Bir nechtasini tanlash mumkin",
+  "@registerMultiSelectHint": {
+    "placeholders": {
+      "label": {
+        "type": "Object"
+      }
+    }
+  },
+  "registerConsentText": "Shaxsiy ma'lumotlarni qayta ishlashga roziman ",
+  "registerConsentMore": "batafsil",
+  "roleSelectTagline": "O'rgan.\nQo'lla.\nErish.",
+  "roleSelectGreeting": "Assalomu alaykum",
+  "roleSelectGreetingName": "Assalomu alaykum, {name}",
+  "@roleSelectGreetingName": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "roleSelectChooseRole": "Kirish uchun rolni tanlang",
+  "roleSelectSubChecksQuests": "Cheklar, kvestlar, ta'lim va hamyon",
+  "roleSelectSubMedrep": "Provizorlar portfeli va reyting",
+  "roleSelectSubProductOwner": "Boshqaruv paneli, mahsulotlar va brendlar",
+  "roleSelectSheetTitle": "Rolni tanlang",
+  "roleSelectEnter": "Kirish",
+  "notifSettingsTitle": "Bildirishnoma sozlamalari",
+  "notifSettingsChecks": "Chek va retsept holatlari",
+  "notifSettingsQuests": "Kvestlar va mukofotlar",
+  "notifSettingsLearning": "Ta'lim",
+  "notifSettingsMarketing": "Yangiliklar va aksiyalar",
+  "supportBackProfile": "Profil",
+  "supportTitle": "Yordam xizmati",
+  "supportEmptyHint": "Bizga yozing — shu yerda javob beramiz",
+  "supportInputHint": "Xabar yozing...",
+  "supportYou": "Siz",
+  "supportTeam": "Yordam xizmati",
+  "appBarSwitchRole": "Rolni almashtirish",
+  "asyncRetry": "Qayta urinish",
+  "brandProductsTitle": "Mahsulotlar",
+  "brandProductsEmpty": "Mahsulotlar yo'q",
+  "brandProductsQuestCount": "{p1} ta kvest",
+  "@brandProductsQuestCount": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "brandProductsDetailTitle": "Mahsulot",
+  "brandQuestsTitle": "Brend kvestlari",
+  "brandQuestsEmpty": "Kvestlar yo'q",
+  "brandQuestsSubtitle": "{p1} · {p2}/{p3} bajarildi",
+  "@brandQuestsSubtitle": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      },
+      "p2": {
+        "type": "Object"
+      },
+      "p3": {
+        "type": "Object"
+      }
+    }
+  },
+  "brandQuestsStatusActive": "Faol",
+  "brandQuestsStatusOff": "O'chiq",
+  "brandQuestsDetailTitle": "Brend kvesti",
+  "brandQuestsSponsor": "Homiy: {p1}",
+  "@brandQuestsSponsor": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "brandQuestsParticipants": "Ishtirokchilar",
+  "brandQuestsCompletions": "Bajarilganlar",
+  "brandQuestsBudget": "Byudjet",
+  "brandQuestsSpent": "Sarflangan",
+  "brandQuestsProducts": "Mahsulotlar",
+  "brandQuestsMxik": "MXIK",
+  "brandQuestsReward": "Mukofot",
+  "brandQuestsPeriod": "Davr",
+  "brandsTitle": "Brendlar",
+  "brandsEmpty": "Brendlar yo'q",
+  "brandsQuestCount": "{p1} ta kvest",
+  "@brandsQuestCount": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "brandsDetailTitle": "Brend",
+  "brandsSubBrands": "Sub-brendlar",
+  "brandDashTitle": "Boshqaruv paneli",
+  "brandDashChecks": "Cheklar",
+  "brandDashPacks": "Qadoqlar",
+  "brandDashActiveQuests": "Faol kvestlar",
+  "brandDashParticipants": "Ishtirokchilar",
+  "brandDashSegmentation": "Segmentatsiya",
+  "brandDashRetail": "Chakana",
+  "brandDashChain": "Tarmoqlar",
+  "brandDashTopProducts": "Top mahsulotlar",
+  "brandDashTopSellers": "Top sotuvchilar",
+  "brandDashRegions": "Hududlar",
+  "brandDashSalesLogs": "Sotuv jurnallari",
+  "salesLogTitle": "Sotuv jurnallari",
+  "salesLogEmpty": "Yozuvlar yo'q",
+  "docHomeActiveQuests": "Faol kvestlar",
+  "docHomeAllQuests": "Barcha kvestlar",
+  "docHomeNoActiveQuests": "Faol kvestlar yo'q",
+  "docHomeRecommendedCourses": "Tavsiya etilgan kurslar",
+  "docHomeAllCourses": "Barcha kurslar",
+  "docHomeNoCourses": "Hozircha kurslar yo'q",
+  "docHomeGreetingNoName": "Salom!",
+  "docHomeGreeting": "Salom, {name}",
+  "@docHomeGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "docHomeSubtitle": "Retseptlarni yuboring va mukofot oling",
+  "docHomeWalletBalance": "HAMYON BALANSI",
+  "docHomeWallet": "Hamyon",
+  "docHomeSendRecipe": "Retsept yuborish",
+  "docHomeSendRecipeHint": "Retseptni suratga oling — AI dorilarni taniydi",
+  "docHomeStatRecipes": "jami retseptlar",
+  "docHomeStatApproved": "tasdiqlangan",
+  "docHomeStatIqc": "IQC ball",
+  "docHomeVoucher": "VAUCHER",
+  "docHomeProgress": "Jarayon",
+  "docHomeProgressDone": "{pct}% bajarildi",
+  "@docHomeProgressDone": {
+    "placeholders": {
+      "pct": {
+        "type": "Object"
+      }
+    }
+  },
+  "recipeDetailMyRecipes": "Mening retseptlarim",
+  "recipeDetailTitle": "Retsept №{id}",
+  "@recipeDetailTitle": {
+    "placeholders": {
+      "id": {
+        "type": "Object"
+      }
+    }
+  },
+  "recipeDetailPhotoCount": "Surat {p1}",
+  "@recipeDetailPhotoCount": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "recipeDetailStatusApproved": "Tasdiqlangan",
+  "recipeDetailStatusRejected": "Rad etilgan",
+  "recipeDetailStatusPending": "Tekshirilmoqda",
+  "recipeDetailAiRecognized": "AI tanidi",
+  "recipeDetailNoDrugs": "Dorilar tanilmadi",
+  "recipesTitle": "Mening retseptlarim",
+  "recipesTotal": "jami {p1}",
+  "@recipesTotal": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "recipesTabAll": "Barchasi",
+  "recipesTabActive": "Faol",
+  "recipesTabDone": "Yakunlangan",
+  "recipesEmpty": "Hozircha retseptlar yo'q",
+  "recipesTakePhoto": "Suratga olish",
+  "recipesFromGallery": "Galereyadan tanlash",
+  "recipesUploading": "Retsept qo'shildi — yuklanmoqda",
+  "recipesDoctorInfoTitle": "Shifokor ma'lumotlari (ixtiyoriy)",
+  "recipesDoctorName": "F.I.Sh.",
+  "recipesDoctorWorkplace": "Ish joyi",
+  "recipesDoctorCity": "Shahar",
+  "recipesDoctorPhone": "Telefon",
+  "recipesSkip": "O'tkazib yuborish",
+  "recipesSend": "Yuborish",
+  "recipesSubmitButton": "Retsept yuborish",
+  "recipesPhotoCount": "surat: {p1}",
+  "@recipesPhotoCount": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "recipesStatusApproved": "Tasdiqlangan",
+  "recipesStatusRejected": "Rad etilgan",
+  "recipesStatusPending": "Tekshirilmoqda",
+  "recipesUploadingBanner": "Yuklanmoqda: {count}",
+  "@recipesUploadingBanner": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "recipesRetry": "Qayta urinish",
+  "companiesTitle": "Kompaniyalar",
+  "companiesEmpty": "Kompaniyalar yo'q",
+  "companiesCode": "Kod: {p1}",
+  "@companiesCode": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "medrepHomeAttributionPrimary": "Birlamchi",
+  "medrepHomeAttributionTotal": "Umumiy",
+  "medrepHomeMenuPharmacists": "Farmatsevtlar",
+  "medrepHomeMenuPending": "Tasdiqlash kutilmoqda",
+  "medrepHomeMenuCompanies": "Kompaniyalar",
+  "medrepHomeMenuLeaderboard": "Reyting",
+  "medrepHomeGreetingNoName": "Salom!",
+  "medrepHomeGreeting": "Salom, {name}",
+  "@medrepHomeGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "medrepHomeAttribution": "Atributsiya: {attribution}",
+  "@medrepHomeAttribution": {
+    "placeholders": {
+      "attribution": {
+        "type": "Object"
+      }
+    }
+  },
+  "medrepHomeStatPharmacists": "Farmatsevtlar",
+  "medrepHomeStatChecks": "Cheklar",
+  "medrepHomeStatPacks": "Qadoqlar",
+  "medrepHomeStatQuests": "Kvestlar",
+  "medrepHomeLinkCopied": "Havola nusxalandi",
+  "medrepHomeReferralTitle": "Referal havola",
+  "medrepHomeReferralHint": "Havolani provizorga yuboring — u ro'yxatdan o'tishda sizga bog'lanadi",
+  "medrepHomeCopy": "Nusxalash",
+  "medrepHomeShare": "Ulashish",
+  "medrepHomeRetry": "Qayta urinish",
+  "leaderboardUnitPharm": "dorixona",
+  "leaderboardUnitQuests": "kvest",
+  "leaderboardUnitChecks": "chek",
+  "leaderboardTitle": "Reyting",
+  "leaderboardAttributionPrimary": "Birlamchi",
+  "leaderboardAttributionTotal": "Umumiy",
+  "leaderboardCompanyFallback": "Kompaniya",
+  "leaderboardRetry": "Qayta urinish",
+  "pharmDetailIncentivizeTitle": "Farmatsevtni rag'batlantirish",
+  "pharmDetailRating": "Baho: {p1}",
+  "@pharmDetailRating": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "pharmDetailComment": "Izoh",
+  "pharmDetailCancel": "Bekor qilish",
+  "pharmDetailSend": "Yuborish",
+  "pharmDetailSent": "Yuborildi",
+  "pharmDetailBack": "Farmatsevtlar",
+  "pharmDetailChecks": "Cheklar",
+  "pharmDetailPacks": "Qadoqlar",
+  "pharmDetailQuests": "Kvestlar",
+  "pharmDetailIqcPoints": "IQC ball",
+  "pharmDetailRecentChecks": "So'nggi cheklar",
+  "pharmDetailNoChecks": "Hozircha cheklar yo'q",
+  "pharmDetailActive": "Faol",
+  "pharmDetailPassive": "Passiv",
+  "pharmDetailIncentivize": "Rag'batlantirish",
+  "pharmDetailRetry": "Qayta urinish",
+  "portfolioTitle": "Farmatsevtlar",
+  "portfolioUpdated": "Yangilandi",
+  "portfolioInPortfolio": "portfelda {total} ta",
+  "@portfolioInPortfolio": {
+    "placeholders": {
+      "total": {
+        "type": "Object"
+      }
+    }
+  },
+  "portfolioSearchHint": "Farmatsevt qidirish…",
+  "portfolioTabAll": "Barchasi ({all})",
+  "@portfolioTabAll": {
+    "placeholders": {
+      "all": {
+        "type": "Object"
+      }
+    }
+  },
+  "portfolioTabActive": "Faollar ({active})",
+  "@portfolioTabActive": {
+    "placeholders": {
+      "active": {
+        "type": "Object"
+      }
+    }
+  },
+  "portfolioTabPassive": "Passivlar ({passive})",
+  "@portfolioTabPassive": {
+    "placeholders": {
+      "passive": {
+        "type": "Object"
+      }
+    }
+  },
+  "portfolioNotFound": "Farmatsevtlar topilmadi",
+  "portfolioRetry": "Qayta urinish",
+  "medrepQuestsTitle": "Kompaniya kvestlari",
+  "medrepQuestsEmpty": "Kvestlar yo'q",
+  "medrepQuestsSubtitle": "Maqsad: {p1} · ishtirokchilar: {p2}",
+  "@medrepQuestsSubtitle": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      },
+      "p2": {
+        "type": "Object"
+      }
+    }
+  },
+  "medrepQuestsNoParticipants": "Hozircha ishtirokchilar yo'q",
+  "referralsAccepted": "Ariza qabul qilindi",
+  "referralsRejected": "Ariza rad etildi",
+  "referralsTitle": "Referal arizalari",
+  "referralsEmpty": "Yangi arizalar yo'q",
+  "referralsDecline": "Rad etish",
+  "referralsAccept": "Qabul qilish",
+  "checkDetailBackMyChecks": "Mening cheklarim",
+  "checkDetailTitle": "Chek №{id}",
+  "@checkDetailTitle": {
+    "placeholders": {
+      "id": {
+        "type": "Object"
+      }
+    }
+  },
+  "checkDetailRejectedFallback": "Chek rad etildi",
+  "checkDetailQuestDone": "{p1} · Kvest bajarildi ✓",
+  "@checkDetailQuestDone": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "checkDetailQuestAfterApproval": "Chek tasdiqlangach paydo bo'ladi",
+  "checkDetailQuestNone": "Hozircha birorta kvestga hisoblanmagan",
+  "checkDetailChipApproved": "Tasdiqlangan",
+  "checkDetailChipRejected": "Rad etilgan",
+  "checkDetailChipPending": "Tekshirilmoqda",
+  "checkDetailOpenPhoto": "Ochish",
+  "checkDetailPhotoCount": "surat: {p1}",
+  "@checkDetailPhotoCount": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "checkDetailRejectReasonTitle": "Rad etish sababi",
+  "checkDetailResubmit": "Qayta yuborish",
+  "checkDetailPendingTitle": "Tekshirilmoqda",
+  "checkDetailPendingBody": "Chekingiz mutaxassis tekshiruvida. Odatda bu 24 soatgacha davom etadi.",
+  "checkDetailSentAt": "Yuborilgan: {sentAt}",
+  "@checkDetailSentAt": {
+    "placeholders": {
+      "sentAt": {
+        "type": "Object"
+      }
+    }
+  },
+  "checkDetailAiWaitingTitle": "AI tanishi kutilmoqda",
+  "checkDetailAiWaitingBody": "Natija tekshiruvdan so'ng paydo bo'ladi",
+  "checkDetailAiTitle": "AI tanidi",
+  "checkDetailPacks": "{p1} qadoq",
+  "@checkDetailPacks": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "checkDetailQuestCardTitle": "Kvestlarga hisoblash",
+  "checksEmpty": "Hozircha cheklar yo'q",
+  "checksAddedUploading": "Chek qo'shildi — yuklanmoqda",
+  "checksNewCheckTitle": "Yangi chek",
+  "checksTapToAddPhoto": "Surat qo'shish uchun bosing",
+  "checksTakePhoto": "Suratga olish",
+  "checksSubmitForReview": "Tekshiruvga yuborish",
+  "checksTitle": "Mening cheklarim",
+  "checksTotalCount": "jami {p1}",
+  "@checksTotalCount": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "checksSendPhoto": "Surat yuborish",
+  "checksCardMeta": "{p1} · surat: {p2}",
+  "@checksCardMeta": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      },
+      "p2": {
+        "type": "Object"
+      }
+    }
+  },
+  "checksAwaitUsually24h": "Kuting — odatda 24 soat",
+  "checksUploadingTitle": "Surat yuklanmoqda",
+  "checksPhotoFallback": "Chek surati",
+  "checksRetry": "Qayta urinish",
+  "courseDetailTabDescription": "TAVSIF",
+  "courseDetailTabContent": "MUNDARIJA",
+  "courseDetailMinutes": "~{totalMin} daqiqa",
+  "@courseDetailMinutes": {
+    "placeholders": {
+      "totalMin": {
+        "type": "Object"
+      }
+    }
+  },
+  "courseDetailContinueLearning": "O'QISHNI DAVOM ETTIRISH",
+  "courseDetailStartLearning": "O'QISHNI BOSHLASH",
+  "courseDetailVideoLessonOne": "videodars",
+  "courseDetailVideoLessonFew": "videodars",
+  "courseDetailVideoLessonMany": "videodars",
+  "courseDetailQuizAfterLesson": "{videosBefore}-darsdan keyingi test",
+  "@courseDetailQuizAfterLesson": {
+    "placeholders": {
+      "videosBefore": {
+        "type": "Object"
+      }
+    }
+  },
+  "courseDetailQuizForCourse": "Kurs bo'yicha test",
+  "courseDetailLessonMin": "{p1} daq",
+  "@courseDetailLessonMin": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "courseDetailQuizBadge": "TEST",
+  "homePhActiveQuests": "Faol kvestlar",
+  "homePhAllQuests": "Barcha kvestlar",
+  "homePhNoActiveQuests": "Faol kvestlar yo'q",
+  "homePhRecentChecks": "So'nggi cheklar",
+  "homePhAllChecks": "Barcha cheklar",
+  "homePhNoChecks": "Hozircha cheklar yo'q",
+  "homePhGreeting": "Salom!",
+  "homePhGreetingName": "Salom, {name}!",
+  "@homePhGreetingName": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "homePhGreetingSub": "Yangi bilimlarga tayyormisiz?",
+  "homePhWalletBalanceLabel": "HAMYON BALANSI",
+  "homePhWalletButton": "Hamyon",
+  "homePhSendCheck": "Chek yuborish",
+  "homePhSendCheckSub": "Chekni suratga oling — AI dorilarni taniydi",
+  "homePhStatActiveQuests": "faol kvestlar",
+  "homePhStatApprovedChecks": "tasdiqlangan cheklar",
+  "homePhStatIqcPoints": "IQC ball",
+  "homePhVoucherBadge": "VAUCHER",
+  "homePhProgress": "Jarayon",
+  "homePhPctDone": "{pct}% bajarildi",
+  "@homePhPctDone": {
+    "placeholders": {
+      "pct": {
+        "type": "Object"
+      }
+    }
+  },
+  "homePhCheckNumber": "Chek №{p1}",
+  "@homePhCheckNumber": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "learnLessonOne": "dars",
+  "learnLessonFew": "dars",
+  "learnLessonMany": "dars",
+  "learnTitle": "Ta'lim",
+  "learnSearchHint": "Kurslar bo'yicha qidirish...",
+  "learnTabAll": "Barchasi",
+  "learnTabMine": "Mening kurslarim",
+  "learnTabDone": "Tugallangan",
+  "learnNewBadge": "YANGI",
+  "learnRepeatCourse": "KURSNI TAKRORLASH",
+  "learnContinueLearning": "O'QISHNI DAVOM ETTIRISH",
+  "learnStartCourse": "KURSNI BOSHLASH",
+  "learnCompleted": "Tugallangan",
+  "learnNotFoundTitle": "Kurslar topilmadi",
+  "learnTryChangeFilters": "Filtrlarni o'zgartirib ko'ring",
+  "learnNothingForQuery": "«{query}» so'rovi bo'yicha hech narsa topilmadi.\nSo'rovni o'zgartiring yoki filtrlarni tiklang.",
+  "@learnNothingForQuery": {
+    "placeholders": {
+      "query": {
+        "type": "Object"
+      }
+    }
+  },
+  "learnResetFilters": "Filtrlarni tiklash",
+  "lessonCompletedReward": "Dars yakunlandi · +{p1} IQC",
+  "@lessonCompletedReward": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "lessonNotFound": "Dars topilmadi",
+  "lessonTabText": "DARS MATNI",
+  "lessonTabMaterials": "DARS MATERIALLARI",
+  "lessonNoMaterials": "Hozircha materiallar yo'q",
+  "lessonStartQuiz": "TESTNI BOSHLASH",
+  "lessonComplete": "DARSNI YAKUNLASH",
+  "questDetailBackQuests": "Kvestlar",
+  "questDetailPillVoucher": "Vaucher",
+  "questDetailLeftLabel": "qoldi",
+  "questDetailDoneLabel": "bajarildi",
+  "questDetailRewardLabel": "MUKOFOT",
+  "questDetailVoucherManual": "Vaucher tekshiruvdan so'ng qo'lda beriladi",
+  "questDetailIqcToBalance": "Balansga +{p1} IQC",
+  "@questDetailIqcToBalance": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "questDetailHowTitle": "Cheklar qanday hisoblanadi",
+  "questDetailHowBody": "Kerakli dori aks etgan chek suratlarini yuboring. Qadoq tekshiruvi — avtomatik.",
+  "questDetailTodoTitle": "Nima qilish kerak",
+  "questDetailDrugLabel": "Dori",
+  "questDetailLimitsLabel": "Limitlar",
+  "questDetailPeriodLabel": "Davr",
+  "questDetailParticipantsLabel": "Ishtirokchilar",
+  "questDetailPurchases": "xarid",
+  "questsPeriodUntil": "{p1} gacha",
+  "@questsPeriodUntil": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "questsPeriodFrom": "{p1} dan",
+  "@questsPeriodFrom": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "questsPeriodNone": "Muddatsiz",
+  "questsTitle": "Kvestlar",
+  "questsTabActive": "Faol",
+  "questsTabArchive": "Arxiv",
+  "questsTabAll": "Barchasi",
+  "questsCountWordActive": "faol",
+  "questsCountWordArchive": "arxivdagi",
+  "questsCountQuestOne": "kvest",
+  "questsCountQuestFew": "kvest",
+  "questsHistoryChip": "Ishtirok tarixi",
+  "questsSearchHint": "Qidirish",
+  "questsPacksItem": "{p1} × {p2} qadoq",
+  "@questsPacksItem": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      },
+      "p2": {
+        "type": "Object"
+      }
+    }
+  },
+  "questsIqcNoLimit": "+{p1} IQC · limitsiz",
+  "@questsIqcNoLimit": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "questsPillVoucher": "Vaucher",
+  "questsActive": "Faol",
+  "questsFinished": "Yakunlangan",
+  "questsEmptyArchiveTitle": "Arxiv kvestlari yo'q",
+  "questsEmptyArchiveSub": "Yakunlangan kvestlar shu yerda paydo bo'ladi",
+  "questsEmptyActiveTitle": "Faol kvestlar yo'q",
+  "questsEmptyActiveSub": "Yangi kvestlar shu yerda paydo bo'ladi",
+  "questsEmptyAllTitle": "Kvestlar yo'q",
+  "questsEmptyAllSub": "Keyinroq qarab ko'ring",
+  "questsViewActive": "Faollarni ko'rish",
+  "quizTitle": "Test sinovi",
+  "quizQuestionOf": "Savol {p1} / {n}",
+  "@quizQuestionOf": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      },
+      "n": {
+        "type": "Object"
+      }
+    }
+  },
+  "quizFinish": "TESTNI YAKUNLASH",
+  "quizNext": "KEYINGI SAVOL →",
+  "quizAnswerLabel": "Javob",
+  "quizCongrats": "Tabriklaymiz!",
+  "quizPassed": "Test muvaffaqiyatli topshirildi!",
+  "quizYouEarned": "Siz ishlab topdingiz",
+  "quizCorrectLabel": "TO'G'RI JAVOBLAR",
+  "quizResultLabel": "NATIJA",
+  "quizToHome": "ASOSIY EKRANGA",
+  "quizViewCertificate": "Sertifikatni ko'rish →",
+  "quizTryAgainTitle": "Yana bir bor urinib ko'ring",
+  "quizFailed": "Test topshirilmadi",
+  "quizYourResult": "Sizning natijangiz",
+  "quizCorrectLower": "to'g'ri",
+  "quizPassMinimum": "O'tish uchun minimum: {passScore}/{total} ({passPct}%)",
+  "@quizPassMinimum": {
+    "placeholders": {
+      "passScore": {
+        "type": "Object"
+      },
+      "total": {
+        "type": "Object"
+      },
+      "passPct": {
+        "type": "Object"
+      }
+    }
+  },
+  "quizRetry": "↺ QAYTA TOPSHIRISH",
+  "quizBackToLesson": "Darsga qaytish →",
+  "voucherNotFound": "Vaucher topilmadi",
+  "voucherTitle": "Mening vaucherim",
+  "voucherCodeCopied": "Kod nusxalandi",
+  "voucherUsed": "Ishlatilgan",
+  "voucherActive": "Faol",
+  "voucherIssuedAt": "Berilgan: {p1}",
+  "@voucherIssuedAt": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "voucherGiftCardLabel": "UZS · SOVG'A KARTASI",
+  "voucherShowQr": "QR-kodni kassirga ko'rsating yoki kodni ayting",
+  "voucherStores": "Korzinka.uz do'konlari",
+  "voucherSupport": "Yordam xizmati",
+  "walletPendingVouchers": "Navbatdagi vaucherlar",
+  "walletUseIqc": "IQC dan foydalanish",
+  "walletMyVouchers": "Mening vaucherlarim",
+  "walletNoVouchers": "Hozircha vaucherlar yo'q",
+  "walletRedeemTitle": "Ballar almashtirilsinmi?",
+  "walletRedeemBody": "{p1} — {p2} IQC evaziga",
+  "@walletRedeemBody": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      },
+      "p2": {
+        "type": "Object"
+      }
+    }
+  },
+  "walletCancel": "Bekor qilish",
+  "walletRedeem": "Almashtirish",
+  "walletVoucherIssued": "Vaucher rasmiylashtirildi",
+  "walletTitle": "Hamyon",
+  "walletBalanceLabel": "BALANS",
+  "walletTotalAccrued": "Jami hisoblangan: {p1} IQC",
+  "@walletTotalAccrued": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "walletHistoryArrow": "Tarix →",
+  "walletQuestDoneAwaiting": "Kvest bajarildi — vaucher berilishini kutmoqda",
+  "walletForIqc": "{p1} IQC evaziga",
+  "@walletForIqc": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "walletGetVoucher": "Vaucher olish",
+  "walletNotEnoughIqc": "IQC yetarli emas",
+  "walletCodeMeta": "Kod: {p1} · {p2}",
+  "@walletCodeMeta": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      },
+      "p2": {
+        "type": "Object"
+      }
+    }
+  },
+  "walletVoucherUsed": "Ishlatilgan",
+  "walletVoucherActive": "Faol",
+  "walletHistoryTitle": "Tarix",
+  "walletNoTransactions": "Hozircha operatsiyalar yo'q",
+  "brandProductsBrand": "Brend",
+  "brandProductsFormat": "Format",
+  "brandProductsMxik": "MXIK",
+  "brandProductsDivisible": "Bo'linadigan",
+  "brandProductsYes": "Ha",
+  "brandProductsNo": "Yo'q",
+  "brandProductsQuests": "Kvestlar",
+  "medrepHomePeriodAll": "Barchasi",
+  "medrepHomePeriod30d": "30 kun",
+  "medrepHomePeriod7d": "7 kun",
+  "leaderboardTabChecks": "Cheklar",
+  "leaderboardTabPharm": "Farmatsevtlar",
+  "leaderboardTabQuests": "Kvestlar",
+  "leaderboardMyRankLabel": "{company} | Mening o'rnim: ",
+  "@leaderboardMyRankLabel": {
+    "placeholders": {
+      "company": {
+        "type": "Object"
+      }
+    }
+  },
+  "leaderboardMyRank": "#{rank} / {total}",
+  "@leaderboardMyRank": {
+    "placeholders": {
+      "rank": {
+        "type": "Object"
+      },
+      "total": {
+        "type": "Object"
+      }
+    }
+  },
+  "portfolioChecksChip": "Cheklar: {count}",
+  "@portfolioChecksChip": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "portfolioQuestsChip": "Kvestlar: {count}",
+  "@portfolioQuestsChip": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "referralsDate": "Ariza: {date}",
+  "@referralsDate": {
+    "placeholders": {
+      "date": {
+        "type": "Object"
+      }
+    }
+  },
+  "checksStatusApproved": "Tasdiqlangan",
+  "checksStatusRejected": "Rad etilgan",
+  "checksStatusPending": "Tekshirilmoqda",
+  "questDetailRewardVoucherLine": "Korzinka · {amount} so'm",
+  "@questDetailRewardVoucherLine": {
+    "placeholders": {
+      "amount": {
+        "type": "Object"
+      }
+    }
+  },
+  "questDetailRewardIqcLine": "Barcha dorixonalar · limitsiz",
+  "questDetailActiveUntil": "{date} gacha faol",
+  "@questDetailActiveUntil": {
+    "placeholders": {
+      "date": {
+        "type": "Object"
+      }
+    }
+  },
+  "questDetailFinished": "Yakunlangan",
+  "questsPurchasesOfGoal": "{completed} / {goal} xarid",
+  "@questsPurchasesOfGoal": {
+    "placeholders": {
+      "completed": {
+        "type": "Object"
+      },
+      "goal": {
+        "type": "Object"
+      }
+    }
+  },
+  "questsPurchases": "{completed} xarid",
+  "@questsPurchases": {
+    "placeholders": {
+      "completed": {
+        "type": "Object"
+      }
+    }
+  }
+}
