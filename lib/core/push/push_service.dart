@@ -3,6 +3,8 @@ import 'dart:io' show Platform;
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'dart:ui' show Color;
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -94,7 +96,9 @@ class PushService {
               _channel.id, _channel.name,
               channelDescription: _channel.description,
               importance: Importance.high, priority: Priority.high,
-              icon: '@mipmap/ic_launcher',
+              // белый силуэт логотипа (ic_launcher дал бы белый квадрат)
+              icon: 'ic_stat_pharmiq',
+              color: const Color(0xFF7C5CFF),
             ),
           ),
           payload: jsonEncode(m.data),

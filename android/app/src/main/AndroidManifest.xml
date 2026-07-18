@@ -39,6 +39,14 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="pharmiq_default" />
+        <!-- Иконка в шторке — белый силуэт логотипа на прозрачном фоне (Android рисует по alpha).
+             ic_launcher нельзя: он сплошной → превращается в белый квадрат. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_stat_pharmiq" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/pharmiq_notification" />
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
