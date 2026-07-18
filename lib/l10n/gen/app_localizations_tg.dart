@@ -1861,4 +1861,10 @@ class AppLocalizationsTg extends AppLocalizations {
   String questsPurchases(Object completed) {
     return '$completed харид';
   }
+
+  @override
+  String get profileLanguageTitle => 'Забон';
+
+  @override
+  String get profileChooseLanguage => 'Забонро интихоб кунед';
 }

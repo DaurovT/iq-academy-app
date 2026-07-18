@@ -1866,4 +1866,10 @@ class AppLocalizationsUz extends AppLocalizations {
   String questsPurchases(Object completed) {
     return '$completed xarid';
   }
+
+  @override
+  String get profileLanguageTitle => 'Til';
+
+  @override
+  String get profileChooseLanguage => 'Tilni tanlang';
 }

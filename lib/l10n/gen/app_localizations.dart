@@ -3433,6 +3433,18 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'{completed} покупок'**
   String questsPurchases(Object completed);
+
+  /// No description provided for @profileLanguageTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Язык'**
+  String get profileLanguageTitle;
+
+  /// No description provided for @profileChooseLanguage.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выберите язык'**
+  String get profileChooseLanguage;
 }
 
 class _AppLocalizationsDelegate

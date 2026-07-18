@@ -1861,4 +1861,10 @@ class AppLocalizationsKy extends AppLocalizations {
   String questsPurchases(Object completed) {
     return '$completed сатып алуу';
   }
+
+  @override
+  String get profileLanguageTitle => 'Тил';
+
+  @override
+  String get profileChooseLanguage => 'Тилди тандаңыз';
 }

@@ -1859,4 +1859,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String questsPurchases(Object completed) {
     return '$completed покупок';
   }
+
+  @override
+  String get profileLanguageTitle => 'Язык';
+
+  @override
+  String get profileChooseLanguage => 'Выберите язык';
 }

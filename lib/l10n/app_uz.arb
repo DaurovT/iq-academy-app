@@ -1223,5 +1223,7 @@
         "type": "Object"
       }
     }
-  }
+  },
+  "profileLanguageTitle": "Til",
+  "profileChooseLanguage": "Tilni tanlang"
 }

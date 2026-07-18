@@ -1223,5 +1223,7 @@
         "type": "Object"
       }
     }
-  }
+  },
+  "profileLanguageTitle": "Тіл",
+  "profileChooseLanguage": "Тілді таңдаңыз"
 }

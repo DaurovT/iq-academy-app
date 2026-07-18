@@ -75,23 +75,23 @@ class ProfileScreen extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _MiniLabel(c: c, text: context.l10n.profileLanguage),
-                      const SizedBox(height: 8),
-                      // Язык интерфейса приложения (5 языков). Wrap — пилюли
-                      // не влезают в одну строку на узких экранах.
-                      Wrap(
-                        spacing: 4,
-                        runSpacing: 8,
-                        children: [
-                          for (final l in supportedAppLocales)
-                            _Pill(
-                              c: c,
-                              label: _localeName(l.languageCode),
-                              selected: ref.watch(localeProvider).languageCode ==
-                                  l.languageCode,
-                              onTap: () => _setLocale(context, ref, l),
-                            ),
-                        ],
+                      // Компактная строка языка (как у роли): «Язык · текущий»
+                      // + «Сменить» → модалка выбора из 5 языков.
+                      _AccountRow(
+                        c: c,
+                        circle: c.circleRole,
+                        icon: Icons.language,
+                        iconColor: c.iconOnNavy,
+                        title: context.l10n.profileLanguageTitle,
+                        subtitle: _localeName(
+                            ref.watch(localeProvider).languageCode),
+                        trailing: _ChangeBtn(
+                          c: c,
+                          text: context.l10n.profileChange,
+                          border: c.changeAccent,
+                          textColor: c.changeAccentText,
+                          onTap: () => _showLanguageSheet(context, ref),
+                        ),
                       ),
                       const SizedBox(height: 12),
                       _Divider(c: c),
@@ -284,6 +284,93 @@ class ProfileScreen extends ConsumerWidget {
         'ky' => 'Кыргызча',
         _ => code,
       };
+
+  /// Модалка выбора языка интерфейса (в стиле шита смены роли).
+  Future<void> _showLanguageSheet(BuildContext context, WidgetRef ref) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final sheetBg = isDark ? const Color(0xFF1E2039) : Colors.white;
+    final divider =
+        isDark ? const Color(0xFF3F4168) : const Color(0xFFF3F4F6);
+    final textColor =
+        isDark ? const Color(0xFFFEFEFE) : const Color(0xFF111827);
+    const brandBlue = Color(0xFF2563EB);
+    final current = ref.read(localeProvider).languageCode;
+
+    return showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (sheetCtx) => Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: sheetBg,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: SafeArea(
+          top: false,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 10),
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: divider,
+                  borderRadius: BorderRadius.circular(999),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                context.l10n.profileChooseLanguage,
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w700,
+                  color: textColor,
+                ),
+              ),
+              const SizedBox(height: 8),
+              for (final l in supportedAppLocales) ...[
+                InkWell(
+                  onTap: () {
+                    Navigator.of(sheetCtx).pop();
+                    _setLocale(context, ref, l);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 14),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            _localeName(l.languageCode),
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: l.languageCode == current
+                                  ? FontWeight.w700
+                                  : FontWeight.w500,
+                              color: l.languageCode == current
+                                  ? brandBlue
+                                  : textColor,
+                            ),
+                          ),
+                        ),
+                        if (l.languageCode == current)
+                          const Icon(Icons.check_circle,
+                              size: 22, color: brandBlue),
+                      ],
+                    ),
+                  ),
+                ),
+                if (l != supportedAppLocales.last)
+                  Divider(height: 1, color: divider),
+              ],
+              const SizedBox(height: 12),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   Future<void> _setLocale(
       BuildContext context, WidgetRef ref, Locale locale) async {
