@@ -1,3 +1,4 @@
+import 'dart:io' show Platform;
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import '../models/account.dart';
@@ -366,6 +367,8 @@ class HttpChecksApi implements ChecksApi {
     final r = await _upload(_dio, '/client/checks', files, {
       'checkDate': checkDate,
       'idempotencyKey': idempotencyKey,
+      // сообщаем платформу, чтобы админка показывала iPhone/Android у чека
+      'platform': Platform.isIOS ? 'ios' : 'android',
     });
     return Check.fromJson(_obj(r.data));
   }

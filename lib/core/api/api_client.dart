@@ -14,8 +14,11 @@ const kApiBase = 'http://194.5.157.183:4000/api/1.0';
 Dio createDio(TokenStore tokens, AppLocalizations Function() l10n) {
   final dio = Dio(BaseOptions(
     baseUrl: kApiBase,
-    connectTimeout: const Duration(seconds: 20),
-    receiveTimeout: const Duration(seconds: 30),
+    // терпимее к краткому рестарту сервера и медленному мобильному интернету
+    connectTimeout: const Duration(seconds: 30),
+    receiveTimeout: const Duration(seconds: 60),
+    // загрузка фото чека по LTE бывает долгой — даём запас на отправку
+    sendTimeout: const Duration(seconds: 90),
     contentType: Headers.jsonContentType,
   ));
 
