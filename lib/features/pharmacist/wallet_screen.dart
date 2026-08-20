@@ -131,15 +131,17 @@ class WalletScreen extends ConsumerWidget {
       BuildContext context, WidgetRef ref, VoucherDenomination v) async {
     final ok = await showDialog<bool>(
       context: context,
-      builder: (_) => AlertDialog(
+      // ctx — контекст диалога (см. фикс в сапёре): под ShellRoute Navigator.pop(context,…)
+      // с внешним контекстом уходил во вложенный навигатор и не закрывал диалог.
+      builder: (ctx) => AlertDialog(
         title: Text(context.l10n.walletRedeemTitle),
         content: Text(context.l10n.walletRedeemBody(v.label, v.costIqc)),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(context, false),
+              onPressed: () => Navigator.pop(ctx, false),
               child: Text(context.l10n.walletCancel)),
           FilledButton(
-              onPressed: () => Navigator.pop(context, true),
+              onPressed: () => Navigator.pop(ctx, true),
               child: Text(context.l10n.walletRedeem)),
         ],
       ),

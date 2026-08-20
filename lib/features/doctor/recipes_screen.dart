@@ -195,7 +195,9 @@ Future<DoctorRecipeInfo?> _askDoctorInfo(BuildContext context) {
   final phone = TextEditingController();
   return showDialog<DoctorRecipeInfo>(
     context: context,
-    builder: (_) => AlertDialog(
+    // ctx — контекст диалога (см. фикс в сапёре): под ShellRoute внешний context
+    // резолвится во вложенный навигатор и кнопки не закрывают диалог.
+    builder: (ctx) => AlertDialog(
       title: Text(context.l10n.recipesDoctorInfoTitle),
       content: SingleChildScrollView(
         child: Column(
@@ -223,12 +225,12 @@ Future<DoctorRecipeInfo?> _askDoctorInfo(BuildContext context) {
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.pop(context, const DoctorRecipeInfo()),
+          onPressed: () => Navigator.pop(ctx, const DoctorRecipeInfo()),
           child: Text(context.l10n.recipesSkip),
         ),
         FilledButton(
           onPressed: () => Navigator.pop(
-            context,
+            ctx,
             DoctorRecipeInfo(
               name: name.text.trim().isEmpty ? null : name.text.trim(),
               workplace:

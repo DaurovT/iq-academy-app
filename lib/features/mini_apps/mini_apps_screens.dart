@@ -546,15 +546,18 @@ class _SapperGameScreenState extends ConsumerState<SapperGameScreen> {
     if (_busy) return;
     final ok = await showDialog<bool>(
       context: context,
-      builder: (_) => AlertDialog(
+      // ctx — контекст диалога (root-навигатор). Раньше был Navigator.pop(context, …)
+      // с внешним контекстом, который под ShellRoute резолвится во вложенный навигатор,
+      // из-за чего кнопки «Занять»/«Отмена» не закрывали диалог.
+      builder: (ctx) => AlertDialog(
         title: Text(context.l10n.sapperReserveTitle(cell + 1)),
         content: Text(context.l10n.sapperReserveBody(f.priceIqc)),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(context, false),
+              onPressed: () => Navigator.pop(ctx, false),
               child: Text(context.l10n.commonCancel)),
           FilledButton(
-              onPressed: () => Navigator.pop(context, true),
+              onPressed: () => Navigator.pop(ctx, true),
               child: Text(context.l10n.sapperReserveConfirm(f.priceIqc))),
         ],
       ),
