@@ -340,8 +340,8 @@ class _BottomInfo extends StatelessWidget {
               Text(context.l10n.voucherSupport,
                   style: TextStyle(fontSize: 13, color: muted)),
               GestureDetector(
-                onTap: () => launchUrl(Uri.parse('tel:1155')),
-                child: const Text('1155',
+                onTap: () => launchUrl(Uri.parse('tel:+998900276969')),
+                child: const Text('+998 90-027-69-69',
                     style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,

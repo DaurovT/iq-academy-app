@@ -59,6 +59,27 @@ class WalletScreen extends ConsumerWidget {
                     ),
                   ),
 
+                  // ── Мои ваучеры (подняты в самый верх) ──
+                  _SectionHeader(c: c, title: context.l10n.walletMyVouchers),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: mine.isEmpty
+                        ? _EmptyCard(c: c, text: context.l10n.walletNoVouchers)
+                        : Column(
+                            children: [
+                              for (final v in mine) ...[
+                                _MyVoucherRow(
+                                  c: c,
+                                  voucher: v,
+                                  onTap: () =>
+                                      context.push('/app/wallet/voucher/${v.id}'),
+                                ),
+                                const SizedBox(height: 8),
+                              ],
+                            ],
+                          ),
+                  ),
+
                   // ── Ваучеры в очереди ──
                   if (pending.isNotEmpty) ...[
                     _SectionHeader(
@@ -97,26 +118,6 @@ class WalletScreen extends ConsumerWidget {
                     ),
                   ),
 
-                  // ── Мои ваучеры ──
-                  _SectionHeader(c: c, title: context.l10n.walletMyVouchers),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: mine.isEmpty
-                        ? _EmptyCard(c: c, text: context.l10n.walletNoVouchers)
-                        : Column(
-                            children: [
-                              for (final v in mine) ...[
-                                _MyVoucherRow(
-                                  c: c,
-                                  voucher: v,
-                                  onTap: () =>
-                                      context.push('/app/wallet/voucher/${v.id}'),
-                                ),
-                                const SizedBox(height: 8),
-                              ],
-                            ],
-                          ),
-                  ),
                 ],
               ),
             ),

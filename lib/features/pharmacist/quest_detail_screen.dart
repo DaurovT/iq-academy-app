@@ -283,11 +283,7 @@ class _Body extends StatelessWidget {
                     c: c,
                     label: context.l10n.questDetailPeriodLabel,
                     value: period),
-                _rowDivider(c),
-                _TableRow(
-                    c: c,
-                    label: context.l10n.questDetailParticipantsLabel,
-                    value: '${q.participants}'),
+                // «Участников» скрыто по требованию — счётчик участников пользователю не показываем.
               ],
             ),
           ),

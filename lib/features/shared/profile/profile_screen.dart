@@ -622,12 +622,7 @@ class _ProfileCard extends StatelessWidget {
                       c: c,
                       value: '$quests',
                       label: context.l10n.profileStatQuests)),
-              _statDivider(c),
-              Expanded(
-                  child: _Stat(
-                      c: c,
-                      value: '1',
-                      label: context.l10n.profileStatLevel)),
+              // «УРОВЕНЬ» скрыт по требованию (был заглушкой '1' — фактического уровня нет).
             ],
           ),
         ],
