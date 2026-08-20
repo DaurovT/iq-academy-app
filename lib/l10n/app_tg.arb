@@ -1,0 +1,1229 @@
+{
+  "@@locale": "tg",
+  "appTitle": "IQ Academy",
+  "apiNetworkError": "Хатои шабака",
+  "apiNoAccess": "Дастрасӣ нест",
+  "checkModelStatusPending": "Дар баррасӣ",
+  "checkModelStatusAiDetected": "AI шинохт",
+  "checkModelStatusAiWrong": "AI нашинохт",
+  "checkModelStatusApproved": "Тасдиқ шуд",
+  "checkModelStatusRejected": "Рад шуд",
+  "commonRolePharmacist": "Фармасевт",
+  "commonRoleDoctor": "Духтур",
+  "commonRoleMedrep": "Намояндаи тиббӣ",
+  "commonRoleProductOwner": "Бренд / Соҳиби маҳсулот",
+  "commonCancel": "Бекор кардан",
+  "navHome": "Асосӣ",
+  "navChecks": "Чекҳо",
+  "navQuests": "Квестҳо",
+  "navLearn": "Таълим",
+  "navWallet": "Ҳамён",
+  "navRecipes": "Дорунома",
+  "navPortfolio": "Портфел",
+  "navPharm": "Фарм.",
+  "navTop": "Топ",
+  "navDashboard": "Дашборд",
+  "navProducts": "Маҳсулот",
+  "navBrands": "Брендҳо",
+  "navProfile": "Профил",
+  "miniAppsTitle": "Мини-барномаҳо",
+  "miniAppsSubtitle": "Бозӣ кунед ва бо IQC тӯҳфаҳо баред",
+  "miniAppsSoon": "Ба зудӣ",
+  "sapperCountdownSoon": "ба зудӣ",
+  "sapperCountdownDaysHours": "{days}р {hours}с",
+  "@sapperCountdownDaysHours": {
+    "placeholders": {
+      "days": {
+        "type": "Object"
+      },
+      "hours": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperCountdownHoursMinutes": "{hours}с {minutes}д",
+  "@sapperCountdownHoursMinutes": {
+    "placeholders": {
+      "hours": {
+        "type": "Object"
+      },
+      "minutes": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperCountdownMinutesSeconds": "{minutes}д {seconds}с",
+  "@sapperCountdownMinutesSeconds": {
+    "placeholders": {
+      "minutes": {
+        "type": "Object"
+      },
+      "seconds": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperTitle": "Супер Сапёр",
+  "sapperSubtitle": "Бо IQC катакҳоро гиред — дар соати кушодан мефаҳмед, ки зери онҳо чист",
+  "sapperNoDraws": "Бозиҳо нестанд",
+  "sapperRevealed": "Кушода шуд",
+  "sapperPrizesAndPrice": "🎁 {prizeCount} тӯҳфа  💎 {priceIqc} IQC/катак  ",
+  "@sapperPrizesAndPrice": {
+    "placeholders": {
+      "prizeCount": {
+        "type": "Object"
+      },
+      "priceIqc": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperMyCells": "катакҳои шумо: {count}",
+  "@sapperMyCells": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperOccupancy": "банд {occupied} аз {total} ({percent}%)",
+  "@sapperOccupancy": {
+    "placeholders": {
+      "occupied": {
+        "type": "Object"
+      },
+      "total": {
+        "type": "Object"
+      },
+      "percent": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperGoToGame": "Гузаштан ба бозӣ",
+  "sapperReserveTitle": "Катаки №{number}-ро мегиред?",
+  "@sapperReserveTitle": {
+    "placeholders": {
+      "number": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperReserveBody": "{price} IQC гирифта мешавад. Бекор кардан мумкин нест — катак то кушодан аз они шумо мешавад.",
+  "@sapperReserveBody": {
+    "placeholders": {
+      "price": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperReserveConfirm": "Гирифтан бо {price} IQC",
+  "@sapperReserveConfirm": {
+    "placeholders": {
+      "price": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperCellReserved": "Катаки №{number} гирифта шуд",
+  "@sapperCellReserved": {
+    "placeholders": {
+      "number": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperDraws": "Бозиҳои тӯҳфаӣ",
+  "sapperAcceptClosed": "Қабули катакҳо пӯшида шуд — омодагӣ ба кушодан рафта истодааст",
+  "sapperHiddenTitle": "ДАР МАЙДОН ПИНҲОН АСТ",
+  "sapperRevealIn": "кушодан баъд аз {time}",
+  "@sapperRevealIn": {
+    "placeholders": {
+      "time": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperNoPrizes": "тӯҳфаҳо эълон нашудаанд",
+  "sapperPrizeChip": "🎁 {count}× {label}",
+  "@sapperPrizeChip": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      },
+      "label": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperBalance": "Баланс: {balance} IQC",
+  "@sapperBalance": {
+    "placeholders": {
+      "balance": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperCellPrice": "нархи катак {price} IQC",
+  "@sapperCellPrice": {
+    "placeholders": {
+      "price": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperYourBalance": "Баланси шумо",
+  "sapperCellPriceLabel": "нархи катак",
+  "sapperWinBannerWin": "🎉 Шумо {count} {word} бурдед!",
+  "@sapperWinBannerWin": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      },
+      "word": {
+        "type": "Object"
+      }
+    }
+  },
+  "sapperNoWin": "Ин дафъа бе бурд",
+  "sapperPrizeOne": "тӯҳфа",
+  "sapperPrizeFew": "тӯҳфа",
+  "sapperPrizeMany": "тӯҳфа",
+  "sapperLegendMine": "Аз они ман",
+  "sapperLegendTheirs": "Аз они дигарон",
+  "sapperLegendEmpty": "Холӣ",
+  "sapperLegendVoucher": "Ваучер",
+  "sapperLegendSelected": "Интихобшуда",
+  "sapperLegendOccupied": "Банд",
+  "sapperLegendFree": "Озод",
+  "sapperWinners": "Ғолибон",
+  "newsTitle": "Хабарҳо",
+  "newsAll": "Ҳамаи хабарҳо",
+  "newsMore": "Муфассал →",
+  "newsDateMonths": "янв,фев,мар,апр,май,июн,июл,авг,сен,окт,ноя,дек",
+  "newsEmpty": "Ҳоло хабарҳо нестанд",
+  "newsPinned": "МУҲИМ",
+  "newsDetailTitle": "Хабар",
+  "surveyRewardCredited": "+{amount} IQC ба ҳисоб гузашт",
+  "@surveyRewardCredited": {
+    "placeholders": {
+      "amount": {
+        "type": "Object"
+      }
+    }
+  },
+  "surveyThanks": "Барои ҷавобатон ташаккур!",
+  "surveySubmitError": "Фиристодан нашуд: {error}",
+  "@surveySubmitError": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "surveyTitle": "Пурсиш",
+  "surveyRewardBadge": "+ {amount} IQC",
+  "@surveyRewardBadge": {
+    "placeholders": {
+      "amount": {
+        "type": "Object"
+      }
+    }
+  },
+  "surveyChooseOption": "Варианти ҷавобро интихоб кунед",
+  "surveyEnterAnswer": "Ҷавобро дастӣ ворид кунед",
+  "surveySubmit": "Ҷавоб додан",
+  "loginTagline": "Омӯз.\nТатбиқ кун.\nБирас.",
+  "loginTitle": "Воридшавӣ",
+  "loginByPhone": "Бо рақами телефон ворид шавед",
+  "loginCodeSent": "Рамз аз SMS ба {phone}",
+  "@loginCodeSent": {
+    "placeholders": {
+      "phone": {
+        "type": "Object"
+      }
+    }
+  },
+  "loginPhoneLabel": "Рақами телефон",
+  "loginPhoneNotFound": "Рақам дар система ёфт нашуд",
+  "loginConfirm": "Тасдиқ кардан",
+  "loginGoRegister": "Аз қайд гузаштан",
+  "loginRegister": "Қайд шудан",
+  "loginEnter": "Ворид шудан",
+  "loginResendIn": "Такрор баъд аз {seconds} сония",
+  "@loginResendIn": {
+    "placeholders": {
+      "seconds": {
+        "type": "Object"
+      }
+    }
+  },
+  "loginResendAgain": "Аз нав фиристодан",
+  "loginChangeNumber": "‹ Тағйири рақам",
+  "loginOr": "ё",
+  "tgLoginExpired": "Вақти воридшавӣ гузашт",
+  "tgLoginParseError": "Ҷавоби воридшавӣ коркард нашуд: {error}",
+  "@tgLoginParseError": {
+    "placeholders": {
+      "error": {
+        "type": "Object"
+      }
+    }
+  },
+  "tgWaitingConfirm": "Интизори тасдиқ…",
+  "tgLoginButton": "Воридшавӣ тавассути Telegram",
+  "notifTitle": "Огоҳиномаҳо",
+  "notifUnreadOne": "{count} хонданашуда",
+  "@notifUnreadOne": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "notifUnreadMany": "{count} хонданашуда",
+  "@notifUnreadMany": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "notifMarkAllRead": "Ҳамаро хондашуда қайд кардан",
+  "notifRead": "✓ Хонда шуд",
+  "notifMarkRead": "Хондашуда қайд кардан",
+  "notifOpen": "Кушодан",
+  "notifEmptyTitle": "Огоҳиномаҳо нестанд",
+  "notifEmptyBody": "Дар ин ҷо ҳолати чекҳо, мукофоти квестҳо ва хабарҳои таълим пайдо мешаванд.",
+  "placeholderComingSoon": "Бахш дар марҳилаҳои оянда пайдо мешавад.",
+  "profileTitle": "Профил",
+  "profileSettings": "Танзимот",
+  "profileLanguage": "ЗАБОН",
+  "profileAppearance": "НАМУД",
+  "profileThemeLight": "Равшан",
+  "profileThemeDark": "Торик",
+  "profileThemeSystem": "Система",
+  "profileAccount": "Ҳисоб",
+  "profilePersonalData": "МАЪЛУМОТИ ШАХСӢ",
+  "profileRole": "Нақш",
+  "profileChange": "Иваз кардан",
+  "profileLinkedServices": "ХИЗМАТҲОИ ПАЙВАСТ",
+  "profilePhone": "Телефон",
+  "profileTgConnected": "Пайваст аст",
+  "profileTgLinked": "Баста шуд",
+  "profileSupport": "Дастгирӣ",
+  "profileSupportSubtitle": "Мо ҳамеша дар алоқаем",
+  "profileLogout": "Баромадан аз ҳисоб",
+  "profileDeleteTitle": "Нест кардани ҳисоб ва маълумот",
+  "profileDeleteIrreversible": "Ин амал бебозгашт аст",
+  "profileDelete": "Нест кардан",
+  "profileLanguageUpdated": "Забон нав шуд",
+  "profileNewPhoneTitle": "Рақами нав",
+  "profileCancel": "Бекор кардан",
+  "profileNext": "Идома",
+  "profileSmsCodeTitle": "Рамз аз SMS",
+  "profileCodeLabel": "Рамз",
+  "profileConfirm": "Тасдиқ кардан",
+  "profilePhoneChanged": "Телефон иваз шуд",
+  "profileLogoutConfirmTitle": "Аз ҳисоб мебароед?",
+  "profileLogoutAction": "Баромадан",
+  "profileDeleteConfirmTitle": "Ҳисоб нест карда шавад?",
+  "profileDeleteConfirmBody": "Ин амал бебозгашт аст. Ҳамаи маълумот нест мешавад.",
+  "profileStatQuests": "КВЕСТҲО",
+  "profileStatLevel": "САТҲ",
+  "questHistoryTitle": "Таърихи иштирок",
+  "questHistoryEmpty": "Таърих холӣ аст",
+  "questHistoryVoucher": "Ваучер",
+  "questHistoryActive": "Фаъол",
+  "questHistoryDone": "Иҷро шуд",
+  "registerStep1Of2": "ҚАДАМИ 1 АЗ 2",
+  "registerStep2Of2": "ҚАДАМИ 2 АЗ 2 · {role}",
+  "@registerStep2Of2": {
+    "placeholders": {
+      "role": {
+        "type": "Object"
+      }
+    }
+  },
+  "registerTitle": "Қайдкунӣ",
+  "registerChooseRole": "Барои воридшавӣ нақшро интихоб кунед",
+  "registerBack": "‹ Бозгашт",
+  "registerConfirmField": "Тасдиқ кунед: {label}",
+  "@registerConfirmField": {
+    "placeholders": {
+      "label": {
+        "type": "Object"
+      }
+    }
+  },
+  "registerFillField": "Пур кунед: {label}",
+  "@registerFillField": {
+    "placeholders": {
+      "label": {
+        "type": "Object"
+      }
+    }
+  },
+  "registerFinish": "Анҷоми қайдкунӣ",
+  "registerSuccessTitle": "Қайдкунӣ анҷом ёфт!",
+  "registerWelcome": "Хуш омадед ба PharmIQ ACADEMY, {name}!",
+  "@registerWelcome": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "registerStartLearning": "Оғози таълим",
+  "registerGoHome": "Гузаштан ба саҳифаи асосӣ",
+  "registerEnterField": "{label}-ро ворид кунед",
+  "@registerEnterField": {
+    "placeholders": {
+      "label": {
+        "type": "Object"
+      }
+    }
+  },
+  "registerRequiredField": "Майдони ҳатмӣ",
+  "registerSelectPlaceholder": "— интихоб кунед —",
+  "registerMultiSelectHintRequired": "{label} * · Якчандторо интихоб кардан мумкин",
+  "@registerMultiSelectHintRequired": {
+    "placeholders": {
+      "label": {
+        "type": "Object"
+      }
+    }
+  },
+  "registerMultiSelectHint": "{label} · Якчандторо интихоб кардан мумкин",
+  "@registerMultiSelectHint": {
+    "placeholders": {
+      "label": {
+        "type": "Object"
+      }
+    }
+  },
+  "registerConsentText": "Ман ба коркарди маълумоти шахсӣ розӣ ҳастам ",
+  "registerConsentMore": "муфассал",
+  "roleSelectTagline": "Омӯз.\nТатбиқ кун.\nБирас.",
+  "roleSelectGreeting": "Ассалому алайкум",
+  "roleSelectGreetingName": "Ассалому алайкум, {name}",
+  "@roleSelectGreetingName": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "roleSelectChooseRole": "Барои воридшавӣ нақшро интихоб кунед",
+  "roleSelectSubChecksQuests": "Чекҳо, квестҳо, таълим ва ҳамён",
+  "roleSelectSubMedrep": "Портфели провизорҳо ва рейтинг",
+  "roleSelectSubProductOwner": "Дашборд, маҳсулот ва брендҳо",
+  "roleSelectSheetTitle": "Нақшро интихоб кунед",
+  "roleSelectEnter": "Ворид шудан",
+  "notifSettingsTitle": "Танзимоти огоҳиномаҳо",
+  "notifSettingsChecks": "Ҳолати чекҳо ва доруномаҳо",
+  "notifSettingsQuests": "Квестҳо ва мукофотҳо",
+  "notifSettingsLearning": "Таълим",
+  "notifSettingsMarketing": "Хабарҳо ва аксияҳо",
+  "supportBackProfile": "Профил",
+  "supportTitle": "Дастгирӣ",
+  "supportEmptyHint": "Ба мо нависед — дар ин ҷо ҷавоб медиҳем",
+  "supportInputHint": "Паём нависед...",
+  "supportYou": "Шумо",
+  "supportTeam": "Дастгирӣ",
+  "appBarSwitchRole": "Иваз кардани нақш",
+  "asyncRetry": "Такрор кардан",
+  "brandProductsTitle": "Маҳсулот",
+  "brandProductsEmpty": "Маҳсулот нест",
+  "brandProductsQuestCount": "{p1} квест",
+  "@brandProductsQuestCount": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "brandProductsDetailTitle": "Маҳсулот",
+  "brandQuestsTitle": "Квестҳои бренд",
+  "brandQuestsEmpty": "Квестҳо нестанд",
+  "brandQuestsSubtitle": "{p1} · {p2}/{p3} иҷро",
+  "@brandQuestsSubtitle": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      },
+      "p2": {
+        "type": "Object"
+      },
+      "p3": {
+        "type": "Object"
+      }
+    }
+  },
+  "brandQuestsStatusActive": "Фаъол",
+  "brandQuestsStatusOff": "Хомӯш",
+  "brandQuestsDetailTitle": "Квести бренд",
+  "brandQuestsSponsor": "Сарпараст: {p1}",
+  "@brandQuestsSponsor": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "brandQuestsParticipants": "Иштирокчиён",
+  "brandQuestsCompletions": "Иҷроҳо",
+  "brandQuestsBudget": "Буҷет",
+  "brandQuestsSpent": "Сарф шуд",
+  "brandQuestsProducts": "Маҳсулот",
+  "brandQuestsMxik": "МХИК",
+  "brandQuestsReward": "Мукофот",
+  "brandQuestsPeriod": "Давра",
+  "brandsTitle": "Брендҳо",
+  "brandsEmpty": "Брендҳо нестанд",
+  "brandsQuestCount": "{p1} квест",
+  "@brandsQuestCount": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "brandsDetailTitle": "Бренд",
+  "brandsSubBrands": "Суббрендҳо",
+  "brandDashTitle": "Дашборд",
+  "brandDashChecks": "Чекҳо",
+  "brandDashPacks": "Бастаҳо",
+  "brandDashActiveQuests": "Квестҳои фаъол",
+  "brandDashParticipants": "Иштирокчиён",
+  "brandDashSegmentation": "Сегментатсия",
+  "brandDashRetail": "Чакана",
+  "brandDashChain": "Шабакаҳо",
+  "brandDashTopProducts": "Беҳтарин маҳсулот",
+  "brandDashTopSellers": "Беҳтарин фурӯшандагон",
+  "brandDashRegions": "Минтақаҳо",
+  "brandDashSalesLogs": "Сабтҳои фурӯш",
+  "salesLogTitle": "Сабтҳои фурӯш",
+  "salesLogEmpty": "Сабтҳо нестанд",
+  "docHomeActiveQuests": "Квестҳои фаъол",
+  "docHomeAllQuests": "Ҳамаи квестҳо",
+  "docHomeNoActiveQuests": "Квестҳои фаъол нестанд",
+  "docHomeRecommendedCourses": "Курсҳои тавсияшуда",
+  "docHomeAllCourses": "Ҳамаи курсҳо",
+  "docHomeNoCourses": "Ҳоло курсҳо нестанд",
+  "docHomeGreetingNoName": "Салом!",
+  "docHomeGreeting": "Салом, {name}",
+  "@docHomeGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "docHomeSubtitle": "Доруномаҳоро фиристед ва мукофот гиред",
+  "docHomeWalletBalance": "БАЛАНСИ ҲАМЁН",
+  "docHomeWallet": "Ҳамён",
+  "docHomeSendRecipe": "Фиристодани дорунома",
+  "docHomeSendRecipeHint": "Доруномаро акс гиред — AI доруҳоро мешиносад",
+  "docHomeStatRecipes": "ҳамаи доруномаҳо",
+  "docHomeStatApproved": "тасдиқшуда",
+  "docHomeStatIqc": "холи IQC",
+  "docHomeVoucher": "ВАУЧЕР",
+  "docHomeProgress": "Пешрафт",
+  "docHomeProgressDone": "{pct}% иҷро шуд",
+  "@docHomeProgressDone": {
+    "placeholders": {
+      "pct": {
+        "type": "Object"
+      }
+    }
+  },
+  "recipeDetailMyRecipes": "Доруномаҳои ман",
+  "recipeDetailTitle": "Доруномаи №{id}",
+  "@recipeDetailTitle": {
+    "placeholders": {
+      "id": {
+        "type": "Object"
+      }
+    }
+  },
+  "recipeDetailPhotoCount": "Акс {p1}",
+  "@recipeDetailPhotoCount": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "recipeDetailStatusApproved": "Тасдиқ шуд",
+  "recipeDetailStatusRejected": "Рад шуд",
+  "recipeDetailStatusPending": "Дар баррасӣ",
+  "recipeDetailAiRecognized": "AI шинохт",
+  "recipeDetailNoDrugs": "Доруҳо шинохта нашуданд",
+  "recipesTitle": "Доруномаҳои ман",
+  "recipesTotal": "ҳамагӣ {p1}",
+  "@recipesTotal": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "recipesTabAll": "Ҳама",
+  "recipesTabActive": "Фаъол",
+  "recipesTabDone": "Анҷомёфта",
+  "recipesEmpty": "Ҳоло доруномаҳо нестанд",
+  "recipesTakePhoto": "Акс гирифтан",
+  "recipesFromGallery": "Интихоб аз галерея",
+  "recipesUploading": "Дорунома илова шуд — бор мешавад",
+  "recipesDoctorInfoTitle": "Маълумоти духтур (ихтиёрӣ)",
+  "recipesDoctorName": "Н.Н.П.",
+  "recipesDoctorWorkplace": "Ҷои кор",
+  "recipesDoctorCity": "Шаҳр",
+  "recipesDoctorPhone": "Телефон",
+  "recipesSkip": "Гузарондан",
+  "recipesSend": "Фиристодан",
+  "recipesSubmitButton": "Фиристодани дорунома",
+  "recipesPhotoCount": "акс: {p1}",
+  "@recipesPhotoCount": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "recipesStatusApproved": "Тасдиқ шуд",
+  "recipesStatusRejected": "Рад шуд",
+  "recipesStatusPending": "Дар баррасӣ",
+  "recipesUploadingBanner": "Бор мешавад: {count}",
+  "@recipesUploadingBanner": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "recipesRetry": "Такрор кардан",
+  "companiesTitle": "Ширкатҳо",
+  "companiesEmpty": "Ширкатҳо нестанд",
+  "companiesCode": "Рамз: {p1}",
+  "@companiesCode": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "medrepHomeAttributionPrimary": "Аввалия",
+  "medrepHomeAttributionTotal": "Умумӣ",
+  "medrepHomeMenuPharmacists": "Фармасевтҳо",
+  "medrepHomeMenuPending": "Интизори тасдиқ",
+  "medrepHomeMenuCompanies": "Ширкатҳо",
+  "medrepHomeMenuLeaderboard": "Рейтинг",
+  "medrepHomeGreetingNoName": "Салом!",
+  "medrepHomeGreeting": "Салом, {name}",
+  "@medrepHomeGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "medrepHomeAttribution": "Атрибутсия: {attribution}",
+  "@medrepHomeAttribution": {
+    "placeholders": {
+      "attribution": {
+        "type": "Object"
+      }
+    }
+  },
+  "medrepHomeStatPharmacists": "Фармасевтҳо",
+  "medrepHomeStatChecks": "Чекҳо",
+  "medrepHomeStatPacks": "Бастаҳо",
+  "medrepHomeStatQuests": "Квестҳо",
+  "medrepHomeLinkCopied": "Пайванд нусхабардорӣ шуд",
+  "medrepHomeReferralTitle": "Пайванди реферал",
+  "medrepHomeReferralHint": "Пайвандро ба провизор фиристед — ӯ ҳангоми қайдкунӣ ба шумо баста мешавад",
+  "medrepHomeCopy": "Нусхабардорӣ",
+  "medrepHomeShare": "Мубодила",
+  "medrepHomeRetry": "Такрор кардан",
+  "leaderboardUnitPharm": "дорухона",
+  "leaderboardUnitQuests": "квест",
+  "leaderboardUnitChecks": "чек",
+  "leaderboardTitle": "Рейтинг",
+  "leaderboardAttributionPrimary": "Аввалия",
+  "leaderboardAttributionTotal": "Умумӣ",
+  "leaderboardCompanyFallback": "Ширкат",
+  "leaderboardRetry": "Такрор кардан",
+  "pharmDetailIncentivizeTitle": "Ҳавасманд кардани фармасевт",
+  "pharmDetailRating": "Баҳо: {p1}",
+  "@pharmDetailRating": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "pharmDetailComment": "Шарҳ",
+  "pharmDetailCancel": "Бекор кардан",
+  "pharmDetailSend": "Фиристодан",
+  "pharmDetailSent": "Фиристода шуд",
+  "pharmDetailBack": "Фармасевтҳо",
+  "pharmDetailChecks": "Чекҳо",
+  "pharmDetailPacks": "Бастаҳо",
+  "pharmDetailQuests": "Квестҳо",
+  "pharmDetailIqcPoints": "Холҳои IQC",
+  "pharmDetailRecentChecks": "Чекҳои охирин",
+  "pharmDetailNoChecks": "Ҳоло чекҳо нестанд",
+  "pharmDetailActive": "Фаъол",
+  "pharmDetailPassive": "Ғайрифаъол",
+  "pharmDetailIncentivize": "Ҳавасманд кардан",
+  "pharmDetailRetry": "Такрор кардан",
+  "portfolioTitle": "Фармасевтҳо",
+  "portfolioUpdated": "Нав шуд",
+  "portfolioInPortfolio": "{total} дар портфел",
+  "@portfolioInPortfolio": {
+    "placeholders": {
+      "total": {
+        "type": "Object"
+      }
+    }
+  },
+  "portfolioSearchHint": "Ҷустуҷӯи фармасевт…",
+  "portfolioTabAll": "Ҳама ({all})",
+  "@portfolioTabAll": {
+    "placeholders": {
+      "all": {
+        "type": "Object"
+      }
+    }
+  },
+  "portfolioTabActive": "Фаъол ({active})",
+  "@portfolioTabActive": {
+    "placeholders": {
+      "active": {
+        "type": "Object"
+      }
+    }
+  },
+  "portfolioTabPassive": "Ғайрифаъол ({passive})",
+  "@portfolioTabPassive": {
+    "placeholders": {
+      "passive": {
+        "type": "Object"
+      }
+    }
+  },
+  "portfolioNotFound": "Фармасевтҳо ёфт нашуданд",
+  "portfolioRetry": "Такрор кардан",
+  "medrepQuestsTitle": "Квестҳои ширкат",
+  "medrepQuestsEmpty": "Квестҳо нестанд",
+  "medrepQuestsSubtitle": "Мақсад: {p1} · иштирокчиён: {p2}",
+  "@medrepQuestsSubtitle": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      },
+      "p2": {
+        "type": "Object"
+      }
+    }
+  },
+  "medrepQuestsNoParticipants": "Ҳоло иштирокчиён нестанд",
+  "referralsAccepted": "Дархост қабул шуд",
+  "referralsRejected": "Дархост рад шуд",
+  "referralsTitle": "Дархостҳои реферал",
+  "referralsEmpty": "Дархостҳои нав нестанд",
+  "referralsDecline": "Рад кардан",
+  "referralsAccept": "Қабул кардан",
+  "checkDetailBackMyChecks": "Чекҳои ман",
+  "checkDetailTitle": "Чеки №{id}",
+  "@checkDetailTitle": {
+    "placeholders": {
+      "id": {
+        "type": "Object"
+      }
+    }
+  },
+  "checkDetailRejectedFallback": "Чек рад шуд",
+  "checkDetailQuestDone": "{p1} · Квест иҷро шуд ✓",
+  "@checkDetailQuestDone": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "checkDetailQuestAfterApproval": "Пас аз тасдиқи чек пайдо мешавад",
+  "checkDetailQuestNone": "Ҳоло ба ягон квест ҳисоб нашудааст",
+  "checkDetailChipApproved": "Тасдиқ шуд",
+  "checkDetailChipRejected": "Рад шуд",
+  "checkDetailChipPending": "Дар баррасӣ",
+  "checkDetailOpenPhoto": "Кушодан",
+  "checkDetailPhotoCount": "акс: {p1}",
+  "@checkDetailPhotoCount": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "checkDetailRejectReasonTitle": "Сабаби радкунӣ",
+  "checkDetailResubmit": "Аз нав фиристодан",
+  "checkDetailPendingTitle": "Дар баррасӣ",
+  "checkDetailPendingBody": "Чеки шумо дар баррасии мутахассис аст. Одатан ин то 24 соат мегирад.",
+  "checkDetailSentAt": "Фиристода шуд: {sentAt}",
+  "@checkDetailSentAt": {
+    "placeholders": {
+      "sentAt": {
+        "type": "Object"
+      }
+    }
+  },
+  "checkDetailAiWaitingTitle": "Интизори шинохти AI",
+  "checkDetailAiWaitingBody": "Натиҷа пас аз баррасӣ пайдо мешавад",
+  "checkDetailAiTitle": "AI шинохт",
+  "checkDetailPacks": "{p1} баста",
+  "@checkDetailPacks": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "checkDetailQuestCardTitle": "Ҳисоб ба квестҳо",
+  "checksEmpty": "Ҳоло чекҳо нестанд",
+  "checksAddedUploading": "Чек илова шуд — бор мешавад",
+  "checksNewCheckTitle": "Чеки нав",
+  "checksTapToAddPhoto": "Барои илова кардани акс пахш кунед",
+  "checksTakePhoto": "Акс гирифтан",
+  "checksSubmitForReview": "Ба баррасӣ фиристодан",
+  "checksTitle": "Чекҳои ман",
+  "checksTotalCount": "ҳамагӣ {p1}",
+  "@checksTotalCount": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "checksSendPhoto": "Фиристодани акс",
+  "checksCardMeta": "{p1} · акс: {p2}",
+  "@checksCardMeta": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      },
+      "p2": {
+        "type": "Object"
+      }
+    }
+  },
+  "checksAwaitUsually24h": "Интизор шавед — одатан 24 соат",
+  "checksUploadingTitle": "Боркунии акс",
+  "checksPhotoFallback": "Акси чек",
+  "checksRetry": "Такрор кардан",
+  "courseDetailTabDescription": "ТАВСИФ",
+  "courseDetailTabContent": "МУНДАРИҶА",
+  "courseDetailMinutes": "~{totalMin} дақиқа",
+  "@courseDetailMinutes": {
+    "placeholders": {
+      "totalMin": {
+        "type": "Object"
+      }
+    }
+  },
+  "courseDetailContinueLearning": "ИДОМАИ ТАЪЛИМ",
+  "courseDetailStartLearning": "ОҒОЗИ ТАЪЛИМ",
+  "courseDetailVideoLessonOne": "видеодарс",
+  "courseDetailVideoLessonFew": "видеодарс",
+  "courseDetailVideoLessonMany": "видеодарс",
+  "courseDetailQuizAfterLesson": "Тест пас аз дарси {videosBefore}",
+  "@courseDetailQuizAfterLesson": {
+    "placeholders": {
+      "videosBefore": {
+        "type": "Object"
+      }
+    }
+  },
+  "courseDetailQuizForCourse": "Тест аз рӯи курс",
+  "courseDetailLessonMin": "{p1} дақ",
+  "@courseDetailLessonMin": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "courseDetailQuizBadge": "ТЕСТ",
+  "homePhActiveQuests": "Квестҳои фаъол",
+  "homePhAllQuests": "Ҳамаи квестҳо",
+  "homePhNoActiveQuests": "Квестҳои фаъол нестанд",
+  "homePhRecentChecks": "Чекҳои охирин",
+  "homePhAllChecks": "Ҳамаи чекҳо",
+  "homePhNoChecks": "Ҳоло чекҳо нестанд",
+  "homePhGreeting": "Салом!",
+  "homePhGreetingName": "Салом, {name}!",
+  "@homePhGreetingName": {
+    "placeholders": {
+      "name": {
+        "type": "Object"
+      }
+    }
+  },
+  "homePhGreetingSub": "Ба донишҳои нав омодаед?",
+  "homePhWalletBalanceLabel": "БАЛАНСИ ҲАМЁН",
+  "homePhWalletButton": "Ҳамён",
+  "homePhSendCheck": "Фиристодани чек",
+  "homePhSendCheckSub": "Чекро акс гиред — AI доруҳоро мешиносад",
+  "homePhStatActiveQuests": "квестҳои фаъол",
+  "homePhStatApprovedChecks": "чекҳои тасдиқшуда",
+  "homePhStatIqcPoints": "холи IQC",
+  "homePhVoucherBadge": "ВАУЧЕР",
+  "homePhProgress": "Пешрафт",
+  "homePhPctDone": "{pct}% иҷро шуд",
+  "@homePhPctDone": {
+    "placeholders": {
+      "pct": {
+        "type": "Object"
+      }
+    }
+  },
+  "homePhCheckNumber": "Чеки №{p1}",
+  "@homePhCheckNumber": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "learnLessonOne": "дарс",
+  "learnLessonFew": "дарс",
+  "learnLessonMany": "дарс",
+  "learnTitle": "Таълим",
+  "learnSearchHint": "Ҷустуҷӯ аз рӯи курсҳо...",
+  "learnTabAll": "Ҳама",
+  "learnTabMine": "Курсҳои ман",
+  "learnTabDone": "Гузашташуда",
+  "learnNewBadge": "НАВ",
+  "learnRepeatCourse": "ТАКРОРИ КУРС",
+  "learnContinueLearning": "ИДОМАИ ТАЪЛИМ",
+  "learnStartCourse": "ГУЗАШТАНИ КУРС",
+  "learnCompleted": "Гузашта шуд",
+  "learnNotFoundTitle": "Курсҳо ёфт нашуданд",
+  "learnTryChangeFilters": "Филтрҳоро иваз карда бинед",
+  "learnNothingForQuery": "Аз рӯи дархости «{query}» чизе ёфт нашуд.\nДархостро иваз кунед ё филтрҳоро бекор кунед.",
+  "@learnNothingForQuery": {
+    "placeholders": {
+      "query": {
+        "type": "Object"
+      }
+    }
+  },
+  "learnResetFilters": "Бекор кардани филтрҳо",
+  "lessonCompletedReward": "Дарс анҷом ёфт · +{p1} IQC",
+  "@lessonCompletedReward": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "lessonNotFound": "Дарс ёфт нашуд",
+  "lessonTabText": "МАТНИ ДАРС",
+  "lessonTabMaterials": "МАВОДИ ДАРС",
+  "lessonNoMaterials": "Ҳоло мавод нест",
+  "lessonStartQuiz": "ОҒОЗИ ТЕСТ",
+  "lessonComplete": "АНҶОМИ ДАРС",
+  "questDetailBackQuests": "Квестҳо",
+  "questDetailPillVoucher": "Ваучер",
+  "questDetailLeftLabel": "боқӣ монд",
+  "questDetailDoneLabel": "иҷро шуд",
+  "questDetailRewardLabel": "МУКОФОТ",
+  "questDetailVoucherManual": "Ваучер пас аз баррасӣ дастӣ дода мешавад",
+  "questDetailIqcToBalance": "+{p1} IQC ба баланс",
+  "@questDetailIqcToBalance": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "questDetailHowTitle": "Чекҳо чӣ тавр ҳисоб мешаванд",
+  "questDetailHowBody": "Акси чекҳоро бо доруи лозимӣ фиристед. Санҷиши баста — худкор.",
+  "questDetailTodoTitle": "Чӣ бояд кард",
+  "questDetailDrugLabel": "Дору",
+  "questDetailLimitsLabel": "Лимитҳо",
+  "questDetailPeriodLabel": "Давра",
+  "questDetailParticipantsLabel": "Иштирокчиён",
+  "questDetailPurchases": "харид",
+  "questsPeriodUntil": "то {p1}",
+  "@questsPeriodUntil": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "questsPeriodFrom": "аз {p1}",
+  "@questsPeriodFrom": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "questsPeriodNone": "Бе мӯҳлат",
+  "questsTitle": "Квестҳо",
+  "questsTabActive": "Фаъол",
+  "questsTabArchive": "Бойгонӣ",
+  "questsTabAll": "Ҳама",
+  "questsCountWordActive": "фаъол",
+  "questsCountWordArchive": "бойгонӣ",
+  "questsCountQuestOne": "квест",
+  "questsCountQuestFew": "квест",
+  "questsHistoryChip": "Таърихи иштирок",
+  "questsSearchHint": "Ҷустуҷӯ",
+  "questsPacksItem": "{p1} × {p2} баста",
+  "@questsPacksItem": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      },
+      "p2": {
+        "type": "Object"
+      }
+    }
+  },
+  "questsIqcNoLimit": "+{p1} IQC · бе лимит",
+  "@questsIqcNoLimit": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "questsPillVoucher": "Ваучер",
+  "questsActive": "Фаъол",
+  "questsFinished": "Анҷом ёфт",
+  "questsEmptyArchiveTitle": "Квестҳои бойгонӣ нестанд",
+  "questsEmptyArchiveSub": "Квестҳои анҷомёфта дар ин ҷо пайдо мешаванд",
+  "questsEmptyActiveTitle": "Квестҳои фаъол нестанд",
+  "questsEmptyActiveSub": "Квестҳои нав дар ин ҷо пайдо мешаванд",
+  "questsEmptyAllTitle": "Квестҳо нестанд",
+  "questsEmptyAllSub": "Дертар нигаред",
+  "questsViewActive": "Дидани фаъолҳо",
+  "quizTitle": "Тестгузаронӣ",
+  "quizQuestionOf": "Саволи {p1} аз {n}",
+  "@quizQuestionOf": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      },
+      "n": {
+        "type": "Object"
+      }
+    }
+  },
+  "quizFinish": "АНҶОМИ ТЕСТ",
+  "quizNext": "САВОЛИ НАВБАТӢ →",
+  "quizAnswerLabel": "Ҷавоб",
+  "quizCongrats": "Табрик!",
+  "quizPassed": "Тест бомуваффақият супорида шуд!",
+  "quizYouEarned": "Шумо ба даст овардед",
+  "quizCorrectLabel": "ҶАВОБҲОИ ДУРУСТ",
+  "quizResultLabel": "НАТИҶА",
+  "quizToHome": "БА ЭКРАНИ АСОСӢ",
+  "quizViewCertificate": "Дидани сертификат →",
+  "quizTryAgainTitle": "Боз як бор кӯшиш кунед",
+  "quizFailed": "Тест супорида нашуд",
+  "quizYourResult": "Натиҷаи шумо",
+  "quizCorrectLower": "дуруст",
+  "quizPassMinimum": "Ҳадди ақал барои гузаштан: {passScore}/{total} ({passPct}%)",
+  "@quizPassMinimum": {
+    "placeholders": {
+      "passScore": {
+        "type": "Object"
+      },
+      "total": {
+        "type": "Object"
+      },
+      "passPct": {
+        "type": "Object"
+      }
+    }
+  },
+  "quizRetry": "↺ АЗ НАВ СУПОРИДАН",
+  "quizBackToLesson": "Бозгашт ба дарс →",
+  "voucherNotFound": "Ваучер ёфт нашуд",
+  "voucherTitle": "Ваучери ман",
+  "voucherCodeCopied": "Рамз нусхабардорӣ шуд",
+  "voucherUsed": "Истифода шуд",
+  "voucherActive": "Фаъол",
+  "voucherIssuedAt": "Дода шуд: {p1}",
+  "@voucherIssuedAt": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "voucherGiftCardLabel": "UZS · КОРТИ ТӮҲФА",
+  "voucherShowQr": "QR-рамзро ба кассир нишон диҳед ё рамзро гӯед",
+  "voucherStores": "Мағозаҳои Korzinka.uz",
+  "voucherSupport": "Хадамоти дастгирӣ",
+  "walletPendingVouchers": "Ваучерҳо дар навбат",
+  "walletUseIqc": "Истифодаи IQC",
+  "walletMyVouchers": "Ваучерҳои ман",
+  "walletNoVouchers": "Ҳоло ваучерҳо нестанд",
+  "walletRedeemTitle": "Холҳо иваз карда шаванд?",
+  "walletRedeemBody": "{p1} бар ивази {p2} IQC",
+  "@walletRedeemBody": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      },
+      "p2": {
+        "type": "Object"
+      }
+    }
+  },
+  "walletCancel": "Бекор кардан",
+  "walletRedeem": "Иваз кардан",
+  "walletVoucherIssued": "Ваучер дода шуд",
+  "walletTitle": "Ҳамён",
+  "walletBalanceLabel": "БАЛАНС",
+  "walletTotalAccrued": "Ҳамагӣ ҳисоб шуд: {p1} IQC",
+  "@walletTotalAccrued": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "walletHistoryArrow": "Таърих →",
+  "walletQuestDoneAwaiting": "Квест иҷро шуд — ваучер интизори додан аст",
+  "walletForIqc": "бар ивази {p1} IQC",
+  "@walletForIqc": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      }
+    }
+  },
+  "walletGetVoucher": "Гирифтани ваучер",
+  "walletNotEnoughIqc": "IQC кофӣ нест",
+  "walletCodeMeta": "Рамз: {p1} · {p2}",
+  "@walletCodeMeta": {
+    "placeholders": {
+      "p1": {
+        "type": "Object"
+      },
+      "p2": {
+        "type": "Object"
+      }
+    }
+  },
+  "walletVoucherUsed": "Истифода шуд",
+  "walletVoucherActive": "Фаъол",
+  "walletHistoryTitle": "Таърих",
+  "walletNoTransactions": "Ҳоло амалиёт нест",
+  "brandProductsBrand": "Бренд",
+  "brandProductsFormat": "Формат",
+  "brandProductsMxik": "МХИК",
+  "brandProductsDivisible": "Тақсимшаванда",
+  "brandProductsYes": "Ҳа",
+  "brandProductsNo": "Не",
+  "brandProductsQuests": "Квестҳо",
+  "medrepHomePeriodAll": "Ҳама",
+  "medrepHomePeriod30d": "30 рӯз",
+  "medrepHomePeriod7d": "7 рӯз",
+  "leaderboardTabChecks": "Чекҳо",
+  "leaderboardTabPharm": "Фармасевтҳо",
+  "leaderboardTabQuests": "Квестҳо",
+  "leaderboardMyRankLabel": "{company} | Ҷои ман: ",
+  "@leaderboardMyRankLabel": {
+    "placeholders": {
+      "company": {
+        "type": "Object"
+      }
+    }
+  },
+  "leaderboardMyRank": "#{rank} аз {total}",
+  "@leaderboardMyRank": {
+    "placeholders": {
+      "rank": {
+        "type": "Object"
+      },
+      "total": {
+        "type": "Object"
+      }
+    }
+  },
+  "portfolioChecksChip": "Чекҳо: {count}",
+  "@portfolioChecksChip": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "portfolioQuestsChip": "Квестҳо: {count}",
+  "@portfolioQuestsChip": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "referralsDate": "Дархост: {date}",
+  "@referralsDate": {
+    "placeholders": {
+      "date": {
+        "type": "Object"
+      }
+    }
+  },
+  "checksStatusApproved": "Тасдиқ шуд",
+  "checksStatusRejected": "Рад шуд",
+  "checksStatusPending": "Дар баррасӣ",
+  "questDetailRewardVoucherLine": "Korzinka · {amount} сум",
+  "@questDetailRewardVoucherLine": {
+    "placeholders": {
+      "amount": {
+        "type": "Object"
+      }
+    }
+  },
+  "questDetailRewardIqcLine": "Ҳамаи дорухонаҳо · бе лимит",
+  "questDetailActiveUntil": "То {date} фаъол",
+  "@questDetailActiveUntil": {
+    "placeholders": {
+      "date": {
+        "type": "Object"
+      }
+    }
+  },
+  "questDetailFinished": "Анҷом ёфт",
+  "questsPurchasesOfGoal": "{completed} / {goal} харид",
+  "@questsPurchasesOfGoal": {
+    "placeholders": {
+      "completed": {
+        "type": "Object"
+      },
+      "goal": {
+        "type": "Object"
+      }
+    }
+  },
+  "questsPurchases": "{completed} харид",
+  "@questsPurchases": {
+    "placeholders": {
+      "completed": {
+        "type": "Object"
+      }
+    }
+  },
+  "profileLanguageTitle": "Забон",
+  "profileChooseLanguage": "Забонро интихоб кунед"
+}

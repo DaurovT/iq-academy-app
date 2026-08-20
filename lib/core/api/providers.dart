@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import '../../l10n/gen/app_localizations.dart';
+import '../l10n/locale_controller.dart';
 import 'api_client.dart';
 import 'http_api.dart';
 import 'platform_api.dart';
@@ -8,7 +10,9 @@ import 'token_store.dart';
 
 /// Защищённое хранилище (keystore/keychain).
 final secureStorageProvider = Provider<FlutterSecureStorage>((ref) {
-  return const FlutterSecureStorage();
+  return const FlutterSecureStorage(
+    iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock),
+  );
 });
 
 /// Хранилище токена и активной роли.
@@ -18,7 +22,10 @@ final tokenStoreProvider = Provider<TokenStore>((ref) {
 
 /// Настроенный Dio (Bearer-токен + маппинг ошибок).
 final dioProvider = Provider<Dio>((ref) {
-  return createDio(ref.watch(tokenStoreProvider));
+  return createDio(
+    ref.watch(tokenStoreProvider),
+    () => lookupAppLocalizations(ref.read(localeProvider)),
+  );
 });
 
 /// Единая точка доступа к API. Провайдеры/экраны зависят от [PlatformApi].

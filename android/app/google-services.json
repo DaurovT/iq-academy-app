@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "802236256438",
+    "project_id": "pharmiq-fb",
+    "storage_bucket": "pharmiq-fb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:802236256438:android:561e683cbea800ad631617",
+        "android_client_info": {
+          "package_name": "uz.iqacademy.platform_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFvqGBuKSG-OJpb_BADjo6YJUeNWaWVfQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

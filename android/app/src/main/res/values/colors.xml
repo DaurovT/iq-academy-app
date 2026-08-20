@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ic_launcher_background">#0D1117</color>
+    <!-- Цвет подложки иконки пуша (фирменный фиолетовый). -->
+    <color name="pharmiq_notification">#7C5CFF</color>
+</resources>

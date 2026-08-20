@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../core/l10n/l10n.dart';
 
 /// Единый рендер AsyncValue: спиннер / ошибка с «Повторить» / данные.
 /// Убирает копипасту `.when(...)` на каждом экране.
@@ -47,7 +48,7 @@ class _ErrorState extends StatelessWidget {
               const SizedBox(height: 16),
               FilledButton.tonal(
                 onPressed: onRetry,
-                child: const Text('Повторить'),
+                child: Text(context.l10n.asyncRetry),
               ),
             ],
           ],

@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import '../../l10n/gen/app_localizations.dart';
 
 /// Роли пользователя. JSON-значения совпадают с platform_api (types.ts: Role).
 enum Role {
@@ -11,20 +12,22 @@ enum Role {
   @JsonValue('product_owner')
   productOwner;
 
-  /// Человекочитаемая метка (пока по-русски; позже — через i18n).
-  String get label => switch (this) {
-        Role.pharmacist => 'Фармацевт',
-        Role.doctor => 'Врач',
-        Role.medrep => 'Мед. представитель',
-        Role.productOwner => 'Бренд / Продукт-оунер',
-      };
-
   /// Значение роли для API (совпадает с @JsonValue).
   String get apiValue => switch (this) {
         Role.pharmacist => 'pharmacist',
         Role.doctor => 'doctor',
         Role.medrep => 'medrep',
         Role.productOwner => 'product_owner',
+      };
+}
+
+/// Человекочитаемая метка роли на языке интерфейса.
+extension RoleL10n on Role {
+  String label(AppLocalizations l10n) => switch (this) {
+        Role.pharmacist => l10n.commonRolePharmacist,
+        Role.doctor => l10n.commonRoleDoctor,
+        Role.medrep => l10n.commonRoleMedrep,
+        Role.productOwner => l10n.commonRoleProductOwner,
       };
 }
 

@@ -1,26 +1,37 @@
 import 'package:flutter/material.dart';
+import 'app_colors.dart';
 
-/// Тема приложения. Один seed-цвет — Material 3 сам строит светлую и тёмную
-/// палитры. Позже сюда добавим фирменные токены из веба (theme/tokens.css).
+/// Тема приложения. Обе яркости строятся из токенов [PharmPalette],
+/// перенесённых из макетов Figma «PharmIQ».
 class AppTheme {
-  static const _seed = Color(0xFF2E7D5B); // фирменный зелёный IQ Academy
-
   static ThemeData light() => _base(Brightness.light);
   static ThemeData dark() => _base(Brightness.dark);
 
   static ThemeData _base(Brightness brightness) {
+    final dark = brightness == Brightness.dark;
+    final p = dark ? PharmPalette.dark : PharmPalette.light;
+
     final scheme = ColorScheme.fromSeed(
-      seedColor: _seed,
+      seedColor: p.accent,
       brightness: brightness,
+    ).copyWith(
+      primary: p.accent,
+      surface: p.bg,
+      onSurface: p.textPrimary,
+      onSurfaceVariant: p.textMuted,
+      surfaceContainerLow: p.card,
+      surfaceContainer: p.card,
+      outline: p.cardBorder,
     );
+
     return ThemeData(
       useMaterial3: true,
       colorScheme: scheme,
-      scaffoldBackgroundColor: scheme.surface,
+      scaffoldBackgroundColor: p.bg,
       appBarTheme: AppBarTheme(
         centerTitle: false,
-        backgroundColor: scheme.surface,
-        foregroundColor: scheme.onSurface,
+        backgroundColor: p.bg,
+        foregroundColor: p.textPrimary,
         elevation: 0,
       ),
       filledButtonTheme: FilledButtonThemeData(
@@ -40,9 +51,38 @@ class AppTheme {
       ),
       cardTheme: CardThemeData(
         elevation: 0,
-        color: scheme.surfaceContainerLow,
+        color: p.card,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(18),
+        ),
+      ),
+      navigationBarTheme: NavigationBarThemeData(
+        height: 72,
+        backgroundColor: p.navBg,
+        elevation: 0,
+        indicatorColor: p.navPill,
+        indicatorShape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+        iconTheme: WidgetStateProperty.resolveWith(
+          (states) => IconThemeData(
+            size: 24,
+            color: states.contains(WidgetState.selected)
+                ? p.navActiveIcon
+                : p.navInactive,
+          ),
+        ),
+        labelTextStyle: WidgetStateProperty.resolveWith(
+          (states) => TextStyle(
+            fontSize: 12,
+            fontWeight: states.contains(WidgetState.selected)
+                ? FontWeight.w700
+                : FontWeight.w500,
+            color: states.contains(WidgetState.selected)
+                ? p.navActiveLabel
+                : p.navInactive,
+          ),
         ),
       ),
     );

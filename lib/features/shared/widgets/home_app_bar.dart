@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/auth/auth_controller.dart';
+import '../../../core/l10n/l10n.dart';
 import '../../../core/models/common.dart';
 import '../../../core/theme/theme_controller.dart';
 import '../providers.dart';
@@ -20,7 +21,7 @@ class HomeAppBar extends ConsumerWidget implements PreferredSizeWidget {
     final themeMode = ref.watch(themeModeProvider);
 
     return AppBar(
-      title: const Text('IQ Academy'),
+      title: Text(context.l10n.appTitle),
       actions: [
         IconButton(
           icon: Icon(themeMode == ThemeMode.dark
@@ -35,12 +36,12 @@ class HomeAppBar extends ConsumerWidget implements PreferredSizeWidget {
         if ((account?.roles.length ?? 0) > 1)
           PopupMenuButton<Role>(
             icon: const Icon(Icons.badge_outlined),
-            tooltip: 'Сменить роль',
+            tooltip: context.l10n.appBarSwitchRole,
             onSelected: (r) =>
                 ref.read(authControllerProvider.notifier).setActiveRole(r),
             itemBuilder: (_) => [
               for (final r in account!.roles)
-                PopupMenuItem(value: r, child: Text(r.label)),
+                PopupMenuItem(value: r, child: Text(r.label(context.l10n))),
             ],
           ),
       ],

@@ -1,4 +1,6 @@
+import 'dart:io' show Platform;
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import '../models/account.dart';
 import '../models/common.dart';
 import '../models/wallet.dart';
@@ -10,6 +12,9 @@ import '../models/medrep.dart';
 import '../models/brand.dart';
 import '../models/registration.dart';
 import '../models/support.dart';
+import '../models/news.dart';
+import '../models/survey.dart';
+import '../models/sapper.dart';
 import 'platform_api.dart';
 import 'upload.dart';
 
@@ -27,7 +32,12 @@ class HttpApi implements PlatformApi {
         notifications = HttpNotificationsApi(dio),
         medrep = HttpMedrepApi(dio),
         brand = HttpBrandApi(dio),
-        support = HttpSupportApi(dio);
+        support = HttpSupportApi(dio),
+        news = HttpNewsApi(dio),
+        surveys = HttpSurveysApi(dio),
+        miniApps = HttpMiniAppsApi(dio),
+        sapper = HttpSapperApi(dio),
+        devices = HttpDevicesApi(dio);
 
   @override
   final AuthApi auth;
@@ -53,6 +63,16 @@ class HttpApi implements PlatformApi {
   final BrandApi brand;
   @override
   final SupportApi support;
+  @override
+  final NewsApi news;
+  @override
+  final SurveysApi surveys;
+  @override
+  final MiniAppsApi miniApps;
+  @override
+  final SapperApi sapper;
+  @override
+  final DevicesApi devices;
 }
 
 /// Разбор JSON-массива в список моделей.
@@ -116,6 +136,8 @@ class HttpAuthApi implements AuthApi {
   @override
   Future<TgPollResult> telegramPoll(String nonce) async {
     final r = await _dio.post('/auth/telegram/poll', data: {'nonce': nonce});
+    // Диагностика: печатаем сырой ответ, чтобы видеть точную форму `done`.
+    if (kDebugMode) debugPrint('[tg/poll] raw response: ${r.data}');
     return TgPollResult.fromJson(_obj(r.data));
   }
 }
@@ -345,6 +367,8 @@ class HttpChecksApi implements ChecksApi {
     final r = await _upload(_dio, '/client/checks', files, {
       'checkDate': checkDate,
       'idempotencyKey': idempotencyKey,
+      // сообщаем платформу, чтобы админка показывала iPhone/Android у чека
+      'platform': Platform.isIOS ? 'ios' : 'android',
     });
     return Check.fromJson(_obj(r.data));
   }
@@ -572,5 +596,94 @@ class HttpSupportApi implements SupportApi {
   Future<SupportMessage> send(String text) async {
     final r = await _dio.post('/client/support/thread', data: {'text': text});
     return SupportMessage.fromJson(_obj(r.data));
+  }
+}
+
+class HttpNewsApi implements NewsApi {
+  HttpNewsApi(this._dio);
+  final Dio _dio;
+
+  @override
+  Future<List<NewsItem>> list() async {
+    final r = await _dio.get('/client/news');
+    return _list(r.data, NewsItem.fromJson);
+  }
+
+  @override
+  Future<NewsDetail> get(int id) async {
+    final r = await _dio.get('/client/news/$id');
+    return NewsDetail.fromJson(_obj(r.data));
+  }
+}
+
+class HttpSurveysApi implements SurveysApi {
+  HttpSurveysApi(this._dio);
+  final Dio _dio;
+
+  @override
+  Future<Survey?> next() async {
+    final r = await _dio.get('/client/surveys/next');
+    if (r.data == null) return null;
+    return Survey.fromJson(_obj(r.data));
+  }
+
+  @override
+  Future<SurveyAnswerResult> answer(int id,
+      {int? optionId, String? text, int? rating}) async {
+    final r = await _dio.post('/client/surveys/$id/answer', data: {
+      if (optionId != null) 'optionId': optionId,
+      if (text != null) 'text': text,
+      if (rating != null) 'rating': rating,
+    });
+    return SurveyAnswerResult.fromJson(_obj(r.data));
+  }
+}
+
+class HttpMiniAppsApi implements MiniAppsApi {
+  HttpMiniAppsApi(this._dio);
+  final Dio _dio;
+
+  @override
+  Future<List<MiniApp>> list() async {
+    final r = await _dio.get('/client/mini-apps');
+    return _list(r.data, MiniApp.fromJson);
+  }
+}
+
+class HttpSapperApi implements SapperApi {
+  HttpSapperApi(this._dio);
+  final Dio _dio;
+
+  @override
+  Future<List<SapperDrawItem>> draws() async {
+    final r = await _dio.get('/client/sapper/draws');
+    return _list(r.data, SapperDrawItem.fromJson);
+  }
+
+  @override
+  Future<SapperField> field(int id) async {
+    final r = await _dio.get('/client/sapper/draws/$id');
+    return SapperField.fromJson(_obj(r.data));
+  }
+
+  @override
+  Future<SapperReserveResult> reserve(int id, int cellIndex) async {
+    final r = await _dio.post('/client/sapper/draws/$id/reserve', data: {'cellIndex': cellIndex});
+    return SapperReserveResult.fromJson(_obj(r.data));
+  }
+}
+
+class HttpDevicesApi implements DevicesApi {
+  HttpDevicesApi(this._dio);
+  final Dio _dio;
+
+  @override
+  Future<void> register(String token, String platform) async {
+    await _dio.post('/client/devices/register', data: {'token': token, 'platform': platform});
+  }
+
+  @override
+  Future<void> unregister(String token) async {
+    await _dio.post('/client/devices/unregister', data: {'token': token});
   }
 }

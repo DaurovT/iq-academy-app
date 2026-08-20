@@ -1,14 +1,19 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/api/providers.dart';
+import '../../core/auth/auth_controller.dart';
 import '../../core/models/quest.dart';
 import '../../core/models/wallet.dart';
 import '../../core/models/check.dart';
 import '../../core/models/learn.dart';
 
 // ── Квесты ──
+// Фильтруем по target и на клиенте: фармацевт (checks) не должен видеть
+// врачебные квесты (recipes) и наоборот, даже если бэкенд вернёт все.
 final questsListProvider =
-    FutureProvider.family<List<Quest>, QuestTarget?>((ref, target) {
-  return ref.watch(apiProvider).quests.list(target);
+    FutureProvider.family<List<Quest>, QuestTarget?>((ref, target) async {
+  final list = await ref.watch(apiProvider).quests.list(target);
+  if (target == null) return list;
+  return list.where((q) => q.target == target).toList();
 });
 
 final questDetailProvider =
@@ -53,13 +58,17 @@ final checkDetailProvider = FutureProvider.family<CheckDetail, int>((ref, id) {
 });
 
 // ── Обучение ──
+// Курсы фильтруются по активной роли, чтобы фармацевт не видел врачебные
+// уроки и наоборот.
 final coursesProvider = FutureProvider<List<Course>>((ref) {
-  return ref.watch(apiProvider).catalog.courses();
+  final role = ref.watch(authControllerProvider).asData?.value.activeRole;
+  return ref.watch(apiProvider).catalog.courses(role);
 });
 
 final courseDetailProvider =
     FutureProvider.family<CourseDetail, int>((ref, id) {
-  return ref.watch(apiProvider).catalog.course(id);
+  final role = ref.watch(authControllerProvider).asData?.value.activeRole;
+  return ref.watch(apiProvider).catalog.course(id, role);
 });
 
 /// Квиз урока. Ключ семейства — (courseId, lessonId).

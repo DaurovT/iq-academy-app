@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Course {
 
- int get id; String get title; String get description; int get lessonCount; double get progress; String? get ownerBrand; String? get category; String? get targetCity; String? get targetSpecialty; bool? get mandatory; bool? get isNew;
+ int get id; String get title; String get description; int get lessonCount; double get progress; String? get ownerBrand; String? get coverUrl; String? get category; String? get targetCity; String? get targetSpecialty; bool? get mandatory; bool? get isNew;
 /// Create a copy of Course
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $CourseCopyWith<Course> get copyWith => _$CourseCopyWithImpl<Course>(this as Cou
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Course&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.lessonCount, lessonCount) || other.lessonCount == lessonCount)&&(identical(other.progress, progress) || other.progress == progress)&&(identical(other.ownerBrand, ownerBrand) || other.ownerBrand == ownerBrand)&&(identical(other.category, category) || other.category == category)&&(identical(other.targetCity, targetCity) || other.targetCity == targetCity)&&(identical(other.targetSpecialty, targetSpecialty) || other.targetSpecialty == targetSpecialty)&&(identical(other.mandatory, mandatory) || other.mandatory == mandatory)&&(identical(other.isNew, isNew) || other.isNew == isNew));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Course&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.lessonCount, lessonCount) || other.lessonCount == lessonCount)&&(identical(other.progress, progress) || other.progress == progress)&&(identical(other.ownerBrand, ownerBrand) || other.ownerBrand == ownerBrand)&&(identical(other.coverUrl, coverUrl) || other.coverUrl == coverUrl)&&(identical(other.category, category) || other.category == category)&&(identical(other.targetCity, targetCity) || other.targetCity == targetCity)&&(identical(other.targetSpecialty, targetSpecialty) || other.targetSpecialty == targetSpecialty)&&(identical(other.mandatory, mandatory) || other.mandatory == mandatory)&&(identical(other.isNew, isNew) || other.isNew == isNew));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,description,lessonCount,progress,ownerBrand,category,targetCity,targetSpecialty,mandatory,isNew);
+int get hashCode => Object.hash(runtimeType,id,title,description,lessonCount,progress,ownerBrand,coverUrl,category,targetCity,targetSpecialty,mandatory,isNew);
 
 @override
 String toString() {
-  return 'Course(id: $id, title: $title, description: $description, lessonCount: $lessonCount, progress: $progress, ownerBrand: $ownerBrand, category: $category, targetCity: $targetCity, targetSpecialty: $targetSpecialty, mandatory: $mandatory, isNew: $isNew)';
+  return 'Course(id: $id, title: $title, description: $description, lessonCount: $lessonCount, progress: $progress, ownerBrand: $ownerBrand, coverUrl: $coverUrl, category: $category, targetCity: $targetCity, targetSpecialty: $targetSpecialty, mandatory: $mandatory, isNew: $isNew)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $CourseCopyWith<$Res>  {
   factory $CourseCopyWith(Course value, $Res Function(Course) _then) = _$CourseCopyWithImpl;
 @useResult
 $Res call({
- int id, String title, String description, int lessonCount, double progress, String? ownerBrand, String? category, String? targetCity, String? targetSpecialty, bool? mandatory, bool? isNew
+ int id, String title, String description, int lessonCount, double progress, String? ownerBrand, String? coverUrl, String? category, String? targetCity, String? targetSpecialty, bool? mandatory, bool? isNew
 });
 
 
@@ -65,7 +65,7 @@ class _$CourseCopyWithImpl<$Res>
 
 /// Create a copy of Course
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? description = null,Object? lessonCount = null,Object? progress = null,Object? ownerBrand = freezed,Object? category = freezed,Object? targetCity = freezed,Object? targetSpecialty = freezed,Object? mandatory = freezed,Object? isNew = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? description = null,Object? lessonCount = null,Object? progress = null,Object? ownerBrand = freezed,Object? coverUrl = freezed,Object? category = freezed,Object? targetCity = freezed,Object? targetSpecialty = freezed,Object? mandatory = freezed,Object? isNew = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -73,6 +73,7 @@ as String,description: null == description ? _self.description : description // 
 as String,lessonCount: null == lessonCount ? _self.lessonCount : lessonCount // ignore: cast_nullable_to_non_nullable
 as int,progress: null == progress ? _self.progress : progress // ignore: cast_nullable_to_non_nullable
 as double,ownerBrand: freezed == ownerBrand ? _self.ownerBrand : ownerBrand // ignore: cast_nullable_to_non_nullable
+as String?,coverUrl: freezed == coverUrl ? _self.coverUrl : coverUrl // ignore: cast_nullable_to_non_nullable
 as String?,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
 as String?,targetCity: freezed == targetCity ? _self.targetCity : targetCity // ignore: cast_nullable_to_non_nullable
 as String?,targetSpecialty: freezed == targetSpecialty ? _self.targetSpecialty : targetSpecialty // ignore: cast_nullable_to_non_nullable
@@ -163,10 +164,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String title,  String description,  int lessonCount,  double progress,  String? ownerBrand,  String? category,  String? targetCity,  String? targetSpecialty,  bool? mandatory,  bool? isNew)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String title,  String description,  int lessonCount,  double progress,  String? ownerBrand,  String? coverUrl,  String? category,  String? targetCity,  String? targetSpecialty,  bool? mandatory,  bool? isNew)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Course() when $default != null:
-return $default(_that.id,_that.title,_that.description,_that.lessonCount,_that.progress,_that.ownerBrand,_that.category,_that.targetCity,_that.targetSpecialty,_that.mandatory,_that.isNew);case _:
+return $default(_that.id,_that.title,_that.description,_that.lessonCount,_that.progress,_that.ownerBrand,_that.coverUrl,_that.category,_that.targetCity,_that.targetSpecialty,_that.mandatory,_that.isNew);case _:
   return orElse();
 
 }
@@ -184,10 +185,10 @@ return $default(_that.id,_that.title,_that.description,_that.lessonCount,_that.p
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String title,  String description,  int lessonCount,  double progress,  String? ownerBrand,  String? category,  String? targetCity,  String? targetSpecialty,  bool? mandatory,  bool? isNew)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String title,  String description,  int lessonCount,  double progress,  String? ownerBrand,  String? coverUrl,  String? category,  String? targetCity,  String? targetSpecialty,  bool? mandatory,  bool? isNew)  $default,) {final _that = this;
 switch (_that) {
 case _Course():
-return $default(_that.id,_that.title,_that.description,_that.lessonCount,_that.progress,_that.ownerBrand,_that.category,_that.targetCity,_that.targetSpecialty,_that.mandatory,_that.isNew);case _:
+return $default(_that.id,_that.title,_that.description,_that.lessonCount,_that.progress,_that.ownerBrand,_that.coverUrl,_that.category,_that.targetCity,_that.targetSpecialty,_that.mandatory,_that.isNew);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -204,10 +205,10 @@ return $default(_that.id,_that.title,_that.description,_that.lessonCount,_that.p
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String title,  String description,  int lessonCount,  double progress,  String? ownerBrand,  String? category,  String? targetCity,  String? targetSpecialty,  bool? mandatory,  bool? isNew)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String title,  String description,  int lessonCount,  double progress,  String? ownerBrand,  String? coverUrl,  String? category,  String? targetCity,  String? targetSpecialty,  bool? mandatory,  bool? isNew)?  $default,) {final _that = this;
 switch (_that) {
 case _Course() when $default != null:
-return $default(_that.id,_that.title,_that.description,_that.lessonCount,_that.progress,_that.ownerBrand,_that.category,_that.targetCity,_that.targetSpecialty,_that.mandatory,_that.isNew);case _:
+return $default(_that.id,_that.title,_that.description,_that.lessonCount,_that.progress,_that.ownerBrand,_that.coverUrl,_that.category,_that.targetCity,_that.targetSpecialty,_that.mandatory,_that.isNew);case _:
   return null;
 
 }
@@ -219,7 +220,7 @@ return $default(_that.id,_that.title,_that.description,_that.lessonCount,_that.p
 @JsonSerializable()
 
 class _Course implements Course {
-  const _Course({required this.id, required this.title, required this.description, required this.lessonCount, required this.progress, this.ownerBrand, this.category, this.targetCity, this.targetSpecialty, this.mandatory, this.isNew});
+  const _Course({required this.id, required this.title, required this.description, required this.lessonCount, required this.progress, this.ownerBrand, this.coverUrl, this.category, this.targetCity, this.targetSpecialty, this.mandatory, this.isNew});
   factory _Course.fromJson(Map<String, dynamic> json) => _$CourseFromJson(json);
 
 @override final  int id;
@@ -228,6 +229,7 @@ class _Course implements Course {
 @override final  int lessonCount;
 @override final  double progress;
 @override final  String? ownerBrand;
+@override final  String? coverUrl;
 @override final  String? category;
 @override final  String? targetCity;
 @override final  String? targetSpecialty;
@@ -247,16 +249,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Course&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.lessonCount, lessonCount) || other.lessonCount == lessonCount)&&(identical(other.progress, progress) || other.progress == progress)&&(identical(other.ownerBrand, ownerBrand) || other.ownerBrand == ownerBrand)&&(identical(other.category, category) || other.category == category)&&(identical(other.targetCity, targetCity) || other.targetCity == targetCity)&&(identical(other.targetSpecialty, targetSpecialty) || other.targetSpecialty == targetSpecialty)&&(identical(other.mandatory, mandatory) || other.mandatory == mandatory)&&(identical(other.isNew, isNew) || other.isNew == isNew));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Course&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.lessonCount, lessonCount) || other.lessonCount == lessonCount)&&(identical(other.progress, progress) || other.progress == progress)&&(identical(other.ownerBrand, ownerBrand) || other.ownerBrand == ownerBrand)&&(identical(other.coverUrl, coverUrl) || other.coverUrl == coverUrl)&&(identical(other.category, category) || other.category == category)&&(identical(other.targetCity, targetCity) || other.targetCity == targetCity)&&(identical(other.targetSpecialty, targetSpecialty) || other.targetSpecialty == targetSpecialty)&&(identical(other.mandatory, mandatory) || other.mandatory == mandatory)&&(identical(other.isNew, isNew) || other.isNew == isNew));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,description,lessonCount,progress,ownerBrand,category,targetCity,targetSpecialty,mandatory,isNew);
+int get hashCode => Object.hash(runtimeType,id,title,description,lessonCount,progress,ownerBrand,coverUrl,category,targetCity,targetSpecialty,mandatory,isNew);
 
 @override
 String toString() {
-  return 'Course(id: $id, title: $title, description: $description, lessonCount: $lessonCount, progress: $progress, ownerBrand: $ownerBrand, category: $category, targetCity: $targetCity, targetSpecialty: $targetSpecialty, mandatory: $mandatory, isNew: $isNew)';
+  return 'Course(id: $id, title: $title, description: $description, lessonCount: $lessonCount, progress: $progress, ownerBrand: $ownerBrand, coverUrl: $coverUrl, category: $category, targetCity: $targetCity, targetSpecialty: $targetSpecialty, mandatory: $mandatory, isNew: $isNew)';
 }
 
 
@@ -267,7 +269,7 @@ abstract mixin class _$CourseCopyWith<$Res> implements $CourseCopyWith<$Res> {
   factory _$CourseCopyWith(_Course value, $Res Function(_Course) _then) = __$CourseCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String title, String description, int lessonCount, double progress, String? ownerBrand, String? category, String? targetCity, String? targetSpecialty, bool? mandatory, bool? isNew
+ int id, String title, String description, int lessonCount, double progress, String? ownerBrand, String? coverUrl, String? category, String? targetCity, String? targetSpecialty, bool? mandatory, bool? isNew
 });
 
 
@@ -284,7 +286,7 @@ class __$CourseCopyWithImpl<$Res>
 
 /// Create a copy of Course
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? description = null,Object? lessonCount = null,Object? progress = null,Object? ownerBrand = freezed,Object? category = freezed,Object? targetCity = freezed,Object? targetSpecialty = freezed,Object? mandatory = freezed,Object? isNew = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? description = null,Object? lessonCount = null,Object? progress = null,Object? ownerBrand = freezed,Object? coverUrl = freezed,Object? category = freezed,Object? targetCity = freezed,Object? targetSpecialty = freezed,Object? mandatory = freezed,Object? isNew = freezed,}) {
   return _then(_Course(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -292,6 +294,7 @@ as String,description: null == description ? _self.description : description // 
 as String,lessonCount: null == lessonCount ? _self.lessonCount : lessonCount // ignore: cast_nullable_to_non_nullable
 as int,progress: null == progress ? _self.progress : progress // ignore: cast_nullable_to_non_nullable
 as double,ownerBrand: freezed == ownerBrand ? _self.ownerBrand : ownerBrand // ignore: cast_nullable_to_non_nullable
+as String?,coverUrl: freezed == coverUrl ? _self.coverUrl : coverUrl // ignore: cast_nullable_to_non_nullable
 as String?,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
 as String?,targetCity: freezed == targetCity ? _self.targetCity : targetCity // ignore: cast_nullable_to_non_nullable
 as String?,targetSpecialty: freezed == targetSpecialty ? _self.targetSpecialty : targetSpecialty // ignore: cast_nullable_to_non_nullable
@@ -597,7 +600,7 @@ as bool?,
 /// @nodoc
 mixin _$CourseDetail {
 
- int get id; String get title; String get description; int get lessonCount; double get progress; String? get ownerBrand; String? get category; String? get targetCity; String? get targetSpecialty; bool? get mandatory; bool? get isNew; List<Lesson> get lessons;
+ int get id; String get title; String get description; int get lessonCount; double get progress; String? get ownerBrand; String? get coverUrl; String? get category; String? get targetCity; String? get targetSpecialty; bool? get mandatory; bool? get isNew; List<Lesson> get lessons;
 /// Create a copy of CourseDetail
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -610,16 +613,16 @@ $CourseDetailCopyWith<CourseDetail> get copyWith => _$CourseDetailCopyWithImpl<C
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CourseDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.lessonCount, lessonCount) || other.lessonCount == lessonCount)&&(identical(other.progress, progress) || other.progress == progress)&&(identical(other.ownerBrand, ownerBrand) || other.ownerBrand == ownerBrand)&&(identical(other.category, category) || other.category == category)&&(identical(other.targetCity, targetCity) || other.targetCity == targetCity)&&(identical(other.targetSpecialty, targetSpecialty) || other.targetSpecialty == targetSpecialty)&&(identical(other.mandatory, mandatory) || other.mandatory == mandatory)&&(identical(other.isNew, isNew) || other.isNew == isNew)&&const DeepCollectionEquality().equals(other.lessons, lessons));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CourseDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.lessonCount, lessonCount) || other.lessonCount == lessonCount)&&(identical(other.progress, progress) || other.progress == progress)&&(identical(other.ownerBrand, ownerBrand) || other.ownerBrand == ownerBrand)&&(identical(other.coverUrl, coverUrl) || other.coverUrl == coverUrl)&&(identical(other.category, category) || other.category == category)&&(identical(other.targetCity, targetCity) || other.targetCity == targetCity)&&(identical(other.targetSpecialty, targetSpecialty) || other.targetSpecialty == targetSpecialty)&&(identical(other.mandatory, mandatory) || other.mandatory == mandatory)&&(identical(other.isNew, isNew) || other.isNew == isNew)&&const DeepCollectionEquality().equals(other.lessons, lessons));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,description,lessonCount,progress,ownerBrand,category,targetCity,targetSpecialty,mandatory,isNew,const DeepCollectionEquality().hash(lessons));
+int get hashCode => Object.hash(runtimeType,id,title,description,lessonCount,progress,ownerBrand,coverUrl,category,targetCity,targetSpecialty,mandatory,isNew,const DeepCollectionEquality().hash(lessons));
 
 @override
 String toString() {
-  return 'CourseDetail(id: $id, title: $title, description: $description, lessonCount: $lessonCount, progress: $progress, ownerBrand: $ownerBrand, category: $category, targetCity: $targetCity, targetSpecialty: $targetSpecialty, mandatory: $mandatory, isNew: $isNew, lessons: $lessons)';
+  return 'CourseDetail(id: $id, title: $title, description: $description, lessonCount: $lessonCount, progress: $progress, ownerBrand: $ownerBrand, coverUrl: $coverUrl, category: $category, targetCity: $targetCity, targetSpecialty: $targetSpecialty, mandatory: $mandatory, isNew: $isNew, lessons: $lessons)';
 }
 
 
@@ -630,7 +633,7 @@ abstract mixin class $CourseDetailCopyWith<$Res>  {
   factory $CourseDetailCopyWith(CourseDetail value, $Res Function(CourseDetail) _then) = _$CourseDetailCopyWithImpl;
 @useResult
 $Res call({
- int id, String title, String description, int lessonCount, double progress, String? ownerBrand, String? category, String? targetCity, String? targetSpecialty, bool? mandatory, bool? isNew, List<Lesson> lessons
+ int id, String title, String description, int lessonCount, double progress, String? ownerBrand, String? coverUrl, String? category, String? targetCity, String? targetSpecialty, bool? mandatory, bool? isNew, List<Lesson> lessons
 });
 
 
@@ -647,7 +650,7 @@ class _$CourseDetailCopyWithImpl<$Res>
 
 /// Create a copy of CourseDetail
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? description = null,Object? lessonCount = null,Object? progress = null,Object? ownerBrand = freezed,Object? category = freezed,Object? targetCity = freezed,Object? targetSpecialty = freezed,Object? mandatory = freezed,Object? isNew = freezed,Object? lessons = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? description = null,Object? lessonCount = null,Object? progress = null,Object? ownerBrand = freezed,Object? coverUrl = freezed,Object? category = freezed,Object? targetCity = freezed,Object? targetSpecialty = freezed,Object? mandatory = freezed,Object? isNew = freezed,Object? lessons = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -655,6 +658,7 @@ as String,description: null == description ? _self.description : description // 
 as String,lessonCount: null == lessonCount ? _self.lessonCount : lessonCount // ignore: cast_nullable_to_non_nullable
 as int,progress: null == progress ? _self.progress : progress // ignore: cast_nullable_to_non_nullable
 as double,ownerBrand: freezed == ownerBrand ? _self.ownerBrand : ownerBrand // ignore: cast_nullable_to_non_nullable
+as String?,coverUrl: freezed == coverUrl ? _self.coverUrl : coverUrl // ignore: cast_nullable_to_non_nullable
 as String?,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
 as String?,targetCity: freezed == targetCity ? _self.targetCity : targetCity // ignore: cast_nullable_to_non_nullable
 as String?,targetSpecialty: freezed == targetSpecialty ? _self.targetSpecialty : targetSpecialty // ignore: cast_nullable_to_non_nullable
@@ -746,10 +750,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String title,  String description,  int lessonCount,  double progress,  String? ownerBrand,  String? category,  String? targetCity,  String? targetSpecialty,  bool? mandatory,  bool? isNew,  List<Lesson> lessons)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String title,  String description,  int lessonCount,  double progress,  String? ownerBrand,  String? coverUrl,  String? category,  String? targetCity,  String? targetSpecialty,  bool? mandatory,  bool? isNew,  List<Lesson> lessons)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CourseDetail() when $default != null:
-return $default(_that.id,_that.title,_that.description,_that.lessonCount,_that.progress,_that.ownerBrand,_that.category,_that.targetCity,_that.targetSpecialty,_that.mandatory,_that.isNew,_that.lessons);case _:
+return $default(_that.id,_that.title,_that.description,_that.lessonCount,_that.progress,_that.ownerBrand,_that.coverUrl,_that.category,_that.targetCity,_that.targetSpecialty,_that.mandatory,_that.isNew,_that.lessons);case _:
   return orElse();
 
 }
@@ -767,10 +771,10 @@ return $default(_that.id,_that.title,_that.description,_that.lessonCount,_that.p
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String title,  String description,  int lessonCount,  double progress,  String? ownerBrand,  String? category,  String? targetCity,  String? targetSpecialty,  bool? mandatory,  bool? isNew,  List<Lesson> lessons)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String title,  String description,  int lessonCount,  double progress,  String? ownerBrand,  String? coverUrl,  String? category,  String? targetCity,  String? targetSpecialty,  bool? mandatory,  bool? isNew,  List<Lesson> lessons)  $default,) {final _that = this;
 switch (_that) {
 case _CourseDetail():
-return $default(_that.id,_that.title,_that.description,_that.lessonCount,_that.progress,_that.ownerBrand,_that.category,_that.targetCity,_that.targetSpecialty,_that.mandatory,_that.isNew,_that.lessons);case _:
+return $default(_that.id,_that.title,_that.description,_that.lessonCount,_that.progress,_that.ownerBrand,_that.coverUrl,_that.category,_that.targetCity,_that.targetSpecialty,_that.mandatory,_that.isNew,_that.lessons);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -787,10 +791,10 @@ return $default(_that.id,_that.title,_that.description,_that.lessonCount,_that.p
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String title,  String description,  int lessonCount,  double progress,  String? ownerBrand,  String? category,  String? targetCity,  String? targetSpecialty,  bool? mandatory,  bool? isNew,  List<Lesson> lessons)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String title,  String description,  int lessonCount,  double progress,  String? ownerBrand,  String? coverUrl,  String? category,  String? targetCity,  String? targetSpecialty,  bool? mandatory,  bool? isNew,  List<Lesson> lessons)?  $default,) {final _that = this;
 switch (_that) {
 case _CourseDetail() when $default != null:
-return $default(_that.id,_that.title,_that.description,_that.lessonCount,_that.progress,_that.ownerBrand,_that.category,_that.targetCity,_that.targetSpecialty,_that.mandatory,_that.isNew,_that.lessons);case _:
+return $default(_that.id,_that.title,_that.description,_that.lessonCount,_that.progress,_that.ownerBrand,_that.coverUrl,_that.category,_that.targetCity,_that.targetSpecialty,_that.mandatory,_that.isNew,_that.lessons);case _:
   return null;
 
 }
@@ -802,7 +806,7 @@ return $default(_that.id,_that.title,_that.description,_that.lessonCount,_that.p
 @JsonSerializable()
 
 class _CourseDetail implements CourseDetail {
-  const _CourseDetail({required this.id, required this.title, required this.description, required this.lessonCount, required this.progress, this.ownerBrand, this.category, this.targetCity, this.targetSpecialty, this.mandatory, this.isNew, required final  List<Lesson> lessons}): _lessons = lessons;
+  const _CourseDetail({required this.id, required this.title, required this.description, required this.lessonCount, required this.progress, this.ownerBrand, this.coverUrl, this.category, this.targetCity, this.targetSpecialty, this.mandatory, this.isNew, required final  List<Lesson> lessons}): _lessons = lessons;
   factory _CourseDetail.fromJson(Map<String, dynamic> json) => _$CourseDetailFromJson(json);
 
 @override final  int id;
@@ -811,6 +815,7 @@ class _CourseDetail implements CourseDetail {
 @override final  int lessonCount;
 @override final  double progress;
 @override final  String? ownerBrand;
+@override final  String? coverUrl;
 @override final  String? category;
 @override final  String? targetCity;
 @override final  String? targetSpecialty;
@@ -837,16 +842,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CourseDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.lessonCount, lessonCount) || other.lessonCount == lessonCount)&&(identical(other.progress, progress) || other.progress == progress)&&(identical(other.ownerBrand, ownerBrand) || other.ownerBrand == ownerBrand)&&(identical(other.category, category) || other.category == category)&&(identical(other.targetCity, targetCity) || other.targetCity == targetCity)&&(identical(other.targetSpecialty, targetSpecialty) || other.targetSpecialty == targetSpecialty)&&(identical(other.mandatory, mandatory) || other.mandatory == mandatory)&&(identical(other.isNew, isNew) || other.isNew == isNew)&&const DeepCollectionEquality().equals(other._lessons, _lessons));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CourseDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.lessonCount, lessonCount) || other.lessonCount == lessonCount)&&(identical(other.progress, progress) || other.progress == progress)&&(identical(other.ownerBrand, ownerBrand) || other.ownerBrand == ownerBrand)&&(identical(other.coverUrl, coverUrl) || other.coverUrl == coverUrl)&&(identical(other.category, category) || other.category == category)&&(identical(other.targetCity, targetCity) || other.targetCity == targetCity)&&(identical(other.targetSpecialty, targetSpecialty) || other.targetSpecialty == targetSpecialty)&&(identical(other.mandatory, mandatory) || other.mandatory == mandatory)&&(identical(other.isNew, isNew) || other.isNew == isNew)&&const DeepCollectionEquality().equals(other._lessons, _lessons));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,description,lessonCount,progress,ownerBrand,category,targetCity,targetSpecialty,mandatory,isNew,const DeepCollectionEquality().hash(_lessons));
+int get hashCode => Object.hash(runtimeType,id,title,description,lessonCount,progress,ownerBrand,coverUrl,category,targetCity,targetSpecialty,mandatory,isNew,const DeepCollectionEquality().hash(_lessons));
 
 @override
 String toString() {
-  return 'CourseDetail(id: $id, title: $title, description: $description, lessonCount: $lessonCount, progress: $progress, ownerBrand: $ownerBrand, category: $category, targetCity: $targetCity, targetSpecialty: $targetSpecialty, mandatory: $mandatory, isNew: $isNew, lessons: $lessons)';
+  return 'CourseDetail(id: $id, title: $title, description: $description, lessonCount: $lessonCount, progress: $progress, ownerBrand: $ownerBrand, coverUrl: $coverUrl, category: $category, targetCity: $targetCity, targetSpecialty: $targetSpecialty, mandatory: $mandatory, isNew: $isNew, lessons: $lessons)';
 }
 
 
@@ -857,7 +862,7 @@ abstract mixin class _$CourseDetailCopyWith<$Res> implements $CourseDetailCopyWi
   factory _$CourseDetailCopyWith(_CourseDetail value, $Res Function(_CourseDetail) _then) = __$CourseDetailCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String title, String description, int lessonCount, double progress, String? ownerBrand, String? category, String? targetCity, String? targetSpecialty, bool? mandatory, bool? isNew, List<Lesson> lessons
+ int id, String title, String description, int lessonCount, double progress, String? ownerBrand, String? coverUrl, String? category, String? targetCity, String? targetSpecialty, bool? mandatory, bool? isNew, List<Lesson> lessons
 });
 
 
@@ -874,7 +879,7 @@ class __$CourseDetailCopyWithImpl<$Res>
 
 /// Create a copy of CourseDetail
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? description = null,Object? lessonCount = null,Object? progress = null,Object? ownerBrand = freezed,Object? category = freezed,Object? targetCity = freezed,Object? targetSpecialty = freezed,Object? mandatory = freezed,Object? isNew = freezed,Object? lessons = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? description = null,Object? lessonCount = null,Object? progress = null,Object? ownerBrand = freezed,Object? coverUrl = freezed,Object? category = freezed,Object? targetCity = freezed,Object? targetSpecialty = freezed,Object? mandatory = freezed,Object? isNew = freezed,Object? lessons = null,}) {
   return _then(_CourseDetail(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -882,6 +887,7 @@ as String,description: null == description ? _self.description : description // 
 as String,lessonCount: null == lessonCount ? _self.lessonCount : lessonCount // ignore: cast_nullable_to_non_nullable
 as int,progress: null == progress ? _self.progress : progress // ignore: cast_nullable_to_non_nullable
 as double,ownerBrand: freezed == ownerBrand ? _self.ownerBrand : ownerBrand // ignore: cast_nullable_to_non_nullable
+as String?,coverUrl: freezed == coverUrl ? _self.coverUrl : coverUrl // ignore: cast_nullable_to_non_nullable
 as String?,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
 as String?,targetCity: freezed == targetCity ? _self.targetCity : targetCity // ignore: cast_nullable_to_non_nullable
 as String?,targetSpecialty: freezed == targetSpecialty ? _self.targetSpecialty : targetSpecialty // ignore: cast_nullable_to_non_nullable

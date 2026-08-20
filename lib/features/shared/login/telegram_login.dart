@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../core/api/providers.dart';
 import '../../../core/auth/auth_controller.dart';
+import '../../../core/l10n/l10n.dart';
 import '../../../core/models/account.dart';
 
 /// Кнопка входа через Telegram-бота: открывает deep-link и опрашивает статус
@@ -28,6 +31,7 @@ class _TelegramLoginButtonState extends ConsumerState<TelegramLoginButton> {
   Future<void> _start() async {
     setState(() => _busy = true);
     final messenger = ScaffoldMessenger.of(context);
+    final l10n = context.l10n;
     try {
       final api = ref.read(apiProvider).auth;
       final start = await api.telegramStart();
@@ -44,7 +48,7 @@ class _TelegramLoginButtonState extends ConsumerState<TelegramLoginButton> {
           t.cancel();
           if (mounted) setState(() => _busy = false);
           messenger.showSnackBar(
-              const SnackBar(content: Text('Время входа истекло')));
+              SnackBar(content: Text(l10n.tgLoginExpired)));
           return;
         }
         try {
@@ -59,12 +63,21 @@ class _TelegramLoginButtonState extends ConsumerState<TelegramLoginButton> {
               t.cancel();
               if (mounted) setState(() => _busy = false);
               messenger.showSnackBar(
-                  const SnackBar(content: Text('Время входа истекло')));
+                  SnackBar(content: Text(l10n.tgLoginExpired)));
             case TgPollPending():
               break; // ждём дальше
           }
-        } catch (_) {
+        } on DioException catch (_) {
           // сетевую ошибку одного тика игнорируем, продолжаем поллинг
+        } catch (e, st) {
+          // Ответ пришёл, но не разобрался (несовпадение схемы `done`).
+          // Это не самоисправится — прекращаем ожидание и показываем причину,
+          // иначе спиннер «Ожидание подтверждения…» висит вечно.
+          t.cancel();
+          if (kDebugMode) debugPrint('[tg/poll] parse error: $e\n$st');
+          if (mounted) setState(() => _busy = false);
+          messenger.showSnackBar(
+              SnackBar(content: Text(l10n.tgLoginParseError(e))));
         }
       });
     } catch (e) {
@@ -75,13 +88,29 @@ class _TelegramLoginButtonState extends ConsumerState<TelegramLoginButton> {
 
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton.icon(
-      onPressed: _busy ? null : _start,
-      icon: _busy
-          ? const SizedBox(
-              height: 18, width: 18, child: CircularProgressIndicator(strokeWidth: 2))
-          : const Icon(Icons.telegram),
-      label: Text(_busy ? 'Ожидание подтверждения…' : 'Войти через Telegram'),
+    return SizedBox(
+      height: 52,
+      width: double.infinity,
+      child: FilledButton.icon(
+        style: FilledButton.styleFrom(
+          backgroundColor: const Color(0xFF2AABEE),
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14)),
+        ),
+        onPressed: _busy ? null : _start,
+        icon: _busy
+            ? const SizedBox(
+                height: 18,
+                width: 18,
+                child: CircularProgressIndicator(
+                    strokeWidth: 2, color: Colors.white))
+            : const Icon(Icons.telegram, size: 22),
+        label: Text(
+          _busy ? context.l10n.tgWaitingConfirm : context.l10n.tgLoginButton,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        ),
+      ),
     );
   }
 }

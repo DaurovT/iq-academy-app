@@ -20,6 +20,8 @@ import '../../features/pharmacist/quest_detail_screen.dart';
 import '../../features/pharmacist/wallet_screen.dart';
 import '../../features/pharmacist/voucher_screen.dart';
 import '../../features/pharmacist/learn_screen.dart';
+import '../../features/news/news_screen.dart';
+import '../../features/mini_apps/mini_apps_screens.dart';
 import '../../features/pharmacist/course_detail_screen.dart';
 import '../../features/pharmacist/lesson_view_screen.dart';
 import '../../features/pharmacist/quiz_screen.dart';
@@ -58,6 +60,11 @@ final routerProvider = Provider<GoRouter>((ref) {
               RegisterScreen(phone: s.uri.queryParameters['phone'])),
       GoRoute(path: '/role', builder: (_, __) => const RoleSelectScreen()),
 
+      // Ваучер с QR — полноэкранный, без нижней навигации.
+      GoRoute(
+          path: '/app/wallet/voucher/:id',
+          builder: (_, s) => VoucherScreen(id: _intParam(s, 'id'))),
+
       // Основное приложение под оболочкой с нижней навигацией.
       ShellRoute(
         builder: (_, __, child) => AppShell(child: child),
@@ -79,11 +86,21 @@ final routerProvider = Provider<GoRouter>((ref) {
               path: '/app/quests/:id',
               builder: (_, s) => QuestDetailScreen(id: _intParam(s, 'id'))),
 
+          // Новости
+          GoRoute(path: '/app/news', builder: (_, __) => const NewsScreen()),
+          GoRoute(
+              path: '/app/news/:id',
+              builder: (_, s) => NewsDetailScreen(id: _intParam(s, 'id'))),
+
+          // Мини-приложения (Супер Сапёр)
+          GoRoute(path: '/app/mini-apps', builder: (_, __) => const MiniAppsHubScreen()),
+          GoRoute(path: '/app/sapper', builder: (_, __) => const SapperDrawsScreen()),
+          GoRoute(
+              path: '/app/sapper/:id',
+              builder: (_, s) => SapperGameScreen(id: _intParam(s, 'id'))),
+
           // Кошелёк
           GoRoute(path: '/app/wallet', builder: (_, __) => const WalletScreen()),
-          GoRoute(
-              path: '/app/wallet/voucher/:id',
-              builder: (_, s) => VoucherScreen(id: _intParam(s, 'id'))),
 
           // Обучение
           GoRoute(path: '/app/learn', builder: (_, __) => const LearnScreen()),

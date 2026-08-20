@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/l10n/l10n.dart';
 import '../../widgets/async_view.dart';
 import 'providers.dart';
 
@@ -11,15 +12,17 @@ class MedrepQuestsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final quests = ref.watch(medrepQuestsProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('Квесты компании')),
+      appBar: AppBar(title: Text(context.l10n.medrepQuestsTitle)),
       body: RefreshIndicator(
         onRefresh: () async => ref.invalidate(medrepQuestsProvider),
         child: AsyncView(
           value: quests,
           onRetry: () => ref.invalidate(medrepQuestsProvider),
           data: (list) => list.isEmpty
-              ? ListView(children: const [
-                  SizedBox(height: 300, child: EmptyState(text: 'Квестов нет')),
+              ? ListView(children: [
+                  SizedBox(
+                      height: 300,
+                      child: EmptyState(text: context.l10n.medrepQuestsEmpty)),
                 ])
               : ListView(
                   padding: const EdgeInsets.all(16),
@@ -28,7 +31,8 @@ class MedrepQuestsScreen extends ConsumerWidget {
                       Card(
                         child: ExpansionTile(
                           title: Text(q.name),
-                          subtitle: Text('Цель: ${q.goal} · участников: ${q.participants.length}'),
+                          subtitle: Text(context.l10n.medrepQuestsSubtitle(
+                              q.goal, q.participants.length)),
                           children: [
                             for (final p in q.participants)
                               ListTile(
@@ -42,9 +46,10 @@ class MedrepQuestsScreen extends ConsumerWidget {
                                 ),
                               ),
                             if (q.participants.isEmpty)
-                              const Padding(
-                                padding: EdgeInsets.all(16),
-                                child: Text('Пока нет участников'),
+                              Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: Text(
+                                    context.l10n.medrepQuestsNoParticipants),
                               ),
                           ],
                         ),
