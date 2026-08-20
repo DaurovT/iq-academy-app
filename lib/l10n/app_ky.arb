@@ -138,6 +138,7 @@
   "sapperDraws": "Байге оюндары",
   "sapperAcceptClosed": "Клетка кабыл алуу жабылды — ачылууга даярдык жүрүп жатат",
   "sapperHiddenTitle": "ТАЛААДА КАТЫЛГАН",
+  "sapperFieldTotal": "Талаада {count} уяча",
   "sapperRevealIn": "ачылууга {time} калды",
   "@sapperRevealIn": {
     "placeholders": {

@@ -404,6 +404,12 @@ abstract class AppLocalizations {
   /// **'НА ПОЛЕ СПРЯТАНО'**
   String get sapperHiddenTitle;
 
+  /// No description provided for @sapperFieldTotal.
+  ///
+  /// In ru, this message translates to:
+  /// **'НА ПОЛЕ {count, plural, one{{count} клетка} few{{count} клетки} many{{count} клеток} other{{count} клеток}}'**
+  String sapperFieldTotal(int count);
+
   /// No description provided for @sapperRevealIn.
   ///
   /// In ru, this message translates to:

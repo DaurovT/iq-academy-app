@@ -138,6 +138,7 @@
   "sapperDraws": "Бозиҳои тӯҳфаӣ",
   "sapperAcceptClosed": "Қабули катакҳо пӯшида шуд — омодагӣ ба кушодан рафта истодааст",
   "sapperHiddenTitle": "ДАР МАЙДОН ПИНҲОН АСТ",
+  "sapperFieldTotal": "Дар майдон {count} катак",
   "sapperRevealIn": "кушодан баъд аз {time}",
   "@sapperRevealIn": {
     "placeholders": {

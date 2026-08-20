@@ -183,6 +183,11 @@ class AppLocalizationsTg extends AppLocalizations {
   String get sapperHiddenTitle => 'ДАР МАЙДОН ПИНҲОН АСТ';
 
   @override
+  String sapperFieldTotal(int count) {
+    return 'Дар майдон $count катак';
+  }
+
+  @override
   String sapperRevealIn(Object time) {
     return 'кушодан баъд аз $time';
   }

@@ -183,6 +183,11 @@ class AppLocalizationsKy extends AppLocalizations {
   String get sapperHiddenTitle => 'ТАЛААДА КАТЫЛГАН';
 
   @override
+  String sapperFieldTotal(int count) {
+    return 'Талаада $count уяча';
+  }
+
+  @override
   String sapperRevealIn(Object time) {
     return 'ачылууга $time калды';
   }

@@ -709,6 +709,17 @@ class _SapperGameScreenState extends ConsumerState<SapperGameScreen> {
           ),
           const SizedBox(height: 12),
         ],
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: Text(
+            context.l10n.sapperFieldTotal(f.cellCount),
+            style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.5,
+                color: p.textMuted),
+          ),
+        ),
         GridView.builder(
           shrinkWrap: true,
           padding: EdgeInsets.zero,
@@ -1233,11 +1244,20 @@ class _RevealCell extends StatelessWidget {
       decoration: BoxDecoration(
         color: bg,
         borderRadius: BorderRadius.circular(10),
-        // Рамка у пустых/чужих клеток, чтобы поле читалось цельным и верхние
-        // пустые ряды не выглядели как «разрыв».
-        border: (hasPrize || mine) ? null : Border.all(color: cellBorder),
+        // Выигравшая КЛЕТКА ПОЛЬЗОВАТЕЛЯ — заметная зелёная рамка + свечение,
+        // чтобы среди жёлтых призов было видно, что именно выиграл он.
+        // Остальным призам/своим клеткам рамка не нужна; пустым/чужим — тонкая,
+        // чтобы поле читалось цельным.
+        border: (hasPrize && wonByMe)
+            ? Border.all(color: const Color(0xFF22C55E), width: 3)
+            : (hasPrize || mine)
+                ? null
+                : Border.all(color: cellBorder),
         boxShadow: (hasPrize && wonByMe)
-            ? const [BoxShadow(color: Color(0x80EAB308), blurRadius: 10)]
+            ? const [
+                BoxShadow(
+                    color: Color(0x9922C55E), blurRadius: 12, spreadRadius: 1)
+              ]
             : null,
       ),
       alignment: Alignment.center,

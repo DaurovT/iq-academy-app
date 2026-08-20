@@ -144,6 +144,10 @@
   "sapperDraws": "Розыгрыши",
   "sapperAcceptClosed": "Приём клеток закрыт — идёт подготовка к вскрытию",
   "sapperHiddenTitle": "НА ПОЛЕ СПРЯТАНО",
+  "sapperFieldTotal": "НА ПОЛЕ {count, plural, one{{count} клетка} few{{count} клетки} many{{count} клеток} other{{count} клеток}}",
+  "@sapperFieldTotal": {
+    "placeholders": { "count": { "type": "int" } }
+  },
   "sapperRevealIn": "вскрытие через {time}",
   "@sapperRevealIn": {
     "placeholders": {

@@ -138,6 +138,7 @@
   "sapperDraws": "Yutuq o'yinlari",
   "sapperAcceptClosed": "Kataklarni band qilish yopildi — ochilishga tayyorgarlik ketmoqda",
   "sapperHiddenTitle": "MAYDONDA YASHIRINGAN",
+  "sapperFieldTotal": "Maydonda {count} ta katak",
   "sapperRevealIn": "ochilishgacha {time}",
   "@sapperRevealIn": {
     "placeholders": {

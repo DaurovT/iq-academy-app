@@ -138,6 +138,7 @@
   "sapperDraws": "Ұтыс ойындары",
   "sapperAcceptClosed": "Ұяшық қабылдау жабылды — ашылуға дайындық жүріп жатыр",
   "sapperHiddenTitle": "АЛАҢДА ЖАСЫРЫЛҒАН",
+  "sapperFieldTotal": "Алаңда {count} ұяшық",
   "sapperRevealIn": "ашылуға {time} қалды",
   "@sapperRevealIn": {
     "placeholders": {

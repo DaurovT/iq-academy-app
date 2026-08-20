@@ -183,6 +183,19 @@ class AppLocalizationsRu extends AppLocalizations {
   String get sapperHiddenTitle => 'НА ПОЛЕ СПРЯТАНО';
 
   @override
+  String sapperFieldTotal(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count клеток',
+      many: '$count клеток',
+      few: '$count клетки',
+      one: '$count клетка',
+    );
+    return 'НА ПОЛЕ $_temp0';
+  }
+
+  @override
   String sapperRevealIn(Object time) {
     return 'вскрытие через $time';
   }

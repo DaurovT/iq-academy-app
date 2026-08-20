@@ -184,6 +184,11 @@ class AppLocalizationsUz extends AppLocalizations {
   String get sapperHiddenTitle => 'MAYDONDA YASHIRINGAN';
 
   @override
+  String sapperFieldTotal(int count) {
+    return 'Maydonda $count ta katak';
+  }
+
+  @override
   String sapperRevealIn(Object time) {
     return 'ochilishgacha $time';
   }
