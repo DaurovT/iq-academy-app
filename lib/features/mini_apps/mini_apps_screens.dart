@@ -26,6 +26,14 @@ String _countdown(AppLocalizations l10n, String? iso) {
   return l10n.sapperCountdownMinutesSeconds(m, s);
 }
 
+// Текст пилюли времени. До вскрытия — «вскрытие через …». Когда время уже наступило
+// (сервер вскроет в течение ~20с) — короткое «Скоро», без кривого «вскрытие через скоро».
+String _revealPill(AppLocalizations l10n, String? iso) {
+  final t = iso == null ? null : DateTime.tryParse(iso);
+  if (t == null || t.difference(DateTime.now()).inSeconds <= 0) return l10n.miniAppsSoon;
+  return l10n.sapperRevealIn(_countdown(l10n, iso));
+}
+
 // ── Хаб мини-приложений ───────────────────────────────────────────────────────
 // Перенесён 1:1 из макета Figma (mini-apps-screen, ноды 209:4 / 209:138):
 // топбар, заголовок «Мини-приложения» + подзаголовок, карточки игр.
@@ -528,12 +536,26 @@ class SapperGameScreen extends ConsumerStatefulWidget {
 class _SapperGameScreenState extends ConsumerState<SapperGameScreen> {
   Timer? _tick;
   bool _busy = false;
+  int _ticks = 0;
 
   @override
   void initState() {
     super.initState();
-    // тикаем таймер обратного отсчёта
-    _tick = Timer.periodic(const Duration(seconds: 1), (_) { if (mounted) setState(() {}); });
+    // Тикаем таймер обратного отсчёта. Плюс, когда время вскрытия наступило, сервер
+    // вскрывает автоматически (loop ~20с) — раз в 10с перезапрашиваем поле, чтобы экран
+    // сам перешёл в «Вскрыт» без ручного обновления (раньше «застревал» на отсчёте).
+    _tick = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (!mounted) return;
+      setState(() {});
+      _ticks++;
+      final f = ref.read(sapperFieldProvider(widget.id)).asData?.value;
+      if (f != null && !f.revealed && _ticks % 10 == 0) {
+        final t = f.revealAt == null ? null : DateTime.tryParse(f.revealAt!);
+        if (t != null && t.difference(DateTime.now()).inSeconds <= 0) {
+          ref.invalidate(sapperFieldProvider(widget.id));
+        }
+      }
+    });
   }
 
   @override
@@ -747,9 +769,7 @@ class _HiddenPrizesCard extends StatelessWidget {
                           ? const Color(0xFF8F909A)
                           : const Color(0xFF6B7280))),
               if (active)
-                _HiddenTimePill(
-                    text: context.l10n
-                        .sapperRevealIn(_countdown(context.l10n, f.revealAt)))
+                _HiddenTimePill(text: _revealPill(context.l10n, f.revealAt))
               else if (f.revealed)
                 _TimePill(active: false, text: context.l10n.sapperRevealed),
             ],
