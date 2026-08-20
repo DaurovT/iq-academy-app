@@ -166,6 +166,14 @@ class AppLocalizationsUz extends AppLocalizations {
   }
 
   @override
+  String get sapperNoIqcTitle => 'IQC yetarli emas';
+
+  @override
+  String sapperNoIqcBody(Object price, Object have) {
+    return 'Ishtirok etish uchun $price IQC kerak, sizda $have. IQC toplang — ta\'lim, kvest yoki so\'rovnomadan o\'ting.';
+  }
+
+  @override
   String get sapperDraws => 'Yutuq o\'yinlari';
 
   @override

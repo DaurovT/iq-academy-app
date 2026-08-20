@@ -133,6 +133,8 @@
       }
     }
   },
+  "sapperNoIqcTitle": "IQC жетишсиз",
+  "sapperNoIqcBody": "Катышуу үчүн {price} IQC керек, сизде {have}. IQC чогултуңуз — окууну, квестти же сурамжылоону өтүңүз.",
   "sapperDraws": "Байге оюндары",
   "sapperAcceptClosed": "Клетка кабыл алуу жабылды — ачылууга даярдык жүрүп жатат",
   "sapperHiddenTitle": "ТАЛААДА КАТЫЛГАН",

@@ -133,6 +133,8 @@
       }
     }
   },
+  "sapperNoIqcTitle": "IQC yetarli emas",
+  "sapperNoIqcBody": "Ishtirok etish uchun {price} IQC kerak, sizda {have}. IQC toplang — ta'lim, kvest yoki so'rovnomadan o'ting.",
   "sapperDraws": "Yutuq o'yinlari",
   "sapperAcceptClosed": "Kataklarni band qilish yopildi — ochilishga tayyorgarlik ketmoqda",
   "sapperHiddenTitle": "MAYDONDA YASHIRINGAN",

@@ -564,8 +564,43 @@ class _SapperGameScreenState extends ConsumerState<SapperGameScreen> {
     super.dispose();
   }
 
+  // Нехватка IQC — вместо ошибки с сервера показываем понятный блокер
+  // с предложением заработать IQC (обучение / квест / опрос).
+  Future<void> _notEnoughIqc(SapperField f) async {
+    await showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(context.l10n.sapperNoIqcTitle),
+        content: Text(context.l10n.sapperNoIqcBody(f.priceIqc, f.balanceIqc)),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(context.l10n.commonCancel)),
+          TextButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+                context.go('/app/learn');
+              },
+              child: Text(context.l10n.navLearn)),
+          FilledButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+                context.go('/app/quests');
+              },
+              child: Text(context.l10n.navQuests)),
+        ],
+      ),
+    );
+  }
+
   Future<void> _reserve(SapperField f, int cell) async {
     if (_busy) return;
+    // При нехватке IQC — понятный диалог с предложением заработать, а не 400-ошибка:
+    // раньше резерв уходил на сервер вслепую и возвращался «Недостаточно IQC».
+    if (f.balanceIqc < f.priceIqc) {
+      await _notEnoughIqc(f);
+      return;
+    }
     final ok = await showDialog<bool>(
       context: context,
       // ctx — контекст диалога (root-навигатор). Раньше был Navigator.pop(context, …)

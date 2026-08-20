@@ -133,6 +133,8 @@
       }
     }
   },
+  "sapperNoIqcTitle": "IQC жеткіліксіз",
+  "sapperNoIqcBody": "Қатысу үшін {price} IQC қажет, сізде {have}. IQC жинаңыз — оқу, квест немесе сауалнамадан өтіңіз.",
   "sapperDraws": "Ұтыс ойындары",
   "sapperAcceptClosed": "Ұяшық қабылдау жабылды — ашылуға дайындық жүріп жатыр",
   "sapperHiddenTitle": "АЛАҢДА ЖАСЫРЫЛҒАН",

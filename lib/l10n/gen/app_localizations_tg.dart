@@ -165,6 +165,14 @@ class AppLocalizationsTg extends AppLocalizations {
   }
 
   @override
+  String get sapperNoIqcTitle => 'IQC кофӣ нест';
+
+  @override
+  String sapperNoIqcBody(Object price, Object have) {
+    return 'Барои иштирок $price IQC лозим аст, шумо $have доред. IQC ҷамъ кунед — таълим, квест ё пурсишро гузаред.';
+  }
+
+  @override
   String get sapperDraws => 'Бозиҳои тӯҳфаӣ';
 
   @override

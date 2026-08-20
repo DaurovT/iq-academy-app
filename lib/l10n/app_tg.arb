@@ -133,6 +133,8 @@
       }
     }
   },
+  "sapperNoIqcTitle": "IQC кофӣ нест",
+  "sapperNoIqcBody": "Барои иштирок {price} IQC лозим аст, шумо {have} доред. IQC ҷамъ кунед — таълим, квест ё пурсишро гузаред.",
   "sapperDraws": "Бозиҳои тӯҳфаӣ",
   "sapperAcceptClosed": "Қабули катакҳо пӯшида шуд — омодагӣ ба кушодан рафта истодааст",
   "sapperHiddenTitle": "ДАР МАЙДОН ПИНҲОН АСТ",

@@ -165,6 +165,14 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String get sapperNoIqcTitle => 'Недостаточно IQC';
+
+  @override
+  String sapperNoIqcBody(Object price, Object have) {
+    return 'Для участия нужно $price IQC, у вас $have. Заработайте IQC — пройдите обучение, квест или опрос.';
+  }
+
+  @override
   String get sapperDraws => 'Розыгрыши';
 
   @override

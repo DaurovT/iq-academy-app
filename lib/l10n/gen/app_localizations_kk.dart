@@ -165,6 +165,14 @@ class AppLocalizationsKk extends AppLocalizations {
   }
 
   @override
+  String get sapperNoIqcTitle => 'IQC жеткіліксіз';
+
+  @override
+  String sapperNoIqcBody(Object price, Object have) {
+    return 'Қатысу үшін $price IQC қажет, сізде $have. IQC жинаңыз — оқу, квест немесе сауалнамадан өтіңіз.';
+  }
+
+  @override
   String get sapperDraws => 'Ұтыс ойындары';
 
   @override
