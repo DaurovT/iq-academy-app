@@ -133,9 +133,21 @@
       }
     }
   },
+  "sapperNoIqcTitle": "Недостаточно IQC",
+  "sapperNoIqcBody": "Для участия нужно {price} IQC, у вас {have}. Заработайте IQC — пройдите обучение, квест или опрос.",
+  "@sapperNoIqcBody": {
+    "placeholders": {
+      "price": { "type": "Object" },
+      "have": { "type": "Object" }
+    }
+  },
   "sapperDraws": "Розыгрыши",
   "sapperAcceptClosed": "Приём клеток закрыт — идёт подготовка к вскрытию",
   "sapperHiddenTitle": "НА ПОЛЕ СПРЯТАНО",
+  "sapperFieldTotal": "НА ПОЛЕ {count, plural, one{{count} клетка} few{{count} клетки} many{{count} клеток} other{{count} клеток}}",
+  "@sapperFieldTotal": {
+    "placeholders": { "count": { "type": "int" } }
+  },
   "sapperRevealIn": "вскрытие через {time}",
   "@sapperRevealIn": {
     "placeholders": {

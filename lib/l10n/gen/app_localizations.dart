@@ -374,6 +374,18 @@ abstract class AppLocalizations {
   /// **'Клетка №{number} занята'**
   String sapperCellReserved(Object number);
 
+  /// No description provided for @sapperNoIqcTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Недостаточно IQC'**
+  String get sapperNoIqcTitle;
+
+  /// No description provided for @sapperNoIqcBody.
+  ///
+  /// In ru, this message translates to:
+  /// **'Для участия нужно {price} IQC, у вас {have}. Заработайте IQC — пройдите обучение, квест или опрос.'**
+  String sapperNoIqcBody(Object price, Object have);
+
   /// No description provided for @sapperDraws.
   ///
   /// In ru, this message translates to:
@@ -391,6 +403,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'НА ПОЛЕ СПРЯТАНО'**
   String get sapperHiddenTitle;
+
+  /// No description provided for @sapperFieldTotal.
+  ///
+  /// In ru, this message translates to:
+  /// **'НА ПОЛЕ {count, plural, one{{count} клетка} few{{count} клетки} many{{count} клеток} other{{count} клеток}}'**
+  String sapperFieldTotal(int count);
 
   /// No description provided for @sapperRevealIn.
   ///

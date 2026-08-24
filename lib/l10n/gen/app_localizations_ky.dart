@@ -165,6 +165,14 @@ class AppLocalizationsKy extends AppLocalizations {
   }
 
   @override
+  String get sapperNoIqcTitle => 'IQC жетишсиз';
+
+  @override
+  String sapperNoIqcBody(Object price, Object have) {
+    return 'Катышуу үчүн $price IQC керек, сизде $have. IQC чогултуңуз — окууну, квестти же сурамжылоону өтүңүз.';
+  }
+
+  @override
   String get sapperDraws => 'Байге оюндары';
 
   @override
@@ -173,6 +181,11 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get sapperHiddenTitle => 'ТАЛААДА КАТЫЛГАН';
+
+  @override
+  String sapperFieldTotal(int count) {
+    return 'Талаада $count уяча';
+  }
 
   @override
   String sapperRevealIn(Object time) {

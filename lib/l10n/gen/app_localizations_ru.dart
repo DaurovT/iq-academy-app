@@ -165,6 +165,14 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String get sapperNoIqcTitle => 'Недостаточно IQC';
+
+  @override
+  String sapperNoIqcBody(Object price, Object have) {
+    return 'Для участия нужно $price IQC, у вас $have. Заработайте IQC — пройдите обучение, квест или опрос.';
+  }
+
+  @override
   String get sapperDraws => 'Розыгрыши';
 
   @override
@@ -173,6 +181,19 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get sapperHiddenTitle => 'НА ПОЛЕ СПРЯТАНО';
+
+  @override
+  String sapperFieldTotal(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count клеток',
+      many: '$count клеток',
+      few: '$count клетки',
+      one: '$count клетка',
+    );
+    return 'НА ПОЛЕ $_temp0';
+  }
 
   @override
   String sapperRevealIn(Object time) {

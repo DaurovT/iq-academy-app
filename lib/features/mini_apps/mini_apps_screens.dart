@@ -26,6 +26,14 @@ String _countdown(AppLocalizations l10n, String? iso) {
   return l10n.sapperCountdownMinutesSeconds(m, s);
 }
 
+// Текст пилюли времени. До вскрытия — «вскрытие через …». Когда время уже наступило
+// (сервер вскроет в течение ~20с) — короткое «Скоро», без кривого «вскрытие через скоро».
+String _revealPill(AppLocalizations l10n, String? iso) {
+  final t = iso == null ? null : DateTime.tryParse(iso);
+  if (t == null || t.difference(DateTime.now()).inSeconds <= 0) return l10n.miniAppsSoon;
+  return l10n.sapperRevealIn(_countdown(l10n, iso));
+}
+
 // ── Хаб мини-приложений ───────────────────────────────────────────────────────
 // Перенесён 1:1 из макета Figma (mini-apps-screen, ноды 209:4 / 209:138):
 // топбар, заголовок «Мини-приложения» + подзаголовок, карточки игр.
@@ -528,12 +536,26 @@ class SapperGameScreen extends ConsumerStatefulWidget {
 class _SapperGameScreenState extends ConsumerState<SapperGameScreen> {
   Timer? _tick;
   bool _busy = false;
+  int _ticks = 0;
 
   @override
   void initState() {
     super.initState();
-    // тикаем таймер обратного отсчёта
-    _tick = Timer.periodic(const Duration(seconds: 1), (_) { if (mounted) setState(() {}); });
+    // Тикаем таймер обратного отсчёта. Плюс, когда время вскрытия наступило, сервер
+    // вскрывает автоматически (loop ~20с) — раз в 10с перезапрашиваем поле, чтобы экран
+    // сам перешёл в «Вскрыт» без ручного обновления (раньше «застревал» на отсчёте).
+    _tick = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (!mounted) return;
+      setState(() {});
+      _ticks++;
+      final f = ref.read(sapperFieldProvider(widget.id)).asData?.value;
+      if (f != null && !f.revealed && _ticks % 10 == 0) {
+        final t = f.revealAt == null ? null : DateTime.tryParse(f.revealAt!);
+        if (t != null && t.difference(DateTime.now()).inSeconds <= 0) {
+          ref.invalidate(sapperFieldProvider(widget.id));
+        }
+      }
+    });
   }
 
   @override
@@ -542,8 +564,43 @@ class _SapperGameScreenState extends ConsumerState<SapperGameScreen> {
     super.dispose();
   }
 
+  // Нехватка IQC — вместо ошибки с сервера показываем понятный блокер
+  // с предложением заработать IQC (обучение / квест / опрос).
+  Future<void> _notEnoughIqc(SapperField f) async {
+    await showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(context.l10n.sapperNoIqcTitle),
+        content: Text(context.l10n.sapperNoIqcBody(f.priceIqc, f.balanceIqc)),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(context.l10n.commonCancel)),
+          TextButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+                context.go('/app/learn');
+              },
+              child: Text(context.l10n.navLearn)),
+          FilledButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+                context.go('/app/quests');
+              },
+              child: Text(context.l10n.navQuests)),
+        ],
+      ),
+    );
+  }
+
   Future<void> _reserve(SapperField f, int cell) async {
     if (_busy) return;
+    // При нехватке IQC — понятный диалог с предложением заработать, а не 400-ошибка:
+    // раньше резерв уходил на сервер вслепую и возвращался «Недостаточно IQC».
+    if (f.balanceIqc < f.priceIqc) {
+      await _notEnoughIqc(f);
+      return;
+    }
     final ok = await showDialog<bool>(
       context: context,
       // ctx — контекст диалога (root-навигатор). Раньше был Navigator.pop(context, …)
@@ -652,6 +709,17 @@ class _SapperGameScreenState extends ConsumerState<SapperGameScreen> {
           ),
           const SizedBox(height: 12),
         ],
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: Text(
+            context.l10n.sapperFieldTotal(f.cellCount),
+            style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.5,
+                color: p.textMuted),
+          ),
+        ),
         GridView.builder(
           shrinkWrap: true,
           padding: EdgeInsets.zero,
@@ -747,9 +815,7 @@ class _HiddenPrizesCard extends StatelessWidget {
                           ? const Color(0xFF8F909A)
                           : const Color(0xFF6B7280))),
               if (active)
-                _HiddenTimePill(
-                    text: context.l10n
-                        .sapperRevealIn(_countdown(context.l10n, f.revealAt)))
+                _HiddenTimePill(text: _revealPill(context.l10n, f.revealAt))
               else if (f.revealed)
                 _TimePill(active: false, text: context.l10n.sapperRevealed),
             ],
@@ -1178,11 +1244,20 @@ class _RevealCell extends StatelessWidget {
       decoration: BoxDecoration(
         color: bg,
         borderRadius: BorderRadius.circular(10),
-        // Рамка у пустых/чужих клеток, чтобы поле читалось цельным и верхние
-        // пустые ряды не выглядели как «разрыв».
-        border: (hasPrize || mine) ? null : Border.all(color: cellBorder),
+        // Выигравшая КЛЕТКА ПОЛЬЗОВАТЕЛЯ — заметная зелёная рамка + свечение,
+        // чтобы среди жёлтых призов было видно, что именно выиграл он.
+        // Остальным призам/своим клеткам рамка не нужна; пустым/чужим — тонкая,
+        // чтобы поле читалось цельным.
+        border: (hasPrize && wonByMe)
+            ? Border.all(color: const Color(0xFF22C55E), width: 3)
+            : (hasPrize || mine)
+                ? null
+                : Border.all(color: cellBorder),
         boxShadow: (hasPrize && wonByMe)
-            ? const [BoxShadow(color: Color(0x80EAB308), blurRadius: 10)]
+            ? const [
+                BoxShadow(
+                    color: Color(0x9922C55E), blurRadius: 12, spreadRadius: 1)
+              ]
             : null,
       ),
       alignment: Alignment.center,
