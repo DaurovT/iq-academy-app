@@ -5,7 +5,7 @@ import 'token_store.dart';
 
 /// Базовый адрес platform_api (совпадает с VITE_API_BASE веба).
 /// Позже вынесем в конфиг сборки (--dart-define).
-const kApiBase = 'http://194.5.157.183:4000/api/1.0';
+const kApiBase = 'https://pharmview.uz/api/1.0';
 
 /// Собирает настроенный Dio: подставляет Bearer-токен и превращает
 /// ошибки бэка в [ApiException] с текстом из поля `detail`.
