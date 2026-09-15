@@ -269,7 +269,7 @@ abstract class AppLocalizations {
   /// No description provided for @miniAppsSubtitle.
   ///
   /// In ru, this message translates to:
-  /// **'Играй и выигрывай призы за IQC'**
+  /// **'Акции для участников программы'**
   String get miniAppsSubtitle;
 
   /// No description provided for @miniAppsSoon.
@@ -311,25 +311,25 @@ abstract class AppLocalizations {
   /// No description provided for @sapperSubtitle.
   ///
   /// In ru, this message translates to:
-  /// **'Занимай клетки за IQC — в час вскрытия узнаешь, что под ними'**
+  /// **'Выбирайте клетки за IQC — при подведении итогов узнаете, что под ними'**
   String get sapperSubtitle;
 
   /// No description provided for @sapperNoDraws.
   ///
   /// In ru, this message translates to:
-  /// **'Нет розыгрышей'**
+  /// **'Нет активных акций'**
   String get sapperNoDraws;
 
   /// No description provided for @sapperRevealed.
   ///
   /// In ru, this message translates to:
-  /// **'Вскрыт'**
+  /// **'Завершена'**
   String get sapperRevealed;
 
   /// No description provided for @sapperPrizesAndPrice.
   ///
   /// In ru, this message translates to:
-  /// **'🎁 {prizeCount} призов  💎 {priceIqc} IQC/клетка  '**
+  /// **'🎁 бонусов: {prizeCount}  💎 {priceIqc} IQC/клетка  '**
   String sapperPrizesAndPrice(Object prizeCount, Object priceIqc);
 
   /// No description provided for @sapperMyCells.
@@ -347,7 +347,7 @@ abstract class AppLocalizations {
   /// No description provided for @sapperGoToGame.
   ///
   /// In ru, this message translates to:
-  /// **'Перейти к игре'**
+  /// **'Открыть поле'**
   String get sapperGoToGame;
 
   /// No description provided for @sapperReserveTitle.
@@ -359,7 +359,7 @@ abstract class AppLocalizations {
   /// No description provided for @sapperReserveBody.
   ///
   /// In ru, this message translates to:
-  /// **'Спишется {price} IQC. Отменить нельзя — клетка закрепится за вами до вскрытия.'**
+  /// **'Будет использовано {price} IQC. Отменить нельзя — клетка закрепится за вами до подведения итогов.'**
   String sapperReserveBody(Object price);
 
   /// No description provided for @sapperReserveConfirm.
@@ -389,19 +389,19 @@ abstract class AppLocalizations {
   /// No description provided for @sapperDraws.
   ///
   /// In ru, this message translates to:
-  /// **'Розыгрыши'**
+  /// **'Акции'**
   String get sapperDraws;
 
   /// No description provided for @sapperAcceptClosed.
   ///
   /// In ru, this message translates to:
-  /// **'Приём клеток закрыт — идёт подготовка к вскрытию'**
+  /// **'Выбор клеток закрыт — подводим итоги'**
   String get sapperAcceptClosed;
 
   /// No description provided for @sapperHiddenTitle.
   ///
   /// In ru, this message translates to:
-  /// **'НА ПОЛЕ СПРЯТАНО'**
+  /// **'БОНУСЫ НА ПОЛЕ'**
   String get sapperHiddenTitle;
 
   /// No description provided for @sapperFieldTotal.
@@ -413,13 +413,13 @@ abstract class AppLocalizations {
   /// No description provided for @sapperRevealIn.
   ///
   /// In ru, this message translates to:
-  /// **'вскрытие через {time}'**
+  /// **'итоги через {time}'**
   String sapperRevealIn(Object time);
 
   /// No description provided for @sapperNoPrizes.
   ///
   /// In ru, this message translates to:
-  /// **'призы не заявлены'**
+  /// **'бонусы не указаны'**
   String get sapperNoPrizes;
 
   /// No description provided for @sapperPrizeChip.
@@ -437,7 +437,7 @@ abstract class AppLocalizations {
   /// No description provided for @sapperCellPrice.
   ///
   /// In ru, this message translates to:
-  /// **'цена клетки {price} IQC'**
+  /// **'клетка — {price} IQC'**
   String sapperCellPrice(Object price);
 
   /// No description provided for @sapperYourBalance.
@@ -449,37 +449,37 @@ abstract class AppLocalizations {
   /// No description provided for @sapperCellPriceLabel.
   ///
   /// In ru, this message translates to:
-  /// **'цена клетки'**
+  /// **'за клетку'**
   String get sapperCellPriceLabel;
 
   /// No description provided for @sapperWinBannerWin.
   ///
   /// In ru, this message translates to:
-  /// **'🎉 Вы выиграли {count} {word}!'**
+  /// **'🎉 Вы получили {count} {word}!'**
   String sapperWinBannerWin(Object count, Object word);
 
   /// No description provided for @sapperNoWin.
   ///
   /// In ru, this message translates to:
-  /// **'В этот раз без выигрыша'**
+  /// **'В этот раз без бонуса'**
   String get sapperNoWin;
 
   /// No description provided for @sapperPrizeOne.
   ///
   /// In ru, this message translates to:
-  /// **'приз'**
+  /// **'бонус'**
   String get sapperPrizeOne;
 
   /// No description provided for @sapperPrizeFew.
   ///
   /// In ru, this message translates to:
-  /// **'приза'**
+  /// **'бонуса'**
   String get sapperPrizeFew;
 
   /// No description provided for @sapperPrizeMany.
   ///
   /// In ru, this message translates to:
-  /// **'призов'**
+  /// **'бонусов'**
   String get sapperPrizeMany;
 
   /// No description provided for @sapperLegendMine.
@@ -527,7 +527,7 @@ abstract class AppLocalizations {
   /// No description provided for @sapperWinners.
   ///
   /// In ru, this message translates to:
-  /// **'Победители'**
+  /// **'Получили бонусы'**
   String get sapperWinners;
 
   /// No description provided for @newsTitle.
@@ -3185,7 +3185,7 @@ abstract class AppLocalizations {
   /// No description provided for @walletRedeemTitle.
   ///
   /// In ru, this message translates to:
-  /// **'Обменять баллы?'**
+  /// **'Оформить ваучер?'**
   String get walletRedeemTitle;
 
   /// No description provided for @walletRedeemBody.
@@ -3203,7 +3203,7 @@ abstract class AppLocalizations {
   /// No description provided for @walletRedeem.
   ///
   /// In ru, this message translates to:
-  /// **'Обменять'**
+  /// **'Оформить'**
   String get walletRedeem;
 
   /// No description provided for @walletVoucherIssued.
@@ -3419,7 +3419,7 @@ abstract class AppLocalizations {
   /// No description provided for @questDetailRewardVoucherLine.
   ///
   /// In ru, this message translates to:
-  /// **'Korzinka · {amount} сум'**
+  /// **'Ваучер Korzinka · {amount} IQC'**
   String questDetailRewardVoucherLine(Object amount);
 
   /// No description provided for @questDetailRewardIqcLine.

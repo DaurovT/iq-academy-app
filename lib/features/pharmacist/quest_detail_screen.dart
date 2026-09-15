@@ -56,7 +56,7 @@ class _Body extends StatelessWidget {
         '${_fmt(q.startDate, _dm)} — ${_fmt(q.endDate, _dmy)}';
     final rewardLine = isVoucher
         ? context.l10n
-            .questDetailRewardVoucherLine(_numFmt.format(q.prizeIqc * 1000))
+            .questDetailRewardVoucherLine(_numFmt.format(q.prizeIqc))
         : context.l10n.questDetailRewardIqcLine;
 
     return ListView(

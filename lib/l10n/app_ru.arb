@@ -27,7 +27,7 @@
   "navBrands": "Бренды",
   "navProfile": "Профиль",
   "miniAppsTitle": "Мини-приложения",
-  "miniAppsSubtitle": "Играй и выигрывай призы за IQC",
+  "miniAppsSubtitle": "Акции для участников программы",
   "miniAppsSoon": "Скоро",
   "sapperCountdownSoon": "скоро",
   "sapperCountdownDaysHours": "{days}д {hours}ч",
@@ -64,10 +64,10 @@
     }
   },
   "sapperTitle": "Супер Сапёр",
-  "sapperSubtitle": "Занимай клетки за IQC — в час вскрытия узнаешь, что под ними",
-  "sapperNoDraws": "Нет розыгрышей",
-  "sapperRevealed": "Вскрыт",
-  "sapperPrizesAndPrice": "🎁 {prizeCount} призов  💎 {priceIqc} IQC/клетка  ",
+  "sapperSubtitle": "Выбирайте клетки за IQC — при подведении итогов узнаете, что под ними",
+  "sapperNoDraws": "Нет активных акций",
+  "sapperRevealed": "Завершена",
+  "sapperPrizesAndPrice": "🎁 бонусов: {prizeCount}  💎 {priceIqc} IQC/клетка  ",
   "@sapperPrizesAndPrice": {
     "placeholders": {
       "prizeCount": {
@@ -100,7 +100,7 @@
       }
     }
   },
-  "sapperGoToGame": "Перейти к игре",
+  "sapperGoToGame": "Открыть поле",
   "sapperReserveTitle": "Занять клетку №{number}?",
   "@sapperReserveTitle": {
     "placeholders": {
@@ -109,7 +109,7 @@
       }
     }
   },
-  "sapperReserveBody": "Спишется {price} IQC. Отменить нельзя — клетка закрепится за вами до вскрытия.",
+  "sapperReserveBody": "Будет использовано {price} IQC. Отменить нельзя — клетка закрепится за вами до подведения итогов.",
   "@sapperReserveBody": {
     "placeholders": {
       "price": {
@@ -141,14 +141,14 @@
       "have": { "type": "Object" }
     }
   },
-  "sapperDraws": "Розыгрыши",
-  "sapperAcceptClosed": "Приём клеток закрыт — идёт подготовка к вскрытию",
-  "sapperHiddenTitle": "НА ПОЛЕ СПРЯТАНО",
+  "sapperDraws": "Акции",
+  "sapperAcceptClosed": "Выбор клеток закрыт — подводим итоги",
+  "sapperHiddenTitle": "БОНУСЫ НА ПОЛЕ",
   "sapperFieldTotal": "НА ПОЛЕ {count, plural, one{{count} клетка} few{{count} клетки} many{{count} клеток} other{{count} клеток}}",
   "@sapperFieldTotal": {
     "placeholders": { "count": { "type": "int" } }
   },
-  "sapperRevealIn": "вскрытие через {time}",
+  "sapperRevealIn": "итоги через {time}",
   "@sapperRevealIn": {
     "placeholders": {
       "time": {
@@ -156,7 +156,7 @@
       }
     }
   },
-  "sapperNoPrizes": "призы не заявлены",
+  "sapperNoPrizes": "бонусы не указаны",
   "sapperPrizeChip": "🎁 {count}× {label}",
   "@sapperPrizeChip": {
     "placeholders": {
@@ -176,7 +176,7 @@
       }
     }
   },
-  "sapperCellPrice": "цена клетки {price} IQC",
+  "sapperCellPrice": "клетка — {price} IQC",
   "@sapperCellPrice": {
     "placeholders": {
       "price": {
@@ -185,8 +185,8 @@
     }
   },
   "sapperYourBalance": "Ваш баланс",
-  "sapperCellPriceLabel": "цена клетки",
-  "sapperWinBannerWin": "🎉 Вы выиграли {count} {word}!",
+  "sapperCellPriceLabel": "за клетку",
+  "sapperWinBannerWin": "🎉 Вы получили {count} {word}!",
   "@sapperWinBannerWin": {
     "placeholders": {
       "count": {
@@ -197,10 +197,10 @@
       }
     }
   },
-  "sapperNoWin": "В этот раз без выигрыша",
-  "sapperPrizeOne": "приз",
-  "sapperPrizeFew": "приза",
-  "sapperPrizeMany": "призов",
+  "sapperNoWin": "В этот раз без бонуса",
+  "sapperPrizeOne": "бонус",
+  "sapperPrizeFew": "бонуса",
+  "sapperPrizeMany": "бонусов",
   "sapperLegendMine": "Мои",
   "sapperLegendTheirs": "Чужие",
   "sapperLegendEmpty": "Пустые",
@@ -208,7 +208,7 @@
   "sapperLegendSelected": "Выбрано",
   "sapperLegendOccupied": "Занято",
   "sapperLegendFree": "Свободно",
-  "sapperWinners": "Победители",
+  "sapperWinners": "Получили бонусы",
   "newsTitle": "Новости",
   "newsAll": "Все новости",
   "newsMore": "Подробнее →",
@@ -1088,7 +1088,7 @@
   "walletUseIqc": "Использовать IQC",
   "walletMyVouchers": "Мои ваучеры",
   "walletNoVouchers": "Пока нет ваучеров",
-  "walletRedeemTitle": "Обменять баллы?",
+  "walletRedeemTitle": "Оформить ваучер?",
   "walletRedeemBody": "{p1} за {p2} IQC",
   "@walletRedeemBody": {
     "placeholders": {
@@ -1101,7 +1101,7 @@
     }
   },
   "walletCancel": "Отмена",
-  "walletRedeem": "Обменять",
+  "walletRedeem": "Оформить",
   "walletVoucherIssued": "Ваучер оформлен",
   "walletTitle": "Кошелёк",
   "walletBalanceLabel": "БАЛАНС",
@@ -1199,7 +1199,7 @@
   "checksStatusApproved": "Одобрен",
   "checksStatusRejected": "Отклонён",
   "checksStatusPending": "На проверке",
-  "questDetailRewardVoucherLine": "Korzinka · {amount} сум",
+  "questDetailRewardVoucherLine": "Ваучер Korzinka · {amount} IQC",
   "@questDetailRewardVoucherLine": {
     "placeholders": {
       "amount": {

@@ -27,7 +27,7 @@
   "navBrands": "Брендтер",
   "navProfile": "Профиль",
   "miniAppsTitle": "Шағын қолданбалар",
-  "miniAppsSubtitle": "Ойнап, IQC-ға жүлделер ұтып алыңыз",
+  "miniAppsSubtitle": "Бағдарлама қатысушыларына арналған акциялар",
   "miniAppsSoon": "Жақында",
   "sapperCountdownSoon": "жақында",
   "sapperCountdownDaysHours": "{days}к {hours}с",
@@ -64,10 +64,10 @@
     }
   },
   "sapperTitle": "Супер Сапер",
-  "sapperSubtitle": "IQC-ға ұяшықтарды иеленіңіз — ашылу сағатында астында не барын білесіз",
-  "sapperNoDraws": "Ұтыс ойындары жоқ",
-  "sapperRevealed": "Ашылды",
-  "sapperPrizesAndPrice": "🎁 {prizeCount} жүлде  💎 {priceIqc} IQC/ұяшық  ",
+  "sapperSubtitle": "IQC-ға ұяшықтарды таңдаңыз — қорытынды шығарылғанда астында не барын білесіз",
+  "sapperNoDraws": "Белсенді акциялар жоқ",
+  "sapperRevealed": "Аяқталды",
+  "sapperPrizesAndPrice": "🎁 бонустар: {prizeCount}  💎 {priceIqc} IQC/ұяшық  ",
   "@sapperPrizesAndPrice": {
     "placeholders": {
       "prizeCount": {
@@ -100,7 +100,7 @@
       }
     }
   },
-  "sapperGoToGame": "Ойынға өту",
+  "sapperGoToGame": "Алаңды ашу",
   "sapperReserveTitle": "№{number} ұяшықты иеленесіз бе?",
   "@sapperReserveTitle": {
     "placeholders": {
@@ -109,7 +109,7 @@
       }
     }
   },
-  "sapperReserveBody": "{price} IQC шегеріледі. Болдырмауға болмайды — ұяшық ашылғанға дейін сізге бекітіледі.",
+  "sapperReserveBody": "{price} IQC пайдаланылады. Болдырмауға болмайды — ұяшық қорытынды шығарылғанға дейін сізге бекітіледі.",
   "@sapperReserveBody": {
     "placeholders": {
       "price": {
@@ -135,11 +135,11 @@
   },
   "sapperNoIqcTitle": "IQC жеткіліксіз",
   "sapperNoIqcBody": "Қатысу үшін {price} IQC қажет, сізде {have}. IQC жинаңыз — оқу, квест немесе сауалнамадан өтіңіз.",
-  "sapperDraws": "Ұтыс ойындары",
-  "sapperAcceptClosed": "Ұяшық қабылдау жабылды — ашылуға дайындық жүріп жатыр",
-  "sapperHiddenTitle": "АЛАҢДА ЖАСЫРЫЛҒАН",
+  "sapperDraws": "Акциялар",
+  "sapperAcceptClosed": "Ұяшық таңдау жабылды — қорытынды шығарылуда",
+  "sapperHiddenTitle": "АЛАҢДАҒЫ БОНУСТАР",
   "sapperFieldTotal": "Алаңда {count} ұяшық",
-  "sapperRevealIn": "ашылуға {time} қалды",
+  "sapperRevealIn": "қорытындыға {time} қалды",
   "@sapperRevealIn": {
     "placeholders": {
       "time": {
@@ -147,7 +147,7 @@
       }
     }
   },
-  "sapperNoPrizes": "жүлделер жарияланбаған",
+  "sapperNoPrizes": "бонустар көрсетілмеген",
   "sapperPrizeChip": "🎁 {count}× {label}",
   "@sapperPrizeChip": {
     "placeholders": {
@@ -167,7 +167,7 @@
       }
     }
   },
-  "sapperCellPrice": "ұяшық бағасы {price} IQC",
+  "sapperCellPrice": "ұяшық — {price} IQC",
   "@sapperCellPrice": {
     "placeholders": {
       "price": {
@@ -176,8 +176,8 @@
     }
   },
   "sapperYourBalance": "Сіздің балансыңыз",
-  "sapperCellPriceLabel": "ұяшық бағасы",
-  "sapperWinBannerWin": "🎉 Сіз {count} {word} ұттыңыз!",
+  "sapperCellPriceLabel": "бір ұяшыққа",
+  "sapperWinBannerWin": "🎉 Сіз {count} {word} алдыңыз!",
   "@sapperWinBannerWin": {
     "placeholders": {
       "count": {
@@ -188,10 +188,10 @@
       }
     }
   },
-  "sapperNoWin": "Бұл жолы ұтыссыз",
-  "sapperPrizeOne": "жүлде",
-  "sapperPrizeFew": "жүлде",
-  "sapperPrizeMany": "жүлде",
+  "sapperNoWin": "Бұл жолы бонуссыз",
+  "sapperPrizeOne": "бонус",
+  "sapperPrizeFew": "бонус",
+  "sapperPrizeMany": "бонус",
   "sapperLegendMine": "Менікі",
   "sapperLegendTheirs": "Басқалардікі",
   "sapperLegendEmpty": "Бос",
@@ -199,7 +199,7 @@
   "sapperLegendSelected": "Таңдалды",
   "sapperLegendOccupied": "Бос емес",
   "sapperLegendFree": "Бос",
-  "sapperWinners": "Жеңімпаздар",
+  "sapperWinners": "Бонус алғандар",
   "newsTitle": "Жаңалықтар",
   "newsAll": "Барлық жаңалықтар",
   "newsMore": "Толығырақ →",
@@ -1079,7 +1079,7 @@
   "walletUseIqc": "IQC пайдалану",
   "walletMyVouchers": "Менің ваучерлерім",
   "walletNoVouchers": "Әзірге ваучерлер жоқ",
-  "walletRedeemTitle": "Ұпайлар айырбастала ма?",
+  "walletRedeemTitle": "Ваучерді рәсімдейсіз бе?",
   "walletRedeemBody": "{p1} — {p2} IQC-ға",
   "@walletRedeemBody": {
     "placeholders": {
@@ -1092,7 +1092,7 @@
     }
   },
   "walletCancel": "Болдырмау",
-  "walletRedeem": "Айырбастау",
+  "walletRedeem": "Рәсімдеу",
   "walletVoucherIssued": "Ваучер рәсімделді",
   "walletTitle": "Әмиян",
   "walletBalanceLabel": "БАЛАНС",
@@ -1190,7 +1190,7 @@
   "checksStatusApproved": "Мақұлданды",
   "checksStatusRejected": "Қабылданбады",
   "checksStatusPending": "Тексерілуде",
-  "questDetailRewardVoucherLine": "Korzinka · {amount} сум",
+  "questDetailRewardVoucherLine": "Korzinka ваучері · {amount} IQC",
   "@questDetailRewardVoucherLine": {
     "placeholders": {
       "amount": {

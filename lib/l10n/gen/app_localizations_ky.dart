@@ -90,7 +90,7 @@ class AppLocalizationsKy extends AppLocalizations {
   String get miniAppsTitle => 'Мини-колдонмолор';
 
   @override
-  String get miniAppsSubtitle => 'Ойноп, IQC үчүн байге утуп алыңыз';
+  String get miniAppsSubtitle => 'Программанын катышуучулары үчүн акциялар';
 
   @override
   String get miniAppsSoon => 'Жакында';
@@ -118,17 +118,17 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get sapperSubtitle =>
-      'IQC үчүн клеткаларды ээлеңиз — ачылуу саатында алардын астында эмне бар экенин билесиз';
+      'IQC үчүн клеткаларды тандаңыз — жыйынтык чыгарылганда алардын астында эмне бар экенин билесиз';
 
   @override
-  String get sapperNoDraws => 'Оюндар жок';
+  String get sapperNoDraws => 'Активдүү акциялар жок';
 
   @override
-  String get sapperRevealed => 'Ачылды';
+  String get sapperRevealed => 'Аяктады';
 
   @override
   String sapperPrizesAndPrice(Object prizeCount, Object priceIqc) {
-    return '🎁 $prizeCount байге  💎 $priceIqc IQC/клетка  ';
+    return '🎁 бонустар: $prizeCount  💎 $priceIqc IQC/клетка  ';
   }
 
   @override
@@ -142,7 +142,7 @@ class AppLocalizationsKy extends AppLocalizations {
   }
 
   @override
-  String get sapperGoToGame => 'Оюнга өтүү';
+  String get sapperGoToGame => 'Талааны ачуу';
 
   @override
   String sapperReserveTitle(Object number) {
@@ -151,7 +151,7 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String sapperReserveBody(Object price) {
-    return '$price IQC алынат. Жокко чыгарууга болбойт — клетка ачылганга чейин сизге бекитилет.';
+    return '$price IQC колдонулат. Жокко чыгарууга болбойт — клетка жыйынтык чыгарылганга чейин сизге бекитилет.';
   }
 
   @override
@@ -173,14 +173,14 @@ class AppLocalizationsKy extends AppLocalizations {
   }
 
   @override
-  String get sapperDraws => 'Байге оюндары';
+  String get sapperDraws => 'Акциялар';
 
   @override
   String get sapperAcceptClosed =>
-      'Клетка кабыл алуу жабылды — ачылууга даярдык жүрүп жатат';
+      'Клетка тандоо жабылды — жыйынтык чыгарылууда';
 
   @override
-  String get sapperHiddenTitle => 'ТАЛААДА КАТЫЛГАН';
+  String get sapperHiddenTitle => 'ТАЛААДАГЫ БОНУСТАР';
 
   @override
   String sapperFieldTotal(int count) {
@@ -189,11 +189,11 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String sapperRevealIn(Object time) {
-    return 'ачылууга $time калды';
+    return 'жыйынтыкка $time калды';
   }
 
   @override
-  String get sapperNoPrizes => 'байгелер жарыяланган жок';
+  String get sapperNoPrizes => 'бонустар көрсөтүлгөн жок';
 
   @override
   String sapperPrizeChip(Object count, Object label) {
@@ -207,31 +207,31 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String sapperCellPrice(Object price) {
-    return 'клетка баасы $price IQC';
+    return 'клетка — $price IQC';
   }
 
   @override
   String get sapperYourBalance => 'Сиздин баланс';
 
   @override
-  String get sapperCellPriceLabel => 'клетка баасы';
+  String get sapperCellPriceLabel => 'бир клетка үчүн';
 
   @override
   String sapperWinBannerWin(Object count, Object word) {
-    return '🎉 Сиз $count $word уттуңуз!';
+    return '🎉 Сиз $count $word алдыңыз!';
   }
 
   @override
-  String get sapperNoWin => 'Бул жолу утушсуз';
+  String get sapperNoWin => 'Бул жолу бонуссуз';
 
   @override
-  String get sapperPrizeOne => 'байге';
+  String get sapperPrizeOne => 'бонус';
 
   @override
-  String get sapperPrizeFew => 'байге';
+  String get sapperPrizeFew => 'бонус';
 
   @override
-  String get sapperPrizeMany => 'байге';
+  String get sapperPrizeMany => 'бонус';
 
   @override
   String get sapperLegendMine => 'Меники';
@@ -255,7 +255,7 @@ class AppLocalizationsKy extends AppLocalizations {
   String get sapperLegendFree => 'Бош';
 
   @override
-  String get sapperWinners => 'Жеңүүчүлөр';
+  String get sapperWinners => 'Бонус алгандар';
 
   @override
   String get newsTitle => 'Жаңылыктар';
@@ -1714,7 +1714,7 @@ class AppLocalizationsKy extends AppLocalizations {
   String get walletNoVouchers => 'Азырынча ваучерлер жок';
 
   @override
-  String get walletRedeemTitle => 'Упайлар алмаштырылсынбы?';
+  String get walletRedeemTitle => 'Ваучерди тариздейсизби?';
 
   @override
   String walletRedeemBody(Object p1, Object p2) {
@@ -1725,7 +1725,7 @@ class AppLocalizationsKy extends AppLocalizations {
   String get walletCancel => 'Жокко чыгаруу';
 
   @override
-  String get walletRedeem => 'Алмаштыруу';
+  String get walletRedeem => 'Тариздөө';
 
   @override
   String get walletVoucherIssued => 'Ваучер таризделди';
@@ -1851,7 +1851,7 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String questDetailRewardVoucherLine(Object amount) {
-    return 'Korzinka · $amount сум';
+    return 'Korzinka ваучери · $amount IQC';
   }
 
   @override

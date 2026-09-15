@@ -27,7 +27,7 @@
   "navBrands": "Brendlar",
   "navProfile": "Profil",
   "miniAppsTitle": "Mini-ilovalar",
-  "miniAppsSubtitle": "O'ynang va IQC evaziga sovg'alar yutib oling",
+  "miniAppsSubtitle": "Dastur ishtirokchilari uchun aksiyalar",
   "miniAppsSoon": "Tez orada",
   "sapperCountdownSoon": "tez orada",
   "sapperCountdownDaysHours": "{days}k {hours}s",
@@ -64,10 +64,10 @@
     }
   },
   "sapperTitle": "Super Sapyor",
-  "sapperSubtitle": "IQC evaziga kataklarni egallang — ochilish soatida ular ostida nima borligini bilib olasiz",
-  "sapperNoDraws": "O'yinlar yo'q",
-  "sapperRevealed": "Ochilgan",
-  "sapperPrizesAndPrice": "🎁 {prizeCount} ta sovg'a  💎 {priceIqc} IQC/katak  ",
+  "sapperSubtitle": "IQC evaziga kataklarni tanlang — yakun chiqarilganda ular ostida nima borligini bilib olasiz",
+  "sapperNoDraws": "Faol aksiyalar yo'q",
+  "sapperRevealed": "Yakunlangan",
+  "sapperPrizesAndPrice": "🎁 bonuslar: {prizeCount}  💎 {priceIqc} IQC/katak  ",
   "@sapperPrizesAndPrice": {
     "placeholders": {
       "prizeCount": {
@@ -100,7 +100,7 @@
       }
     }
   },
-  "sapperGoToGame": "O'yinga o'tish",
+  "sapperGoToGame": "Maydonni ochish",
   "sapperReserveTitle": "{number}-katakni egallaysizmi?",
   "@sapperReserveTitle": {
     "placeholders": {
@@ -109,7 +109,7 @@
       }
     }
   },
-  "sapperReserveBody": "{price} IQC yechiladi. Bekor qilib bo'lmaydi — katak ochilishgacha sizniki bo'lib qoladi.",
+  "sapperReserveBody": "{price} IQC ishlatiladi. Bekor qilib bo'lmaydi — katak yakun chiqarilgunga qadar sizniki bo'lib qoladi.",
   "@sapperReserveBody": {
     "placeholders": {
       "price": {
@@ -135,11 +135,11 @@
   },
   "sapperNoIqcTitle": "IQC yetarli emas",
   "sapperNoIqcBody": "Ishtirok etish uchun {price} IQC kerak, sizda {have}. IQC toplang — ta'lim, kvest yoki so'rovnomadan o'ting.",
-  "sapperDraws": "Yutuq o'yinlari",
-  "sapperAcceptClosed": "Kataklarni band qilish yopildi — ochilishga tayyorgarlik ketmoqda",
-  "sapperHiddenTitle": "MAYDONDA YASHIRINGAN",
+  "sapperDraws": "Aksiyalar",
+  "sapperAcceptClosed": "Kataklarni tanlash yopildi — yakun chiqarilmoqda",
+  "sapperHiddenTitle": "MAYDONDAGI BONUSLAR",
   "sapperFieldTotal": "Maydonda {count} ta katak",
-  "sapperRevealIn": "ochilishgacha {time}",
+  "sapperRevealIn": "yakungacha {time}",
   "@sapperRevealIn": {
     "placeholders": {
       "time": {
@@ -147,7 +147,7 @@
       }
     }
   },
-  "sapperNoPrizes": "sovg'alar e'lon qilinmagan",
+  "sapperNoPrizes": "bonuslar ko'rsatilmagan",
   "sapperPrizeChip": "🎁 {count}× {label}",
   "@sapperPrizeChip": {
     "placeholders": {
@@ -167,7 +167,7 @@
       }
     }
   },
-  "sapperCellPrice": "katak narxi {price} IQC",
+  "sapperCellPrice": "katak — {price} IQC",
   "@sapperCellPrice": {
     "placeholders": {
       "price": {
@@ -176,8 +176,8 @@
     }
   },
   "sapperYourBalance": "Sizning balansingiz",
-  "sapperCellPriceLabel": "katak narxi",
-  "sapperWinBannerWin": "🎉 Siz {count} {word} yutdingiz!",
+  "sapperCellPriceLabel": "bir katak uchun",
+  "sapperWinBannerWin": "🎉 Siz {count} {word} oldingiz!",
   "@sapperWinBannerWin": {
     "placeholders": {
       "count": {
@@ -188,10 +188,10 @@
       }
     }
   },
-  "sapperNoWin": "Bu safar yutuqsiz",
-  "sapperPrizeOne": "sovg'a",
-  "sapperPrizeFew": "sovg'a",
-  "sapperPrizeMany": "sovg'a",
+  "sapperNoWin": "Bu safar bonussiz",
+  "sapperPrizeOne": "bonus",
+  "sapperPrizeFew": "bonus",
+  "sapperPrizeMany": "bonus",
   "sapperLegendMine": "Meniki",
   "sapperLegendTheirs": "Boshqalarniki",
   "sapperLegendEmpty": "Bo'sh",
@@ -199,7 +199,7 @@
   "sapperLegendSelected": "Tanlangan",
   "sapperLegendOccupied": "Band",
   "sapperLegendFree": "Bo'sh",
-  "sapperWinners": "G'oliblar",
+  "sapperWinners": "Bonus olganlar",
   "newsTitle": "Yangiliklar",
   "newsAll": "Barcha yangiliklar",
   "newsMore": "Batafsil →",
@@ -1079,7 +1079,7 @@
   "walletUseIqc": "IQC dan foydalanish",
   "walletMyVouchers": "Mening vaucherlarim",
   "walletNoVouchers": "Hozircha vaucherlar yo'q",
-  "walletRedeemTitle": "Ballar almashtirilsinmi?",
+  "walletRedeemTitle": "Vaucherni rasmiylashtirasizmi?",
   "walletRedeemBody": "{p1} — {p2} IQC evaziga",
   "@walletRedeemBody": {
     "placeholders": {
@@ -1092,7 +1092,7 @@
     }
   },
   "walletCancel": "Bekor qilish",
-  "walletRedeem": "Almashtirish",
+  "walletRedeem": "Rasmiylashtirish",
   "walletVoucherIssued": "Vaucher rasmiylashtirildi",
   "walletTitle": "Hamyon",
   "walletBalanceLabel": "BALANS",
@@ -1190,7 +1190,7 @@
   "checksStatusApproved": "Tasdiqlangan",
   "checksStatusRejected": "Rad etilgan",
   "checksStatusPending": "Tekshirilmoqda",
-  "questDetailRewardVoucherLine": "Korzinka · {amount} so'm",
+  "questDetailRewardVoucherLine": "Korzinka vaucheri · {amount} IQC",
   "@questDetailRewardVoucherLine": {
     "placeholders": {
       "amount": {

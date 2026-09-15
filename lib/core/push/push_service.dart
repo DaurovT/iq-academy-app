@@ -33,7 +33,7 @@ Future<void> firebaseBackgroundHandler(RemoteMessage message) async {}
 const _channel = AndroidNotificationChannel(
   'pharmiq_default', // должен совпадать с default_notification_channel_id в AndroidManifest
   'Уведомления',
-  description: 'Начисления IQC, розыгрыши, опросы и новости',
+  description: 'Начисления IQC, акции, опросы и новости',
   importance: Importance.high,
 );
 

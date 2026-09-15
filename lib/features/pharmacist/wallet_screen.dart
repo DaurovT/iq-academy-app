@@ -52,7 +52,6 @@ class WalletScreen extends ConsumerWidget {
                     child: _BalanceCard(
                       c: c,
                       iqc: iqc,
-                      uzs: wallet?.balanceUzs ?? 0,
                       onHistory: () => Navigator.of(context).push(
                         MaterialPageRoute(builder: (_) => const _HistoryScreen()),
                       ),
@@ -182,13 +181,11 @@ class _BalanceCard extends StatelessWidget {
   const _BalanceCard({
     required this.c,
     required this.iqc,
-    required this.uzs,
     required this.onHistory,
   });
 
   final _W c;
   final int iqc;
-  final int uzs;
   final VoidCallback onHistory;
 
   @override
@@ -231,9 +228,6 @@ class _BalanceCard extends StatelessWidget {
                       color: c.balLabel)),
             ],
           ),
-          const SizedBox(height: 8),
-          Text(_uzs(uzs),
-              style: TextStyle(fontSize: 14, color: c.balSub)),
           Padding(
             padding: const EdgeInsets.only(top: 12),
             child: Row(
@@ -560,7 +554,7 @@ class _HistoryScreen extends ConsumerWidget {
                     title: Text(t.note ?? t.refType),
                     subtitle: Text(formatDateTime(t.createdAt)),
                     trailing: Text(
-                      '${positive ? '+' : ''}${formatUzs(t.deltaUzs)}',
+                      '${positive ? '+' : ''}${formatIqc(iqcFromUzs(t.deltaUzs))}',
                       style: TextStyle(
                         color: positive ? Colors.green : Colors.red,
                         fontWeight: FontWeight.w600,

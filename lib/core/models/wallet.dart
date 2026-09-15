@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'wallet.freezed.dart';
 part 'wallet.g.dart';
 
-/// Тип движения по кошельку (1 IQC = 1000 UZS).
+/// Тип движения по кошельку.
 enum WalletTxnType {
   @JsonValue('earn')
   earn,

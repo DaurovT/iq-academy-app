@@ -27,7 +27,7 @@
   "navBrands": "Брендҳо",
   "navProfile": "Профил",
   "miniAppsTitle": "Мини-барномаҳо",
-  "miniAppsSubtitle": "Бозӣ кунед ва бо IQC тӯҳфаҳо баред",
+  "miniAppsSubtitle": "Аксияҳо барои иштирокчиёни барнома",
   "miniAppsSoon": "Ба зудӣ",
   "sapperCountdownSoon": "ба зудӣ",
   "sapperCountdownDaysHours": "{days}р {hours}с",
@@ -64,10 +64,10 @@
     }
   },
   "sapperTitle": "Супер Сапёр",
-  "sapperSubtitle": "Бо IQC катакҳоро гиред — дар соати кушодан мефаҳмед, ки зери онҳо чист",
-  "sapperNoDraws": "Бозиҳо нестанд",
-  "sapperRevealed": "Кушода шуд",
-  "sapperPrizesAndPrice": "🎁 {prizeCount} тӯҳфа  💎 {priceIqc} IQC/катак  ",
+  "sapperSubtitle": "Бо IQC катакҳоро интихоб кунед — ҳангоми ҷамъбаст мефаҳмед, ки зери онҳо чист",
+  "sapperNoDraws": "Аксияҳои фаъол нестанд",
+  "sapperRevealed": "Анҷом ёфт",
+  "sapperPrizesAndPrice": "🎁 бонусҳо: {prizeCount}  💎 {priceIqc} IQC/катак  ",
   "@sapperPrizesAndPrice": {
     "placeholders": {
       "prizeCount": {
@@ -100,7 +100,7 @@
       }
     }
   },
-  "sapperGoToGame": "Гузаштан ба бозӣ",
+  "sapperGoToGame": "Кушодани майдон",
   "sapperReserveTitle": "Катаки №{number}-ро мегиред?",
   "@sapperReserveTitle": {
     "placeholders": {
@@ -109,7 +109,7 @@
       }
     }
   },
-  "sapperReserveBody": "{price} IQC гирифта мешавад. Бекор кардан мумкин нест — катак то кушодан аз они шумо мешавад.",
+  "sapperReserveBody": "{price} IQC истифода мешавад. Бекор кардан мумкин нест — катак то ҷамъбаст аз они шумо мешавад.",
   "@sapperReserveBody": {
     "placeholders": {
       "price": {
@@ -135,11 +135,11 @@
   },
   "sapperNoIqcTitle": "IQC кофӣ нест",
   "sapperNoIqcBody": "Барои иштирок {price} IQC лозим аст, шумо {have} доред. IQC ҷамъ кунед — таълим, квест ё пурсишро гузаред.",
-  "sapperDraws": "Бозиҳои тӯҳфаӣ",
-  "sapperAcceptClosed": "Қабули катакҳо пӯшида шуд — омодагӣ ба кушодан рафта истодааст",
-  "sapperHiddenTitle": "ДАР МАЙДОН ПИНҲОН АСТ",
+  "sapperDraws": "Аксияҳо",
+  "sapperAcceptClosed": "Интихоби катакҳо пӯшида шуд — ҷамъбаст рафта истодааст",
+  "sapperHiddenTitle": "БОНУСҲО ДАР МАЙДОН",
   "sapperFieldTotal": "Дар майдон {count} катак",
-  "sapperRevealIn": "кушодан баъд аз {time}",
+  "sapperRevealIn": "ҷамъбаст баъд аз {time}",
   "@sapperRevealIn": {
     "placeholders": {
       "time": {
@@ -147,7 +147,7 @@
       }
     }
   },
-  "sapperNoPrizes": "тӯҳфаҳо эълон нашудаанд",
+  "sapperNoPrizes": "бонусҳо нишон дода нашудаанд",
   "sapperPrizeChip": "🎁 {count}× {label}",
   "@sapperPrizeChip": {
     "placeholders": {
@@ -167,7 +167,7 @@
       }
     }
   },
-  "sapperCellPrice": "нархи катак {price} IQC",
+  "sapperCellPrice": "катак — {price} IQC",
   "@sapperCellPrice": {
     "placeholders": {
       "price": {
@@ -176,8 +176,8 @@
     }
   },
   "sapperYourBalance": "Баланси шумо",
-  "sapperCellPriceLabel": "нархи катак",
-  "sapperWinBannerWin": "🎉 Шумо {count} {word} бурдед!",
+  "sapperCellPriceLabel": "барои як катак",
+  "sapperWinBannerWin": "🎉 Шумо {count} {word} гирифтед!",
   "@sapperWinBannerWin": {
     "placeholders": {
       "count": {
@@ -188,10 +188,10 @@
       }
     }
   },
-  "sapperNoWin": "Ин дафъа бе бурд",
-  "sapperPrizeOne": "тӯҳфа",
-  "sapperPrizeFew": "тӯҳфа",
-  "sapperPrizeMany": "тӯҳфа",
+  "sapperNoWin": "Ин дафъа бе бонус",
+  "sapperPrizeOne": "бонус",
+  "sapperPrizeFew": "бонус",
+  "sapperPrizeMany": "бонус",
   "sapperLegendMine": "Аз они ман",
   "sapperLegendTheirs": "Аз они дигарон",
   "sapperLegendEmpty": "Холӣ",
@@ -199,7 +199,7 @@
   "sapperLegendSelected": "Интихобшуда",
   "sapperLegendOccupied": "Банд",
   "sapperLegendFree": "Озод",
-  "sapperWinners": "Ғолибон",
+  "sapperWinners": "Бонус гирифтагон",
   "newsTitle": "Хабарҳо",
   "newsAll": "Ҳамаи хабарҳо",
   "newsMore": "Муфассал →",
@@ -1079,7 +1079,7 @@
   "walletUseIqc": "Истифодаи IQC",
   "walletMyVouchers": "Ваучерҳои ман",
   "walletNoVouchers": "Ҳоло ваучерҳо нестанд",
-  "walletRedeemTitle": "Холҳо иваз карда шаванд?",
+  "walletRedeemTitle": "Ваучер гиред?",
   "walletRedeemBody": "{p1} бар ивази {p2} IQC",
   "@walletRedeemBody": {
     "placeholders": {
@@ -1092,7 +1092,7 @@
     }
   },
   "walletCancel": "Бекор кардан",
-  "walletRedeem": "Иваз кардан",
+  "walletRedeem": "Гирифтан",
   "walletVoucherIssued": "Ваучер дода шуд",
   "walletTitle": "Ҳамён",
   "walletBalanceLabel": "БАЛАНС",
@@ -1190,7 +1190,7 @@
   "checksStatusApproved": "Тасдиқ шуд",
   "checksStatusRejected": "Рад шуд",
   "checksStatusPending": "Дар баррасӣ",
-  "questDetailRewardVoucherLine": "Korzinka · {amount} сум",
+  "questDetailRewardVoucherLine": "Ваучери Korzinka · {amount} IQC",
   "@questDetailRewardVoucherLine": {
     "placeholders": {
       "amount": {
