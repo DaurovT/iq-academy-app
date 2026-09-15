@@ -1228,5 +1228,53 @@
     }
   },
   "profileLanguageTitle": "Тил",
-  "profileChooseLanguage": "Тилди тандаңыз"
+  "profileChooseLanguage": "Тилди тандаңыз",
+  "navDoctors": "Дарыгерлер",
+  "doctorsTitle": "Дарыгерлер",
+  "doctorsHint": "Компанияңыздын дарыгерлери жана алардын рецепт квести боюнча жетишкендиги",
+  "doctorsSearchHint": "Дарыгер, клиника, шаар боюнча издөө",
+  "doctorsCompleted": "Аткарды",
+  "doctorsInProgress": "Жүрүшүндө",
+  "doctorsIdle": "Баштаган жок",
+  "doctorsNoQuest": "Активдүү рецепт квести жок",
+  "doctorsUnavailable": "Компанияңызда рецепт долбоору жок, ошондуктан дарыгерлер туташтырылган эмес",
+  "doctorsEmpty": "Азырынча дарыгерлер жок",
+  "doctorsNotFound": "Эч нерсе табылган жок",
+  "doctorsRegionUnknown": "Аймак көрсөтүлгөн эмес",
+  "doctorsRecipesCount": "Бардык убакыттагы рецепттер: {count}",
+  "@doctorsRecipesCount": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "doctorsQuestGoal": "Норма: {goal}",
+  "@doctorsQuestGoal": {
+    "placeholders": {
+      "goal": {
+        "type": "Object"
+      }
+    }
+  },
+  "doctorsDoneTimes": "Аткарылды ×{count}",
+  "@doctorsDoneTimes": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "doctorsRegionSummary": "{doctors} дарыгер · {completed} аткарды",
+  "@doctorsRegionSummary": {
+    "placeholders": {
+      "doctors": {
+        "type": "Object"
+      },
+      "completed": {
+        "type": "Object"
+      }
+    }
+  },
+  "doctorsAll": "Баары"
 }

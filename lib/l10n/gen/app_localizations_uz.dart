@@ -1884,4 +1884,66 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get profileChooseLanguage => 'Tilni tanlang';
+
+  @override
+  String get navDoctors => 'Shifokorlar';
+
+  @override
+  String get doctorsTitle => 'Shifokorlar';
+
+  @override
+  String get doctorsHint =>
+      'Kompaniyangiz shifokorlari va ularning retsept kvesti bo‘yicha natijasi';
+
+  @override
+  String get doctorsSearchHint =>
+      'Shifokor, klinika yoki shahar bo‘yicha qidirish';
+
+  @override
+  String get doctorsCompleted => 'Bajardi';
+
+  @override
+  String get doctorsInProgress => 'Jarayonda';
+
+  @override
+  String get doctorsIdle => 'Boshlamagan';
+
+  @override
+  String get doctorsNoQuest => 'Faol retsept kvesti yo‘q';
+
+  @override
+  String get doctorsUnavailable =>
+      'Kompaniyangizda retsept loyihasi yo‘q, shuning uchun shifokorlar ulanmagan';
+
+  @override
+  String get doctorsEmpty => 'Hozircha shifokorlar yo‘q';
+
+  @override
+  String get doctorsNotFound => 'Hech narsa topilmadi';
+
+  @override
+  String get doctorsRegionUnknown => 'Hudud ko‘rsatilmagan';
+
+  @override
+  String doctorsRecipesCount(Object count) {
+    return 'Barcha vaqt uchun retseptlar: $count';
+  }
+
+  @override
+  String doctorsQuestGoal(Object goal) {
+    return 'Norma: $goal';
+  }
+
+  @override
+  String doctorsDoneTimes(Object count) {
+    return 'Bajarilgan ×$count';
+  }
+
+  @override
+  String doctorsRegionSummary(Object doctors, Object completed) {
+    return '$doctors shifokor · $completed bajardi';
+  }
+
+  @override
+  String get doctorsAll => 'Barchasi';
 }

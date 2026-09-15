@@ -182,7 +182,7 @@ Future<void> showNewRecipeSheet(BuildContext context, WidgetRef ref) async {
 
   await ref
       .read(uploadQueueProvider.notifier)
-      .enqueueRecipe(picked.map((x) => x.path).toList(), doctor);
+      .enqueueRecipe(picked, doctor);
   if (!context.mounted) return;
   ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(context.l10n.recipesUploading)));

@@ -93,6 +93,13 @@ class _MedrepHomeState extends ConsumerState<MedrepHome> {
                           const SizedBox(height: 12),
                           _MenuRow(
                             palette: p,
+                            icon: Icons.medical_services_outlined,
+                            label: context.l10n.navDoctors,
+                            onTap: () => context.go('/app/doctors'),
+                          ),
+                          const SizedBox(height: 12),
+                          _MenuRow(
+                            palette: p,
                             icon: Icons.person_add_alt_1_outlined,
                             label: context.l10n.medrepHomeMenuPending,
                             onTap: () => context.go('/app/referrals'),

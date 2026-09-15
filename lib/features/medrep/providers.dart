@@ -47,3 +47,10 @@ final referralsProvider = FutureProvider<List<PendingReferral>>((ref) {
 final companiesProvider = FutureProvider<List<Company>>((ref) {
   return ref.watch(apiProvider).medrep.companies();
 });
+
+/// Врачи компании медпреда по регионам. Аргумент — questId рецептурного квеста
+/// (null = бэкенд берёт ближайший к завершению активный).
+final doctorsProvider =
+    FutureProvider.family<DoctorsOverview, int?>((ref, questId) {
+  return ref.watch(apiProvider).medrep.doctors(questId: questId);
+});

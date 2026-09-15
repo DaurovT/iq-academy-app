@@ -53,11 +53,15 @@ DioException _toApiException(DioException e, AppLocalizations l10n) {
     message = l10n.apiNoAccess;
   }
 
-  return e.copyWith(
+  final out = e.copyWith(
     error: ApiException(
       message,
       statusCode: status,
       unauthorized: status == 401,
     ),
   );
+  // Экраны показывают ошибку через e.toString(); без этого там простыня
+  // «DioException [bad response]: …» вместо текста сервера.
+  out.stringBuilder = (_) => message;
+  return out;
 }

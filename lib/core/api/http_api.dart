@@ -1,4 +1,3 @@
-import 'dart:io' show Platform;
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import '../models/account.dart';
@@ -334,6 +333,12 @@ class HttpCatalogApi implements CatalogApi {
   }
 }
 
+/// Метка платформы для бэкенда (админка показывает её у чека).
+/// `dart:io` на вебе недоступен, поэтому определяем через foundation.
+String get _platformTag => kIsWeb
+    ? 'web'
+    : (defaultTargetPlatform == TargetPlatform.iOS ? 'ios' : 'android');
+
 /// Multipart-загрузка фото (чеки/рецепты).
 Future<Response> _upload(Dio dio, String path, List<UploadFile> files,
     Map<String, String?> fields) async {
@@ -341,14 +346,21 @@ Future<Response> _upload(Dio dio, String path, List<UploadFile> files,
   for (var i = 0; i < files.length; i++) {
     form.files.add(MapEntry(
       'files',
-      await MultipartFile.fromFile(files[i].path,
-          filename: files[i].filename ?? 'photo_$i.jpg'),
+      await _multipart(files[i], i),
     ));
   }
   fields.forEach((k, v) {
     if (v != null) form.fields.add(MapEntry(k, v));
   });
   return dio.post(path, data: form);
+}
+
+/// На вебе файла на диске нет — там [UploadFile] несёт байты.
+Future<MultipartFile> _multipart(UploadFile f, int i) async {
+  final name = f.filename ?? 'photo_$i.jpg';
+  final bytes = f.bytes;
+  if (bytes != null) return MultipartFile.fromBytes(bytes, filename: name);
+  return MultipartFile.fromFile(f.path, filename: name);
 }
 
 class HttpChecksApi implements ChecksApi {
@@ -368,7 +380,7 @@ class HttpChecksApi implements ChecksApi {
       'checkDate': checkDate,
       'idempotencyKey': idempotencyKey,
       // сообщаем платформу, чтобы админка показывала iPhone/Android у чека
-      'platform': Platform.isIOS ? 'ios' : 'android',
+      'platform': _platformTag,
     });
     return Check.fromJson(_obj(r.data));
   }
@@ -478,6 +490,13 @@ class HttpMedrepApi implements MedrepApi {
   Future<PharmacistDetail> pharmacist(int telegramId) async {
     final r = await _dio.get('/client/medrep/pharmacists/$telegramId');
     return PharmacistDetail.fromJson(_obj(r.data));
+  }
+
+  @override
+  Future<DoctorsOverview> doctors({int? questId}) async {
+    final r = await _dio.get('/client/medrep/doctors',
+        queryParameters: questId == null ? null : {'questId': questId});
+    return DoctorsOverview.fromJson(_obj(r.data));
   }
 
   @override

@@ -1879,4 +1879,65 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get profileChooseLanguage => 'Тілді таңдаңыз';
+
+  @override
+  String get navDoctors => 'Дәрігерлер';
+
+  @override
+  String get doctorsTitle => 'Дәрігерлер';
+
+  @override
+  String get doctorsHint =>
+      'Компанияңыздың дәрігерлері және олардың рецепт квесті бойынша үлгерімі';
+
+  @override
+  String get doctorsSearchHint => 'Дәрігер, клиника, қала бойынша іздеу';
+
+  @override
+  String get doctorsCompleted => 'Орындады';
+
+  @override
+  String get doctorsInProgress => 'Орындалуда';
+
+  @override
+  String get doctorsIdle => 'Бастамаған';
+
+  @override
+  String get doctorsNoQuest => 'Белсенді рецепт квесті жоқ';
+
+  @override
+  String get doctorsUnavailable =>
+      'Компанияңызда рецепт жобасы жоқ, сондықтан дәрігерлер қосылмаған';
+
+  @override
+  String get doctorsEmpty => 'Әзірге дәрігерлер жоқ';
+
+  @override
+  String get doctorsNotFound => 'Ештеңе табылмады';
+
+  @override
+  String get doctorsRegionUnknown => 'Аймақ көрсетілмеген';
+
+  @override
+  String doctorsRecipesCount(Object count) {
+    return 'Барлық уақыттағы рецепттер: $count';
+  }
+
+  @override
+  String doctorsQuestGoal(Object goal) {
+    return 'Норма: $goal';
+  }
+
+  @override
+  String doctorsDoneTimes(Object count) {
+    return 'Орындалды ×$count';
+  }
+
+  @override
+  String doctorsRegionSummary(Object doctors, Object completed) {
+    return '$doctors дәрігер · $completed орындады';
+  }
+
+  @override
+  String get doctorsAll => 'Барлығы';
 }

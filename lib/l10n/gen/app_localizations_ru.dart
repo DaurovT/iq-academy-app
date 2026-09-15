@@ -1885,4 +1885,65 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get profileChooseLanguage => 'Выберите язык';
+
+  @override
+  String get navDoctors => 'Врачи';
+
+  @override
+  String get doctorsTitle => 'Врачи';
+
+  @override
+  String get doctorsHint =>
+      'Врачи вашей компании и их прогресс по рецептурному квесту';
+
+  @override
+  String get doctorsSearchHint => 'Поиск по врачу, клинике, городу';
+
+  @override
+  String get doctorsCompleted => 'Выполнили';
+
+  @override
+  String get doctorsInProgress => 'В процессе';
+
+  @override
+  String get doctorsIdle => 'Не начали';
+
+  @override
+  String get doctorsNoQuest => 'Нет активного рецептурного квеста';
+
+  @override
+  String get doctorsUnavailable =>
+      'У вашей компании нет рецептурного проекта, поэтому врачи не подключены';
+
+  @override
+  String get doctorsEmpty => 'Врачей пока нет';
+
+  @override
+  String get doctorsNotFound => 'Ничего не найдено';
+
+  @override
+  String get doctorsRegionUnknown => 'Регион не указан';
+
+  @override
+  String doctorsRecipesCount(Object count) {
+    return 'Рецептов за всё время: $count';
+  }
+
+  @override
+  String doctorsQuestGoal(Object goal) {
+    return 'Норма: $goal';
+  }
+
+  @override
+  String doctorsDoneTimes(Object count) {
+    return 'Выполнен ×$count';
+  }
+
+  @override
+  String doctorsRegionSummary(Object doctors, Object completed) {
+    return '$doctors врач. · $completed вып.';
+  }
+
+  @override
+  String get doctorsAll => 'Все';
 }

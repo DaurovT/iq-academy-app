@@ -29,6 +29,7 @@ import '../../features/doctor/recipes_screen.dart';
 import '../../features/doctor/recipe_detail_screen.dart';
 import '../../features/shared/quest_history/quest_history_screen.dart';
 import '../../features/medrep/portfolio_screen.dart';
+import '../../features/medrep/doctors_screen.dart';
 import '../../features/medrep/pharmacist_detail_screen.dart';
 import '../../features/medrep/quests_screen.dart';
 import '../../features/medrep/leaderboard_screen.dart';
@@ -132,6 +133,7 @@ final routerProvider = Provider<GoRouter>((ref) {
               path: '/app/portfolio/:telegramId',
               builder: (_, s) => MedrepPharmacistDetailScreen(
                   telegramId: _intParam(s, 'telegramId'))),
+          GoRoute(path: '/app/doctors', builder: (_, __) => const DoctorsScreen()),
           GoRoute(path: '/app/leaderboard', builder: (_, __) => const LeaderboardScreen()),
           GoRoute(path: '/app/medrep/quests', builder: (_, __) => const MedrepQuestsScreen()),
           GoRoute(path: '/app/referrals', builder: (_, __) => const ReferralsScreen()),

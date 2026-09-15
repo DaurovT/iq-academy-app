@@ -144,6 +144,10 @@ abstract interface class MedrepApi {
   Future<MedrepMetrics> metrics({String? dateFrom, String? dateTo});
   Future<List<PortfolioPharmacist>> portfolio();
   Future<PharmacistDetail> pharmacist(int telegramId);
+
+  /// Врачи компании медпреда по регионам + прогресс по рецептурному квесту.
+  /// [questId] — какой квест считать; null = ближайший к завершению активный.
+  Future<DoctorsOverview> doctors({int? questId});
   Future<Leaderboard> leaderboard(String metric);
   Future<List<MedrepQuest>> quests();
   Future<String> reflink();

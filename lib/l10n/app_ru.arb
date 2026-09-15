@@ -137,8 +137,12 @@
   "sapperNoIqcBody": "Для участия нужно {price} IQC, у вас {have}. Заработайте IQC — пройдите обучение, квест или опрос.",
   "@sapperNoIqcBody": {
     "placeholders": {
-      "price": { "type": "Object" },
-      "have": { "type": "Object" }
+      "price": {
+        "type": "Object"
+      },
+      "have": {
+        "type": "Object"
+      }
     }
   },
   "sapperDraws": "Акции",
@@ -146,7 +150,11 @@
   "sapperHiddenTitle": "БОНУСЫ НА ПОЛЕ",
   "sapperFieldTotal": "НА ПОЛЕ {count, plural, one{{count} клетка} few{{count} клетки} many{{count} клеток} other{{count} клеток}}",
   "@sapperFieldTotal": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "sapperRevealIn": "итоги через {time}",
   "@sapperRevealIn": {
@@ -1237,5 +1245,53 @@
     }
   },
   "profileLanguageTitle": "Язык",
-  "profileChooseLanguage": "Выберите язык"
+  "profileChooseLanguage": "Выберите язык",
+  "navDoctors": "Врачи",
+  "doctorsTitle": "Врачи",
+  "doctorsHint": "Врачи вашей компании и их прогресс по рецептурному квесту",
+  "doctorsSearchHint": "Поиск по врачу, клинике, городу",
+  "doctorsCompleted": "Выполнили",
+  "doctorsInProgress": "В процессе",
+  "doctorsIdle": "Не начали",
+  "doctorsNoQuest": "Нет активного рецептурного квеста",
+  "doctorsUnavailable": "У вашей компании нет рецептурного проекта, поэтому врачи не подключены",
+  "doctorsEmpty": "Врачей пока нет",
+  "doctorsNotFound": "Ничего не найдено",
+  "doctorsRegionUnknown": "Регион не указан",
+  "doctorsRecipesCount": "Рецептов за всё время: {count}",
+  "@doctorsRecipesCount": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "doctorsQuestGoal": "Норма: {goal}",
+  "@doctorsQuestGoal": {
+    "placeholders": {
+      "goal": {
+        "type": "Object"
+      }
+    }
+  },
+  "doctorsDoneTimes": "Выполнен ×{count}",
+  "@doctorsDoneTimes": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "doctorsRegionSummary": "{doctors} врач. · {completed} вып.",
+  "@doctorsRegionSummary": {
+    "placeholders": {
+      "doctors": {
+        "type": "Object"
+      },
+      "completed": {
+        "type": "Object"
+      }
+    }
+  },
+  "doctorsAll": "Все"
 }

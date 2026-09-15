@@ -1228,5 +1228,53 @@
     }
   },
   "profileLanguageTitle": "Забон",
-  "profileChooseLanguage": "Забонро интихоб кунед"
+  "profileChooseLanguage": "Забонро интихоб кунед",
+  "navDoctors": "Табибон",
+  "doctorsTitle": "Табибон",
+  "doctorsHint": "Табибони ширкати шумо ва пешрафти онҳо аз рӯи квести дорухат",
+  "doctorsSearchHint": "Ҷустуҷӯ аз рӯи табиб, клиника, шаҳр",
+  "doctorsCompleted": "Иҷро карданд",
+  "doctorsInProgress": "Дар ҷараён",
+  "doctorsIdle": "Оғоз накарданд",
+  "doctorsNoQuest": "Квести фаъоли дорухат нест",
+  "doctorsUnavailable": "Ширкати шумо лоиҳаи дорухат надорад, бинобар ин табибон пайваст нашудаанд",
+  "doctorsEmpty": "Ҳоло табибон нестанд",
+  "doctorsNotFound": "Чизе ёфт нашуд",
+  "doctorsRegionUnknown": "Минтақа нишон дода нашудааст",
+  "doctorsRecipesCount": "Дорухатҳо дар тамоми давра: {count}",
+  "@doctorsRecipesCount": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "doctorsQuestGoal": "Меъёр: {goal}",
+  "@doctorsQuestGoal": {
+    "placeholders": {
+      "goal": {
+        "type": "Object"
+      }
+    }
+  },
+  "doctorsDoneTimes": "Иҷрошуда ×{count}",
+  "@doctorsDoneTimes": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "doctorsRegionSummary": "{doctors} табиб · {completed} иҷро",
+  "@doctorsRegionSummary": {
+    "placeholders": {
+      "doctors": {
+        "type": "Object"
+      },
+      "completed": {
+        "type": "Object"
+      }
+    }
+  },
+  "doctorsAll": "Ҳама"
 }

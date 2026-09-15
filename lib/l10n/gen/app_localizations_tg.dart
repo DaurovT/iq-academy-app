@@ -1880,4 +1880,65 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get profileChooseLanguage => 'Забонро интихоб кунед';
+
+  @override
+  String get navDoctors => 'Табибон';
+
+  @override
+  String get doctorsTitle => 'Табибон';
+
+  @override
+  String get doctorsHint =>
+      'Табибони ширкати шумо ва пешрафти онҳо аз рӯи квести дорухат';
+
+  @override
+  String get doctorsSearchHint => 'Ҷустуҷӯ аз рӯи табиб, клиника, шаҳр';
+
+  @override
+  String get doctorsCompleted => 'Иҷро карданд';
+
+  @override
+  String get doctorsInProgress => 'Дар ҷараён';
+
+  @override
+  String get doctorsIdle => 'Оғоз накарданд';
+
+  @override
+  String get doctorsNoQuest => 'Квести фаъоли дорухат нест';
+
+  @override
+  String get doctorsUnavailable =>
+      'Ширкати шумо лоиҳаи дорухат надорад, бинобар ин табибон пайваст нашудаанд';
+
+  @override
+  String get doctorsEmpty => 'Ҳоло табибон нестанд';
+
+  @override
+  String get doctorsNotFound => 'Чизе ёфт нашуд';
+
+  @override
+  String get doctorsRegionUnknown => 'Минтақа нишон дода нашудааст';
+
+  @override
+  String doctorsRecipesCount(Object count) {
+    return 'Дорухатҳо дар тамоми давра: $count';
+  }
+
+  @override
+  String doctorsQuestGoal(Object goal) {
+    return 'Меъёр: $goal';
+  }
+
+  @override
+  String doctorsDoneTimes(Object count) {
+    return 'Иҷрошуда ×$count';
+  }
+
+  @override
+  String doctorsRegionSummary(Object doctors, Object completed) {
+    return '$doctors табиб · $completed иҷро';
+  }
+
+  @override
+  String get doctorsAll => 'Ҳама';
 }

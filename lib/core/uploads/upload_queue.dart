@@ -1,29 +1,28 @@
-import 'dart:convert';
-import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 import '../api/providers.dart';
-import '../api/upload.dart';
 import '../models/check.dart';
 import '../../features/pharmacist/providers.dart';
 import '../../features/doctor/providers.dart';
 import 'pending_upload.dart';
+import 'upload_storage.dart';
 
 const _uuid = Uuid();
 
-/// Очередь загрузки фото: копит чеки/рецепты, копирует файлы в постоянную
-/// папку, грузит при наличии сети и повторяет при сбоях. idempotencyKey = id
+/// Очередь загрузки фото: копит чеки/рецепты, откладывает файлы на хранение,
+/// грузит при наличии сети и повторяет при сбоях. idempotencyKey = id
 /// защищает от дублей на бэке при ретраях.
+/// Где именно лежат файлы — решает [UploadStorage] (диск на мобильных,
+/// память вкладки на вебе).
 class UploadQueue extends AsyncNotifier<List<PendingUpload>> {
-  Directory? _dir;
+  final UploadStorage _storage = createUploadStorage();
   bool _processing = false;
 
   @override
   Future<List<PendingUpload>> build() async {
-    final docs = await getApplicationDocumentsDirectory();
-    _dir = Directory('${docs.path}/uploads')..createSync(recursive: true);
+    await _storage.init();
 
     // Ретраим при появлении сети.
     final sub = Connectivity().onConnectivityChanged.listen((res) {
@@ -31,59 +30,29 @@ class UploadQueue extends AsyncNotifier<List<PendingUpload>> {
     });
     ref.onDispose(sub.cancel);
 
-    final items = _load();
+    final items = _storage.load();
     // Первый прогон — вдруг сеть уже есть.
     Future.microtask(_process);
     return items;
   }
 
-  File get _indexFile => File('${_dir!.path}/queue.json');
-
-  List<PendingUpload> _load() {
-    if (!_indexFile.existsSync()) return [];
-    try {
-      final raw = jsonDecode(_indexFile.readAsStringSync()) as List;
-      return raw
-          .map((e) => PendingUpload.fromJson(e as Map<String, dynamic>))
-          .toList();
-    } catch (_) {
-      return [];
-    }
+  Future<void> enqueueCheck(List<XFile> photos) async {
+    await _enqueue(UploadKind.check, photos, {});
   }
 
-  void _save(List<PendingUpload> items) {
-    _indexFile.writeAsStringSync(
-        jsonEncode(items.map((e) => e.toJson()).toList()));
-  }
-
-  /// Копирует выбранные файлы в постоянную папку (temp может очиститься).
-  Future<List<String>> _persistFiles(String id, List<String> paths) async {
-    final out = <String>[];
-    for (var i = 0; i < paths.length; i++) {
-      final dst = '${_dir!.path}/${id}_$i.jpg';
-      await File(paths[i]).copy(dst);
-      out.add(dst);
-    }
-    return out;
-  }
-
-  Future<void> enqueueCheck(List<String> paths) async {
-    await _enqueue(UploadKind.check, paths, {});
-  }
-
-  Future<void> enqueueRecipe(List<String> paths, DoctorRecipeInfo? d) async {
+  Future<void> enqueueRecipe(List<XFile> photos, DoctorRecipeInfo? d) async {
     final fields = <String, String>{};
     if (d?.name != null) fields['doctorName'] = d!.name!;
     if (d?.workplace != null) fields['doctorWorkplace'] = d!.workplace!;
     if (d?.city != null) fields['doctorCity'] = d!.city!;
     if (d?.phone != null) fields['doctorPhone'] = d!.phone!;
-    await _enqueue(UploadKind.recipe, paths, fields);
+    await _enqueue(UploadKind.recipe, photos, fields);
   }
 
-  Future<void> _enqueue(
-      UploadKind kind, List<String> paths, Map<String, String> fields) async {
+  Future<void> _enqueue(UploadKind kind, List<XFile> photos,
+      Map<String, String> fields) async {
     final id = _uuid.v4();
-    final stored = await _persistFiles(id, paths);
+    final stored = await _storage.persist(id, photos);
     final item = PendingUpload(
       id: id,
       kind: kind,
@@ -92,7 +61,7 @@ class UploadQueue extends AsyncNotifier<List<PendingUpload>> {
       createdAt: DateTime.now().toIso8601String(),
     );
     final items = [...(state.asData?.value ?? <PendingUpload>[]), item];
-    _save(items);
+    _storage.save(items);
     state = AsyncData(items);
     _process();
   }
@@ -103,11 +72,10 @@ class UploadQueue extends AsyncNotifier<List<PendingUpload>> {
     _processing = true;
     try {
       final api = ref.read(apiProvider);
-      var items = [...(state.asData?.value ?? _load())];
+      var items = [...(state.asData?.value ?? _storage.load())];
       for (final item in [...items]) {
         try {
-          final files =
-              item.filePaths.map((p) => UploadFile(path: p)).toList();
+          final files = await _storage.readFiles(item);
           if (item.kind == UploadKind.check) {
             await api.checks.submit(files, idempotencyKey: item.id);
           } else {
@@ -122,11 +90,8 @@ class UploadQueue extends AsyncNotifier<List<PendingUpload>> {
           }
           // Успех — убираем из очереди и чистим файлы.
           items = items.where((e) => e.id != item.id).toList();
-          for (final p in item.filePaths) {
-            final f = File(p);
-            if (f.existsSync()) f.deleteSync();
-          }
-          _save(items);
+          await _storage.cleanup(item);
+          _storage.save(items);
           state = AsyncData(items);
           ref.invalidate(item.kind == UploadKind.check
               ? checksProvider
@@ -134,7 +99,7 @@ class UploadQueue extends AsyncNotifier<List<PendingUpload>> {
         } catch (e) {
           item.attempts++;
           item.lastError = e.toString();
-          _save(items);
+          _storage.save(items);
           state = AsyncData([...items]);
           // Прекращаем прогон — вероятно, нет сети; повторим позже.
           break;

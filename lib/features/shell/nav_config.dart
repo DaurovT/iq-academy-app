@@ -45,6 +45,8 @@ Map<Role, List<NavItem>> navConfig(AppLocalizations l10n) => {
         NavItem(path: '/app/portfolio', label: l10n.navPharm, icon: Icons.people_alt_outlined, tab: true),
         NavItem(path: '/app/medrep/quests', label: l10n.navQuests, icon: Icons.flag_outlined, tab: true),
         NavItem(path: '/app/leaderboard', label: l10n.navTop, icon: Icons.emoji_events_outlined, tab: true),
+        // Не таб: нижняя панель уже занята (макс. 4). Вход — с главной и из меню.
+        NavItem(path: '/app/doctors', label: l10n.navDoctors, icon: Icons.medical_services_outlined),
       ],
       Role.productOwner: [
         NavItem(path: '/app', label: l10n.navDashboard, icon: Icons.insights_outlined, tab: true),

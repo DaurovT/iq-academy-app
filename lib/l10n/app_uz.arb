@@ -1228,5 +1228,53 @@
     }
   },
   "profileLanguageTitle": "Til",
-  "profileChooseLanguage": "Tilni tanlang"
+  "profileChooseLanguage": "Tilni tanlang",
+  "navDoctors": "Shifokorlar",
+  "doctorsTitle": "Shifokorlar",
+  "doctorsHint": "Kompaniyangiz shifokorlari va ularning retsept kvesti bo‘yicha natijasi",
+  "doctorsSearchHint": "Shifokor, klinika yoki shahar bo‘yicha qidirish",
+  "doctorsCompleted": "Bajardi",
+  "doctorsInProgress": "Jarayonda",
+  "doctorsIdle": "Boshlamagan",
+  "doctorsNoQuest": "Faol retsept kvesti yo‘q",
+  "doctorsUnavailable": "Kompaniyangizda retsept loyihasi yo‘q, shuning uchun shifokorlar ulanmagan",
+  "doctorsEmpty": "Hozircha shifokorlar yo‘q",
+  "doctorsNotFound": "Hech narsa topilmadi",
+  "doctorsRegionUnknown": "Hudud ko‘rsatilmagan",
+  "doctorsRecipesCount": "Barcha vaqt uchun retseptlar: {count}",
+  "@doctorsRecipesCount": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "doctorsQuestGoal": "Norma: {goal}",
+  "@doctorsQuestGoal": {
+    "placeholders": {
+      "goal": {
+        "type": "Object"
+      }
+    }
+  },
+  "doctorsDoneTimes": "Bajarilgan ×{count}",
+  "@doctorsDoneTimes": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "doctorsRegionSummary": "{doctors} shifokor · {completed} bajardi",
+  "@doctorsRegionSummary": {
+    "placeholders": {
+      "doctors": {
+        "type": "Object"
+      },
+      "completed": {
+        "type": "Object"
+      }
+    }
+  },
+  "doctorsAll": "Barchasi"
 }

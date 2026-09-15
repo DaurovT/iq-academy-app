@@ -3463,6 +3463,108 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Выберите язык'**
   String get profileChooseLanguage;
+
+  /// No description provided for @navDoctors.
+  ///
+  /// In ru, this message translates to:
+  /// **'Врачи'**
+  String get navDoctors;
+
+  /// No description provided for @doctorsTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Врачи'**
+  String get doctorsTitle;
+
+  /// No description provided for @doctorsHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Врачи вашей компании и их прогресс по рецептурному квесту'**
+  String get doctorsHint;
+
+  /// No description provided for @doctorsSearchHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Поиск по врачу, клинике, городу'**
+  String get doctorsSearchHint;
+
+  /// No description provided for @doctorsCompleted.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выполнили'**
+  String get doctorsCompleted;
+
+  /// No description provided for @doctorsInProgress.
+  ///
+  /// In ru, this message translates to:
+  /// **'В процессе'**
+  String get doctorsInProgress;
+
+  /// No description provided for @doctorsIdle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не начали'**
+  String get doctorsIdle;
+
+  /// No description provided for @doctorsNoQuest.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет активного рецептурного квеста'**
+  String get doctorsNoQuest;
+
+  /// No description provided for @doctorsUnavailable.
+  ///
+  /// In ru, this message translates to:
+  /// **'У вашей компании нет рецептурного проекта, поэтому врачи не подключены'**
+  String get doctorsUnavailable;
+
+  /// No description provided for @doctorsEmpty.
+  ///
+  /// In ru, this message translates to:
+  /// **'Врачей пока нет'**
+  String get doctorsEmpty;
+
+  /// No description provided for @doctorsNotFound.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ничего не найдено'**
+  String get doctorsNotFound;
+
+  /// No description provided for @doctorsRegionUnknown.
+  ///
+  /// In ru, this message translates to:
+  /// **'Регион не указан'**
+  String get doctorsRegionUnknown;
+
+  /// No description provided for @doctorsRecipesCount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Рецептов за всё время: {count}'**
+  String doctorsRecipesCount(Object count);
+
+  /// No description provided for @doctorsQuestGoal.
+  ///
+  /// In ru, this message translates to:
+  /// **'Норма: {goal}'**
+  String doctorsQuestGoal(Object goal);
+
+  /// No description provided for @doctorsDoneTimes.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выполнен ×{count}'**
+  String doctorsDoneTimes(Object count);
+
+  /// No description provided for @doctorsRegionSummary.
+  ///
+  /// In ru, this message translates to:
+  /// **'{doctors} врач. · {completed} вып.'**
+  String doctorsRegionSummary(Object doctors, Object completed);
+
+  /// No description provided for @doctorsAll.
+  ///
+  /// In ru, this message translates to:
+  /// **'Все'**
+  String get doctorsAll;
 }
 
 class _AppLocalizationsDelegate
