@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'core/app_modules.dart';
 import 'core/l10n/l10n.dart';
 import 'core/l10n/locale_controller.dart';
 import 'core/push/push_service.dart';
@@ -22,9 +23,20 @@ class IqAcademyApp extends ConsumerStatefulWidget {
 }
 
 class _IqAcademyAppState extends ConsumerState<IqAcademyApp> {
+  // Изменения видимости разделов из админки подхватываем при возврате в приложение.
+  late final AppLifecycleListener _lifecycle = AppLifecycleListener(
+      onResume: () => ref.read(appModulesProvider.notifier).refresh());
+
+  @override
+  void dispose() {
+    _lifecycle.dispose();
+    super.dispose();
+  }
+
   @override
   void initState() {
     super.initState();
+    _lifecycle; // создать слушатель
     // Разрешение на уведомления, слушатели сообщений и привязка токена к аккаунту.
     WidgetsBinding.instance.addPostFrameCallback((_) => PushService.attach(ref));
   }

@@ -13,6 +13,7 @@ import '../models/news.dart';
 import '../models/survey.dart';
 import '../models/sapper.dart';
 import '../models/oauth.dart';
+import '../app_modules.dart';
 import 'upload.dart';
 
 /// Контракт платформы — прямое зеркало web/src/lib/api/contract.ts.
@@ -99,6 +100,9 @@ abstract interface class AccountApi {
   Future<void> deleteAccount();
   Future<({bool sent})> changePhoneStart(String phone);
   Future<({String phone})> changePhoneConfirm(String phone, String code);
+
+  /// Видимость разделов приложения из админки.
+  Future<AppModules> appConfig();
 }
 
 abstract interface class WalletApi {

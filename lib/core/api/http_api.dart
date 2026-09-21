@@ -9,6 +9,7 @@ import '../models/check.dart';
 import '../models/notification.dart';
 import '../models/medrep.dart';
 import '../models/oauth.dart';
+import '../app_modules.dart';
 import '../models/brand.dart';
 import '../models/registration.dart';
 import '../models/support.dart';
@@ -198,6 +199,12 @@ class HttpReferenceApi implements ReferenceApi {
 class HttpAccountApi implements AccountApi {
   HttpAccountApi(this._dio);
   final Dio _dio;
+
+  @override
+  Future<AppModules> appConfig() async {
+    final r = await _dio.get('/client/app-config');
+    return AppModules.fromJson(_obj(r.data));
+  }
 
   @override
   Future<AccountSettings> settings() async {

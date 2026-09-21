@@ -1,3 +1,4 @@
+import '../../../core/app_modules.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -206,18 +207,20 @@ class ProfileScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 15),
 
-                // ── Поддержка ──
-                _TileCard(
-                  c: c,
-                  circle: const Color(0xFF1A3566),
-                  icon: Icons.headset_mic_outlined,
-                  iconColor: Colors.white,
-                  title: context.l10n.profileSupport,
-                  subtitle: context.l10n.profileSupportSubtitle,
-                  chevron: true,
-                  onTap: () => context.push('/app/support'),
-                ),
-                const SizedBox(height: 12),
+                // ── Поддержка ── (можно спрятать из админки)
+                if (ref.moduleVisible('support')) ...[
+                  _TileCard(
+                    c: c,
+                    circle: const Color(0xFF1A3566),
+                    icon: Icons.headset_mic_outlined,
+                    iconColor: Colors.white,
+                    title: context.l10n.profileSupport,
+                    subtitle: context.l10n.profileSupportSubtitle,
+                    chevron: true,
+                    onTap: () => context.push('/app/support'),
+                  ),
+                  const SizedBox(height: 12),
+                ],
                 _TileCard(
                   c: c,
                   circle: c.circlePlain,

@@ -1,3 +1,4 @@
+import '../../core/app_modules.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -129,11 +130,11 @@ class DoctorHome extends ConsumerWidget {
                               const SizedBox(height: 12),
                             ],
                           const SizedBox(height: 12),
-                          const NewsHomeBlock(),
+                          const ModuleGate(module: 'news', child: NewsHomeBlock()),
                           const SizedBox(height: 24),
-                          const SurveyHomeBlock(),
+                          const ModuleGate(module: 'surveys', child: SurveyHomeBlock()),
                           const SizedBox(height: 24),
-                          const MiniAppsHomeBlock(),
+                          const ModuleGate(module: 'mini_apps', child: MiniAppsHomeBlock()),
                         ],
                       ),
                     ),

@@ -1,3 +1,4 @@
+import '../../core/app_modules.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -69,7 +70,7 @@ class MiniAppsHubScreen extends ConsumerWidget {
                     style: const TextStyle(fontSize: 15, color: Color(0xFF6B6C78)),
                   ),
                   const SizedBox(height: 32),
-                  for (final a in apps) ...[
+                  for (final a in apps.where((a) => ref.moduleVisible(a.key))) ...[
                     _AppCard(app: a),
                     const SizedBox(height: 10),
                   ],

@@ -1,3 +1,4 @@
+import '../app_modules.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -49,6 +50,7 @@ int _intParam(GoRouterState s, String key) =>
 final routerProvider = Provider<GoRouter>((ref) {
   final refresh = ValueNotifier(0);
   ref.listen(authControllerProvider, (_, __) => refresh.value++);
+  ref.listen(appModulesProvider, (_, __) => refresh.value++);  // раздел скрыли, пока он открыт
   ref.onDispose(refresh.dispose);
 
   return GoRouter(
@@ -193,7 +195,15 @@ final routerProvider = Provider<GoRouter>((ref) {
       if (s.needsRole) return loc == '/role' ? null : '/role';
 
       const gate = {'/splash', '/login', '/register', '/oauth-link', '/role'};
-      return gate.contains(loc) ? '/app' : null;
+      if (gate.contains(loc)) return '/app';
+
+      // Раздел скрыт в админке → на главную (в т.ч. переход из уведомления или ссылки).
+      final module = moduleForPath(loc);
+      final modules = ref.read(appModulesProvider).asData?.value;
+      if (module != null && modules != null && !modules.isVisible(module, s.activeRole)) {
+        return '/app';
+      }
+      return null;
     },
   );
 });
