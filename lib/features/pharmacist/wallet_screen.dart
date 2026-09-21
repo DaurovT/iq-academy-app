@@ -9,6 +9,7 @@ import '../../core/models/wallet.dart';
 import '../shared/widgets/pharm_top_bar.dart';
 import '../shared/widgets/screen_decor.dart';
 import 'providers.dart';
+import '../../widgets/dialog_buttons.dart';
 
 final _num = NumberFormat.decimalPattern('ru');
 String _uzs(num v) => '${_num.format(v)} UZS';
@@ -136,12 +137,12 @@ class WalletScreen extends ConsumerWidget {
         title: Text(context.l10n.walletRedeemTitle),
         content: Text(context.l10n.walletRedeemBody(v.label, v.costIqc)),
         actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: Text(context.l10n.walletCancel)),
-          FilledButton(
-              onPressed: () => Navigator.pop(ctx, true),
-              child: Text(context.l10n.walletRedeem)),
+          DialogButtons(
+            cancelLabel: context.l10n.walletCancel,
+            onCancel: () => Navigator.pop(ctx, false),
+            confirmLabel: context.l10n.walletRedeem,
+            onConfirm: () => Navigator.pop(ctx, true),
+          ),
         ],
       ),
     );

@@ -239,6 +239,7 @@
   "loginTagline": "Үйрөн.\nКолдон.\nЖет.",
   "loginTitle": "Кирүү",
   "loginByPhone": "Телефон номери аркылуу кириңиз",
+  "loginChooseMethod": "Кирүүнүн ыңгайлуу жолун тандаңыз",
   "loginCodeSent": "{phone} номерине SMS-код жөнөтүлдү",
   "@loginCodeSent": {
     "placeholders": {
@@ -252,6 +253,7 @@
   "loginConfirm": "Ырастоо",
   "loginGoRegister": "Каттоодон өтүү",
   "loginRegister": "Катталуу",
+  "loginNoAccount": "Аккаунтуңуз жокпу?",
   "loginEnter": "Кирүү",
   "loginResendIn": "{seconds} секунддан кийин кайталоо",
   "@loginResendIn": {
@@ -329,6 +331,7 @@
   "profileConfirm": "Ырастоо",
   "profilePhoneChanged": "Телефон өзгөртүлдү",
   "profileLogoutConfirmTitle": "Аккаунттан чыгасызбы?",
+  "profileLogoutConfirmBody": "Колдонмону кайра колдонуу үчүн кайрадан кирүү керек болот.",
   "profileLogoutAction": "Чыгуу",
   "profileDeleteConfirmTitle": "Аккаунт өчүрүлсүнбү?",
   "profileDeleteConfirmBody": "Профиль, телефон номери, кирүү байланыштары, билдирмелер жана колдоо кызматы менен кат алышуу өчүрүлөт. Эсептөөлөр жана берилген ваучерлер тууралуу жазуулар жеке маалыматтарыңызсыз сакталат — алар эсеп үчүн керек. Бул аракетти кайтарууга болбойт.",

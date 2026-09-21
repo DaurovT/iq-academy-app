@@ -239,6 +239,7 @@
   "loginTagline": "O'rgan.\nQo'lla.\nErish.",
   "loginTitle": "Kirish",
   "loginByPhone": "Telefon raqami orqali kiring",
+  "loginChooseMethod": "Kirishning qulay usulini tanlang",
   "loginCodeSent": "{phone} raqamiga SMS-kod yuborildi",
   "@loginCodeSent": {
     "placeholders": {
@@ -252,6 +253,7 @@
   "loginConfirm": "Tasdiqlash",
   "loginGoRegister": "Ro'yxatdan o'tish",
   "loginRegister": "Ro'yxatdan o'tish",
+  "loginNoAccount": "Akkauntingiz yo'qmi?",
   "loginEnter": "Kirish",
   "loginResendIn": "{seconds} soniyadan so'ng qayta yuborish",
   "@loginResendIn": {
@@ -329,6 +331,7 @@
   "profileConfirm": "Tasdiqlash",
   "profilePhoneChanged": "Telefon o'zgartirildi",
   "profileLogoutConfirmTitle": "Hisobdan chiqasizmi?",
+  "profileLogoutConfirmBody": "Ilovadan yana foydalanish uchun qaytadan kirishingiz kerak bo'ladi.",
   "profileLogoutAction": "Chiqish",
   "profileDeleteConfirmTitle": "Hisob o'chirilsinmi?",
   "profileDeleteConfirmBody": "Profil, telefon raqami, kirish bog'lanishlari, bildirishnomalar va qo'llab-quvvatlash bilan yozishmalar o'chiriladi. Hisoblangan ballar va berilgan vaucherlar haqidagi yozuvlar shaxsiy ma'lumotlaringizsiz saqlanadi — ular hisob uchun kerak. Bu amalni qaytarib bo'lmaydi.",

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../../../core/api/providers.dart';
 import '../../../core/auth/auth_controller.dart';
@@ -10,7 +9,7 @@ import '../../../core/auth/social_sign_in.dart';
 import '../../../core/l10n/l10n.dart';
 import '../../../core/models/oauth.dart';
 
-/// Кнопки «Войти через Apple / Google». Показываются только там, где вход
+/// Кнопки «Войти через Google / Apple» — идут под кнопкой Telegram. Показываются только там, где вход
 /// реально настроен: Apple — на iOS, Google — при заданных client ID.
 class SocialLoginButtons extends ConsumerStatefulWidget {
   const SocialLoginButtons({super.key});
@@ -66,64 +65,96 @@ class _SocialLoginButtonsState extends ConsumerState<SocialLoginButtons> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (apple) ...[
-          SignInWithAppleButton(
-            text: l10n.loginWithApple,
-            height: 50,
-            style: SignInWithAppleButtonStyle.white,
-            borderRadius: const BorderRadius.all(Radius.circular(12)),
-            onPressed: () => _signIn('apple'),
-          ),
-          const SizedBox(height: 12),
-        ],
         if (google) ...[
-          _GoogleButton(
+          const SizedBox(height: 12),
+          SocialButton(
             label: l10n.loginWithGoogle,
+            icon: SvgPicture.string(_googleG, width: 20, height: 20),
+            background: Colors.white,
+            foreground: _socialDark,
             busy: _busy == 'google',
             onTap: () => _signIn('google'),
           ),
+        ],
+        if (apple) ...[
           const SizedBox(height: 12),
+          SocialButton(
+            label: l10n.loginWithApple,
+            icon: const Icon(Icons.apple, size: 24, color: Colors.black),
+            background: Colors.white,
+            foreground: _socialDark,
+            busy: _busy == 'apple',
+            onTap: () => _signIn('apple'),
+          ),
         ],
       ],
     );
   }
 }
 
-/// Кнопка Google по его брендбуку: белый фон, цветной логотип «G».
-class _GoogleButton extends StatelessWidget {
-  const _GoogleButton(
-      {required this.label, required this.busy, required this.onTap});
+const _socialDark = Color(0xFF111111);
+
+/// Общая кнопка входа через Apple / Google / Telegram. Размеры и шрифт — как у
+/// основной кнопки экрана входа; значок прижат к левому краю на одном отступе,
+/// чтобы у всех провайдеров стоять ровно в столбик, а надпись — по центру.
+class SocialButton extends StatelessWidget {
+  const SocialButton({
+    super.key,
+    required this.label,
+    required this.icon,
+    required this.background,
+    required this.foreground,
+    required this.busy,
+    required this.onTap,
+  });
 
   final String label;
+  final Widget icon;
+  final Color background;
+  final Color foreground;
   final bool busy;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(12),
+      color: background,
+      borderRadius: BorderRadius.circular(14),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: busy ? null : onTap,
         child: SizedBox(
-          height: 50,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          height: 52,
+          width: double.infinity,
+          child: Stack(
+            alignment: Alignment.center,
             children: [
-              if (busy)
-                const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2))
-              else
-                SvgPicture.string(_googleG, width: 20, height: 20),
-              const SizedBox(width: 12),
-              Text(label,
-                  style: const TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFF1F1F1F))),
+              Positioned(
+                left: 20,
+                child: SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: Center(
+                    child: busy
+                        ? SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(
+                                strokeWidth: 2, color: foreground))
+                        : icon,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 56),
+                child: Text(label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: foreground)),
+              ),
             ],
           ),
         ),

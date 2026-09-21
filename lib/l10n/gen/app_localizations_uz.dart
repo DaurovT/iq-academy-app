@@ -319,6 +319,9 @@ class AppLocalizationsUz extends AppLocalizations {
   String get loginByPhone => 'Telefon raqami orqali kiring';
 
   @override
+  String get loginChooseMethod => 'Kirishning qulay usulini tanlang';
+
+  @override
   String loginCodeSent(Object phone) {
     return '$phone raqamiga SMS-kod yuborildi';
   }
@@ -337,6 +340,9 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get loginRegister => 'Ro\'yxatdan o\'tish';
+
+  @override
+  String get loginNoAccount => 'Akkauntingiz yo\'qmi?';
 
   @override
   String get loginEnter => 'Kirish';
@@ -494,6 +500,10 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get profileLogoutConfirmTitle => 'Hisobdan chiqasizmi?';
+
+  @override
+  String get profileLogoutConfirmBody =>
+      'Ilovadan yana foydalanish uchun qaytadan kirishingiz kerak bo\'ladi.';
 
   @override
   String get profileLogoutAction => 'Chiqish';

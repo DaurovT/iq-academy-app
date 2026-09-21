@@ -256,6 +256,7 @@
   "loginTagline": "Обучайся.\nПрименяй.\nДостигай.",
   "loginTitle": "Вход",
   "loginByPhone": "Войдите по номеру телефона",
+  "loginChooseMethod": "Выберите удобный способ входа",
   "loginCodeSent": "Код из SMS на {phone}",
   "@loginCodeSent": {
     "placeholders": {
@@ -269,6 +270,7 @@
   "loginConfirm": "Подтвердить",
   "loginGoRegister": "Пройти регистрацию",
   "loginRegister": "Зарегистрироваться",
+  "loginNoAccount": "Нет аккаунта?",
   "loginEnter": "Войти",
   "loginResendIn": "Повтор через {seconds} с",
   "@loginResendIn": {
@@ -346,6 +348,7 @@
   "profileConfirm": "Подтвердить",
   "profilePhoneChanged": "Телефон изменён",
   "profileLogoutConfirmTitle": "Выйти из аккаунта?",
+  "profileLogoutConfirmBody": "Чтобы снова пользоваться приложением, нужно будет войти ещё раз.",
   "profileLogoutAction": "Выйти",
   "profileDeleteConfirmTitle": "Удалить аккаунт?",
   "profileDeleteConfirmBody": "Удалим профиль, номер телефона, привязки входа, уведомления и переписку с поддержкой. Записи о начислениях и выданных ваучерах сохранятся без ваших персональных данных — они нужны для учёта. Действие необратимо.",

@@ -319,6 +319,9 @@ class AppLocalizationsTg extends AppLocalizations {
   String get loginByPhone => 'Бо рақами телефон ворид шавед';
 
   @override
+  String get loginChooseMethod => 'Усули қулайи воридшавиро интихоб кунед';
+
+  @override
   String loginCodeSent(Object phone) {
     return 'Рамз аз SMS ба $phone';
   }
@@ -337,6 +340,9 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get loginRegister => 'Қайд шудан';
+
+  @override
+  String get loginNoAccount => 'Аккаунт надоред?';
 
   @override
   String get loginEnter => 'Ворид шудан';
@@ -494,6 +500,10 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get profileLogoutConfirmTitle => 'Аз ҳисоб мебароед?';
+
+  @override
+  String get profileLogoutConfirmBody =>
+      'Барои боз истифода бурдани барнома бояд аз нав ворид шавед.';
 
   @override
   String get profileLogoutAction => 'Баромадан';

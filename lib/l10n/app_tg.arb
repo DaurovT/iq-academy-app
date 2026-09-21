@@ -239,6 +239,7 @@
   "loginTagline": "Омӯз.\nТатбиқ кун.\nБирас.",
   "loginTitle": "Воридшавӣ",
   "loginByPhone": "Бо рақами телефон ворид шавед",
+  "loginChooseMethod": "Усули қулайи воридшавиро интихоб кунед",
   "loginCodeSent": "Рамз аз SMS ба {phone}",
   "@loginCodeSent": {
     "placeholders": {
@@ -252,6 +253,7 @@
   "loginConfirm": "Тасдиқ кардан",
   "loginGoRegister": "Аз қайд гузаштан",
   "loginRegister": "Қайд шудан",
+  "loginNoAccount": "Аккаунт надоред?",
   "loginEnter": "Ворид шудан",
   "loginResendIn": "Такрор баъд аз {seconds} сония",
   "@loginResendIn": {
@@ -329,6 +331,7 @@
   "profileConfirm": "Тасдиқ кардан",
   "profilePhoneChanged": "Телефон иваз шуд",
   "profileLogoutConfirmTitle": "Аз ҳисоб мебароед?",
+  "profileLogoutConfirmBody": "Барои боз истифода бурдани барнома бояд аз нав ворид шавед.",
   "profileLogoutAction": "Баромадан",
   "profileDeleteConfirmTitle": "Ҳисоб нест карда шавад?",
   "profileDeleteConfirmBody": "Профил, рақами телефон, пайвандҳои воридшавӣ, огоҳиномаҳо ва мукотиба бо дастгирӣ нест карда мешаванд. Сабтҳои ҳисобҳо ва ваучерҳои додашуда бе маълумоти шахсии шумо нигоҳ дошта мешаванд — онҳо барои баҳисобгирӣ лозиманд. Ин амал бебозгашт аст.",

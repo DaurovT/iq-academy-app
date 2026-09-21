@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
 
+/// Размер FilledButton в диалогах. Тема растягивает FilledButton на всю ширину
+/// (Size.fromHeight) — в AlertDialog из-за этого кнопки уходят в столбик.
+const kDialogButtonSize = Size(64, 44);
+
 /// Тема приложения. Обе яркости строятся из токенов [PharmPalette],
 /// перенесённых из макетов Figma «PharmIQ».
 class AppTheme {
@@ -55,6 +59,26 @@ class AppTheme {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(18),
         ),
+      ),
+      // Диалоги в стиле карточек приложения, а не Material 3 по умолчанию.
+      dialogTheme: DialogThemeData(
+        backgroundColor: p.card,
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        titleTextStyle: TextStyle(
+          fontSize: 18,
+          height: 1.3,
+          fontWeight: FontWeight.w700,
+          color: p.textPrimary,
+        ),
+        contentTextStyle: TextStyle(
+          fontSize: 15,
+          height: 1.4,
+          color: p.textMuted,
+        ),
+        actionsPadding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
       ),
       navigationBarTheme: NavigationBarThemeData(
         height: 72,

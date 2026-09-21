@@ -638,6 +638,12 @@ abstract class AppLocalizations {
   /// **'Войдите по номеру телефона'**
   String get loginByPhone;
 
+  /// No description provided for @loginChooseMethod.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выберите удобный способ входа'**
+  String get loginChooseMethod;
+
   /// No description provided for @loginCodeSent.
   ///
   /// In ru, this message translates to:
@@ -673,6 +679,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Зарегистрироваться'**
   String get loginRegister;
+
+  /// No description provided for @loginNoAccount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет аккаунта?'**
+  String get loginNoAccount;
 
   /// No description provided for @loginEnter.
   ///
@@ -967,6 +979,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Выйти из аккаунта?'**
   String get profileLogoutConfirmTitle;
+
+  /// No description provided for @profileLogoutConfirmBody.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чтобы снова пользоваться приложением, нужно будет войти ещё раз.'**
+  String get profileLogoutConfirmBody;
 
   /// No description provided for @profileLogoutAction.
   ///

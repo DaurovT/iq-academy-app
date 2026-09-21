@@ -10,6 +10,8 @@ import '../../core/theme/app_colors.dart';
 import '../../widgets/async_view.dart';
 import '../pharmacist/providers.dart' show walletProvider;
 import '../shared/widgets/pharm_top_bar.dart';
+import '../../core/theme/app_theme.dart';
+import '../../widgets/dialog_buttons.dart';
 
 final miniAppsProvider = FutureProvider<List<MiniApp>>((ref) => ref.watch(apiProvider).miniApps.list());
 final sapperDrawsProvider = FutureProvider<List<SapperDrawItem>>((ref) => ref.watch(apiProvider).sapper.draws());
@@ -582,21 +584,32 @@ class _SapperGameScreenState extends ConsumerState<SapperGameScreen> {
         title: Text(context.l10n.sapperNoIqcTitle),
         content: Text(context.l10n.sapperNoIqcBody(f.priceIqc, f.balanceIqc)),
         actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(ctx),
-              child: Text(context.l10n.commonCancel)),
-          TextButton(
-              onPressed: () {
-                Navigator.pop(ctx);
-                context.go('/app/learn');
-              },
-              child: Text(context.l10n.navLearn)),
-          FilledButton(
-              onPressed: () {
-                Navigator.pop(ctx);
-                context.go('/app/quests');
-              },
-              child: Text(context.l10n.navQuests)),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              FilledButton(
+                style: FilledButton.styleFrom(minimumSize: kDialogButtonSize),
+                onPressed: () {
+                  Navigator.pop(ctx);
+                  context.go('/app/quests');
+                },
+                child: Text(context.l10n.navQuests),
+              ),
+              const SizedBox(height: 8),
+              FilledButton(
+                style: DialogButtons.secondaryStyle(ctx),
+                onPressed: () {
+                  Navigator.pop(ctx);
+                  context.go('/app/learn');
+                },
+                child: Text(context.l10n.navLearn),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: Text(context.l10n.commonCancel),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -625,21 +638,27 @@ class _SapperGameScreenState extends ConsumerState<SapperGameScreen> {
             const SizedBox(height: 12),
             Text(context.l10n.sapperRulesAccept,
                 style: Theme.of(ctx).textTheme.bodySmall),
-          ],
-        ),
-        actions: [
-          TextButton(
+            TextButton(
+              style: TextButton.styleFrom(
+                padding: EdgeInsets.zero,
+                minimumSize: const Size(0, 36),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
               onPressed: () {
                 Navigator.pop(ctx, false);
                 context.push('/app/sapper-rules');
               },
-              child: Text(context.l10n.sapperRulesButton)),
-          TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: Text(context.l10n.commonCancel)),
-          FilledButton(
-              onPressed: () => Navigator.pop(ctx, true),
-              child: Text(context.l10n.sapperReserveConfirm(f.priceIqc))),
+              child: Text(context.l10n.sapperRulesButton),
+            ),
+          ],
+        ),
+        actions: [
+          DialogButtons(
+            cancelLabel: context.l10n.commonCancel,
+            onCancel: () => Navigator.pop(ctx, false),
+            confirmLabel: context.l10n.sapperReserveConfirm(f.priceIqc),
+            onConfirm: () => Navigator.pop(ctx, true),
+          ),
         ],
       ),
     );

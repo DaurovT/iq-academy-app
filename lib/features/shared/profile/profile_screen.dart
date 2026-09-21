@@ -16,6 +16,7 @@ import '../../pharmacist/providers.dart';
 import '../role_select/role_select_screen.dart';
 import '../widgets/pharm_top_bar.dart';
 import '../widgets/screen_decor.dart';
+import '../../../widgets/dialog_buttons.dart';
 
 /// Профиль пользователя. Перенесён один в один из макета Figma
 /// «pharmiq-profile-connected» (node 20:493 / 46:1147).
@@ -427,12 +428,12 @@ class ProfileScreen extends ConsumerWidget {
           decoration: InputDecoration(labelText: ctx.l10n.profilePhone),
         ),
         actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: Text(ctx.l10n.profileCancel)),
-          FilledButton(
-              onPressed: () => Navigator.pop(ctx, true),
-              child: Text(ctx.l10n.profileNext)),
+          DialogButtons(
+            cancelLabel: ctx.l10n.profileCancel,
+            onCancel: () => Navigator.pop(ctx, false),
+            confirmLabel: ctx.l10n.profileNext,
+            onConfirm: () => Navigator.pop(ctx, true),
+          ),
         ],
       ),
     );
@@ -458,12 +459,12 @@ class ProfileScreen extends ConsumerWidget {
           decoration: InputDecoration(labelText: ctx.l10n.profileCodeLabel),
         ),
         actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: Text(ctx.l10n.profileCancel)),
-          FilledButton(
-              onPressed: () => Navigator.pop(ctx, true),
-              child: Text(ctx.l10n.profileConfirm)),
+          DialogButtons(
+            cancelLabel: ctx.l10n.profileCancel,
+            onCancel: () => Navigator.pop(ctx, false),
+            confirmLabel: ctx.l10n.profileConfirm,
+            onConfirm: () => Navigator.pop(ctx, true),
+          ),
         ],
       ),
     );
@@ -488,13 +489,15 @@ class ProfileScreen extends ConsumerWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text(ctx.l10n.profileLogoutConfirmTitle),
+        content: Text(ctx.l10n.profileLogoutConfirmBody),
         actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: Text(ctx.l10n.profileCancel)),
-          FilledButton(
-              onPressed: () => Navigator.pop(ctx, true),
-              child: Text(ctx.l10n.profileLogoutAction)),
+          DialogButtons(
+            cancelLabel: ctx.l10n.profileCancel,
+            onCancel: () => Navigator.pop(ctx, false),
+            confirmLabel: ctx.l10n.profileLogoutAction,
+            onConfirm: () => Navigator.pop(ctx, true),
+            destructive: true,
+          ),
         ],
       ),
     );
@@ -508,14 +511,12 @@ class ProfileScreen extends ConsumerWidget {
         title: Text(ctx.l10n.profileDeleteConfirmTitle),
         content: Text(ctx.l10n.profileDeleteConfirmBody),
         actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: Text(ctx.l10n.profileCancel)),
-          FilledButton(
-            style: FilledButton.styleFrom(
-                backgroundColor: Theme.of(ctx).colorScheme.error),
-            onPressed: () => Navigator.pop(ctx, true),
-            child: Text(ctx.l10n.profileDelete),
+          DialogButtons(
+            cancelLabel: ctx.l10n.profileCancel,
+            onCancel: () => Navigator.pop(ctx, false),
+            confirmLabel: ctx.l10n.profileDelete,
+            onConfirm: () => Navigator.pop(ctx, true),
+            destructive: true,
           ),
         ],
       ),

@@ -84,7 +84,13 @@ class _OAuthLinkScreenState extends ConsumerState<OAuthLinkScreen> {
       });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => AnnotatedRegion<SystemUiOverlayStyle>(
+        // Фон экрана всегда тёмный — значки статус-бара светлые в любой теме.
+        value: SystemUiOverlayStyle.light,
+        child: _scaffold(context),
+      );
+
+  Widget _scaffold(BuildContext context) {
     final l10n = context.l10n;
     return Scaffold(
       backgroundColor: _bg,

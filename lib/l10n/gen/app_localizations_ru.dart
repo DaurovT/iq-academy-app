@@ -326,6 +326,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get loginByPhone => 'Войдите по номеру телефона';
 
   @override
+  String get loginChooseMethod => 'Выберите удобный способ входа';
+
+  @override
   String loginCodeSent(Object phone) {
     return 'Код из SMS на $phone';
   }
@@ -344,6 +347,9 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get loginRegister => 'Зарегистрироваться';
+
+  @override
+  String get loginNoAccount => 'Нет аккаунта?';
 
   @override
   String get loginEnter => 'Войти';
@@ -500,6 +506,10 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get profileLogoutConfirmTitle => 'Выйти из аккаунта?';
+
+  @override
+  String get profileLogoutConfirmBody =>
+      'Чтобы снова пользоваться приложением, нужно будет войти ещё раз.';
 
   @override
   String get profileLogoutAction => 'Выйти';

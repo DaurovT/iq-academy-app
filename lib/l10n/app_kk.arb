@@ -239,6 +239,7 @@
   "loginTagline": "Үйрен.\nҚолдан.\nЖет.",
   "loginTitle": "Кіру",
   "loginByPhone": "Телефон нөмірі арқылы кіріңіз",
+  "loginChooseMethod": "Кірудің ыңғайлы тәсілін таңдаңыз",
   "loginCodeSent": "{phone} нөміріне SMS-код жіберілді",
   "@loginCodeSent": {
     "placeholders": {
@@ -252,6 +253,7 @@
   "loginConfirm": "Растау",
   "loginGoRegister": "Тіркелуден өту",
   "loginRegister": "Тіркелу",
+  "loginNoAccount": "Аккаунтыңыз жоқ па?",
   "loginEnter": "Кіру",
   "loginResendIn": "{seconds} секундтан кейін қайталау",
   "@loginResendIn": {
@@ -329,6 +331,7 @@
   "profileConfirm": "Растау",
   "profilePhoneChanged": "Телефон өзгертілді",
   "profileLogoutConfirmTitle": "Аккаунттан шығасыз ба?",
+  "profileLogoutConfirmBody": "Қолданбаны қайта пайдалану үшін қайтадан кіру қажет болады.",
   "profileLogoutAction": "Шығу",
   "profileDeleteConfirmTitle": "Аккаунт жойылсын ба?",
   "profileDeleteConfirmBody": "Профиль, телефон нөмірі, кіру байланыстары, хабарламалар және қолдау қызметімен хат алмасу жойылады. Есептеулер мен берілген ваучерлер туралы жазбалар жеке деректеріңізсіз сақталады — олар есеп үшін қажет. Бұл әрекетті қайтару мүмкін емес.",
