@@ -329,7 +329,7 @@ abstract class AppLocalizations {
   /// No description provided for @sapperPrizesAndPrice.
   ///
   /// In ru, this message translates to:
-  /// **'🎁 бонусов: {prizeCount}  💎 {priceIqc} IQC/клетка  '**
+  /// **'🎁 призов: {prizeCount}  💎 {priceIqc} IQC/клетка  '**
   String sapperPrizesAndPrice(Object prizeCount, Object priceIqc);
 
   /// No description provided for @sapperMyCells.
@@ -401,7 +401,7 @@ abstract class AppLocalizations {
   /// No description provided for @sapperHiddenTitle.
   ///
   /// In ru, this message translates to:
-  /// **'БОНУСЫ НА ПОЛЕ'**
+  /// **'ПРИЗЫ НА ПОЛЕ'**
   String get sapperHiddenTitle;
 
   /// No description provided for @sapperFieldTotal.
@@ -419,7 +419,7 @@ abstract class AppLocalizations {
   /// No description provided for @sapperNoPrizes.
   ///
   /// In ru, this message translates to:
-  /// **'бонусы не указаны'**
+  /// **'призы не указаны'**
   String get sapperNoPrizes;
 
   /// No description provided for @sapperPrizeChip.
@@ -461,25 +461,25 @@ abstract class AppLocalizations {
   /// No description provided for @sapperNoWin.
   ///
   /// In ru, this message translates to:
-  /// **'В этот раз без бонуса'**
+  /// **'В этот раз без приза'**
   String get sapperNoWin;
 
   /// No description provided for @sapperPrizeOne.
   ///
   /// In ru, this message translates to:
-  /// **'бонус'**
+  /// **'приз'**
   String get sapperPrizeOne;
 
   /// No description provided for @sapperPrizeFew.
   ///
   /// In ru, this message translates to:
-  /// **'бонуса'**
+  /// **'приза'**
   String get sapperPrizeFew;
 
   /// No description provided for @sapperPrizeMany.
   ///
   /// In ru, this message translates to:
-  /// **'бонусов'**
+  /// **'призов'**
   String get sapperPrizeMany;
 
   /// No description provided for @sapperLegendMine.
@@ -527,7 +527,7 @@ abstract class AppLocalizations {
   /// No description provided for @sapperWinners.
   ///
   /// In ru, this message translates to:
-  /// **'Получили бонусы'**
+  /// **'Получили призы'**
   String get sapperWinners;
 
   /// No description provided for @newsTitle.
@@ -3719,7 +3719,7 @@ abstract class AppLocalizations {
   /// No description provided for @sapperRule7.
   ///
   /// In ru, this message translates to:
-  /// **'Призы — подарочные ваучеры партнёров и бонусные баллы; на деньги они не обмениваются. Призы из незанятых клеток повторно не разыгрываются.'**
+  /// **'Призы — подарочные ваучеры партнёров и бонусные баллы; на деньги они не обмениваются. Призы из незанятых клеток повторно не распределяются.'**
   String get sapperRule7;
 
   /// No description provided for @sapperRule8.

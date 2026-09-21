@@ -32,7 +32,9 @@ flutter pub get
    ```
 4. Сделать резервную копию ключа и паролей: при потере придётся восстанавливать ключ загрузки через поддержку Google.
 
-Без `key.properties` релиз подписывается отладочным ключом — Google Play такую сборку не примет.
+Без `key.properties` сборка AAB для Google Play (`flutter build appbundle`) **останавливается с ошибкой** —
+так пакет с отладочной подписью не попадёт в Play по ошибке. Тестовый APK (`flutter build apk --release`,
+`flutter run --release`) без ключа собирается как раньше, с отладочной подписью и предупреждением в логе.
 
 ## 3. Сборка Android (Google Play)
 ```bash
@@ -55,8 +57,8 @@ Product → Archive → Distribute App → App Store Connect.
 **Каждая новая загрузка в стор — номер сборки +1** (`1.0.0+2`, `1.0.0+3`…), иначе консоль её не примет.
 
 ## 6. Известные ловушки
-- Flutter-тулинг иногда сам откатывает `minSdk = 23` в `android/app/build.gradle.kts` на `flutter.minSdkVersion`
-  (замечено после `flutter create` и `flutter build apk`). Перед релизом: `git diff android/app/build.gradle.kts`.
+- `minSdk` берётся из Flutter (`flutter.minSdkVersion`, с 3.44 — API 24, Android 7.0). Жёстко прописанное
+  число ниже этого инструмент сборки переписывает сам при каждой сборке, поэтому его не задаём.
 - После первой загрузки в Google Play добавить в Firebase SHA-1 ключа **App Signing** из Play Console
   (App integrity → App signing), иначе вход через Google не заработает у скачавших из стора.
 - `deploy_web.sh` — выкатка веб-версии на сервер pharmview.uz, запускается только на сервере.

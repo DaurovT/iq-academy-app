@@ -67,7 +67,7 @@
   "sapperSubtitle": "IQC-ға ұяшықтарды таңдаңыз — қорытынды шығарылғанда астында не барын білесіз",
   "sapperNoDraws": "Белсенді акциялар жоқ",
   "sapperRevealed": "Аяқталды",
-  "sapperPrizesAndPrice": "🎁 бонустар: {prizeCount}  💎 {priceIqc} IQC/ұяшық  ",
+  "sapperPrizesAndPrice": "🎁 жүлделер: {prizeCount}  💎 {priceIqc} IQC/ұяшық  ",
   "@sapperPrizesAndPrice": {
     "placeholders": {
       "prizeCount": {
@@ -137,7 +137,7 @@
   "sapperNoIqcBody": "Қатысу үшін {price} IQC қажет, сізде {have}. IQC жинаңыз — оқу, квест немесе сауалнамадан өтіңіз.",
   "sapperDraws": "Акциялар",
   "sapperAcceptClosed": "Ұяшық таңдау жабылды — қорытынды шығарылуда",
-  "sapperHiddenTitle": "АЛАҢДАҒЫ БОНУСТАР",
+  "sapperHiddenTitle": "АЛАҢДАҒЫ ЖҮЛДЕЛЕР",
   "sapperFieldTotal": "Алаңда {count} ұяшық",
   "sapperRevealIn": "қорытындыға {time} қалды",
   "@sapperRevealIn": {
@@ -147,7 +147,7 @@
       }
     }
   },
-  "sapperNoPrizes": "бонустар көрсетілмеген",
+  "sapperNoPrizes": "жүлделер көрсетілмеген",
   "sapperPrizeChip": "🎁 {count}× {label}",
   "@sapperPrizeChip": {
     "placeholders": {
@@ -188,10 +188,10 @@
       }
     }
   },
-  "sapperNoWin": "Бұл жолы бонуссыз",
-  "sapperPrizeOne": "бонус",
-  "sapperPrizeFew": "бонус",
-  "sapperPrizeMany": "бонус",
+  "sapperNoWin": "Бұл жолы жүлдесіз",
+  "sapperPrizeOne": "жүлде",
+  "sapperPrizeFew": "жүлде",
+  "sapperPrizeMany": "жүлде",
   "sapperLegendMine": "Менікі",
   "sapperLegendTheirs": "Басқалардікі",
   "sapperLegendEmpty": "Бос",
@@ -199,7 +199,7 @@
   "sapperLegendSelected": "Таңдалды",
   "sapperLegendOccupied": "Бос емес",
   "sapperLegendFree": "Бос",
-  "sapperWinners": "Бонус алғандар",
+  "sapperWinners": "Жүлде алғандар",
   "newsTitle": "Жаңалықтар",
   "newsAll": "Барлық жаңалықтар",
   "newsMore": "Толығырақ →",
@@ -1309,6 +1309,6 @@
   "sapperRule4": "Мерзімдер, ұяшық бағасы және жүлделердің толық тізімі қатысуға дейін акция бетінде көрсетіледі.",
   "sapperRule5": "Ұпайлар ұяшықты алғанда шегеріледі, мұны болдырмауға болмайды. Бір ұяшықты бір қатысушы алады; қабылдау қорытындыдан 1 минут бұрын жабылады.",
   "sapperRule6": "Жүлделер ұяшықтарға акция басталғанға дейін орналастырылады және кейін өзгермейді. Белгіленген уақытта барлық ұяшықтар бір мезгілде ашылады, ұяшықтағы жүлдені оны алған қатысушы автоматты түрде алады. Қорытынды бәріне көрінеді.",
-  "sapperRule7": "Жүлделер — серіктестердің сыйлық ваучерлері мен бонус ұпайлар; ақшаға айырбасталмайды. Бос ұяшықтардағы жүлделер қайта ойнатылмайды.",
+  "sapperRule7": "Жүлделер — серіктестердің сыйлық ваучерлері мен бонус ұпайлар; ақшаға айырбасталмайды. Бос ұяшықтардағы жүлделер қайта таратылмайды.",
   "sapperRule8": "Акция тоқтатылса, жұмсалған барлық ұпайлар қайтарылады. 18 жастан асқан пайдаланушылар қатыса алады, қатысу ерікті."
 }

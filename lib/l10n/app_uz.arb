@@ -64,10 +64,10 @@
     }
   },
   "sapperTitle": "Super Sapyor",
-  "sapperSubtitle": "IQC evaziga kataklarni tanlang — yakun chiqarilganda ular ostida nima borligini bilib olasiz",
+  "sapperSubtitle": "IQC evaziga kataklarni tanlang — natijalar e'lon qilinganda ular ostida nima borligini bilib olasiz",
   "sapperNoDraws": "Faol aksiyalar yo'q",
   "sapperRevealed": "Yakunlangan",
-  "sapperPrizesAndPrice": "🎁 bonuslar: {prizeCount}  💎 {priceIqc} IQC/katak  ",
+  "sapperPrizesAndPrice": "🎁 sovrinlar: {prizeCount}  💎 {priceIqc} IQC/katak  ",
   "@sapperPrizesAndPrice": {
     "placeholders": {
       "prizeCount": {
@@ -109,7 +109,7 @@
       }
     }
   },
-  "sapperReserveBody": "{price} IQC ishlatiladi. Bekor qilib bo'lmaydi — katak yakun chiqarilgunga qadar sizniki bo'lib qoladi.",
+  "sapperReserveBody": "{price} IQC ishlatiladi. Bekor qilib bo'lmaydi — katak natijalar e'lon qilingunga qadar sizniki bo'lib qoladi.",
   "@sapperReserveBody": {
     "placeholders": {
       "price": {
@@ -136,10 +136,10 @@
   "sapperNoIqcTitle": "IQC yetarli emas",
   "sapperNoIqcBody": "Ishtirok etish uchun {price} IQC kerak, sizda {have}. IQC toplang — ta'lim, kvest yoki so'rovnomadan o'ting.",
   "sapperDraws": "Aksiyalar",
-  "sapperAcceptClosed": "Kataklarni tanlash yopildi — yakun chiqarilmoqda",
-  "sapperHiddenTitle": "MAYDONDAGI BONUSLAR",
+  "sapperAcceptClosed": "Kataklarni tanlash yopildi — natijalar tayyorlanmoqda",
+  "sapperHiddenTitle": "MAYDONDAGI SOVRINLAR",
   "sapperFieldTotal": "Maydonda {count} ta katak",
-  "sapperRevealIn": "yakungacha {time}",
+  "sapperRevealIn": "natijalargacha {time}",
   "@sapperRevealIn": {
     "placeholders": {
       "time": {
@@ -147,7 +147,7 @@
       }
     }
   },
-  "sapperNoPrizes": "bonuslar ko'rsatilmagan",
+  "sapperNoPrizes": "sovrinlar ko'rsatilmagan",
   "sapperPrizeChip": "🎁 {count}× {label}",
   "@sapperPrizeChip": {
     "placeholders": {
@@ -188,10 +188,10 @@
       }
     }
   },
-  "sapperNoWin": "Bu safar bonussiz",
-  "sapperPrizeOne": "bonus",
-  "sapperPrizeFew": "bonus",
-  "sapperPrizeMany": "bonus",
+  "sapperNoWin": "Bu safar sovrinsiz",
+  "sapperPrizeOne": "sovrin",
+  "sapperPrizeFew": "sovrin",
+  "sapperPrizeMany": "sovrin",
   "sapperLegendMine": "Meniki",
   "sapperLegendTheirs": "Boshqalarniki",
   "sapperLegendEmpty": "Bo'sh",
@@ -199,7 +199,7 @@
   "sapperLegendSelected": "Tanlangan",
   "sapperLegendOccupied": "Band",
   "sapperLegendFree": "Bo'sh",
-  "sapperWinners": "Bonus olganlar",
+  "sapperWinners": "Sovrin olganlar",
   "newsTitle": "Yangiliklar",
   "newsAll": "Barcha yangiliklar",
   "newsMore": "Batafsil →",
@@ -1309,6 +1309,6 @@
   "sapperRule4": "Muddatlar, katak narxi va sovrinlarning to‘liq ro‘yxati ishtirokdan oldin aksiya sahifasida ko‘rsatiladi.",
   "sapperRule5": "Ballar katak egallanganda yechiladi, buni bekor qilib bo‘lmaydi. Bitta katakni bitta ishtirokchi egallaydi; qabul natijalardan 1 daqiqa oldin yopiladi.",
   "sapperRule6": "Sovrinlar aksiya boshlanishidan oldin kataklarga joylashtiriladi va keyin o‘zgarmaydi. Belgilangan vaqtda barcha kataklar bir vaqtda ochiladi, katakdagi sovrinni uni egallagan ishtirokchi avtomatik oladi. Natijalar hammaga ko‘rinadi.",
-  "sapperRule7": "Sovrinlar — hamkorlarning sovg‘a vaucherlari va bonus ballar; pulga almashtirilmaydi. Egallanmagan kataklardagi sovrinlar qayta o‘ynalmaydi.",
+  "sapperRule7": "Sovrinlar — hamkorlarning sovg‘a vaucherlari va bonus ballar; pulga almashtirilmaydi. Egallanmagan kataklardagi sovrinlar qayta taqsimlanmaydi.",
   "sapperRule8": "Aksiya bekor qilinsa, sarflangan barcha ballar qaytariladi. 18 yoshdan katta foydalanuvchilar ishtirok etishi mumkin, ishtirok ixtiyoriy."
 }

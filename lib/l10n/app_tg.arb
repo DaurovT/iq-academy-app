@@ -64,10 +64,10 @@
     }
   },
   "sapperTitle": "Супер Сапёр",
-  "sapperSubtitle": "Бо IQC катакҳоро интихоб кунед — ҳангоми ҷамъбаст мефаҳмед, ки зери онҳо чист",
+  "sapperSubtitle": "Бо IQC катакҳоро интихоб кунед — ҳангоми эълони натиҷаҳо мефаҳмед, ки зери онҳо чист",
   "sapperNoDraws": "Аксияҳои фаъол нестанд",
   "sapperRevealed": "Анҷом ёфт",
-  "sapperPrizesAndPrice": "🎁 бонусҳо: {prizeCount}  💎 {priceIqc} IQC/катак  ",
+  "sapperPrizesAndPrice": "🎁 ҷоизаҳо: {prizeCount}  💎 {priceIqc} IQC/катак  ",
   "@sapperPrizesAndPrice": {
     "placeholders": {
       "prizeCount": {
@@ -109,7 +109,7 @@
       }
     }
   },
-  "sapperReserveBody": "{price} IQC истифода мешавад. Бекор кардан мумкин нест — катак то ҷамъбаст аз они шумо мешавад.",
+  "sapperReserveBody": "{price} IQC истифода мешавад. Бекор кардан мумкин нест — катак то эълони натиҷаҳо аз они шумо мешавад.",
   "@sapperReserveBody": {
     "placeholders": {
       "price": {
@@ -136,10 +136,10 @@
   "sapperNoIqcTitle": "IQC кофӣ нест",
   "sapperNoIqcBody": "Барои иштирок {price} IQC лозим аст, шумо {have} доред. IQC ҷамъ кунед — таълим, квест ё пурсишро гузаред.",
   "sapperDraws": "Аксияҳо",
-  "sapperAcceptClosed": "Интихоби катакҳо пӯшида шуд — ҷамъбаст рафта истодааст",
-  "sapperHiddenTitle": "БОНУСҲО ДАР МАЙДОН",
+  "sapperAcceptClosed": "Интихоби катакҳо пӯшида шуд — натиҷаҳо омода мешаванд",
+  "sapperHiddenTitle": "ҶОИЗАҲО ДАР МАЙДОН",
   "sapperFieldTotal": "Дар майдон {count} катак",
-  "sapperRevealIn": "ҷамъбаст баъд аз {time}",
+  "sapperRevealIn": "натиҷаҳо баъд аз {time}",
   "@sapperRevealIn": {
     "placeholders": {
       "time": {
@@ -147,7 +147,7 @@
       }
     }
   },
-  "sapperNoPrizes": "бонусҳо нишон дода нашудаанд",
+  "sapperNoPrizes": "ҷоизаҳо нишон дода нашудаанд",
   "sapperPrizeChip": "🎁 {count}× {label}",
   "@sapperPrizeChip": {
     "placeholders": {
@@ -188,10 +188,10 @@
       }
     }
   },
-  "sapperNoWin": "Ин дафъа бе бонус",
-  "sapperPrizeOne": "бонус",
-  "sapperPrizeFew": "бонус",
-  "sapperPrizeMany": "бонус",
+  "sapperNoWin": "Ин дафъа бе ҷоиза",
+  "sapperPrizeOne": "ҷоиза",
+  "sapperPrizeFew": "ҷоиза",
+  "sapperPrizeMany": "ҷоиза",
   "sapperLegendMine": "Аз они ман",
   "sapperLegendTheirs": "Аз они дигарон",
   "sapperLegendEmpty": "Холӣ",
@@ -199,7 +199,7 @@
   "sapperLegendSelected": "Интихобшуда",
   "sapperLegendOccupied": "Банд",
   "sapperLegendFree": "Озод",
-  "sapperWinners": "Бонус гирифтагон",
+  "sapperWinners": "Ҷоиза гирифтагон",
   "newsTitle": "Хабарҳо",
   "newsAll": "Ҳамаи хабарҳо",
   "newsMore": "Муфассал →",
@@ -1309,6 +1309,6 @@
   "sapperRule4": "Мӯҳлатҳо, нархи катак ва рӯйхати пурраи ҷоизаҳо то иштирок дар саҳифаи аксия нишон дода мешаванд.",
   "sapperRule5": "Холҳо ҳангоми ишғоли катак хориҷ мешаванд, бекор кардан мумкин нест. Як катакро як иштирокчӣ ишғол мекунад; қабул 1 дақиқа пеш аз натиҷаҳо баста мешавад.",
   "sapperRule6": "Ҷоизаҳо то оғози аксия дар катакҳо ҷойгир карда мешаванд ва баъд тағйир намеёбанд. Дар вақти муайяншуда ҳамаи катакҳо якбора кушода мешаванд, ҷоизаи катакро иштирокчие, ки онро ишғол кардааст, худкор мегирад. Натиҷаҳо ба ҳама намоёнанд.",
-  "sapperRule7": "Ҷоизаҳо — ваучерҳои тӯҳфавии шарикон ва холҳои бонусӣ; ба пул иваз намешаванд. Ҷоизаҳои катакҳои ишғолнашуда дубора бозӣ намешаванд.",
+  "sapperRule7": "Ҷоизаҳо — ваучерҳои тӯҳфавии шарикон ва холҳои бонусӣ; ба пул иваз намешаванд. Ҷоизаҳои катакҳои ишғолнашуда дубора тақсим намешаванд.",
   "sapperRule8": "Агар аксия бекор шавад, ҳамаи холҳои сарфшуда баргардонида мешаванд. Корбарони аз 18 сола боло иштирок карда метавонанд, иштирок ихтиёрӣ аст."
 }

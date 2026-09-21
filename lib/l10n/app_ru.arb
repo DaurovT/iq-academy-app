@@ -67,7 +67,7 @@
   "sapperSubtitle": "Выбирайте клетки за IQC — при подведении итогов узнаете, что под ними",
   "sapperNoDraws": "Нет активных акций",
   "sapperRevealed": "Завершена",
-  "sapperPrizesAndPrice": "🎁 бонусов: {prizeCount}  💎 {priceIqc} IQC/клетка  ",
+  "sapperPrizesAndPrice": "🎁 призов: {prizeCount}  💎 {priceIqc} IQC/клетка  ",
   "@sapperPrizesAndPrice": {
     "placeholders": {
       "prizeCount": {
@@ -147,7 +147,7 @@
   },
   "sapperDraws": "Акции",
   "sapperAcceptClosed": "Выбор клеток закрыт — подводим итоги",
-  "sapperHiddenTitle": "БОНУСЫ НА ПОЛЕ",
+  "sapperHiddenTitle": "ПРИЗЫ НА ПОЛЕ",
   "sapperFieldTotal": "НА ПОЛЕ {count, plural, one{{count} клетка} few{{count} клетки} many{{count} клеток} other{{count} клеток}}",
   "@sapperFieldTotal": {
     "placeholders": {
@@ -164,7 +164,7 @@
       }
     }
   },
-  "sapperNoPrizes": "бонусы не указаны",
+  "sapperNoPrizes": "призы не указаны",
   "sapperPrizeChip": "🎁 {count}× {label}",
   "@sapperPrizeChip": {
     "placeholders": {
@@ -205,10 +205,10 @@
       }
     }
   },
-  "sapperNoWin": "В этот раз без бонуса",
-  "sapperPrizeOne": "бонус",
-  "sapperPrizeFew": "бонуса",
-  "sapperPrizeMany": "бонусов",
+  "sapperNoWin": "В этот раз без приза",
+  "sapperPrizeOne": "приз",
+  "sapperPrizeFew": "приза",
+  "sapperPrizeMany": "призов",
   "sapperLegendMine": "Мои",
   "sapperLegendTheirs": "Чужие",
   "sapperLegendEmpty": "Пустые",
@@ -216,7 +216,7 @@
   "sapperLegendSelected": "Выбрано",
   "sapperLegendOccupied": "Занято",
   "sapperLegendFree": "Свободно",
-  "sapperWinners": "Получили бонусы",
+  "sapperWinners": "Получили призы",
   "newsTitle": "Новости",
   "newsAll": "Все новости",
   "newsMore": "Подробнее →",
@@ -1326,6 +1326,6 @@
   "sapperRule4": "Сроки, цена клетки и полный список призов показаны на странице акции до участия.",
   "sapperRule5": "Баллы списываются при занятии клетки, отменить это нельзя. Одну клетку занимает один участник; приём закрывается за 1 минуту до итогов.",
   "sapperRule6": "Призы размещаются в клетках до начала акции и после старта не меняются. В назначенное время все клетки открываются одновременно, приз из клетки автоматически получает участник, который её занял. Итоги видны всем.",
-  "sapperRule7": "Призы — подарочные ваучеры партнёров и бонусные баллы; на деньги они не обмениваются. Призы из незанятых клеток повторно не разыгрываются.",
+  "sapperRule7": "Призы — подарочные ваучеры партнёров и бонусные баллы; на деньги они не обмениваются. Призы из незанятых клеток повторно не распределяются.",
   "sapperRule8": "Если акция отменена, все потраченные баллы возвращаются. Участвовать могут пользователи старше 18 лет, участие добровольное."
 }

@@ -128,7 +128,7 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String sapperPrizesAndPrice(Object prizeCount, Object priceIqc) {
-    return '🎁 бонустар: $prizeCount  💎 $priceIqc IQC/ұяшық  ';
+    return '🎁 жүлделер: $prizeCount  💎 $priceIqc IQC/ұяшық  ';
   }
 
   @override
@@ -180,7 +180,7 @@ class AppLocalizationsKk extends AppLocalizations {
       'Ұяшық таңдау жабылды — қорытынды шығарылуда';
 
   @override
-  String get sapperHiddenTitle => 'АЛАҢДАҒЫ БОНУСТАР';
+  String get sapperHiddenTitle => 'АЛАҢДАҒЫ ЖҮЛДЕЛЕР';
 
   @override
   String sapperFieldTotal(int count) {
@@ -193,7 +193,7 @@ class AppLocalizationsKk extends AppLocalizations {
   }
 
   @override
-  String get sapperNoPrizes => 'бонустар көрсетілмеген';
+  String get sapperNoPrizes => 'жүлделер көрсетілмеген';
 
   @override
   String sapperPrizeChip(Object count, Object label) {
@@ -222,16 +222,16 @@ class AppLocalizationsKk extends AppLocalizations {
   }
 
   @override
-  String get sapperNoWin => 'Бұл жолы бонуссыз';
+  String get sapperNoWin => 'Бұл жолы жүлдесіз';
 
   @override
-  String get sapperPrizeOne => 'бонус';
+  String get sapperPrizeOne => 'жүлде';
 
   @override
-  String get sapperPrizeFew => 'бонус';
+  String get sapperPrizeFew => 'жүлде';
 
   @override
-  String get sapperPrizeMany => 'бонус';
+  String get sapperPrizeMany => 'жүлде';
 
   @override
   String get sapperLegendMine => 'Менікі';
@@ -255,7 +255,7 @@ class AppLocalizationsKk extends AppLocalizations {
   String get sapperLegendFree => 'Бос';
 
   @override
-  String get sapperWinners => 'Бонус алғандар';
+  String get sapperWinners => 'Жүлде алғандар';
 
   @override
   String get newsTitle => 'Жаңалықтар';
@@ -2030,7 +2030,7 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get sapperRule7 =>
-      'Жүлделер — серіктестердің сыйлық ваучерлері мен бонус ұпайлар; ақшаға айырбасталмайды. Бос ұяшықтардағы жүлделер қайта ойнатылмайды.';
+      'Жүлделер — серіктестердің сыйлық ваучерлері мен бонус ұпайлар; ақшаға айырбасталмайды. Бос ұяшықтардағы жүлделер қайта таратылмайды.';
 
   @override
   String get sapperRule8 =>

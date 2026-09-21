@@ -118,7 +118,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get sapperSubtitle =>
-      'IQC evaziga kataklarni tanlang — yakun chiqarilganda ular ostida nima borligini bilib olasiz';
+      'IQC evaziga kataklarni tanlang — natijalar e\'lon qilinganda ular ostida nima borligini bilib olasiz';
 
   @override
   String get sapperNoDraws => 'Faol aksiyalar yo\'q';
@@ -128,7 +128,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String sapperPrizesAndPrice(Object prizeCount, Object priceIqc) {
-    return '🎁 bonuslar: $prizeCount  💎 $priceIqc IQC/katak  ';
+    return '🎁 sovrinlar: $prizeCount  💎 $priceIqc IQC/katak  ';
   }
 
   @override
@@ -151,7 +151,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String sapperReserveBody(Object price) {
-    return '$price IQC ishlatiladi. Bekor qilib bo\'lmaydi — katak yakun chiqarilgunga qadar sizniki bo\'lib qoladi.';
+    return '$price IQC ishlatiladi. Bekor qilib bo\'lmaydi — katak natijalar e\'lon qilingunga qadar sizniki bo\'lib qoladi.';
   }
 
   @override
@@ -177,10 +177,10 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get sapperAcceptClosed =>
-      'Kataklarni tanlash yopildi — yakun chiqarilmoqda';
+      'Kataklarni tanlash yopildi — natijalar tayyorlanmoqda';
 
   @override
-  String get sapperHiddenTitle => 'MAYDONDAGI BONUSLAR';
+  String get sapperHiddenTitle => 'MAYDONDAGI SOVRINLAR';
 
   @override
   String sapperFieldTotal(int count) {
@@ -189,11 +189,11 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String sapperRevealIn(Object time) {
-    return 'yakungacha $time';
+    return 'natijalargacha $time';
   }
 
   @override
-  String get sapperNoPrizes => 'bonuslar ko\'rsatilmagan';
+  String get sapperNoPrizes => 'sovrinlar ko\'rsatilmagan';
 
   @override
   String sapperPrizeChip(Object count, Object label) {
@@ -222,16 +222,16 @@ class AppLocalizationsUz extends AppLocalizations {
   }
 
   @override
-  String get sapperNoWin => 'Bu safar bonussiz';
+  String get sapperNoWin => 'Bu safar sovrinsiz';
 
   @override
-  String get sapperPrizeOne => 'bonus';
+  String get sapperPrizeOne => 'sovrin';
 
   @override
-  String get sapperPrizeFew => 'bonus';
+  String get sapperPrizeFew => 'sovrin';
 
   @override
-  String get sapperPrizeMany => 'bonus';
+  String get sapperPrizeMany => 'sovrin';
 
   @override
   String get sapperLegendMine => 'Meniki';
@@ -255,7 +255,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get sapperLegendFree => 'Bo\'sh';
 
   @override
-  String get sapperWinners => 'Bonus olganlar';
+  String get sapperWinners => 'Sovrin olganlar';
 
   @override
   String get newsTitle => 'Yangiliklar';
@@ -2036,7 +2036,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get sapperRule7 =>
-      'Sovrinlar — hamkorlarning sovg‘a vaucherlari va bonus ballar; pulga almashtirilmaydi. Egallanmagan kataklardagi sovrinlar qayta o‘ynalmaydi.';
+      'Sovrinlar — hamkorlarning sovg‘a vaucherlari va bonus ballar; pulga almashtirilmaydi. Egallanmagan kataklardagi sovrinlar qayta taqsimlanmaydi.';
 
   @override
   String get sapperRule8 =>

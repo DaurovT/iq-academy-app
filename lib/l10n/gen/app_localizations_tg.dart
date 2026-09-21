@@ -118,7 +118,7 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get sapperSubtitle =>
-      'Бо IQC катакҳоро интихоб кунед — ҳангоми ҷамъбаст мефаҳмед, ки зери онҳо чист';
+      'Бо IQC катакҳоро интихоб кунед — ҳангоми эълони натиҷаҳо мефаҳмед, ки зери онҳо чист';
 
   @override
   String get sapperNoDraws => 'Аксияҳои фаъол нестанд';
@@ -128,7 +128,7 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String sapperPrizesAndPrice(Object prizeCount, Object priceIqc) {
-    return '🎁 бонусҳо: $prizeCount  💎 $priceIqc IQC/катак  ';
+    return '🎁 ҷоизаҳо: $prizeCount  💎 $priceIqc IQC/катак  ';
   }
 
   @override
@@ -151,7 +151,7 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String sapperReserveBody(Object price) {
-    return '$price IQC истифода мешавад. Бекор кардан мумкин нест — катак то ҷамъбаст аз они шумо мешавад.';
+    return '$price IQC истифода мешавад. Бекор кардан мумкин нест — катак то эълони натиҷаҳо аз они шумо мешавад.';
   }
 
   @override
@@ -177,10 +177,10 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get sapperAcceptClosed =>
-      'Интихоби катакҳо пӯшида шуд — ҷамъбаст рафта истодааст';
+      'Интихоби катакҳо пӯшида шуд — натиҷаҳо омода мешаванд';
 
   @override
-  String get sapperHiddenTitle => 'БОНУСҲО ДАР МАЙДОН';
+  String get sapperHiddenTitle => 'ҶОИЗАҲО ДАР МАЙДОН';
 
   @override
   String sapperFieldTotal(int count) {
@@ -189,11 +189,11 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String sapperRevealIn(Object time) {
-    return 'ҷамъбаст баъд аз $time';
+    return 'натиҷаҳо баъд аз $time';
   }
 
   @override
-  String get sapperNoPrizes => 'бонусҳо нишон дода нашудаанд';
+  String get sapperNoPrizes => 'ҷоизаҳо нишон дода нашудаанд';
 
   @override
   String sapperPrizeChip(Object count, Object label) {
@@ -222,16 +222,16 @@ class AppLocalizationsTg extends AppLocalizations {
   }
 
   @override
-  String get sapperNoWin => 'Ин дафъа бе бонус';
+  String get sapperNoWin => 'Ин дафъа бе ҷоиза';
 
   @override
-  String get sapperPrizeOne => 'бонус';
+  String get sapperPrizeOne => 'ҷоиза';
 
   @override
-  String get sapperPrizeFew => 'бонус';
+  String get sapperPrizeFew => 'ҷоиза';
 
   @override
-  String get sapperPrizeMany => 'бонус';
+  String get sapperPrizeMany => 'ҷоиза';
 
   @override
   String get sapperLegendMine => 'Аз они ман';
@@ -255,7 +255,7 @@ class AppLocalizationsTg extends AppLocalizations {
   String get sapperLegendFree => 'Озод';
 
   @override
-  String get sapperWinners => 'Бонус гирифтагон';
+  String get sapperWinners => 'Ҷоиза гирифтагон';
 
   @override
   String get newsTitle => 'Хабарҳо';
@@ -2031,7 +2031,7 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get sapperRule7 =>
-      'Ҷоизаҳо — ваучерҳои тӯҳфавии шарикон ва холҳои бонусӣ; ба пул иваз намешаванд. Ҷоизаҳои катакҳои ишғолнашуда дубора бозӣ намешаванд.';
+      'Ҷоизаҳо — ваучерҳои тӯҳфавии шарикон ва холҳои бонусӣ; ба пул иваз намешаванд. Ҷоизаҳои катакҳои ишғолнашуда дубора тақсим намешаванд.';
 
   @override
   String get sapperRule8 =>

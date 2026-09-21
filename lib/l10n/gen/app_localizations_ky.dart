@@ -118,7 +118,7 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get sapperSubtitle =>
-      'IQC үчүн клеткаларды тандаңыз — жыйынтык чыгарылганда алардын астында эмне бар экенин билесиз';
+      'IQC үчүн уячаларды тандаңыз — жыйынтык чыгарылганда алардын астында эмне бар экенин билесиз';
 
   @override
   String get sapperNoDraws => 'Активдүү акциялар жок';
@@ -128,12 +128,12 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String sapperPrizesAndPrice(Object prizeCount, Object priceIqc) {
-    return '🎁 бонустар: $prizeCount  💎 $priceIqc IQC/клетка  ';
+    return '🎁 сыйлыктар: $prizeCount  💎 $priceIqc IQC/уяча  ';
   }
 
   @override
   String sapperMyCells(Object count) {
-    return 'сиздин клеткалар: $count';
+    return 'сиздин уячалар: $count';
   }
 
   @override
@@ -146,12 +146,12 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String sapperReserveTitle(Object number) {
-    return '№$number клетканы ээлейсизби?';
+    return '№$number уячаны ээлейсизби?';
   }
 
   @override
   String sapperReserveBody(Object price) {
-    return '$price IQC колдонулат. Жокко чыгарууга болбойт — клетка жыйынтык чыгарылганга чейин сизге бекитилет.';
+    return '$price IQC колдонулат. Жокко чыгарууга болбойт — уяча жыйынтык чыгарылганга чейин сизге бекитилет.';
   }
 
   @override
@@ -161,7 +161,7 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String sapperCellReserved(Object number) {
-    return '№$number клетка ээленди';
+    return '№$number уяча ээленди';
   }
 
   @override
@@ -176,11 +176,10 @@ class AppLocalizationsKy extends AppLocalizations {
   String get sapperDraws => 'Акциялар';
 
   @override
-  String get sapperAcceptClosed =>
-      'Клетка тандоо жабылды — жыйынтык чыгарылууда';
+  String get sapperAcceptClosed => 'Уяча тандоо жабылды — жыйынтык чыгарылууда';
 
   @override
-  String get sapperHiddenTitle => 'ТАЛААДАГЫ БОНУСТАР';
+  String get sapperHiddenTitle => 'ТАЛААДАГЫ СЫЙЛЫКТАР';
 
   @override
   String sapperFieldTotal(int count) {
@@ -193,7 +192,7 @@ class AppLocalizationsKy extends AppLocalizations {
   }
 
   @override
-  String get sapperNoPrizes => 'бонустар көрсөтүлгөн жок';
+  String get sapperNoPrizes => 'сыйлыктар көрсөтүлгөн жок';
 
   @override
   String sapperPrizeChip(Object count, Object label) {
@@ -207,14 +206,14 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String sapperCellPrice(Object price) {
-    return 'клетка — $price IQC';
+    return 'уяча — $price IQC';
   }
 
   @override
   String get sapperYourBalance => 'Сиздин баланс';
 
   @override
-  String get sapperCellPriceLabel => 'бир клетка үчүн';
+  String get sapperCellPriceLabel => 'бир уяча үчүн';
 
   @override
   String sapperWinBannerWin(Object count, Object word) {
@@ -222,16 +221,16 @@ class AppLocalizationsKy extends AppLocalizations {
   }
 
   @override
-  String get sapperNoWin => 'Бул жолу бонуссуз';
+  String get sapperNoWin => 'Бул жолу сыйлыксыз';
 
   @override
-  String get sapperPrizeOne => 'бонус';
+  String get sapperPrizeOne => 'сыйлык';
 
   @override
-  String get sapperPrizeFew => 'бонус';
+  String get sapperPrizeFew => 'сыйлык';
 
   @override
-  String get sapperPrizeMany => 'бонус';
+  String get sapperPrizeMany => 'сыйлык';
 
   @override
   String get sapperLegendMine => 'Меники';
@@ -255,7 +254,7 @@ class AppLocalizationsKy extends AppLocalizations {
   String get sapperLegendFree => 'Бош';
 
   @override
-  String get sapperWinners => 'Бонус алгандар';
+  String get sapperWinners => 'Сыйлык алгандар';
 
   @override
   String get newsTitle => 'Жаңылыктар';
@@ -2031,7 +2030,7 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get sapperRule7 =>
-      'Сыйлыктар — өнөктөштөрдүн белек ваучерлери жана бонус упайлар; акчага алмаштырылбайт. Ээленбеген уячалардагы сыйлыктар кайра ойнолбойт.';
+      'Сыйлыктар — өнөктөштөрдүн белек ваучерлери жана бонус упайлар; акчага алмаштырылбайт. Ээленбеген уячалардагы сыйлыктар кайра бөлүштүрүлбөйт.';
 
   @override
   String get sapperRule8 =>

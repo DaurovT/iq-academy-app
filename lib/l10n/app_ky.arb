@@ -64,10 +64,10 @@
     }
   },
   "sapperTitle": "Супер Сапёр",
-  "sapperSubtitle": "IQC үчүн клеткаларды тандаңыз — жыйынтык чыгарылганда алардын астында эмне бар экенин билесиз",
+  "sapperSubtitle": "IQC үчүн уячаларды тандаңыз — жыйынтык чыгарылганда алардын астында эмне бар экенин билесиз",
   "sapperNoDraws": "Активдүү акциялар жок",
   "sapperRevealed": "Аяктады",
-  "sapperPrizesAndPrice": "🎁 бонустар: {prizeCount}  💎 {priceIqc} IQC/клетка  ",
+  "sapperPrizesAndPrice": "🎁 сыйлыктар: {prizeCount}  💎 {priceIqc} IQC/уяча  ",
   "@sapperPrizesAndPrice": {
     "placeholders": {
       "prizeCount": {
@@ -78,7 +78,7 @@
       }
     }
   },
-  "sapperMyCells": "сиздин клеткалар: {count}",
+  "sapperMyCells": "сиздин уячалар: {count}",
   "@sapperMyCells": {
     "placeholders": {
       "count": {
@@ -101,7 +101,7 @@
     }
   },
   "sapperGoToGame": "Талааны ачуу",
-  "sapperReserveTitle": "№{number} клетканы ээлейсизби?",
+  "sapperReserveTitle": "№{number} уячаны ээлейсизби?",
   "@sapperReserveTitle": {
     "placeholders": {
       "number": {
@@ -109,7 +109,7 @@
       }
     }
   },
-  "sapperReserveBody": "{price} IQC колдонулат. Жокко чыгарууга болбойт — клетка жыйынтык чыгарылганга чейин сизге бекитилет.",
+  "sapperReserveBody": "{price} IQC колдонулат. Жокко чыгарууга болбойт — уяча жыйынтык чыгарылганга чейин сизге бекитилет.",
   "@sapperReserveBody": {
     "placeholders": {
       "price": {
@@ -125,7 +125,7 @@
       }
     }
   },
-  "sapperCellReserved": "№{number} клетка ээленди",
+  "sapperCellReserved": "№{number} уяча ээленди",
   "@sapperCellReserved": {
     "placeholders": {
       "number": {
@@ -136,8 +136,8 @@
   "sapperNoIqcTitle": "IQC жетишсиз",
   "sapperNoIqcBody": "Катышуу үчүн {price} IQC керек, сизде {have}. IQC чогултуңуз — окууну, квестти же сурамжылоону өтүңүз.",
   "sapperDraws": "Акциялар",
-  "sapperAcceptClosed": "Клетка тандоо жабылды — жыйынтык чыгарылууда",
-  "sapperHiddenTitle": "ТАЛААДАГЫ БОНУСТАР",
+  "sapperAcceptClosed": "Уяча тандоо жабылды — жыйынтык чыгарылууда",
+  "sapperHiddenTitle": "ТАЛААДАГЫ СЫЙЛЫКТАР",
   "sapperFieldTotal": "Талаада {count} уяча",
   "sapperRevealIn": "жыйынтыкка {time} калды",
   "@sapperRevealIn": {
@@ -147,7 +147,7 @@
       }
     }
   },
-  "sapperNoPrizes": "бонустар көрсөтүлгөн жок",
+  "sapperNoPrizes": "сыйлыктар көрсөтүлгөн жок",
   "sapperPrizeChip": "🎁 {count}× {label}",
   "@sapperPrizeChip": {
     "placeholders": {
@@ -167,7 +167,7 @@
       }
     }
   },
-  "sapperCellPrice": "клетка — {price} IQC",
+  "sapperCellPrice": "уяча — {price} IQC",
   "@sapperCellPrice": {
     "placeholders": {
       "price": {
@@ -176,7 +176,7 @@
     }
   },
   "sapperYourBalance": "Сиздин баланс",
-  "sapperCellPriceLabel": "бир клетка үчүн",
+  "sapperCellPriceLabel": "бир уяча үчүн",
   "sapperWinBannerWin": "🎉 Сиз {count} {word} алдыңыз!",
   "@sapperWinBannerWin": {
     "placeholders": {
@@ -188,10 +188,10 @@
       }
     }
   },
-  "sapperNoWin": "Бул жолу бонуссуз",
-  "sapperPrizeOne": "бонус",
-  "sapperPrizeFew": "бонус",
-  "sapperPrizeMany": "бонус",
+  "sapperNoWin": "Бул жолу сыйлыксыз",
+  "sapperPrizeOne": "сыйлык",
+  "sapperPrizeFew": "сыйлык",
+  "sapperPrizeMany": "сыйлык",
   "sapperLegendMine": "Меники",
   "sapperLegendTheirs": "Башкалардыкы",
   "sapperLegendEmpty": "Бош",
@@ -199,7 +199,7 @@
   "sapperLegendSelected": "Тандалды",
   "sapperLegendOccupied": "Ээленген",
   "sapperLegendFree": "Бош",
-  "sapperWinners": "Бонус алгандар",
+  "sapperWinners": "Сыйлык алгандар",
   "newsTitle": "Жаңылыктар",
   "newsAll": "Бардык жаңылыктар",
   "newsMore": "Толугураак →",
@@ -1309,6 +1309,6 @@
   "sapperRule4": "Мөөнөттөр, уячанын баасы жана сыйлыктардын толук тизмеси катышууга чейин акциянын бетинде көрсөтүлөт.",
   "sapperRule5": "Упайлар уяча ээленгенде чегерилет, аны жокко чыгарууга болбойт. Бир уячаны бир катышуучу ээлейт; кабыл алуу жыйынтыктан 1 мүнөт мурун жабылат.",
   "sapperRule6": "Сыйлыктар уячаларга акция башталганга чейин жайгаштырылат жана андан кийин өзгөрбөйт. Белгиленген убакта бардык уячалар бир убакта ачылат, уячадагы сыйлыкты аны ээлеген катышуучу автоматтык түрдө алат. Жыйынтык баарына көрүнөт.",
-  "sapperRule7": "Сыйлыктар — өнөктөштөрдүн белек ваучерлери жана бонус упайлар; акчага алмаштырылбайт. Ээленбеген уячалардагы сыйлыктар кайра ойнолбойт.",
+  "sapperRule7": "Сыйлыктар — өнөктөштөрдүн белек ваучерлери жана бонус упайлар; акчага алмаштырылбайт. Ээленбеген уячалардагы сыйлыктар кайра бөлүштүрүлбөйт.",
   "sapperRule8": "Акция жокко чыгарылса, короттулган бардык упайлар кайтарылат. 18 жаштан улуу колдонуучулар катыша алат, катышуу ыктыярдуу."
 }

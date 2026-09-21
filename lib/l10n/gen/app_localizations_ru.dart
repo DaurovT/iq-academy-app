@@ -128,7 +128,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String sapperPrizesAndPrice(Object prizeCount, Object priceIqc) {
-    return '🎁 бонусов: $prizeCount  💎 $priceIqc IQC/клетка  ';
+    return '🎁 призов: $prizeCount  💎 $priceIqc IQC/клетка  ';
   }
 
   @override
@@ -179,7 +179,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get sapperAcceptClosed => 'Выбор клеток закрыт — подводим итоги';
 
   @override
-  String get sapperHiddenTitle => 'БОНУСЫ НА ПОЛЕ';
+  String get sapperHiddenTitle => 'ПРИЗЫ НА ПОЛЕ';
 
   @override
   String sapperFieldTotal(int count) {
@@ -200,7 +200,7 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get sapperNoPrizes => 'бонусы не указаны';
+  String get sapperNoPrizes => 'призы не указаны';
 
   @override
   String sapperPrizeChip(Object count, Object label) {
@@ -229,16 +229,16 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get sapperNoWin => 'В этот раз без бонуса';
+  String get sapperNoWin => 'В этот раз без приза';
 
   @override
-  String get sapperPrizeOne => 'бонус';
+  String get sapperPrizeOne => 'приз';
 
   @override
-  String get sapperPrizeFew => 'бонуса';
+  String get sapperPrizeFew => 'приза';
 
   @override
-  String get sapperPrizeMany => 'бонусов';
+  String get sapperPrizeMany => 'призов';
 
   @override
   String get sapperLegendMine => 'Мои';
@@ -262,7 +262,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get sapperLegendFree => 'Свободно';
 
   @override
-  String get sapperWinners => 'Получили бонусы';
+  String get sapperWinners => 'Получили призы';
 
   @override
   String get newsTitle => 'Новости';
@@ -2034,7 +2034,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get sapperRule7 =>
-      'Призы — подарочные ваучеры партнёров и бонусные баллы; на деньги они не обмениваются. Призы из незанятых клеток повторно не разыгрываются.';
+      'Призы — подарочные ваучеры партнёров и бонусные баллы; на деньги они не обмениваются. Призы из незанятых клеток повторно не распределяются.';
 
   @override
   String get sapperRule8 =>

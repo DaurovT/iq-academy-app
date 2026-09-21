@@ -11,12 +11,41 @@ plugins {
 }
 
 // Ключ загрузки для Google Play. key.properties и сам ключ в git не попадают
-// (android/.gitignore); без файла релиз подписывается отладочным ключом — такую
-// сборку Play не примет, но локальный `flutter run --release` работает.
+// (android/.gitignore). Без ключа AAB для Play (bundleRelease) не собирается —
+// сборка падает с понятной ошибкой, чтобы в Play не ушёл пакет с отладочной
+// подписью. Тестовый APK (assembleRelease, `flutter run --release`) без ключа
+// подписывается отладочным ключом — с предупреждением в логе.
 val keystoreProperties = Properties()
 val keystorePropertiesFile = rootProject.file("key.properties")
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+}
+val hasUploadKey = keystorePropertiesFile.exists()
+val requestedTasks = gradle.startParameter.taskNames
+val buildsReleaseBundle = requestedTasks.any {
+    it.contains("bundle", ignoreCase = true) && it.contains("release", ignoreCase = true)
+}
+if (buildsReleaseBundle) {
+    if (!hasUploadKey) {
+        throw GradleException(
+            "Нет android/key.properties — AAB для Google Play с отладочной подписью собирать нельзя. " +
+                "Положите ключ загрузки по инструкции в BUILD.md (раздел 2)."
+        )
+    }
+    val missing = listOf("storeFile", "storePassword", "keyAlias", "keyPassword")
+        .filter { (keystoreProperties[it] as String?).isNullOrBlank() }
+    if (missing.isNotEmpty()) {
+        throw GradleException("В android/key.properties не заполнено: ${missing.joinToString()}.")
+    }
+    val storeFilePath = keystoreProperties["storeFile"] as String
+    if (!file(storeFilePath).exists()) {
+        throw GradleException("Файл ключа из android/key.properties не найден: $storeFilePath")
+    }
+} else if (!hasUploadKey && requestedTasks.any { it.contains("release", ignoreCase = true) }) {
+    logger.warn(
+        "⚠️ Нет android/key.properties: релизная сборка подписана ОТЛАДОЧНЫМ ключом — " +
+            "только для тестов на устройствах, в Google Play её не загрузить."
+    )
 }
 
 android {
@@ -42,9 +71,10 @@ android {
         applicationId = "uz.iqacademy.platform_app"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        // androidx.core 1.18 и flutter_secure_storage 10.x требуют minSdk >= 23 (Android 6.0).
-        // flutter.minSdkVersion отдаёт 21 → манифест-мержер падает. Фиксируем явно.
-        minSdk = 23
+        // Минимальная версия Android — из Flutter: с 3.44 это API 24 (Android 7.0). Этого хватает
+        // androidx.core 1.18 и flutter_secure_storage 10.x (им нужно ≥ 23). Число ниже минимума
+        // Flutter прописывать бесполезно — инструмент сборки переписывает его при каждой сборке.
+        minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
