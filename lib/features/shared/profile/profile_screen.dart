@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../core/api/providers.dart';
 import '../../../core/auth/auth_controller.dart';
 import '../../../core/l10n/l10n.dart';
+import '../../../core/legal.dart';
 import '../../../core/l10n/locale_controller.dart';
 import '../../../core/models/common.dart';
 import '../../../core/models/quest.dart';
@@ -214,6 +216,18 @@ class ProfileScreen extends ConsumerWidget {
                   subtitle: context.l10n.profileSupportSubtitle,
                   chevron: true,
                   onTap: () => context.push('/app/support'),
+                ),
+                const SizedBox(height: 12),
+                _TileCard(
+                  c: c,
+                  circle: c.circlePlain,
+                  icon: Icons.privacy_tip_outlined,
+                  iconColor: c.iconOnNavy,
+                  title: context.l10n.profilePrivacy,
+                  subtitle: context.l10n.profilePrivacySubtitle,
+                  chevron: true,
+                  onTap: () => launchUrl(Uri.parse(kPrivacyPolicyUrl),
+                      mode: LaunchMode.externalApplication),
                 ),
                 const SizedBox(height: 12),
                 _TileCard(

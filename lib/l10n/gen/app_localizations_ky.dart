@@ -63,7 +63,7 @@ class AppLocalizationsKy extends AppLocalizations {
   String get navWallet => 'Капчык';
 
   @override
-  String get navRecipes => 'Рецепттер';
+  String get navRecipes => 'Бланктар';
 
   @override
   String get navPortfolio => 'Портфель';
@@ -502,7 +502,7 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get profileDeleteConfirmBody =>
-      'Бул аракетти кайтарууга болбойт. Бардык маалымат өчүрүлөт.';
+      'Профиль, телефон номери, кирүү байланыштары, билдирмелер жана колдоо кызматы менен кат алышуу өчүрүлөт. Эсептөөлөр жана берилген ваучерлер тууралуу жазуулар жеке маалыматтарыңызсыз сакталат — алар эсеп үчүн керек. Бул аракетти кайтарууга болбойт.';
 
   @override
   String get profileStatQuests => 'КВЕСТТЕР';
@@ -629,7 +629,7 @@ class AppLocalizationsKy extends AppLocalizations {
   String get notifSettingsTitle => 'Билдирме жөндөөлөрү';
 
   @override
-  String get notifSettingsChecks => 'Чек жана рецепт абалдары';
+  String get notifSettingsChecks => 'Чек жана бланк абалдары';
 
   @override
   String get notifSettingsQuests => 'Квесттер жана сыйлыктар';
@@ -813,7 +813,7 @@ class AppLocalizationsKy extends AppLocalizations {
   }
 
   @override
-  String get docHomeSubtitle => 'Рецепттерди жөнөтүп, сыйлык алыңыз';
+  String get docHomeSubtitle => 'Бланктарды жөнөтүп, сыйлык алыңыз';
 
   @override
   String get docHomeWalletBalance => 'КАПЧЫК БАЛАНСЫ';
@@ -822,14 +822,14 @@ class AppLocalizationsKy extends AppLocalizations {
   String get docHomeWallet => 'Капчык';
 
   @override
-  String get docHomeSendRecipe => 'Рецепт жөнөтүү';
+  String get docHomeSendRecipe => 'Бланк жөнөтүү';
 
   @override
   String get docHomeSendRecipeHint =>
-      'Рецептти сүрөткө тартыңыз — AI дарыларды тааныйт';
+      'Бланкты сүрөткө тартыңыз — AI дарыларды тааныйт';
 
   @override
-  String get docHomeStatRecipes => 'бардык рецепттер';
+  String get docHomeStatRecipes => 'бардык бланктар';
 
   @override
   String get docHomeStatApproved => 'жактырылды';
@@ -849,11 +849,11 @@ class AppLocalizationsKy extends AppLocalizations {
   }
 
   @override
-  String get recipeDetailMyRecipes => 'Менин рецепттерим';
+  String get recipeDetailMyRecipes => 'Менин бланктарым';
 
   @override
   String recipeDetailTitle(Object id) {
-    return 'Рецепт №$id';
+    return 'Бланк №$id';
   }
 
   @override
@@ -877,7 +877,7 @@ class AppLocalizationsKy extends AppLocalizations {
   String get recipeDetailNoDrugs => 'Дарылар таанылган жок';
 
   @override
-  String get recipesTitle => 'Менин рецепттерим';
+  String get recipesTitle => 'Менин бланктарым';
 
   @override
   String recipesTotal(Object p1) {
@@ -894,7 +894,7 @@ class AppLocalizationsKy extends AppLocalizations {
   String get recipesTabDone => 'Аякталган';
 
   @override
-  String get recipesEmpty => 'Азырынча рецепттер жок';
+  String get recipesEmpty => 'Азырынча бланктар жок';
 
   @override
   String get recipesTakePhoto => 'Сүрөткө тартуу';
@@ -903,7 +903,7 @@ class AppLocalizationsKy extends AppLocalizations {
   String get recipesFromGallery => 'Галереядан тандоо';
 
   @override
-  String get recipesUploading => 'Рецепт кошулду — жүктөлүүдө';
+  String get recipesUploading => 'Бланк кошулду — жүктөлүүдө';
 
   @override
   String get recipesDoctorInfoTitle => 'Дарыгер маалыматы (каалоо боюнча)';
@@ -927,7 +927,7 @@ class AppLocalizationsKy extends AppLocalizations {
   String get recipesSend => 'Жөнөтүү';
 
   @override
-  String get recipesSubmitButton => 'Рецепт жөнөтүү';
+  String get recipesSubmitButton => 'Бланк жөнөтүү';
 
   @override
   String recipesPhotoCount(Object p1) {
@@ -1889,7 +1889,7 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get doctorsHint =>
-      'Компанияңыздын дарыгерлери жана алардын рецепт квести боюнча жетишкендиги';
+      'Компанияңыздын дарыгерлери жана алардын бланк квести боюнча жетишкендиги';
 
   @override
   String get doctorsSearchHint => 'Дарыгер, клиника, шаар боюнча издөө';
@@ -1904,11 +1904,11 @@ class AppLocalizationsKy extends AppLocalizations {
   String get doctorsIdle => 'Баштаган жок';
 
   @override
-  String get doctorsNoQuest => 'Активдүү рецепт квести жок';
+  String get doctorsNoQuest => 'Активдүү бланк квести жок';
 
   @override
   String get doctorsUnavailable =>
-      'Компанияңызда рецепт долбоору жок, ошондуктан дарыгерлер туташтырылган эмес';
+      'Компанияңызда бланк долбоору жок, ошондуктан дарыгерлер туташтырылган эмес';
 
   @override
   String get doctorsEmpty => 'Азырынча дарыгерлер жок';
@@ -1921,7 +1921,7 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String doctorsRecipesCount(Object count) {
-    return 'Бардык убакыттагы рецепттер: $count';
+    return 'Бардык убакыттагы бланктар: $count';
   }
 
   @override
@@ -1941,4 +1941,89 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get doctorsAll => 'Баары';
+
+  @override
+  String get loginWithGoogle => 'Google аркылуу кирүү';
+
+  @override
+  String get loginWithApple => 'Apple аркылуу кирүү';
+
+  @override
+  String get oauthLinkTitle => 'Телефон номериңизди ырастаңыз';
+
+  @override
+  String get oauthLinkBody =>
+      'Номерди бир жолу ырастаңыз — ушинтип аккаунтуңузду жана упайларыңызды табабыз. Кийинки жолу бир басуу менен киресиз.';
+
+  @override
+  String get oauthLinkPhoneLabel => 'Телефон номери';
+
+  @override
+  String get oauthLinkSendCode => 'Кодду алуу';
+
+  @override
+  String oauthLinkCodeSent(String phone) {
+    return 'Код $phone номерине жөнөтүлдү';
+  }
+
+  @override
+  String get oauthLinkCodeLabel => 'SMS коду';
+
+  @override
+  String get oauthLinkConfirm => 'Ырастоо';
+
+  @override
+  String get oauthLinkChangePhone => 'Номерди өзгөртүү';
+
+  @override
+  String get profilePrivacy => 'Купуялык саясаты';
+
+  @override
+  String get profilePrivacySubtitle =>
+      'Кандай маалыматтарды чогултабыз жана кантип сактайбыз';
+
+  @override
+  String get sapperRulesButton => 'Акциянын эрежелери';
+
+  @override
+  String get sapperRulesTitle => '«Супер Сапёр» акциясынын эрежелери';
+
+  @override
+  String get sapperRulesFull => 'Толук расмий эрежелер';
+
+  @override
+  String get sapperRulesAccept =>
+      'Уячаны ээлеп, сиз акциянын эрежелерин кабыл аласыз.';
+
+  @override
+  String get sapperRule1 =>
+      'Уюштуруучу — «PHARMIQ ACADEMY» ЖЧК. Apple жана Google акциянын демөөрчүсү эмес жана ага катышпайт.';
+
+  @override
+  String get sapperRule2 =>
+      'Акцияда акча колдонулбайт: IQC упайлары менен гана катышууга болот.';
+
+  @override
+  String get sapperRule3 =>
+      'IQC упайлары окуу, сурамжылоолор жана ырасталган квесттер үчүн берилет. Аларды сатып алууга, башка колдонуучуга өткөрүүгө же акчага алмаштырууга болбойт.';
+
+  @override
+  String get sapperRule4 =>
+      'Мөөнөттөр, уячанын баасы жана сыйлыктардын толук тизмеси катышууга чейин акциянын бетинде көрсөтүлөт.';
+
+  @override
+  String get sapperRule5 =>
+      'Упайлар уяча ээленгенде чегерилет, аны жокко чыгарууга болбойт. Бир уячаны бир катышуучу ээлейт; кабыл алуу жыйынтыктан 1 мүнөт мурун жабылат.';
+
+  @override
+  String get sapperRule6 =>
+      'Сыйлыктар уячаларга акция башталганга чейин жайгаштырылат жана андан кийин өзгөрбөйт. Белгиленген убакта бардык уячалар бир убакта ачылат, уячадагы сыйлыкты аны ээлеген катышуучу автоматтык түрдө алат. Жыйынтык баарына көрүнөт.';
+
+  @override
+  String get sapperRule7 =>
+      'Сыйлыктар — өнөктөштөрдүн белек ваучерлери жана бонус упайлар; акчага алмаштырылбайт. Ээленбеген уячалардагы сыйлыктар кайра ойнолбойт.';
+
+  @override
+  String get sapperRule8 =>
+      'Акция жокко чыгарылса, короттулган бардык упайлар кайтарылат. 18 жаштан улуу колдонуучулар катыша алат, катышуу ыктыярдуу.';
 }

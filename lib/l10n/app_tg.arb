@@ -18,7 +18,7 @@
   "navQuests": "Квестҳо",
   "navLearn": "Таълим",
   "navWallet": "Ҳамён",
-  "navRecipes": "Дорунома",
+  "navRecipes": "Бланкҳо",
   "navPortfolio": "Портфел",
   "navPharm": "Фарм.",
   "navTop": "Топ",
@@ -331,7 +331,7 @@
   "profileLogoutConfirmTitle": "Аз ҳисоб мебароед?",
   "profileLogoutAction": "Баромадан",
   "profileDeleteConfirmTitle": "Ҳисоб нест карда шавад?",
-  "profileDeleteConfirmBody": "Ин амал бебозгашт аст. Ҳамаи маълумот нест мешавад.",
+  "profileDeleteConfirmBody": "Профил, рақами телефон, пайвандҳои воридшавӣ, огоҳиномаҳо ва мукотиба бо дастгирӣ нест карда мешаванд. Сабтҳои ҳисобҳо ва ваучерҳои додашуда бе маълумоти шахсии шумо нигоҳ дошта мешаванд — онҳо барои баҳисобгирӣ лозиманд. Ин амал бебозгашт аст.",
   "profileStatQuests": "КВЕСТҲО",
   "profileStatLevel": "САТҲ",
   "questHistoryTitle": "Таърихи иштирок",
@@ -424,7 +424,7 @@
   "roleSelectSheetTitle": "Нақшро интихоб кунед",
   "roleSelectEnter": "Ворид шудан",
   "notifSettingsTitle": "Танзимоти огоҳиномаҳо",
-  "notifSettingsChecks": "Ҳолати чекҳо ва доруномаҳо",
+  "notifSettingsChecks": "Ҳолати чекҳо ва бланкҳо",
   "notifSettingsQuests": "Квестҳо ва мукофотҳо",
   "notifSettingsLearning": "Таълим",
   "notifSettingsMarketing": "Хабарҳо ва аксияҳо",
@@ -523,12 +523,12 @@
       }
     }
   },
-  "docHomeSubtitle": "Доруномаҳоро фиристед ва мукофот гиред",
+  "docHomeSubtitle": "Бланкҳоро фиристед ва мукофот гиред",
   "docHomeWalletBalance": "БАЛАНСИ ҲАМЁН",
   "docHomeWallet": "Ҳамён",
-  "docHomeSendRecipe": "Фиристодани дорунома",
-  "docHomeSendRecipeHint": "Доруномаро акс гиред — AI доруҳоро мешиносад",
-  "docHomeStatRecipes": "ҳамаи доруномаҳо",
+  "docHomeSendRecipe": "Фиристодани бланк",
+  "docHomeSendRecipeHint": "Бланкро акс гиред — AI доруҳоро мешиносад",
+  "docHomeStatRecipes": "ҳамаи бланкҳо",
   "docHomeStatApproved": "тасдиқшуда",
   "docHomeStatIqc": "холи IQC",
   "docHomeVoucher": "ВАУЧЕР",
@@ -541,8 +541,8 @@
       }
     }
   },
-  "recipeDetailMyRecipes": "Доруномаҳои ман",
-  "recipeDetailTitle": "Доруномаи №{id}",
+  "recipeDetailMyRecipes": "Бланкҳои ман",
+  "recipeDetailTitle": "Бланки №{id}",
   "@recipeDetailTitle": {
     "placeholders": {
       "id": {
@@ -563,7 +563,7 @@
   "recipeDetailStatusPending": "Дар баррасӣ",
   "recipeDetailAiRecognized": "AI шинохт",
   "recipeDetailNoDrugs": "Доруҳо шинохта нашуданд",
-  "recipesTitle": "Доруномаҳои ман",
+  "recipesTitle": "Бланкҳои ман",
   "recipesTotal": "ҳамагӣ {p1}",
   "@recipesTotal": {
     "placeholders": {
@@ -575,10 +575,10 @@
   "recipesTabAll": "Ҳама",
   "recipesTabActive": "Фаъол",
   "recipesTabDone": "Анҷомёфта",
-  "recipesEmpty": "Ҳоло доруномаҳо нестанд",
+  "recipesEmpty": "Ҳоло бланкҳо нестанд",
   "recipesTakePhoto": "Акс гирифтан",
   "recipesFromGallery": "Интихоб аз галерея",
-  "recipesUploading": "Дорунома илова шуд — бор мешавад",
+  "recipesUploading": "Бланк илова шуд — бор мешавад",
   "recipesDoctorInfoTitle": "Маълумоти духтур (ихтиёрӣ)",
   "recipesDoctorName": "Н.Н.П.",
   "recipesDoctorWorkplace": "Ҷои кор",
@@ -586,7 +586,7 @@
   "recipesDoctorPhone": "Телефон",
   "recipesSkip": "Гузарондан",
   "recipesSend": "Фиристодан",
-  "recipesSubmitButton": "Фиристодани дорунома",
+  "recipesSubmitButton": "Фиристодани бланк",
   "recipesPhotoCount": "акс: {p1}",
   "@recipesPhotoCount": {
     "placeholders": {
@@ -1231,17 +1231,17 @@
   "profileChooseLanguage": "Забонро интихоб кунед",
   "navDoctors": "Табибон",
   "doctorsTitle": "Табибон",
-  "doctorsHint": "Табибони ширкати шумо ва пешрафти онҳо аз рӯи квести дорухат",
+  "doctorsHint": "Табибони ширкати шумо ва пешрафти онҳо аз рӯи квести бланк",
   "doctorsSearchHint": "Ҷустуҷӯ аз рӯи табиб, клиника, шаҳр",
   "doctorsCompleted": "Иҷро карданд",
   "doctorsInProgress": "Дар ҷараён",
   "doctorsIdle": "Оғоз накарданд",
-  "doctorsNoQuest": "Квести фаъоли дорухат нест",
-  "doctorsUnavailable": "Ширкати шумо лоиҳаи дорухат надорад, бинобар ин табибон пайваст нашудаанд",
+  "doctorsNoQuest": "Квести фаъоли бланк нест",
+  "doctorsUnavailable": "Ширкати шумо лоиҳаи бланк надорад, бинобар ин табибон пайваст нашудаанд",
   "doctorsEmpty": "Ҳоло табибон нестанд",
   "doctorsNotFound": "Чизе ёфт нашуд",
   "doctorsRegionUnknown": "Минтақа нишон дода нашудааст",
-  "doctorsRecipesCount": "Дорухатҳо дар тамоми давра: {count}",
+  "doctorsRecipesCount": "Бланкҳо дар тамоми давра: {count}",
   "@doctorsRecipesCount": {
     "placeholders": {
       "count": {
@@ -1276,5 +1276,36 @@
       }
     }
   },
-  "doctorsAll": "Ҳама"
+  "doctorsAll": "Ҳама",
+  "loginWithGoogle": "Ворид шудан тавассути Google",
+  "loginWithApple": "Ворид шудан тавассути Apple",
+  "oauthLinkTitle": "Рақами телефонро тасдиқ кунед",
+  "oauthLinkBody": "Рақамро як бор тасдиқ кунед — ҳамин тавр ҳисоб ва холҳои шуморо меёбем. Дафъаи оянда бо як ламс ворид мешавед.",
+  "oauthLinkPhoneLabel": "Рақами телефон",
+  "oauthLinkSendCode": "Гирифтани рамз",
+  "oauthLinkCodeSent": "Рамз ба {phone} фиристода шуд",
+  "@oauthLinkCodeSent": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "oauthLinkCodeLabel": "Рамзи SMS",
+  "oauthLinkConfirm": "Тасдиқ кардан",
+  "oauthLinkChangePhone": "Иваз кардани рақам",
+  "profilePrivacy": "Сиёсати махфият",
+  "profilePrivacySubtitle": "Кадом маълумотро ҷамъ мекунем ва чӣ тавр нигоҳ медорем",
+  "sapperRulesButton": "Қоидаҳои аксия",
+  "sapperRulesTitle": "Қоидаҳои аксияи «Супер Сапёр»",
+  "sapperRulesFull": "Қоидаҳои пурраи расмӣ",
+  "sapperRulesAccept": "Бо ишғол кардани катак шумо қоидаҳои аксияро қабул мекунед.",
+  "sapperRule1": "Ташкилотчӣ — ҶДММ «PHARMIQ ACADEMY». Apple ва Google сарпарасти аксия нестанд ва дар он иштирок намекунанд.",
+  "sapperRule2": "Дар аксия пул истифода намешавад: танҳо бо холҳои IQC иштирок кардан мумкин аст.",
+  "sapperRule3": "Холҳои IQC барои таълим, пурсишҳо ва квестҳои тасдиқшуда дода мешаванд. Онҳоро харидан, ба корбари дигар додан ё ба пул иваз кардан мумкин нест.",
+  "sapperRule4": "Мӯҳлатҳо, нархи катак ва рӯйхати пурраи ҷоизаҳо то иштирок дар саҳифаи аксия нишон дода мешаванд.",
+  "sapperRule5": "Холҳо ҳангоми ишғоли катак хориҷ мешаванд, бекор кардан мумкин нест. Як катакро як иштирокчӣ ишғол мекунад; қабул 1 дақиқа пеш аз натиҷаҳо баста мешавад.",
+  "sapperRule6": "Ҷоизаҳо то оғози аксия дар катакҳо ҷойгир карда мешаванд ва баъд тағйир намеёбанд. Дар вақти муайяншуда ҳамаи катакҳо якбора кушода мешаванд, ҷоизаи катакро иштирокчие, ки онро ишғол кардааст, худкор мегирад. Натиҷаҳо ба ҳама намоёнанд.",
+  "sapperRule7": "Ҷоизаҳо — ваучерҳои тӯҳфавии шарикон ва холҳои бонусӣ; ба пул иваз намешаванд. Ҷоизаҳои катакҳои ишғолнашуда дубора бозӣ намешаванд.",
+  "sapperRule8": "Агар аксия бекор шавад, ҳамаи холҳои сарфшуда баргардонида мешаванд. Корбарони аз 18 сола боло иштирок карда метавонанд, иштирок ихтиёрӣ аст."
 }

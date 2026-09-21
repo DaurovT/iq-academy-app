@@ -94,7 +94,8 @@ class PushService {
   static void attach(WidgetRef ref) {
     if (!_ready) return;
     try {
-      _requestPermission();
+      // Разрешение на уведомления спрашиваем только после входа: до входа человек ещё
+      // не понимает, зачем они (так рекомендует Apple), и токен всё равно некуда привязать.
 
       // приложение открыто → рисуем сами (Android). На iOS покажет система.
       FirebaseMessaging.onMessage.listen((m) {
@@ -140,7 +141,7 @@ class PushService {
         final wasAuthed = prev?.asData?.value.isAuthed ?? false;
         final isAuthed = next.asData?.value.isAuthed ?? false;
         if (isAuthed && !wasAuthed) {
-          syncToken(ref);
+          _requestPermission().then((_) => syncToken(ref));
         } else if (!isAuthed && wasAuthed) {
           dropToken(ref);
         }

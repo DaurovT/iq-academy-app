@@ -7,6 +7,7 @@ import '../../../core/api/providers.dart';
 import '../../../core/auth/auth_controller.dart';
 import '../../../core/l10n/l10n.dart';
 import '../widgets/pharm_academy_logo.dart';
+import 'social_login_buttons.dart';
 import 'telegram_login.dart';
 
 /// Вход по номеру телефона и SMS-коду. Перенесён из макета Figma
@@ -245,6 +246,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         const SizedBox(height: 16),
         _orDivider(),
         const SizedBox(height: 16),
+        const SocialLoginButtons(),
         const TelegramLoginButton(),
         const SizedBox(height: 8),
         Center(

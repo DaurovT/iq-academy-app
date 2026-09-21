@@ -12,6 +12,7 @@ import '../models/support.dart';
 import '../models/news.dart';
 import '../models/survey.dart';
 import '../models/sapper.dart';
+import '../models/oauth.dart';
 import 'upload.dart';
 
 /// Контракт платформы — прямое зеркало web/src/lib/api/contract.ts.
@@ -70,9 +71,17 @@ abstract interface class AuthApi {
   Future<Account> session();
   Future<void> logout();
   Future<Session> register(
-      Role role, String schemaVersion, Map<String, dynamic> values);
+      Role role, String schemaVersion, Map<String, dynamic> values,
+      {String? oauthLinkToken});
   Future<TgLoginStart> telegramStart();
   Future<TgPollResult> telegramPoll(String nonce);
+
+  /// Вход через Google/Apple: проверенный токен провайдера → сессия или шаг привязки.
+  Future<OAuthResult> oauth(String provider, String idToken,
+      {String? nonce, String? authorizationCode, String? fullName});
+  Future<void> oauthLinkSendSms(String linkToken, String phone);
+  Future<OAuthResult> oauthLinkConfirm(
+      String linkToken, String phone, String code);
 }
 
 abstract interface class ReferenceApi {

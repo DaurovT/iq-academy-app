@@ -282,6 +282,14 @@ class SapperDrawsScreen extends ConsumerWidget {
                         context.l10n.sapperSubtitle,
                         style: TextStyle(
                             fontSize: 16, height: 1.4, color: p.textMuted)),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: TextButton.icon(
+                        icon: const Icon(Icons.gavel_outlined, size: 18),
+                        label: Text(context.l10n.sapperRulesButton),
+                        onPressed: () => context.push('/app/sapper-rules'),
+                      ),
+                    ),
                     const SizedBox(height: 24),
                     if (draws.isEmpty)
                       Padding(
@@ -608,8 +616,23 @@ class _SapperGameScreenState extends ConsumerState<SapperGameScreen> {
       // из-за чего кнопки «Занять»/«Отмена» не закрывали диалог.
       builder: (ctx) => AlertDialog(
         title: Text(context.l10n.sapperReserveTitle(cell + 1)),
-        content: Text(context.l10n.sapperReserveBody(f.priceIqc)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(context.l10n.sapperReserveBody(f.priceIqc)),
+            const SizedBox(height: 12),
+            Text(context.l10n.sapperRulesAccept,
+                style: Theme.of(ctx).textTheme.bodySmall),
+          ],
+        ),
         actions: [
+          TextButton(
+              onPressed: () {
+                Navigator.pop(ctx, false);
+                context.push('/app/sapper-rules');
+              },
+              child: Text(context.l10n.sapperRulesButton)),
           TextButton(
               onPressed: () => Navigator.pop(ctx, false),
               child: Text(context.l10n.commonCancel)),

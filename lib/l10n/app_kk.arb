@@ -18,7 +18,7 @@
   "navQuests": "Квесттер",
   "navLearn": "Оқыту",
   "navWallet": "Әмиян",
-  "navRecipes": "Рецепттер",
+  "navRecipes": "Бланктар",
   "navPortfolio": "Портфель",
   "navPharm": "Фарм.",
   "navTop": "Топ",
@@ -331,7 +331,7 @@
   "profileLogoutConfirmTitle": "Аккаунттан шығасыз ба?",
   "profileLogoutAction": "Шығу",
   "profileDeleteConfirmTitle": "Аккаунт жойылсын ба?",
-  "profileDeleteConfirmBody": "Бұл әрекетті қайтару мүмкін емес. Барлық деректер жойылады.",
+  "profileDeleteConfirmBody": "Профиль, телефон нөмірі, кіру байланыстары, хабарламалар және қолдау қызметімен хат алмасу жойылады. Есептеулер мен берілген ваучерлер туралы жазбалар жеке деректеріңізсіз сақталады — олар есеп үшін қажет. Бұл әрекетті қайтару мүмкін емес.",
   "profileStatQuests": "КВЕСТТЕР",
   "profileStatLevel": "ДЕҢГЕЙ",
   "questHistoryTitle": "Қатысу тарихы",
@@ -424,7 +424,7 @@
   "roleSelectSheetTitle": "Рөлді таңдаңыз",
   "roleSelectEnter": "Кіру",
   "notifSettingsTitle": "Хабарлама баптаулары",
-  "notifSettingsChecks": "Чек және рецепт мәртебелері",
+  "notifSettingsChecks": "Чек және бланк мәртебелері",
   "notifSettingsQuests": "Квесттер мен сыйақылар",
   "notifSettingsLearning": "Оқыту",
   "notifSettingsMarketing": "Жаңалықтар мен акциялар",
@@ -523,12 +523,12 @@
       }
     }
   },
-  "docHomeSubtitle": "Рецепттерді жіберіп, сыйақы алыңыз",
+  "docHomeSubtitle": "Бланктарды жіберіп, сыйақы алыңыз",
   "docHomeWalletBalance": "ӘМИЯН БАЛАНСЫ",
   "docHomeWallet": "Әмиян",
-  "docHomeSendRecipe": "Рецепт жіберу",
-  "docHomeSendRecipeHint": "Рецептті суретке түсіріңіз — AI дәрілерді таниды",
-  "docHomeStatRecipes": "барлық рецепттер",
+  "docHomeSendRecipe": "Бланк жіберу",
+  "docHomeSendRecipeHint": "Бланкты суретке түсіріңіз — AI дәрілерді таниды",
+  "docHomeStatRecipes": "барлық бланктар",
   "docHomeStatApproved": "мақұлданды",
   "docHomeStatIqc": "IQC ұпайы",
   "docHomeVoucher": "ВАУЧЕР",
@@ -541,8 +541,8 @@
       }
     }
   },
-  "recipeDetailMyRecipes": "Менің рецепттерім",
-  "recipeDetailTitle": "Рецепт №{id}",
+  "recipeDetailMyRecipes": "Менің бланктарым",
+  "recipeDetailTitle": "Бланк №{id}",
   "@recipeDetailTitle": {
     "placeholders": {
       "id": {
@@ -563,7 +563,7 @@
   "recipeDetailStatusPending": "Тексерілуде",
   "recipeDetailAiRecognized": "AI таныды",
   "recipeDetailNoDrugs": "Дәрілер танылмады",
-  "recipesTitle": "Менің рецепттерім",
+  "recipesTitle": "Менің бланктарым",
   "recipesTotal": "барлығы {p1}",
   "@recipesTotal": {
     "placeholders": {
@@ -575,10 +575,10 @@
   "recipesTabAll": "Барлығы",
   "recipesTabActive": "Белсенді",
   "recipesTabDone": "Аяқталған",
-  "recipesEmpty": "Әзірге рецепттер жоқ",
+  "recipesEmpty": "Әзірге бланктар жоқ",
   "recipesTakePhoto": "Суретке түсіру",
   "recipesFromGallery": "Галереядан таңдау",
-  "recipesUploading": "Рецепт қосылды — жүктелуде",
+  "recipesUploading": "Бланк қосылды — жүктелуде",
   "recipesDoctorInfoTitle": "Дәрігер деректері (қалауыңызша)",
   "recipesDoctorName": "Т.А.Ә.",
   "recipesDoctorWorkplace": "Жұмыс орны",
@@ -586,7 +586,7 @@
   "recipesDoctorPhone": "Телефон",
   "recipesSkip": "Өткізіп жіберу",
   "recipesSend": "Жіберу",
-  "recipesSubmitButton": "Рецепт жіберу",
+  "recipesSubmitButton": "Бланк жіберу",
   "recipesPhotoCount": "сурет: {p1}",
   "@recipesPhotoCount": {
     "placeholders": {
@@ -1231,17 +1231,17 @@
   "profileChooseLanguage": "Тілді таңдаңыз",
   "navDoctors": "Дәрігерлер",
   "doctorsTitle": "Дәрігерлер",
-  "doctorsHint": "Компанияңыздың дәрігерлері және олардың рецепт квесті бойынша үлгерімі",
+  "doctorsHint": "Компанияңыздың дәрігерлері және олардың бланк квесті бойынша үлгерімі",
   "doctorsSearchHint": "Дәрігер, клиника, қала бойынша іздеу",
   "doctorsCompleted": "Орындады",
   "doctorsInProgress": "Орындалуда",
   "doctorsIdle": "Бастамаған",
-  "doctorsNoQuest": "Белсенді рецепт квесті жоқ",
-  "doctorsUnavailable": "Компанияңызда рецепт жобасы жоқ, сондықтан дәрігерлер қосылмаған",
+  "doctorsNoQuest": "Белсенді бланк квесті жоқ",
+  "doctorsUnavailable": "Компанияңызда бланк жобасы жоқ, сондықтан дәрігерлер қосылмаған",
   "doctorsEmpty": "Әзірге дәрігерлер жоқ",
   "doctorsNotFound": "Ештеңе табылмады",
   "doctorsRegionUnknown": "Аймақ көрсетілмеген",
-  "doctorsRecipesCount": "Барлық уақыттағы рецепттер: {count}",
+  "doctorsRecipesCount": "Барлық уақыттағы бланктар: {count}",
   "@doctorsRecipesCount": {
     "placeholders": {
       "count": {
@@ -1276,5 +1276,36 @@
       }
     }
   },
-  "doctorsAll": "Барлығы"
+  "doctorsAll": "Барлығы",
+  "loginWithGoogle": "Google арқылы кіру",
+  "loginWithApple": "Apple арқылы кіру",
+  "oauthLinkTitle": "Телефон нөміріңізді растаңыз",
+  "oauthLinkBody": "Нөмірді бір рет растаңыз — осылайша аккаунтыңыз бен ұпайларыңызды табамыз. Келесі жолы бір түртумен кіресіз.",
+  "oauthLinkPhoneLabel": "Телефон нөмірі",
+  "oauthLinkSendCode": "Кодты алу",
+  "oauthLinkCodeSent": "Код {phone} нөміріне жіберілді",
+  "@oauthLinkCodeSent": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "oauthLinkCodeLabel": "SMS коды",
+  "oauthLinkConfirm": "Растау",
+  "oauthLinkChangePhone": "Нөмірді өзгерту",
+  "profilePrivacy": "Құпиялық саясаты",
+  "profilePrivacySubtitle": "Қандай деректер жинаймыз және қалай сақтаймыз",
+  "sapperRulesButton": "Акция ережелері",
+  "sapperRulesTitle": "«Супер Сапёр» акциясының ережелері",
+  "sapperRulesFull": "Толық ресми ережелер",
+  "sapperRulesAccept": "Ұяшықты алу арқылы сіз акция ережелерін қабылдайсыз.",
+  "sapperRule1": "Ұйымдастырушы — «PHARMIQ ACADEMY» ЖШС. Apple мен Google акцияның демеушісі емес және оған қатыспайды.",
+  "sapperRule2": "Акцияда ақша қолданылмайды: тек IQC ұпайларымен қатысуға болады.",
+  "sapperRule3": "IQC ұпайлары оқу, сауалнамалар және расталған квесттер үшін беріледі. Оларды сатып алуға, басқа пайдаланушыға беруге немесе ақшаға айырбастауға болмайды.",
+  "sapperRule4": "Мерзімдер, ұяшық бағасы және жүлделердің толық тізімі қатысуға дейін акция бетінде көрсетіледі.",
+  "sapperRule5": "Ұпайлар ұяшықты алғанда шегеріледі, мұны болдырмауға болмайды. Бір ұяшықты бір қатысушы алады; қабылдау қорытындыдан 1 минут бұрын жабылады.",
+  "sapperRule6": "Жүлделер ұяшықтарға акция басталғанға дейін орналастырылады және кейін өзгермейді. Белгіленген уақытта барлық ұяшықтар бір мезгілде ашылады, ұяшықтағы жүлдені оны алған қатысушы автоматты түрде алады. Қорытынды бәріне көрінеді.",
+  "sapperRule7": "Жүлделер — серіктестердің сыйлық ваучерлері мен бонус ұпайлар; ақшаға айырбасталмайды. Бос ұяшықтардағы жүлделер қайта ойнатылмайды.",
+  "sapperRule8": "Акция тоқтатылса, жұмсалған барлық ұпайлар қайтарылады. 18 жастан асқан пайдаланушылар қатыса алады, қатысу ерікті."
 }

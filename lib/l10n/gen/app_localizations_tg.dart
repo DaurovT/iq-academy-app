@@ -63,7 +63,7 @@ class AppLocalizationsTg extends AppLocalizations {
   String get navWallet => 'Ҳамён';
 
   @override
-  String get navRecipes => 'Дорунома';
+  String get navRecipes => 'Бланкҳо';
 
   @override
   String get navPortfolio => 'Портфел';
@@ -503,7 +503,7 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get profileDeleteConfirmBody =>
-      'Ин амал бебозгашт аст. Ҳамаи маълумот нест мешавад.';
+      'Профил, рақами телефон, пайвандҳои воридшавӣ, огоҳиномаҳо ва мукотиба бо дастгирӣ нест карда мешаванд. Сабтҳои ҳисобҳо ва ваучерҳои додашуда бе маълумоти шахсии шумо нигоҳ дошта мешаванд — онҳо барои баҳисобгирӣ лозиманд. Ин амал бебозгашт аст.';
 
   @override
   String get profileStatQuests => 'КВЕСТҲО';
@@ -631,7 +631,7 @@ class AppLocalizationsTg extends AppLocalizations {
   String get notifSettingsTitle => 'Танзимоти огоҳиномаҳо';
 
   @override
-  String get notifSettingsChecks => 'Ҳолати чекҳо ва доруномаҳо';
+  String get notifSettingsChecks => 'Ҳолати чекҳо ва бланкҳо';
 
   @override
   String get notifSettingsQuests => 'Квестҳо ва мукофотҳо';
@@ -815,7 +815,7 @@ class AppLocalizationsTg extends AppLocalizations {
   }
 
   @override
-  String get docHomeSubtitle => 'Доруномаҳоро фиристед ва мукофот гиред';
+  String get docHomeSubtitle => 'Бланкҳоро фиристед ва мукофот гиред';
 
   @override
   String get docHomeWalletBalance => 'БАЛАНСИ ҲАМЁН';
@@ -824,14 +824,14 @@ class AppLocalizationsTg extends AppLocalizations {
   String get docHomeWallet => 'Ҳамён';
 
   @override
-  String get docHomeSendRecipe => 'Фиристодани дорунома';
+  String get docHomeSendRecipe => 'Фиристодани бланк';
 
   @override
   String get docHomeSendRecipeHint =>
-      'Доруномаро акс гиред — AI доруҳоро мешиносад';
+      'Бланкро акс гиред — AI доруҳоро мешиносад';
 
   @override
-  String get docHomeStatRecipes => 'ҳамаи доруномаҳо';
+  String get docHomeStatRecipes => 'ҳамаи бланкҳо';
 
   @override
   String get docHomeStatApproved => 'тасдиқшуда';
@@ -851,11 +851,11 @@ class AppLocalizationsTg extends AppLocalizations {
   }
 
   @override
-  String get recipeDetailMyRecipes => 'Доруномаҳои ман';
+  String get recipeDetailMyRecipes => 'Бланкҳои ман';
 
   @override
   String recipeDetailTitle(Object id) {
-    return 'Доруномаи №$id';
+    return 'Бланки №$id';
   }
 
   @override
@@ -879,7 +879,7 @@ class AppLocalizationsTg extends AppLocalizations {
   String get recipeDetailNoDrugs => 'Доруҳо шинохта нашуданд';
 
   @override
-  String get recipesTitle => 'Доруномаҳои ман';
+  String get recipesTitle => 'Бланкҳои ман';
 
   @override
   String recipesTotal(Object p1) {
@@ -896,7 +896,7 @@ class AppLocalizationsTg extends AppLocalizations {
   String get recipesTabDone => 'Анҷомёфта';
 
   @override
-  String get recipesEmpty => 'Ҳоло доруномаҳо нестанд';
+  String get recipesEmpty => 'Ҳоло бланкҳо нестанд';
 
   @override
   String get recipesTakePhoto => 'Акс гирифтан';
@@ -905,7 +905,7 @@ class AppLocalizationsTg extends AppLocalizations {
   String get recipesFromGallery => 'Интихоб аз галерея';
 
   @override
-  String get recipesUploading => 'Дорунома илова шуд — бор мешавад';
+  String get recipesUploading => 'Бланк илова шуд — бор мешавад';
 
   @override
   String get recipesDoctorInfoTitle => 'Маълумоти духтур (ихтиёрӣ)';
@@ -929,7 +929,7 @@ class AppLocalizationsTg extends AppLocalizations {
   String get recipesSend => 'Фиристодан';
 
   @override
-  String get recipesSubmitButton => 'Фиристодани дорунома';
+  String get recipesSubmitButton => 'Фиристодани бланк';
 
   @override
   String recipesPhotoCount(Object p1) {
@@ -1889,7 +1889,7 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get doctorsHint =>
-      'Табибони ширкати шумо ва пешрафти онҳо аз рӯи квести дорухат';
+      'Табибони ширкати шумо ва пешрафти онҳо аз рӯи квести бланк';
 
   @override
   String get doctorsSearchHint => 'Ҷустуҷӯ аз рӯи табиб, клиника, шаҳр';
@@ -1904,11 +1904,11 @@ class AppLocalizationsTg extends AppLocalizations {
   String get doctorsIdle => 'Оғоз накарданд';
 
   @override
-  String get doctorsNoQuest => 'Квести фаъоли дорухат нест';
+  String get doctorsNoQuest => 'Квести фаъоли бланк нест';
 
   @override
   String get doctorsUnavailable =>
-      'Ширкати шумо лоиҳаи дорухат надорад, бинобар ин табибон пайваст нашудаанд';
+      'Ширкати шумо лоиҳаи бланк надорад, бинобар ин табибон пайваст нашудаанд';
 
   @override
   String get doctorsEmpty => 'Ҳоло табибон нестанд';
@@ -1921,7 +1921,7 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String doctorsRecipesCount(Object count) {
-    return 'Дорухатҳо дар тамоми давра: $count';
+    return 'Бланкҳо дар тамоми давра: $count';
   }
 
   @override
@@ -1941,4 +1941,89 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get doctorsAll => 'Ҳама';
+
+  @override
+  String get loginWithGoogle => 'Ворид шудан тавассути Google';
+
+  @override
+  String get loginWithApple => 'Ворид шудан тавассути Apple';
+
+  @override
+  String get oauthLinkTitle => 'Рақами телефонро тасдиқ кунед';
+
+  @override
+  String get oauthLinkBody =>
+      'Рақамро як бор тасдиқ кунед — ҳамин тавр ҳисоб ва холҳои шуморо меёбем. Дафъаи оянда бо як ламс ворид мешавед.';
+
+  @override
+  String get oauthLinkPhoneLabel => 'Рақами телефон';
+
+  @override
+  String get oauthLinkSendCode => 'Гирифтани рамз';
+
+  @override
+  String oauthLinkCodeSent(String phone) {
+    return 'Рамз ба $phone фиристода шуд';
+  }
+
+  @override
+  String get oauthLinkCodeLabel => 'Рамзи SMS';
+
+  @override
+  String get oauthLinkConfirm => 'Тасдиқ кардан';
+
+  @override
+  String get oauthLinkChangePhone => 'Иваз кардани рақам';
+
+  @override
+  String get profilePrivacy => 'Сиёсати махфият';
+
+  @override
+  String get profilePrivacySubtitle =>
+      'Кадом маълумотро ҷамъ мекунем ва чӣ тавр нигоҳ медорем';
+
+  @override
+  String get sapperRulesButton => 'Қоидаҳои аксия';
+
+  @override
+  String get sapperRulesTitle => 'Қоидаҳои аксияи «Супер Сапёр»';
+
+  @override
+  String get sapperRulesFull => 'Қоидаҳои пурраи расмӣ';
+
+  @override
+  String get sapperRulesAccept =>
+      'Бо ишғол кардани катак шумо қоидаҳои аксияро қабул мекунед.';
+
+  @override
+  String get sapperRule1 =>
+      'Ташкилотчӣ — ҶДММ «PHARMIQ ACADEMY». Apple ва Google сарпарасти аксия нестанд ва дар он иштирок намекунанд.';
+
+  @override
+  String get sapperRule2 =>
+      'Дар аксия пул истифода намешавад: танҳо бо холҳои IQC иштирок кардан мумкин аст.';
+
+  @override
+  String get sapperRule3 =>
+      'Холҳои IQC барои таълим, пурсишҳо ва квестҳои тасдиқшуда дода мешаванд. Онҳоро харидан, ба корбари дигар додан ё ба пул иваз кардан мумкин нест.';
+
+  @override
+  String get sapperRule4 =>
+      'Мӯҳлатҳо, нархи катак ва рӯйхати пурраи ҷоизаҳо то иштирок дар саҳифаи аксия нишон дода мешаванд.';
+
+  @override
+  String get sapperRule5 =>
+      'Холҳо ҳангоми ишғоли катак хориҷ мешаванд, бекор кардан мумкин нест. Як катакро як иштирокчӣ ишғол мекунад; қабул 1 дақиқа пеш аз натиҷаҳо баста мешавад.';
+
+  @override
+  String get sapperRule6 =>
+      'Ҷоизаҳо то оғози аксия дар катакҳо ҷойгир карда мешаванд ва баъд тағйир намеёбанд. Дар вақти муайяншуда ҳамаи катакҳо якбора кушода мешаванд, ҷоизаи катакро иштирокчие, ки онро ишғол кардааст, худкор мегирад. Натиҷаҳо ба ҳама намоёнанд.';
+
+  @override
+  String get sapperRule7 =>
+      'Ҷоизаҳо — ваучерҳои тӯҳфавии шарикон ва холҳои бонусӣ; ба пул иваз намешаванд. Ҷоизаҳои катакҳои ишғолнашуда дубора бозӣ намешаванд.';
+
+  @override
+  String get sapperRule8 =>
+      'Агар аксия бекор шавад, ҳамаи холҳои сарфшуда баргардонида мешаванд. Корбарони аз 18 сола боло иштирок карда метавонанд, иштирок ихтиёрӣ аст.';
 }

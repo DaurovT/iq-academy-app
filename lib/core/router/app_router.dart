@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../auth/auth_controller.dart';
 import '../../features/shared/splash/splash_screen.dart';
 import '../../features/shared/login/login_screen.dart';
+import '../../features/shared/login/oauth_link_screen.dart';
 import '../../features/shared/register/register_screen.dart';
 import '../../features/shared/role_select/role_select_screen.dart';
 import '../../features/shared/home/home_screen.dart';
@@ -22,6 +23,7 @@ import '../../features/pharmacist/voucher_screen.dart';
 import '../../features/pharmacist/learn_screen.dart';
 import '../../features/news/news_screen.dart';
 import '../../features/mini_apps/mini_apps_screens.dart';
+import '../../features/mini_apps/sapper_rules_screen.dart';
 import '../../features/pharmacist/course_detail_screen.dart';
 import '../../features/pharmacist/lesson_view_screen.dart';
 import '../../features/pharmacist/quiz_screen.dart';
@@ -58,7 +60,14 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
           path: '/register',
           builder: (_, s) =>
-              RegisterScreen(phone: s.uri.queryParameters['phone'])),
+              RegisterScreen(
+                  phone: s.uri.queryParameters['phone'],
+                  linkToken: s.uri.queryParameters['link'])),
+      GoRoute(
+          path: '/oauth-link',
+          builder: (_, s) => OAuthLinkScreen(
+              linkToken: s.uri.queryParameters['token'] ?? '',
+              fullName: s.uri.queryParameters['name'])),
       GoRoute(path: '/role', builder: (_, __) => const RoleSelectScreen()),
 
       // Ваучер с QR — полноэкранный, без нижней навигации.
@@ -96,6 +105,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           // Мини-приложения (Супер Сапёр)
           GoRoute(path: '/app/mini-apps', builder: (_, __) => const MiniAppsHubScreen()),
           GoRoute(path: '/app/sapper', builder: (_, __) => const SapperDrawsScreen()),
+          GoRoute(path: '/app/sapper-rules', builder: (_, __) => const SapperRulesScreen()),
           GoRoute(
               path: '/app/sapper/:id',
               builder: (_, s) => SapperGameScreen(id: _intParam(s, 'id'))),
@@ -177,11 +187,12 @@ final routerProvider = Provider<GoRouter>((ref) {
       final s = auth.asData?.value ?? const AuthState();
 
       if (!s.isAuthed) {
-        return (loc == '/login' || loc == '/register') ? null : '/login';
+        const guest = {'/login', '/register', '/oauth-link'};
+        return guest.contains(loc) ? null : '/login';
       }
       if (s.needsRole) return loc == '/role' ? null : '/role';
 
-      const gate = {'/splash', '/login', '/register', '/role'};
+      const gate = {'/splash', '/login', '/register', '/oauth-link', '/role'};
       return gate.contains(loc) ? '/app' : null;
     },
   );

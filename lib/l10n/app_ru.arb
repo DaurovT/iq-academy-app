@@ -18,7 +18,7 @@
   "navQuests": "Квесты",
   "navLearn": "Обучение",
   "navWallet": "Кошелёк",
-  "navRecipes": "Рецепты",
+  "navRecipes": "Бланки",
   "navPortfolio": "Портфель",
   "navPharm": "Фарм.",
   "navTop": "Топ",
@@ -348,7 +348,7 @@
   "profileLogoutConfirmTitle": "Выйти из аккаунта?",
   "profileLogoutAction": "Выйти",
   "profileDeleteConfirmTitle": "Удалить аккаунт?",
-  "profileDeleteConfirmBody": "Действие необратимо. Все данные будут удалены.",
+  "profileDeleteConfirmBody": "Удалим профиль, номер телефона, привязки входа, уведомления и переписку с поддержкой. Записи о начислениях и выданных ваучерах сохранятся без ваших персональных данных — они нужны для учёта. Действие необратимо.",
   "profileStatQuests": "КВЕСТОВ",
   "profileStatLevel": "УРОВЕНЬ",
   "questHistoryTitle": "История участия",
@@ -441,7 +441,7 @@
   "roleSelectSheetTitle": "Выберите роль",
   "roleSelectEnter": "Войти",
   "notifSettingsTitle": "Настройки уведомлений",
-  "notifSettingsChecks": "Статусы чеков и рецептов",
+  "notifSettingsChecks": "Статусы чеков и бланков",
   "notifSettingsQuests": "Квесты и награды",
   "notifSettingsLearning": "Обучение",
   "notifSettingsMarketing": "Новости и акции",
@@ -540,12 +540,12 @@
       }
     }
   },
-  "docHomeSubtitle": "Отправляйте рецепты и получайте вознаграждение",
+  "docHomeSubtitle": "Отправляйте бланки и получайте вознаграждение",
   "docHomeWalletBalance": "БАЛАНС КОШЕЛЬКА",
   "docHomeWallet": "Кошелёк",
-  "docHomeSendRecipe": "Отправить рецепт",
-  "docHomeSendRecipeHint": "Сфотографируйте рецепт — ИИ распознает препараты",
-  "docHomeStatRecipes": "всего рецептов",
+  "docHomeSendRecipe": "Отправить бланк",
+  "docHomeSendRecipeHint": "Сфотографируйте бланк — ИИ распознает препараты",
+  "docHomeStatRecipes": "всего бланков",
   "docHomeStatApproved": "одобрено",
   "docHomeStatIqc": "баллов IQC",
   "docHomeVoucher": "ВАУЧЕР",
@@ -558,8 +558,8 @@
       }
     }
   },
-  "recipeDetailMyRecipes": "Мои рецепты",
-  "recipeDetailTitle": "Рецепт №{id}",
+  "recipeDetailMyRecipes": "Мои бланки",
+  "recipeDetailTitle": "Бланк №{id}",
   "@recipeDetailTitle": {
     "placeholders": {
       "id": {
@@ -580,7 +580,7 @@
   "recipeDetailStatusPending": "На проверке",
   "recipeDetailAiRecognized": "Распознано ИИ",
   "recipeDetailNoDrugs": "Препараты не распознаны",
-  "recipesTitle": "Мои рецепты",
+  "recipesTitle": "Мои бланки",
   "recipesTotal": "{p1} всего",
   "@recipesTotal": {
     "placeholders": {
@@ -592,10 +592,10 @@
   "recipesTabAll": "Все",
   "recipesTabActive": "Активные",
   "recipesTabDone": "Завершенные",
-  "recipesEmpty": "Рецептов пока нет",
+  "recipesEmpty": "Бланков пока нет",
   "recipesTakePhoto": "Сделать фото",
   "recipesFromGallery": "Выбрать из галереи",
-  "recipesUploading": "Рецепт добавлен — загружается",
+  "recipesUploading": "Бланк добавлен — загружается",
   "recipesDoctorInfoTitle": "Данные врача (по желанию)",
   "recipesDoctorName": "ФИО",
   "recipesDoctorWorkplace": "Место работы",
@@ -603,7 +603,7 @@
   "recipesDoctorPhone": "Телефон",
   "recipesSkip": "Пропустить",
   "recipesSend": "Отправить",
-  "recipesSubmitButton": "Отправить рецепт",
+  "recipesSubmitButton": "Отправить бланк",
   "recipesPhotoCount": "фото: {p1}",
   "@recipesPhotoCount": {
     "placeholders": {
@@ -1248,17 +1248,17 @@
   "profileChooseLanguage": "Выберите язык",
   "navDoctors": "Врачи",
   "doctorsTitle": "Врачи",
-  "doctorsHint": "Врачи вашей компании и их прогресс по рецептурному квесту",
+  "doctorsHint": "Врачи вашей компании и их прогресс по квесту на бланки",
   "doctorsSearchHint": "Поиск по врачу, клинике, городу",
   "doctorsCompleted": "Выполнили",
   "doctorsInProgress": "В процессе",
   "doctorsIdle": "Не начали",
-  "doctorsNoQuest": "Нет активного рецептурного квеста",
-  "doctorsUnavailable": "У вашей компании нет рецептурного проекта, поэтому врачи не подключены",
+  "doctorsNoQuest": "Нет активного квеста на бланки",
+  "doctorsUnavailable": "У вашей компании нет проекта с бланками, поэтому врачи не подключены",
   "doctorsEmpty": "Врачей пока нет",
   "doctorsNotFound": "Ничего не найдено",
   "doctorsRegionUnknown": "Регион не указан",
-  "doctorsRecipesCount": "Рецептов за всё время: {count}",
+  "doctorsRecipesCount": "Бланков за всё время: {count}",
   "@doctorsRecipesCount": {
     "placeholders": {
       "count": {
@@ -1293,5 +1293,36 @@
       }
     }
   },
-  "doctorsAll": "Все"
+  "doctorsAll": "Все",
+  "loginWithGoogle": "Войти через Google",
+  "loginWithApple": "Войти через Apple",
+  "oauthLinkTitle": "Подтвердите номер телефона",
+  "oauthLinkBody": "Один раз подтвердите номер — так мы найдём ваш аккаунт и баллы. В следующий раз вход будет в одно касание.",
+  "oauthLinkPhoneLabel": "Номер телефона",
+  "oauthLinkSendCode": "Получить код",
+  "oauthLinkCodeSent": "Код отправлен на {phone}",
+  "@oauthLinkCodeSent": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "oauthLinkCodeLabel": "Код из SMS",
+  "oauthLinkConfirm": "Подтвердить",
+  "oauthLinkChangePhone": "Изменить номер",
+  "profilePrivacy": "Политика конфиденциальности",
+  "profilePrivacySubtitle": "Какие данные мы собираем и как храним",
+  "sapperRulesButton": "Правила акции",
+  "sapperRulesTitle": "Правила акции «Супер Сапёр»",
+  "sapperRulesFull": "Полные официальные правила",
+  "sapperRulesAccept": "Занимая клетку, вы принимаете правила акции.",
+  "sapperRule1": "Организатор — ООО «PHARMIQ ACADEMY». Apple и Google не являются спонсорами акции и никак в ней не участвуют.",
+  "sapperRule2": "Деньги в акции не используются: участвовать можно только за баллы IQC.",
+  "sapperRule3": "Баллы IQC начисляются за обучение, опросы и подтверждённые квесты. Их нельзя купить, передать другому пользователю или обменять на деньги.",
+  "sapperRule4": "Сроки, цена клетки и полный список призов показаны на странице акции до участия.",
+  "sapperRule5": "Баллы списываются при занятии клетки, отменить это нельзя. Одну клетку занимает один участник; приём закрывается за 1 минуту до итогов.",
+  "sapperRule6": "Призы размещаются в клетках до начала акции и после старта не меняются. В назначенное время все клетки открываются одновременно, приз из клетки автоматически получает участник, который её занял. Итоги видны всем.",
+  "sapperRule7": "Призы — подарочные ваучеры партнёров и бонусные баллы; на деньги они не обмениваются. Призы из незанятых клеток повторно не разыгрываются.",
+  "sapperRule8": "Если акция отменена, все потраченные баллы возвращаются. Участвовать могут пользователи старше 18 лет, участие добровольное."
 }

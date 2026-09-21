@@ -8,6 +8,7 @@ import '../models/learn.dart';
 import '../models/check.dart';
 import '../models/notification.dart';
 import '../models/medrep.dart';
+import '../models/oauth.dart';
 import '../models/brand.dart';
 import '../models/registration.dart';
 import '../models/support.dart';
@@ -117,11 +118,13 @@ class HttpAuthApi implements AuthApi {
 
   @override
   Future<Session> register(
-      Role role, String schemaVersion, Map<String, dynamic> values) async {
+      Role role, String schemaVersion, Map<String, dynamic> values,
+      {String? oauthLinkToken}) async {
     final r = await _dio.post('/auth/register', data: {
       'role': role.apiValue,
       'schemaVersion': schemaVersion,
       'values': values,
+      if (oauthLinkToken != null) 'oauthLinkToken': oauthLinkToken,
     });
     return Session.fromJson(_obj(r.data));
   }
@@ -138,6 +141,33 @@ class HttpAuthApi implements AuthApi {
     // Диагностика: печатаем сырой ответ, чтобы видеть точную форму `done`.
     if (kDebugMode) debugPrint('[tg/poll] raw response: ${r.data}');
     return TgPollResult.fromJson(_obj(r.data));
+  }
+
+  @override
+  Future<OAuthResult> oauth(String provider, String idToken,
+      {String? nonce, String? authorizationCode, String? fullName}) async {
+    final r = await _dio.post('/auth/oauth', data: {
+      'provider': provider,
+      'idToken': idToken,
+      if (nonce != null) 'nonce': nonce,
+      if (authorizationCode != null) 'authorizationCode': authorizationCode,
+      if (fullName != null) 'fullName': fullName,
+    });
+    return parseOAuthResult(_obj(r.data));
+  }
+
+  @override
+  Future<void> oauthLinkSendSms(String linkToken, String phone) async {
+    await _dio.post('/auth/oauth/link/send-sms',
+        data: {'linkToken': linkToken, 'phone': phone});
+  }
+
+  @override
+  Future<OAuthResult> oauthLinkConfirm(
+      String linkToken, String phone, String code) async {
+    final r = await _dio.post('/auth/oauth/link/confirm',
+        data: {'linkToken': linkToken, 'phone': phone, 'code': code});
+    return parseOAuthResult(_obj(r.data));
   }
 }
 
