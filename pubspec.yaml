@@ -20,6 +20,8 @@ version: 1.0.0+1
 
 environment:
   sdk: ^3.7.0
+  # sign_in_with_apple 8.x требует Flutter 3.44+ (Dart 3.12) — на старой версии pub get упадёт
+  flutter: ">=3.44.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
