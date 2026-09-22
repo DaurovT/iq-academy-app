@@ -45,6 +45,10 @@ the user confirms a phone number once, because the program account is identified
 The demo accounts are not linked to real program participants, so their quest progress and history are empty;
 all active quests and courses are the same as for regular users.
 
+To try Super Sapper, sign in as the **Pharmacist** demo account: it is topped up to 60 IQC on every sign-in
+(one cell costs 5 IQC), and a promotion is active until 13 October 2026. Home → Mini apps → Super Sapper →
+pick a cell → confirm. Deleting a demo account is safe — it is recreated on the next sign-in.
+
 **Account deletion**
 Profile → “Delete account”. Personal data (profile, phone number, sign-in links, notifications, support chat)
 is deleted immediately; anonymized accrual and voucher records are kept for accounting. Sign in with Apple
