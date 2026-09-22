@@ -17,10 +17,10 @@
 7. **User Access:** Full Access → **Create**.
 
 ### A2. App Information (слева)
-- **Subtitle:** `Обучение и баллы для аптек`
+- **Subtitle:** `Обучение сотрудников аптек`
 - **Category:** Primary — **Education**, Secondary — **не указывать** (Medical не ставим: лишний повод
   для проверки по медицинским правилам; Entertainment не подходит — приложение обучающее).
-- **Content Rights:** «Contains third-party content» → **Yes** (курсы и материалы компаний-партнёров) → подтвердить, что права есть.
+- **Content Rights:** «Contains third-party content» → **No** (весь контент — собственный).
 - **Age Rating** → Edit → отвечать так:
   - Medical or Treatment-Focused Content → **Infrequent/Mild**
   - Contests → **Frequent/Intense** («Супер Сапёр» — призовая акция)
