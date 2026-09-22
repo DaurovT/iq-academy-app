@@ -10,6 +10,7 @@ import '../../core/theme/app_colors.dart';
 import '../shared/widgets/pharm_top_bar.dart';
 import '../shared/widgets/screen_decor.dart';
 import 'providers.dart';
+import '../../widgets/dialog_buttons.dart';
 
 enum _Tab { all, active, done }
 
@@ -182,7 +183,7 @@ Future<void> showNewRecipeSheet(BuildContext context, WidgetRef ref) async {
 
   await ref
       .read(uploadQueueProvider.notifier)
-      .enqueueRecipe(picked.map((x) => x.path).toList(), doctor);
+      .enqueueRecipe(picked, doctor);
   if (!context.mounted) return;
   ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(context.l10n.recipesUploading)));
@@ -224,12 +225,11 @@ Future<DoctorRecipeInfo?> _askDoctorInfo(BuildContext context) {
         ),
       ),
       actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(ctx, const DoctorRecipeInfo()),
-          child: Text(context.l10n.recipesSkip),
-        ),
-        FilledButton(
-          onPressed: () => Navigator.pop(
+        DialogButtons(
+          cancelLabel: context.l10n.recipesSkip,
+          onCancel: () => Navigator.pop(ctx, const DoctorRecipeInfo()),
+          confirmLabel: context.l10n.recipesSend,
+          onConfirm: () => Navigator.pop(
             ctx,
             DoctorRecipeInfo(
               name: name.text.trim().isEmpty ? null : name.text.trim(),
@@ -239,7 +239,6 @@ Future<DoctorRecipeInfo?> _askDoctorInfo(BuildContext context) {
               phone: phone.text.trim().isEmpty ? null : phone.text.trim(),
             ),
           ),
-          child: Text(context.l10n.recipesSend),
         ),
       ],
     ),

@@ -1,4 +1,3 @@
-import 'dart:io' show Platform;
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import '../models/account.dart';
@@ -9,6 +8,8 @@ import '../models/learn.dart';
 import '../models/check.dart';
 import '../models/notification.dart';
 import '../models/medrep.dart';
+import '../models/oauth.dart';
+import '../app_modules.dart';
 import '../models/brand.dart';
 import '../models/registration.dart';
 import '../models/support.dart';
@@ -118,11 +119,13 @@ class HttpAuthApi implements AuthApi {
 
   @override
   Future<Session> register(
-      Role role, String schemaVersion, Map<String, dynamic> values) async {
+      Role role, String schemaVersion, Map<String, dynamic> values,
+      {String? oauthLinkToken}) async {
     final r = await _dio.post('/auth/register', data: {
       'role': role.apiValue,
       'schemaVersion': schemaVersion,
       'values': values,
+      if (oauthLinkToken != null) 'oauthLinkToken': oauthLinkToken,
     });
     return Session.fromJson(_obj(r.data));
   }
@@ -139,6 +142,33 @@ class HttpAuthApi implements AuthApi {
     // Диагностика: печатаем сырой ответ, чтобы видеть точную форму `done`.
     if (kDebugMode) debugPrint('[tg/poll] raw response: ${r.data}');
     return TgPollResult.fromJson(_obj(r.data));
+  }
+
+  @override
+  Future<OAuthResult> oauth(String provider, String idToken,
+      {String? nonce, String? authorizationCode, String? fullName}) async {
+    final r = await _dio.post('/auth/oauth', data: {
+      'provider': provider,
+      'idToken': idToken,
+      if (nonce != null) 'nonce': nonce,
+      if (authorizationCode != null) 'authorizationCode': authorizationCode,
+      if (fullName != null) 'fullName': fullName,
+    });
+    return parseOAuthResult(_obj(r.data));
+  }
+
+  @override
+  Future<void> oauthLinkSendSms(String linkToken, String phone) async {
+    await _dio.post('/auth/oauth/link/send-sms',
+        data: {'linkToken': linkToken, 'phone': phone});
+  }
+
+  @override
+  Future<OAuthResult> oauthLinkConfirm(
+      String linkToken, String phone, String code) async {
+    final r = await _dio.post('/auth/oauth/link/confirm',
+        data: {'linkToken': linkToken, 'phone': phone, 'code': code});
+    return parseOAuthResult(_obj(r.data));
   }
 }
 
@@ -169,6 +199,12 @@ class HttpReferenceApi implements ReferenceApi {
 class HttpAccountApi implements AccountApi {
   HttpAccountApi(this._dio);
   final Dio _dio;
+
+  @override
+  Future<AppModules> appConfig() async {
+    final r = await _dio.get('/client/app-config');
+    return AppModules.fromJson(_obj(r.data));
+  }
 
   @override
   Future<AccountSettings> settings() async {
@@ -334,6 +370,12 @@ class HttpCatalogApi implements CatalogApi {
   }
 }
 
+/// Метка платформы для бэкенда (админка показывает её у чека).
+/// `dart:io` на вебе недоступен, поэтому определяем через foundation.
+String get _platformTag => kIsWeb
+    ? 'web'
+    : (defaultTargetPlatform == TargetPlatform.iOS ? 'ios' : 'android');
+
 /// Multipart-загрузка фото (чеки/рецепты).
 Future<Response> _upload(Dio dio, String path, List<UploadFile> files,
     Map<String, String?> fields) async {
@@ -341,14 +383,21 @@ Future<Response> _upload(Dio dio, String path, List<UploadFile> files,
   for (var i = 0; i < files.length; i++) {
     form.files.add(MapEntry(
       'files',
-      await MultipartFile.fromFile(files[i].path,
-          filename: files[i].filename ?? 'photo_$i.jpg'),
+      await _multipart(files[i], i),
     ));
   }
   fields.forEach((k, v) {
     if (v != null) form.fields.add(MapEntry(k, v));
   });
   return dio.post(path, data: form);
+}
+
+/// На вебе файла на диске нет — там [UploadFile] несёт байты.
+Future<MultipartFile> _multipart(UploadFile f, int i) async {
+  final name = f.filename ?? 'photo_$i.jpg';
+  final bytes = f.bytes;
+  if (bytes != null) return MultipartFile.fromBytes(bytes, filename: name);
+  return MultipartFile.fromFile(f.path, filename: name);
 }
 
 class HttpChecksApi implements ChecksApi {
@@ -368,7 +417,7 @@ class HttpChecksApi implements ChecksApi {
       'checkDate': checkDate,
       'idempotencyKey': idempotencyKey,
       // сообщаем платформу, чтобы админка показывала iPhone/Android у чека
-      'platform': Platform.isIOS ? 'ios' : 'android',
+      'platform': _platformTag,
     });
     return Check.fromJson(_obj(r.data));
   }
@@ -478,6 +527,13 @@ class HttpMedrepApi implements MedrepApi {
   Future<PharmacistDetail> pharmacist(int telegramId) async {
     final r = await _dio.get('/client/medrep/pharmacists/$telegramId');
     return PharmacistDetail.fromJson(_obj(r.data));
+  }
+
+  @override
+  Future<DoctorsOverview> doctors({int? questId}) async {
+    final r = await _dio.get('/client/medrep/doctors',
+        queryParameters: questId == null ? null : {'questId': questId});
+    return DoctorsOverview.fromJson(_obj(r.data));
   }
 
   @override

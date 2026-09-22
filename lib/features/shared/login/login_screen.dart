@@ -7,6 +7,7 @@ import '../../../core/api/providers.dart';
 import '../../../core/auth/auth_controller.dart';
 import '../../../core/l10n/l10n.dart';
 import '../widgets/pharm_academy_logo.dart';
+import 'social_login_buttons.dart';
 import 'telegram_login.dart';
 
 /// Вход по номеру телефона и SMS-коду. Перенесён из макета Figma
@@ -101,7 +102,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => AnnotatedRegion<SystemUiOverlayStyle>(
+        // Фон экрана всегда тёмный — значки статус-бара светлые в любой теме.
+        value: SystemUiOverlayStyle.light,
+        child: _scaffold(context),
+      );
+
+  Widget _scaffold(BuildContext context) {
     return Scaffold(
       backgroundColor: _bg,
       body: Stack(
@@ -163,7 +170,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   const SizedBox(height: 8),
                   Text(
                     _step == _Step.phone
-                        ? context.l10n.loginByPhone
+                        ? (_phoneNotFound
+                            ? context.l10n.loginByPhone
+                            : context.l10n.loginChooseMethod)
                         : context.l10n.loginCodeSent(_phone),
                     style: const TextStyle(fontSize: 14, color: _sub),
                   ),
@@ -246,15 +255,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         _orDivider(),
         const SizedBox(height: 16),
         const TelegramLoginButton(),
-        const SizedBox(height: 8),
+        const SocialLoginButtons(),
+        const SizedBox(height: 16),
         Center(
           child: TextButton(
             onPressed: () => context.go('/register'),
-            child: Text(context.l10n.loginRegister,
-                style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                    color: Color(0xFFFEFEFE))),
+            child: Text.rich(
+              TextSpan(children: [
+                TextSpan(
+                    text: '${context.l10n.loginNoAccount} ',
+                    style: const TextStyle(color: _sub)),
+                TextSpan(
+                    text: context.l10n.loginRegister,
+                    style: const TextStyle(
+                        color: _blue, fontWeight: FontWeight.w600)),
+              ]),
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 15),
+            ),
           ),
         ),
       ],

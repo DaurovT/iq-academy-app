@@ -12,6 +12,8 @@ import '../models/support.dart';
 import '../models/news.dart';
 import '../models/survey.dart';
 import '../models/sapper.dart';
+import '../models/oauth.dart';
+import '../app_modules.dart';
 import 'upload.dart';
 
 /// Контракт платформы — прямое зеркало web/src/lib/api/contract.ts.
@@ -70,9 +72,17 @@ abstract interface class AuthApi {
   Future<Account> session();
   Future<void> logout();
   Future<Session> register(
-      Role role, String schemaVersion, Map<String, dynamic> values);
+      Role role, String schemaVersion, Map<String, dynamic> values,
+      {String? oauthLinkToken});
   Future<TgLoginStart> telegramStart();
   Future<TgPollResult> telegramPoll(String nonce);
+
+  /// Вход через Google/Apple: проверенный токен провайдера → сессия или шаг привязки.
+  Future<OAuthResult> oauth(String provider, String idToken,
+      {String? nonce, String? authorizationCode, String? fullName});
+  Future<void> oauthLinkSendSms(String linkToken, String phone);
+  Future<OAuthResult> oauthLinkConfirm(
+      String linkToken, String phone, String code);
 }
 
 abstract interface class ReferenceApi {
@@ -90,6 +100,9 @@ abstract interface class AccountApi {
   Future<void> deleteAccount();
   Future<({bool sent})> changePhoneStart(String phone);
   Future<({String phone})> changePhoneConfirm(String phone, String code);
+
+  /// Видимость разделов приложения из админки.
+  Future<AppModules> appConfig();
 }
 
 abstract interface class WalletApi {
@@ -144,6 +157,10 @@ abstract interface class MedrepApi {
   Future<MedrepMetrics> metrics({String? dateFrom, String? dateTo});
   Future<List<PortfolioPharmacist>> portfolio();
   Future<PharmacistDetail> pharmacist(int telegramId);
+
+  /// Врачи компании медпреда по регионам + прогресс по рецептурному квесту.
+  /// [questId] — какой квест считать; null = ближайший к завершению активный.
+  Future<DoctorsOverview> doctors({int? questId});
   Future<Leaderboard> leaderboard(String metric);
   Future<List<MedrepQuest>> quests();
   Future<String> reflink();

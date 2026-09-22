@@ -12,6 +12,7 @@ class PharmPalette {
     required this.accent,
     required this.card,
     required this.cardBorder,
+    required this.neutralFill,
     required this.walletGradient,
     required this.walletText,
     required this.walletPillBg,
@@ -53,6 +54,9 @@ class PharmPalette {
   final Color accent;
   final Color card;
   final Color cardBorder;
+
+  /// Спокойная заливка второстепенных кнопок (например, «Отмена» в диалогах).
+  final Color neutralFill;
   final List<Color> walletGradient;
   final Color walletText;
   final Color walletPillBg;
@@ -100,6 +104,7 @@ class PharmPalette {
     accent: Color(0xFF6B9EF5),
     card: Color(0xFF22232B),
     cardBorder: Color(0xFF46474E),
+    neutralFill: Color(0xFF2D2E38),
     walletGradient: [Color(0xFF1A3566), Color(0xFF2A4B8A)],
     walletText: Color(0xFFD6E3FF),
     walletPillBg: Color(0x14FFFFFF), // white 8%
@@ -142,6 +147,7 @@ class PharmPalette {
     accent: Color(0xFF2563EB),
     card: Color(0xFFFFFFFF),
     cardBorder: Color(0xFFEBEDF0),
+    neutralFill: Color(0xFFEEF0F4),
     walletGradient: [Color(0xFF2563EB), Color(0xFF7C3AED)],
     walletText: Color(0xFFFFFFFF),
     walletPillBg: Color(0x33FFFFFF), // white 20%

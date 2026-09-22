@@ -63,7 +63,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get navWallet => 'Кошелёк';
 
   @override
-  String get navRecipes => 'Рецепты';
+  String get navRecipes => 'Бланки';
 
   @override
   String get navPortfolio => 'Портфель';
@@ -90,7 +90,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get miniAppsTitle => 'Мини-приложения';
 
   @override
-  String get miniAppsSubtitle => 'Играй и выигрывай призы за IQC';
+  String get miniAppsSubtitle => 'Акции для участников программы';
 
   @override
   String get miniAppsSoon => 'Скоро';
@@ -118,17 +118,17 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get sapperSubtitle =>
-      'Занимай клетки за IQC — в час вскрытия узнаешь, что под ними';
+      'Выбирайте клетки за IQC — при подведении итогов узнаете, что под ними';
 
   @override
-  String get sapperNoDraws => 'Нет розыгрышей';
+  String get sapperNoDraws => 'Нет активных акций';
 
   @override
-  String get sapperRevealed => 'Вскрыт';
+  String get sapperRevealed => 'Завершена';
 
   @override
   String sapperPrizesAndPrice(Object prizeCount, Object priceIqc) {
-    return '🎁 $prizeCount призов  💎 $priceIqc IQC/клетка  ';
+    return '🎁 призов: $prizeCount  💎 $priceIqc IQC/клетка  ';
   }
 
   @override
@@ -142,7 +142,7 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get sapperGoToGame => 'Перейти к игре';
+  String get sapperGoToGame => 'Открыть поле';
 
   @override
   String sapperReserveTitle(Object number) {
@@ -151,7 +151,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String sapperReserveBody(Object price) {
-    return 'Спишется $price IQC. Отменить нельзя — клетка закрепится за вами до вскрытия.';
+    return 'Будет использовано $price IQC. Отменить нельзя — клетка закрепится за вами до подведения итогов.';
   }
 
   @override
@@ -165,22 +165,42 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get sapperDraws => 'Розыгрыши';
+  String get sapperNoIqcTitle => 'Недостаточно IQC';
 
   @override
-  String get sapperAcceptClosed =>
-      'Приём клеток закрыт — идёт подготовка к вскрытию';
-
-  @override
-  String get sapperHiddenTitle => 'НА ПОЛЕ СПРЯТАНО';
-
-  @override
-  String sapperRevealIn(Object time) {
-    return 'вскрытие через $time';
+  String sapperNoIqcBody(Object price, Object have) {
+    return 'Для участия нужно $price IQC, у вас $have. Заработайте IQC — пройдите обучение, квест или опрос.';
   }
 
   @override
-  String get sapperNoPrizes => 'призы не заявлены';
+  String get sapperDraws => 'Акции';
+
+  @override
+  String get sapperAcceptClosed => 'Выбор клеток закрыт — подводим итоги';
+
+  @override
+  String get sapperHiddenTitle => 'ПРИЗЫ НА ПОЛЕ';
+
+  @override
+  String sapperFieldTotal(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count клеток',
+      many: '$count клеток',
+      few: '$count клетки',
+      one: '$count клетка',
+    );
+    return 'НА ПОЛЕ $_temp0';
+  }
+
+  @override
+  String sapperRevealIn(Object time) {
+    return 'итоги через $time';
+  }
+
+  @override
+  String get sapperNoPrizes => 'призы не указаны';
 
   @override
   String sapperPrizeChip(Object count, Object label) {
@@ -194,22 +214,22 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String sapperCellPrice(Object price) {
-    return 'цена клетки $price IQC';
+    return 'клетка — $price IQC';
   }
 
   @override
   String get sapperYourBalance => 'Ваш баланс';
 
   @override
-  String get sapperCellPriceLabel => 'цена клетки';
+  String get sapperCellPriceLabel => 'за клетку';
 
   @override
   String sapperWinBannerWin(Object count, Object word) {
-    return '🎉 Вы выиграли $count $word!';
+    return '🎉 Вы получили $count $word!';
   }
 
   @override
-  String get sapperNoWin => 'В этот раз без выигрыша';
+  String get sapperNoWin => 'В этот раз без приза';
 
   @override
   String get sapperPrizeOne => 'приз';
@@ -242,7 +262,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get sapperLegendFree => 'Свободно';
 
   @override
-  String get sapperWinners => 'Победители';
+  String get sapperWinners => 'Получили призы';
 
   @override
   String get newsTitle => 'Новости';
@@ -306,6 +326,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get loginByPhone => 'Войдите по номеру телефона';
 
   @override
+  String get loginChooseMethod => 'Выберите удобный способ входа';
+
+  @override
   String loginCodeSent(Object phone) {
     return 'Код из SMS на $phone';
   }
@@ -324,6 +347,9 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get loginRegister => 'Зарегистрироваться';
+
+  @override
+  String get loginNoAccount => 'Нет аккаунта?';
 
   @override
   String get loginEnter => 'Войти';
@@ -482,6 +508,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get profileLogoutConfirmTitle => 'Выйти из аккаунта?';
 
   @override
+  String get profileLogoutConfirmBody =>
+      'Чтобы снова пользоваться приложением, нужно будет войти ещё раз.';
+
+  @override
   String get profileLogoutAction => 'Выйти';
 
   @override
@@ -489,7 +519,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get profileDeleteConfirmBody =>
-      'Действие необратимо. Все данные будут удалены.';
+      'Удалим профиль, номер телефона, привязки входа, уведомления и переписку с поддержкой. Записи о начислениях и выданных ваучерах сохранятся без ваших персональных данных — они нужны для учёта. Действие необратимо.';
 
   @override
   String get profileStatQuests => 'КВЕСТОВ';
@@ -617,7 +647,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get notifSettingsTitle => 'Настройки уведомлений';
 
   @override
-  String get notifSettingsChecks => 'Статусы чеков и рецептов';
+  String get notifSettingsChecks => 'Статусы чеков и бланков';
 
   @override
   String get notifSettingsQuests => 'Квесты и награды';
@@ -801,8 +831,7 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get docHomeSubtitle =>
-      'Отправляйте рецепты и получайте вознаграждение';
+  String get docHomeSubtitle => 'Отправляйте бланки и получайте вознаграждение';
 
   @override
   String get docHomeWalletBalance => 'БАЛАНС КОШЕЛЬКА';
@@ -811,14 +840,14 @@ class AppLocalizationsRu extends AppLocalizations {
   String get docHomeWallet => 'Кошелёк';
 
   @override
-  String get docHomeSendRecipe => 'Отправить рецепт';
+  String get docHomeSendRecipe => 'Отправить бланк';
 
   @override
   String get docHomeSendRecipeHint =>
-      'Сфотографируйте рецепт — ИИ распознает препараты';
+      'Сфотографируйте бланк — ИИ распознает препараты';
 
   @override
-  String get docHomeStatRecipes => 'всего рецептов';
+  String get docHomeStatRecipes => 'всего бланков';
 
   @override
   String get docHomeStatApproved => 'одобрено';
@@ -838,11 +867,11 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get recipeDetailMyRecipes => 'Мои рецепты';
+  String get recipeDetailMyRecipes => 'Мои бланки';
 
   @override
   String recipeDetailTitle(Object id) {
-    return 'Рецепт №$id';
+    return 'Бланк №$id';
   }
 
   @override
@@ -866,7 +895,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get recipeDetailNoDrugs => 'Препараты не распознаны';
 
   @override
-  String get recipesTitle => 'Мои рецепты';
+  String get recipesTitle => 'Мои бланки';
 
   @override
   String recipesTotal(Object p1) {
@@ -883,7 +912,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get recipesTabDone => 'Завершенные';
 
   @override
-  String get recipesEmpty => 'Рецептов пока нет';
+  String get recipesEmpty => 'Бланков пока нет';
 
   @override
   String get recipesTakePhoto => 'Сделать фото';
@@ -892,7 +921,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get recipesFromGallery => 'Выбрать из галереи';
 
   @override
-  String get recipesUploading => 'Рецепт добавлен — загружается';
+  String get recipesUploading => 'Бланк добавлен — загружается';
 
   @override
   String get recipesDoctorInfoTitle => 'Данные врача (по желанию)';
@@ -916,7 +945,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get recipesSend => 'Отправить';
 
   @override
-  String get recipesSubmitButton => 'Отправить рецепт';
+  String get recipesSubmitButton => 'Отправить бланк';
 
   @override
   String recipesPhotoCount(Object p1) {
@@ -1700,7 +1729,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get walletNoVouchers => 'Пока нет ваучеров';
 
   @override
-  String get walletRedeemTitle => 'Обменять баллы?';
+  String get walletRedeemTitle => 'Оформить ваучер?';
 
   @override
   String walletRedeemBody(Object p1, Object p2) {
@@ -1711,7 +1740,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get walletCancel => 'Отмена';
 
   @override
-  String get walletRedeem => 'Обменять';
+  String get walletRedeem => 'Оформить';
 
   @override
   String get walletVoucherIssued => 'Ваучер оформлен';
@@ -1836,7 +1865,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String questDetailRewardVoucherLine(Object amount) {
-    return 'Korzinka · $amount сум';
+    return 'Ваучер Korzinka · $amount IQC';
   }
 
   @override
@@ -1865,4 +1894,149 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get profileChooseLanguage => 'Выберите язык';
+
+  @override
+  String get navDoctors => 'Врачи';
+
+  @override
+  String get doctorsTitle => 'Врачи';
+
+  @override
+  String get doctorsHint =>
+      'Врачи вашей компании и их прогресс по квесту на бланки';
+
+  @override
+  String get doctorsSearchHint => 'Поиск по врачу, клинике, городу';
+
+  @override
+  String get doctorsCompleted => 'Выполнили';
+
+  @override
+  String get doctorsInProgress => 'В процессе';
+
+  @override
+  String get doctorsIdle => 'Не начали';
+
+  @override
+  String get doctorsNoQuest => 'Нет активного квеста на бланки';
+
+  @override
+  String get doctorsUnavailable =>
+      'У вашей компании нет проекта с бланками, поэтому врачи не подключены';
+
+  @override
+  String get doctorsEmpty => 'Врачей пока нет';
+
+  @override
+  String get doctorsNotFound => 'Ничего не найдено';
+
+  @override
+  String get doctorsRegionUnknown => 'Регион не указан';
+
+  @override
+  String doctorsRecipesCount(Object count) {
+    return 'Бланков за всё время: $count';
+  }
+
+  @override
+  String doctorsQuestGoal(Object goal) {
+    return 'Норма: $goal';
+  }
+
+  @override
+  String doctorsDoneTimes(Object count) {
+    return 'Выполнен ×$count';
+  }
+
+  @override
+  String doctorsRegionSummary(Object doctors, Object completed) {
+    return '$doctors врач. · $completed вып.';
+  }
+
+  @override
+  String get doctorsAll => 'Все';
+
+  @override
+  String get loginWithGoogle => 'Войти через Google';
+
+  @override
+  String get loginWithApple => 'Войти через Apple';
+
+  @override
+  String get oauthLinkTitle => 'Подтвердите номер телефона';
+
+  @override
+  String get oauthLinkBody =>
+      'Один раз подтвердите номер — так мы найдём ваш аккаунт и баллы. В следующий раз вход будет в одно касание.';
+
+  @override
+  String get oauthLinkPhoneLabel => 'Номер телефона';
+
+  @override
+  String get oauthLinkSendCode => 'Получить код';
+
+  @override
+  String oauthLinkCodeSent(String phone) {
+    return 'Код отправлен на $phone';
+  }
+
+  @override
+  String get oauthLinkCodeLabel => 'Код из SMS';
+
+  @override
+  String get oauthLinkConfirm => 'Подтвердить';
+
+  @override
+  String get oauthLinkChangePhone => 'Изменить номер';
+
+  @override
+  String get profilePrivacy => 'Политика конфиденциальности';
+
+  @override
+  String get profilePrivacySubtitle => 'Какие данные мы собираем и как храним';
+
+  @override
+  String get sapperRulesButton => 'Правила акции';
+
+  @override
+  String get sapperRulesTitle => 'Правила акции «Супер Сапёр»';
+
+  @override
+  String get sapperRulesFull => 'Полные официальные правила';
+
+  @override
+  String get sapperRulesAccept =>
+      'Занимая клетку, вы принимаете правила акции.';
+
+  @override
+  String get sapperRule1 =>
+      'Организатор — ООО «PHARMIQ ACADEMY». Apple и Google не являются спонсорами акции и никак в ней не участвуют.';
+
+  @override
+  String get sapperRule2 =>
+      'Деньги в акции не используются: участвовать можно только за баллы IQC.';
+
+  @override
+  String get sapperRule3 =>
+      'Баллы IQC начисляются за обучение, опросы и подтверждённые квесты. Их нельзя купить, передать другому пользователю или обменять на деньги.';
+
+  @override
+  String get sapperRule4 =>
+      'Сроки, цена клетки и полный список призов показаны на странице акции до участия.';
+
+  @override
+  String get sapperRule5 =>
+      'Баллы списываются при занятии клетки, отменить это нельзя. Одну клетку занимает один участник; приём закрывается за 1 минуту до итогов.';
+
+  @override
+  String get sapperRule6 =>
+      'Призы размещаются в клетках до начала акции и после старта не меняются. В назначенное время все клетки открываются одновременно, приз из клетки автоматически получает участник, который её занял. Итоги видны всем.';
+
+  @override
+  String get sapperRule7 =>
+      'Призы — подарочные ваучеры партнёров и бонусные баллы; на деньги они не обмениваются. Призы из незанятых клеток повторно не распределяются.';
+
+  @override
+  String get sapperRule8 =>
+      'Если акция отменена, все потраченные баллы возвращаются. Участвовать могут пользователи старше 18 лет, участие добровольное.';
 }

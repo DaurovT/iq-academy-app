@@ -1,0 +1,798 @@
+{
+  "available": true,
+  "companyName": "Test Pharma",
+  "quests": [
+    {
+      "id": 94,
+      "name": "Бронхипрет (2 этап 08.09–14.09)",
+      "startDate": "2026-09-08",
+      "endDate": "2026-09-14",
+      "goal": 15.0,
+      "drugs": [
+        {
+          "drug": "Бронхипрет",
+          "need": 15.0
+        }
+      ]
+    }
+  ],
+  "questId": 94,
+  "totals": {
+    "doctors": 34,
+    "completed": 6,
+    "inProgress": 15,
+    "idle": 13
+  },
+  "regions": [
+    {
+      "region": "Андижанская область",
+      "doctors": 13,
+      "completed": 2,
+      "items": [
+        {
+          "telegramId": 1001,
+          "name": "Врач Тестовый 1",
+          "workplace": "Поликлиника №1",
+          "city": "Андижон",
+          "phone": "900000001",
+          "recipes": 58,
+          "approvedRecipes": 57,
+          "lastRecipeAt": "2026-09-14T07:53:53.667364+00:00",
+          "done": 1,
+          "collected": 5.0,
+          "goal": 15.0,
+          "progress": 0.3333333333333333,
+          "perDrug": [
+            {
+              "drug": "Бронхипрет",
+              "got": 5.0,
+              "need": 15.0
+            }
+          ]
+        },
+        {
+          "telegramId": 1002,
+          "name": "Врач Тестовый 2",
+          "workplace": "Поликлиника №2",
+          "city": "Андижон",
+          "phone": "900000002",
+          "recipes": 67,
+          "approvedRecipes": 62,
+          "lastRecipeAt": "2026-09-11T13:06:17.885091+00:00",
+          "done": 1,
+          "collected": 0.0,
+          "goal": 15.0,
+          "progress": 0.0,
+          "perDrug": [
+            {
+              "drug": "Бронхипрет",
+              "got": 0.0,
+              "need": 15.0
+            }
+          ]
+        },
+        {
+          "telegramId": 1003,
+          "name": "Врач Тестовый 3",
+          "workplace": "Поликлиника №3",
+          "city": "Андижон",
+          "phone": "900000003",
+          "recipes": 47,
+          "approvedRecipes": 42,
+          "lastRecipeAt": "2026-09-14T05:51:39.723114+00:00",
+          "done": 0,
+          "collected": 14.0,
+          "goal": 15.0,
+          "progress": 0.9333333333333333,
+          "perDrug": [
+            {
+              "drug": "Бронхипрет",
+              "got": 14.0,
+              "need": 15.0
+            }
+          ]
+        },
+        {
+          "telegramId": 1004,
+          "name": "Врач Тестовый 4",
+          "workplace": "Поликлиника №4",
+          "city": "Андижон",
+          "phone": "900000004",
+          "recipes": 26,
+          "approvedRecipes": 19,
+          "lastRecipeAt": "2026-09-12T17:32:14.586841+00:00",
+          "done": 0,
+          "collected": 12.0,
+          "goal": 15.0,
+          "progress": 0.8,
+          "perDrug": [
+            {
+              "drug": "Бронхипрет",
+              "got": 12.0,
+              "need": 15.0
+            }
+          ]
+        },
+        {
+          "telegramId": 1005,
+          "name": "Врач Тестовый 5",
+          "workplace": "Поликлиника №5",
+          "city": "Андижан",
+          "phone": "900000005",
+          "recipes": 92,
+          "approvedRecipes": 87,
+          "lastRecipeAt": "2026-09-14T06:18:24.319815+00:00",
+          "done": 0,
+          "collected": 7.0,
+          "goal": 15.0,
+          "progress": 0.4666666666666667,
+          "perDrug": [
+            {
+              "drug": "Бронхипрет",
+              "got": 7.0,
+              "need": 15.0
+            }
+          ]
+        },
+        {
+          "telegramId": 1006,
+          "name": "Врач Тестовый 6",
+          "workplace": "Поликлиника №6",
+          "city": "Андижон",
+          "phone": "900000006",
+          "recipes": 25,
+          "approvedRecipes": 19,
+          "lastRecipeAt": "2026-09-11T11:02:48.683662+00:00",
+          "done": 0,
+          "collected": 5.0,
+          "goal": 15.0,
+          "progress": 0.3333333333333333,
+          "perDrug": [
+            {
+              "drug": "Бронхипрет",
+              "got": 5.0,
+              "need": 15.0
+            }
+          ]
+        },
+        {
+          "telegramId": 1007,
+          "name": "Врач Тестовый 7",
+          "workplace": "Поликлиника №7",
+          "city": "Андижон",
+          "phone": "900000007",
+          "recipes": 66,
+          "approvedRecipes": 38,
+          "lastRecipeAt": "2026-07-28T11:45:03.133996+00:00",
+          "done": 0,
+          "collected": 0.0,
+          "goal": 15.0,
+          "progress": 0.0,
+          "perDrug": [
+            {
+              "drug": "Бронхипрет",
+              "got": 0.0,
+              "need": 15.0
+            }
+          ]
+        },
+        {
+          "telegramId": 1008,
+          "name": "Врач Тестовый 8",
+          "workplace": "Поликлиника №8",
+          "city": "Андижон",
+          "phone": "900000008",
+          "recipes": 6,
+          "approvedRecipes": 1,
+          "lastRecipeAt": "2026-07-01T07:51:11.868463+00:00",
+          "done": 0,
+          "collected": 0.0,
+          "goal": 15.0,
+          "progress": 0.0,
+          "perDrug": [
+            {
+              "drug": "Бронхипрет",
+              "got": 0.0,
+              "need": 15.0
+            }
+          ]
+        },
+        {
+          "telegramId": 1009,
+          "name": "Врач Тестовый 9",
+          "workplace": "Поликлиника №9",
+          "city": "Андижан",
+          "phone": "900000009",
+          "recipes": 4,
+          "approvedRecipes": 0,
+          "lastRecipeAt": "2026-07-10T02:35:38.773138+00:00",
+          "done": 0,
+          "collected": 0.0,
+          "goal": 15.0,
+          "progress": 0.0,
+          "perDrug": [
+            {
+              "drug": "Бронхипрет",
+              "got": 0.0,
+              "need": 15.0
+            }
+          ]
+        },
+        {
+          "telegramId": 1010,
+          "name": "Врач Тестовый 10",
+          "workplace": "Поликлиника №10",
+          "city": "Андижан",
+          "phone": "900000010",
+          "recipes": 2,
+          "approvedRecipes": 1,
+          "lastRecipeAt": "2026-09-12T09:57:15.167191+00:00",
+          "done": 0,
+          "collected": 0.0,
+          "goal": 15.0,
+          "progress": 0.0,
+          "perDrug": [
+            {
+              "drug": "Бронхипрет",
+              "got": 0.0,
+              "need": 15.0
+            }
+          ]
+        },
+        {
+          "telegramId": 1011,
+          "name": "Врач Тестовый 11",
+          "workplace": "Поликлиника №11",
+          "city": "Андижан",
+          "phone": "900000011",
+          "recipes": 1,
+          "approvedRecipes": 0,
+          "lastRecipeAt": "2026-07-20T03:46:07.872721+00:00",
+          "done": 0,
+          "collected": 0.0,
+          "goal": 15.0,
+          "progress": 0.0,
+          "perDrug": [
+            {
+              "drug": "Бронхипрет",
+              "got": 0.0,
+              "need": 15.0
+            }
+          ]
+        },
+        {
+          "telegramId": 1012,
+          "name": "Врач Тестовый 12",
+          "workplace": "Поликлиника №12",
+          "city": "Андижан",
+          "phone": "900000012",
+          "recipes": 1,
+          "approvedRecipes": 1,
+          "lastRecipeAt": "2026-07-03T06:41:28.371961+00:00",
+          "done": 0,
+          "collected": 0.0,
+          "goal": 15.0,
+          "progress": 0.0,
+          "perDrug": [
+            {
+              "drug": "Бронхипрет",
+              "got": 0.0,
+              "need": 15.0
+            }
+          ]
+        },
+        {
+          "telegramId": 1013,
+          "name": "Врач Тестовый 13",
+          "workplace": "Поликлиника №13",
+          "city": "Андижан",
+          "phone": "900000013",
+          "recipes": 1,
+          "approvedRecipes": 1,
+          "lastRecipeAt": "2026-07-03T05:17:12.124074+00:00",
+          "done": 0,
+          "collected": 0.0,
+          "goal": 15.0,
+          "progress": 0.0,
+          "perDrug": [
+            {
+              "drug": "Бронхипрет",
+              "got": 0.0,
+              "need": 15.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "region": "Бухарская область",
+      "doctors": 6,
+      "completed": 0,
+      "items": [
+        {
+          "telegramId": 1014,
+          "name": "Врач Тестовый 14",
+          "workplace": "Поликлиника №14",
+          "city": "Бухара",
+          "phone": "900000014",
+          "recipes": 9,
+          "approvedRecipes": 8,
+          "lastRecipeAt": "2026-09-12T12:23:57.499091+00:00",
+          "done": 0,
+          "collected": 8.0,
+          "goal": 15.0,
+          "progress": 0.5333333333333333,
+          "perDrug": [
+            {
+              "drug": "Бронхипрет",
+              "got": 8.0,
+              "need": 15.0
+            }
+          ]
+        },
+        {
+          "telegramId": 1015,
+          "name": "Врач Тестовый 15",
+          "workplace": "Поликлиника №15",
+          "city": "Бухара",
+          "phone": "900000015",
+          "recipes": 3,
+          "approvedRecipes": 1,
+          "lastRecipeAt": "2026-09-11T10:57:28.997670+00:00",
+          "done": 0,
+          "collected": 1.0,
+          "goal": 15.0,
+          "progress": 0.06666666666666667,
+          "perDrug": [
+            {
+              "drug": "Бронхипрет",
+              "got": 1.0,
+              "need": 15.0
+            }
+          ]
+        },
+        {
+          "telegramId": 1016,
+          "name": "Врач Тестовый 16",
+          "workplace": "Поликлиника №16",
+          "city": "Бухара",
+          "phone": "900000016",
+          "recipes": 1,
+          "approvedRecipes": 1,
+          "lastRecipeAt": "2026-09-11T05:51:02.172051+00:00",
+          "done": 0,
+          "collected": 1.0,
+          "goal": 15.0,
+          "progress": 0.06666666666666667,
+          "perDrug": [
+            {
+              "drug": "Бронхипрет",
+              "got": 1.0,
+              "need": 15.0
+            }
+          ]
+        },
+        {
+          "telegramId": 1017,
+          "name": "Врач Тестовый 17",
+          "workplace": "Поликлиника №17",
+          "city": "Бухара",
+          "phone": "900000017",
+          "recipes": 1,
+          "approvedRecipes": 0,
+          "lastRecipeAt": "2026-09-10T07:35:10.696100+00:00",
+          "done": 0,
+          "collected": 0.0,
+          "goal": 15.0,
+          "progress": 0.0,
+          "perDrug": [
+            {
+              "drug": "Бронхипрет",
+              "got": 0.0,
+              "need": 15.0
+            }
+          ]
+        },
+        {
+          "telegramId": 1018,
+          "name": "Врач Тестовый 18",
+          "workplace": "Поликлиника №18",
+          "city": "Бухоро",
+          "phone": "900000018",
+          "recipes": 1,
+          "approvedRecipes": 0,
+          "lastRecipeAt": "2026-09-10T07:25:31.564806+00:00",
+          "done": 0,
+          "collected": 0.0,
+          "goal": 15.0,
+          "progress": 0.0,
+          "perDrug": [
+            {
+              "drug": "Бронхипрет",
+              "got": 0.0,
+              "need": 15.0
+            }
+          ]
+        },
+        {
+          "telegramId": 1019,
+          "name": "Врач Тестовый 19",
+          "workplace": "Поликлиника №19",
+          "city": "Бухара",
+          "phone": "900000019",
+          "recipes": 1,
+          "approvedRecipes": 0,
+          "lastRecipeAt": "2026-09-11T08:44:47.787818+00:00",
+          "done": 0,
+          "collected": 0.0,
+          "goal": 15.0,
+          "progress": 0.0,
+          "perDrug": [
+            {
+              "drug": "Бронхипрет",
+              "got": 0.0,
+              "need": 15.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "region": "Ташкентская область",
+      "doctors": 6,
+      "completed": 3,
+      "items": [
+        {
+          "telegramId": 1020,
+          "name": "Врач Тестовый 20",
+          "workplace": "Поликлиника №20",
+          "city": "Тошкент вилояти",
+          "phone": "900000020",
+          "recipes": 21,
+          "approvedRecipes": 19,
+          "lastRecipeAt": "2026-09-14T07:41:27.846769+00:00",
+          "done": 1,
+          "collected": 4.0,
+          "goal": 15.0,
+          "progress": 0.26666666666666666,
+          "perDrug": [
+            {
+              "drug": "Бронхипрет",
+              "got": 4.0,
+              "need": 15.0
+            }
+          ]
+        },
+        {
+          "telegramId": 1021,
+          "name": "Врач Тестовый 21",
+          "workplace": "Поликлиника №21",
+          "city": "Тошкент вилояти",
+          "phone": "900000021",
+          "recipes": 20,
+          "approvedRecipes": 18,
+          "lastRecipeAt": "2026-09-14T08:21:38.976313+00:00",
+          "done": 1,
+          "collected": 4.0,
+          "goal": 15.0,
+          "progress": 0.26666666666666666,
+          "perDrug": [
+            {
+              "drug": "Бронхипрет",
+              "got": 4.0,
+              "need": 15.0
+            }
+          ]
+        },
+        {
+          "telegramId": 1022,
+          "name": "Врач Тестовый 22",
+          "workplace": "Поликлиника №22",
+          "city": "Тошкент вилояти",
+          "phone": "900000022",
+          "recipes": 20,
+          "approvedRecipes": 15,
+          "lastRecipeAt": "2026-09-14T07:51:33.149202+00:00",
+          "done": 1,
+          "collected": 3.0,
+          "goal": 15.0,
+          "progress": 0.2,
+          "perDrug": [
+            {
+              "drug": "Бронхипрет",
+              "got": 3.0,
+              "need": 15.0
+            }
+          ]
+        },
+        {
+          "telegramId": 1023,
+          "name": "Врач Тестовый 23",
+          "workplace": "Поликлиника №23",
+          "city": "Тошкент вилояти",
+          "phone": "900000023",
+          "recipes": 3,
+          "approvedRecipes": 3,
+          "lastRecipeAt": "2026-09-09T13:38:31.171854+00:00",
+          "done": 0,
+          "collected": 3.0,
+          "goal": 15.0,
+          "progress": 0.2,
+          "perDrug": [
+            {
+              "drug": "Бронхипрет",
+              "got": 3.0,
+              "need": 15.0
+            }
+          ]
+        },
+        {
+          "telegramId": 1024,
+          "name": "Врач Тестовый 24",
+          "workplace": "Поликлиника №24",
+          "city": "Тошкент вилояти",
+          "phone": "900000024",
+          "recipes": 1,
+          "approvedRecipes": 1,
+          "lastRecipeAt": "2026-09-04T05:21:19.777157+00:00",
+          "done": 0,
+          "collected": 0.0,
+          "goal": 15.0,
+          "progress": 0.0,
+          "perDrug": [
+            {
+              "drug": "Бронхипрет",
+              "got": 0.0,
+              "need": 15.0
+            }
+          ]
+        },
+        {
+          "telegramId": 1025,
+          "name": "Врач Тестовый 25",
+          "workplace": "Поликлиника №25",
+          "city": "Тошкент вилояти",
+          "phone": "900000025",
+          "recipes": 1,
+          "approvedRecipes": 0,
+          "lastRecipeAt": "2026-09-04T06:24:34.450616+00:00",
+          "done": 0,
+          "collected": 0.0,
+          "goal": 15.0,
+          "progress": 0.0,
+          "perDrug": [
+            {
+              "drug": "Бронхипрет",
+              "got": 0.0,
+              "need": 15.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "region": "Джизакская область",
+      "doctors": 5,
+      "completed": 1,
+      "items": [
+        {
+          "telegramId": 1026,
+          "name": "Врач Тестовый 26",
+          "workplace": "Поликлиника №26",
+          "city": "Жиззах",
+          "phone": "900000026",
+          "recipes": 18,
+          "approvedRecipes": 15,
+          "lastRecipeAt": "2026-09-14T08:13:22.320925+00:00",
+          "done": 1,
+          "collected": 2.0,
+          "goal": 15.0,
+          "progress": 0.13333333333333333,
+          "perDrug": [
+            {
+              "drug": "Бронхипрет",
+              "got": 2.0,
+              "need": 15.0
+            }
+          ]
+        },
+        {
+          "telegramId": 1027,
+          "name": "Врач Тестовый 27",
+          "workplace": "Поликлиника №27",
+          "city": "Жиззах",
+          "phone": "900000027",
+          "recipes": 3,
+          "approvedRecipes": 3,
+          "lastRecipeAt": "2026-09-11T06:19:53.729057+00:00",
+          "done": 0,
+          "collected": 3.0,
+          "goal": 15.0,
+          "progress": 0.2,
+          "perDrug": [
+            {
+              "drug": "Бронхипрет",
+              "got": 3.0,
+              "need": 15.0
+            }
+          ]
+        },
+        {
+          "telegramId": 1028,
+          "name": "Врач Тестовый 28",
+          "workplace": "Поликлиника №28",
+          "city": "Жиззах",
+          "phone": "900000028",
+          "recipes": 3,
+          "approvedRecipes": 3,
+          "lastRecipeAt": "2026-09-14T07:57:31.453581+00:00",
+          "done": 0,
+          "collected": 3.0,
+          "goal": 15.0,
+          "progress": 0.2,
+          "perDrug": [
+            {
+              "drug": "Бронхипрет",
+              "got": 3.0,
+              "need": 15.0
+            }
+          ]
+        },
+        {
+          "telegramId": 1029,
+          "name": "Врач Тестовый 29",
+          "workplace": "Поликлиника №29",
+          "city": "Жиззах",
+          "phone": "900000029",
+          "recipes": 4,
+          "approvedRecipes": 2,
+          "lastRecipeAt": "2026-09-14T08:36:30.879426+00:00",
+          "done": 0,
+          "collected": 2.0,
+          "goal": 15.0,
+          "progress": 0.13333333333333333,
+          "perDrug": [
+            {
+              "drug": "Бронхипрет",
+              "got": 2.0,
+              "need": 15.0
+            }
+          ]
+        },
+        {
+          "telegramId": 1030,
+          "name": "Врач Тестовый 30",
+          "workplace": "Поликлиника №30",
+          "city": "Жиззах",
+          "phone": "900000030",
+          "recipes": 2,
+          "approvedRecipes": 2,
+          "lastRecipeAt": "2026-09-09T06:46:40.958610+00:00",
+          "done": 0,
+          "collected": 2.0,
+          "goal": 15.0,
+          "progress": 0.13333333333333333,
+          "perDrug": [
+            {
+              "drug": "Бронхипрет",
+              "got": 2.0,
+              "need": 15.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "region": "Навоийская область",
+      "doctors": 1,
+      "completed": 0,
+      "items": [
+        {
+          "telegramId": 1031,
+          "name": "Врач Тестовый 31",
+          "workplace": "Поликлиника №31",
+          "city": "Навои",
+          "phone": "900000031",
+          "recipes": 22,
+          "approvedRecipes": 4,
+          "lastRecipeAt": "2026-09-12T09:57:15.172396+00:00",
+          "done": 0,
+          "collected": 0.0,
+          "goal": 15.0,
+          "progress": 0.0,
+          "perDrug": [
+            {
+              "drug": "Бронхипрет",
+              "got": 0.0,
+              "need": 15.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "region": "Республика Каракалпакстан",
+      "doctors": 1,
+      "completed": 0,
+      "items": [
+        {
+          "telegramId": 1032,
+          "name": "Врач Тестовый 32",
+          "workplace": "Поликлиника №32",
+          "city": "Республика Каракалпакстан",
+          "phone": "900000032",
+          "recipes": 28,
+          "approvedRecipes": 27,
+          "lastRecipeAt": "2026-09-14T06:36:21.971043+00:00",
+          "done": 0,
+          "collected": 12.0,
+          "goal": 15.0,
+          "progress": 0.8,
+          "perDrug": [
+            {
+              "drug": "Бронхипрет",
+              "got": 12.0,
+              "need": 15.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "region": "Самаркандская область",
+      "doctors": 1,
+      "completed": 0,
+      "items": [
+        {
+          "telegramId": 1033,
+          "name": "Врач Тестовый 33",
+          "workplace": "Поликлиника №33",
+          "city": "Самарқанд",
+          "phone": "900000033",
+          "recipes": 2,
+          "approvedRecipes": 1,
+          "lastRecipeAt": "2026-09-11T09:40:33.042014+00:00",
+          "done": 0,
+          "collected": 1.0,
+          "goal": 15.0,
+          "progress": 0.06666666666666667,
+          "perDrug": [
+            {
+              "drug": "Бронхипрет",
+              "got": 1.0,
+              "need": 15.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "region": "Хорезмская область",
+      "doctors": 1,
+      "completed": 0,
+      "items": [
+        {
+          "telegramId": 1034,
+          "name": "Врач Тестовый 34",
+          "workplace": "Поликлиника №34",
+          "city": "Хорезм",
+          "phone": "900000034",
+          "recipes": 1,
+          "approvedRecipes": 1,
+          "lastRecipeAt": "2026-09-11T08:07:27.592090+00:00",
+          "done": 0,
+          "collected": 1.0,
+          "goal": 15.0,
+          "progress": 0.06666666666666667,
+          "perDrug": [
+            {
+              "drug": "Бронхипрет",
+              "got": 1.0,
+              "need": 15.0
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

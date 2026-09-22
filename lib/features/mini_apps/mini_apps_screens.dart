@@ -1,3 +1,4 @@
+import '../../core/app_modules.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,6 +10,8 @@ import '../../core/theme/app_colors.dart';
 import '../../widgets/async_view.dart';
 import '../pharmacist/providers.dart' show walletProvider;
 import '../shared/widgets/pharm_top_bar.dart';
+import '../../core/theme/app_theme.dart';
+import '../../widgets/dialog_buttons.dart';
 
 final miniAppsProvider = FutureProvider<List<MiniApp>>((ref) => ref.watch(apiProvider).miniApps.list());
 final sapperDrawsProvider = FutureProvider<List<SapperDrawItem>>((ref) => ref.watch(apiProvider).sapper.draws());
@@ -24,6 +27,14 @@ String _countdown(AppLocalizations l10n, String? iso) {
   if (d > 0) return l10n.sapperCountdownDaysHours(d, h);
   if (h > 0) return l10n.sapperCountdownHoursMinutes(h, m);
   return l10n.sapperCountdownMinutesSeconds(m, s);
+}
+
+// Текст пилюли времени. До вскрытия — «вскрытие через …». Когда время уже наступило
+// (сервер вскроет в течение ~20с) — короткое «Скоро», без кривого «вскрытие через скоро».
+String _revealPill(AppLocalizations l10n, String? iso) {
+  final t = iso == null ? null : DateTime.tryParse(iso);
+  if (t == null || t.difference(DateTime.now()).inSeconds <= 0) return l10n.miniAppsSoon;
+  return l10n.sapperRevealIn(_countdown(l10n, iso));
 }
 
 // ── Хаб мини-приложений ───────────────────────────────────────────────────────
@@ -61,7 +72,7 @@ class MiniAppsHubScreen extends ConsumerWidget {
                     style: const TextStyle(fontSize: 15, color: Color(0xFF6B6C78)),
                   ),
                   const SizedBox(height: 32),
-                  for (final a in apps) ...[
+                  for (final a in apps.where((a) => ref.moduleVisible(a.key))) ...[
                     _AppCard(app: a),
                     const SizedBox(height: 10),
                   ],
@@ -274,6 +285,14 @@ class SapperDrawsScreen extends ConsumerWidget {
                         context.l10n.sapperSubtitle,
                         style: TextStyle(
                             fontSize: 16, height: 1.4, color: p.textMuted)),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: TextButton.icon(
+                        icon: const Icon(Icons.gavel_outlined, size: 18),
+                        label: Text(context.l10n.sapperRulesButton),
+                        onPressed: () => context.push('/app/sapper-rules'),
+                      ),
+                    ),
                     const SizedBox(height: 24),
                     if (draws.isEmpty)
                       Padding(
@@ -528,12 +547,26 @@ class SapperGameScreen extends ConsumerStatefulWidget {
 class _SapperGameScreenState extends ConsumerState<SapperGameScreen> {
   Timer? _tick;
   bool _busy = false;
+  int _ticks = 0;
 
   @override
   void initState() {
     super.initState();
-    // тикаем таймер обратного отсчёта
-    _tick = Timer.periodic(const Duration(seconds: 1), (_) { if (mounted) setState(() {}); });
+    // Тикаем таймер обратного отсчёта. Плюс, когда время вскрытия наступило, сервер
+    // вскрывает автоматически (loop ~20с) — раз в 10с перезапрашиваем поле, чтобы экран
+    // сам перешёл в «Вскрыт» без ручного обновления (раньше «застревал» на отсчёте).
+    _tick = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (!mounted) return;
+      setState(() {});
+      _ticks++;
+      final f = ref.read(sapperFieldProvider(widget.id)).asData?.value;
+      if (f != null && !f.revealed && _ticks % 10 == 0) {
+        final t = f.revealAt == null ? null : DateTime.tryParse(f.revealAt!);
+        if (t != null && t.difference(DateTime.now()).inSeconds <= 0) {
+          ref.invalidate(sapperFieldProvider(widget.id));
+        }
+      }
+    });
   }
 
   @override
@@ -542,8 +575,54 @@ class _SapperGameScreenState extends ConsumerState<SapperGameScreen> {
     super.dispose();
   }
 
+  // Нехватка IQC — вместо ошибки с сервера показываем понятный блокер
+  // с предложением заработать IQC (обучение / квест / опрос).
+  Future<void> _notEnoughIqc(SapperField f) async {
+    await showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(context.l10n.sapperNoIqcTitle),
+        content: Text(context.l10n.sapperNoIqcBody(f.priceIqc, f.balanceIqc)),
+        actions: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              FilledButton(
+                style: FilledButton.styleFrom(minimumSize: kDialogButtonSize),
+                onPressed: () {
+                  Navigator.pop(ctx);
+                  context.go('/app/quests');
+                },
+                child: Text(context.l10n.navQuests),
+              ),
+              const SizedBox(height: 8),
+              FilledButton(
+                style: DialogButtons.secondaryStyle(ctx),
+                onPressed: () {
+                  Navigator.pop(ctx);
+                  context.go('/app/learn');
+                },
+                child: Text(context.l10n.navLearn),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: Text(context.l10n.commonCancel),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<void> _reserve(SapperField f, int cell) async {
     if (_busy) return;
+    // При нехватке IQC — понятный диалог с предложением заработать, а не 400-ошибка:
+    // раньше резерв уходил на сервер вслепую и возвращался «Недостаточно IQC».
+    if (f.balanceIqc < f.priceIqc) {
+      await _notEnoughIqc(f);
+      return;
+    }
     final ok = await showDialog<bool>(
       context: context,
       // ctx — контекст диалога (root-навигатор). Раньше был Navigator.pop(context, …)
@@ -551,14 +630,35 @@ class _SapperGameScreenState extends ConsumerState<SapperGameScreen> {
       // из-за чего кнопки «Занять»/«Отмена» не закрывали диалог.
       builder: (ctx) => AlertDialog(
         title: Text(context.l10n.sapperReserveTitle(cell + 1)),
-        content: Text(context.l10n.sapperReserveBody(f.priceIqc)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(context.l10n.sapperReserveBody(f.priceIqc)),
+            const SizedBox(height: 12),
+            Text(context.l10n.sapperRulesAccept,
+                style: Theme.of(ctx).textTheme.bodySmall),
+            TextButton(
+              style: TextButton.styleFrom(
+                padding: EdgeInsets.zero,
+                minimumSize: const Size(0, 36),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              onPressed: () {
+                Navigator.pop(ctx, false);
+                context.push('/app/sapper-rules');
+              },
+              child: Text(context.l10n.sapperRulesButton),
+            ),
+          ],
+        ),
         actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: Text(context.l10n.commonCancel)),
-          FilledButton(
-              onPressed: () => Navigator.pop(ctx, true),
-              child: Text(context.l10n.sapperReserveConfirm(f.priceIqc))),
+          DialogButtons(
+            cancelLabel: context.l10n.commonCancel,
+            onCancel: () => Navigator.pop(ctx, false),
+            confirmLabel: context.l10n.sapperReserveConfirm(f.priceIqc),
+            onConfirm: () => Navigator.pop(ctx, true),
+          ),
         ],
       ),
     );
@@ -652,6 +752,17 @@ class _SapperGameScreenState extends ConsumerState<SapperGameScreen> {
           ),
           const SizedBox(height: 12),
         ],
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: Text(
+            context.l10n.sapperFieldTotal(f.cellCount),
+            style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.5,
+                color: p.textMuted),
+          ),
+        ),
         GridView.builder(
           shrinkWrap: true,
           padding: EdgeInsets.zero,
@@ -747,9 +858,7 @@ class _HiddenPrizesCard extends StatelessWidget {
                           ? const Color(0xFF8F909A)
                           : const Color(0xFF6B7280))),
               if (active)
-                _HiddenTimePill(
-                    text: context.l10n
-                        .sapperRevealIn(_countdown(context.l10n, f.revealAt)))
+                _HiddenTimePill(text: _revealPill(context.l10n, f.revealAt))
               else if (f.revealed)
                 _TimePill(active: false, text: context.l10n.sapperRevealed),
             ],
@@ -1178,11 +1287,20 @@ class _RevealCell extends StatelessWidget {
       decoration: BoxDecoration(
         color: bg,
         borderRadius: BorderRadius.circular(10),
-        // Рамка у пустых/чужих клеток, чтобы поле читалось цельным и верхние
-        // пустые ряды не выглядели как «разрыв».
-        border: (hasPrize || mine) ? null : Border.all(color: cellBorder),
+        // Выигравшая КЛЕТКА ПОЛЬЗОВАТЕЛЯ — заметная зелёная рамка + свечение,
+        // чтобы среди жёлтых призов было видно, что именно выиграл он.
+        // Остальным призам/своим клеткам рамка не нужна; пустым/чужим — тонкая,
+        // чтобы поле читалось цельным.
+        border: (hasPrize && wonByMe)
+            ? Border.all(color: const Color(0xFF22C55E), width: 3)
+            : (hasPrize || mine)
+                ? null
+                : Border.all(color: cellBorder),
         boxShadow: (hasPrize && wonByMe)
-            ? const [BoxShadow(color: Color(0x80EAB308), blurRadius: 10)]
+            ? const [
+                BoxShadow(
+                    color: Color(0x9922C55E), blurRadius: 12, spreadRadius: 1)
+              ]
             : null,
       ),
       alignment: Alignment.center,

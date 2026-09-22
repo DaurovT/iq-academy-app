@@ -12,7 +12,28 @@
           "package_name": "uz.iqacademy.platform_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "802236256438-2m11r92h5uu6408tjhlun20k5imvj8no.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "uz.iqacademy.platform_app",
+            "certificate_hash": "758a5c5a927ea52baed062404d9eb96b60624fd3"
+          }
+        },
+        {
+          "client_id": "802236256438-nhfmorl56oo69s3scstvnopa46hh3luv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "uz.iqacademy.platform_app",
+            "certificate_hash": "d653da1c2e1fb12fd00832db206e54663217962a"
+          }
+        },
+        {
+          "client_id": "802236256438-1mql3gmt5l9vgbv5l9s34ltfkcr5r0gm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCFvqGBuKSG-OJpb_BADjo6YJUeNWaWVfQ"
@@ -20,7 +41,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "802236256438-1mql3gmt5l9vgbv5l9s34ltfkcr5r0gm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "802236256438-okgc27evg9m4r0u2bgrl3mnr6h2bi1pl.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "uz.iqacademy.platformApp"
+              }
+            }
+          ]
         }
       }
     }

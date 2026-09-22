@@ -1,3 +1,4 @@
+import '../../core/app_modules.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -84,33 +85,50 @@ class _MedrepHomeState extends ConsumerState<MedrepHome> {
                           const SizedBox(height: 20),
                           _ReferralCard(palette: p, link: link),
                           const SizedBox(height: 20),
-                          _MenuRow(
-                            palette: p,
-                            icon: Icons.people_alt_outlined,
-                            label: context.l10n.medrepHomeMenuPharmacists,
-                            onTap: () => context.go('/app/portfolio'),
-                          ),
-                          const SizedBox(height: 12),
-                          _MenuRow(
-                            palette: p,
-                            icon: Icons.person_add_alt_1_outlined,
-                            label: context.l10n.medrepHomeMenuPending,
-                            onTap: () => context.go('/app/referrals'),
-                          ),
-                          const SizedBox(height: 12),
-                          _MenuRow(
-                            palette: p,
-                            icon: Icons.business_outlined,
-                            label: context.l10n.medrepHomeMenuCompanies,
-                            onTap: () => context.go('/app/companies'),
-                          ),
-                          const SizedBox(height: 12),
-                          _MenuRow(
-                            palette: p,
-                            icon: Icons.emoji_events_outlined,
-                            label: context.l10n.medrepHomeMenuLeaderboard,
-                            onTap: () => context.go('/app/leaderboard'),
-                          ),
+                          if (ref.moduleVisible('medrep_portfolio')) ...[
+                            _MenuRow(
+                              palette: p,
+                              icon: Icons.people_alt_outlined,
+                              label: context.l10n.medrepHomeMenuPharmacists,
+                              onTap: () => context.go('/app/portfolio'),
+                            ),
+                            const SizedBox(height: 12),
+                          ],
+                          if (ref.moduleVisible('medrep_doctors')) ...[
+                            _MenuRow(
+                              palette: p,
+                              icon: Icons.medical_services_outlined,
+                              label: context.l10n.navDoctors,
+                              onTap: () => context.go('/app/doctors'),
+                            ),
+                            const SizedBox(height: 12),
+                          ],
+                          if (ref.moduleVisible('medrep_referrals')) ...[
+                            _MenuRow(
+                              palette: p,
+                              icon: Icons.person_add_alt_1_outlined,
+                              label: context.l10n.medrepHomeMenuPending,
+                              onTap: () => context.go('/app/referrals'),
+                            ),
+                            const SizedBox(height: 12),
+                          ],
+                          if (ref.moduleVisible('medrep_companies')) ...[
+                            _MenuRow(
+                              palette: p,
+                              icon: Icons.business_outlined,
+                              label: context.l10n.medrepHomeMenuCompanies,
+                              onTap: () => context.go('/app/companies'),
+                            ),
+                            const SizedBox(height: 12),
+                          ],
+                          if (ref.moduleVisible('leaderboard')) ...[
+                            _MenuRow(
+                              palette: p,
+                              icon: Icons.emoji_events_outlined,
+                              label: context.l10n.medrepHomeMenuLeaderboard,
+                              onTap: () => context.go('/app/leaderboard'),
+                            ),
+                          ],
                         ],
                       ),
                     ),

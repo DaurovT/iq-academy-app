@@ -1,8 +1,8 @@
+import '../../core/app_modules.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/auth/auth_controller.dart';
-import '../../core/format.dart';
 import '../../core/img.dart';
 import '../../core/l10n/l10n.dart';
 import '../../core/models/check.dart';
@@ -42,7 +42,6 @@ class DoctorHome extends ConsumerWidget {
     final courses = ref.watch(coursesProvider).asData?.value ?? const [];
 
     final iqc = wallet?.balanceIqc ?? 0;
-    final uzs = wallet?.balanceUzs ?? 0;
     final approved =
         recipes.where((r) => r.status == CheckStatus.approved).length;
     final recommended = courses.take(2).toList();
@@ -77,7 +76,6 @@ class DoctorHome extends ConsumerWidget {
                           _WalletCard(
                             palette: p,
                             iqc: iqc,
-                            uzs: uzs,
                             onWallet: () => context.go('/app/wallet'),
                           ),
                           const SizedBox(height: 16),
@@ -132,11 +130,11 @@ class DoctorHome extends ConsumerWidget {
                               const SizedBox(height: 12),
                             ],
                           const SizedBox(height: 12),
-                          const NewsHomeBlock(),
+                          const ModuleGate(module: 'news', child: NewsHomeBlock()),
                           const SizedBox(height: 24),
-                          const SurveyHomeBlock(),
+                          const ModuleGate(module: 'surveys', child: SurveyHomeBlock()),
                           const SizedBox(height: 24),
-                          const MiniAppsHomeBlock(),
+                          const ModuleGate(module: 'mini_apps', child: MiniAppsHomeBlock()),
                         ],
                       ),
                     ),
@@ -191,13 +189,11 @@ class _WalletCard extends StatelessWidget {
   const _WalletCard({
     required this.palette,
     required this.iqc,
-    required this.uzs,
     required this.onWallet,
   });
 
   final PharmPalette palette;
   final int iqc;
-  final int uzs;
   final VoidCallback onWallet;
 
   @override
@@ -255,14 +251,6 @@ class _WalletCard extends StatelessWidget {
                 ),
               ),
             ],
-          ),
-          const SizedBox(height: 6),
-          Text(
-            '${formatUzsPlain(uzs)} UZS',
-            style: TextStyle(
-              fontSize: 14,
-              color: palette.walletText.withValues(alpha: 0.8),
-            ),
           ),
         ],
       ),

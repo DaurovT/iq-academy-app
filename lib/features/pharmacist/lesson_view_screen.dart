@@ -1,55 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 import '../../core/api/providers.dart';
 import '../../core/l10n/l10n.dart';
 import '../../core/models/learn.dart';
 import '../../widgets/async_view.dart';
+import '../../widgets/video_frame.dart';
 import '../shared/widgets/screen_decor.dart';
 import 'providers.dart';
-
-/// Приводит ссылку к встраиваемому виду (Vimeo/YouTube → embed-плеер).
-String _embedUrl(String url) {
-  final vimeo = RegExp(r'vimeo\.com/(?:video/)?(\d+)').firstMatch(url);
-  if (vimeo != null) {
-    return 'https://player.vimeo.com/video/${vimeo.group(1)}?autoplay=1&title=0&byline=0';
-  }
-  final yt = RegExp(r'(?:youtu\.be/|youtube\.com/watch\?v=)([\w-]+)')
-      .firstMatch(url);
-  if (yt != null) {
-    return 'https://www.youtube.com/embed/${yt.group(1)}?autoplay=1&playsinline=1';
-  }
-  return url;
-}
-
-/// true, если ссылка ведёт на Vimeo/YouTube (там играем их embed-плеером).
-bool _isEmbeddable(String url) =>
-    RegExp(r'vimeo\.com|youtu\.be/|youtube\.com').hasMatch(url);
-
-/// HTML-обёртка для прямых видеофайлов: стандартные контролы, но перемотка
-/// вперёд заблокирована — можно мотать только в пределах уже просмотренного.
-String _noSeekHtml(String url) => '''
-<!DOCTYPE html><html><head>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<style>html,body{margin:0;padding:0;background:#0B0F1A;height:100%;overflow:hidden}
-video{width:100%;height:100%;object-fit:contain;background:#0B0F1A}</style></head>
-<body>
-<video src="$url" controls autoplay playsinline
-  controlsList="nodownload noplaybackrate"></video>
-<script>
-  var v = document.querySelector('video');
-  var watched = 0; // максимальная просмотренная позиция
-  v.addEventListener('timeupdate', function () {
-    if (!v.seeking) watched = Math.max(watched, v.currentTime);
-  });
-  v.addEventListener('seeking', function () {
-    // вперёд дальше просмотренного нельзя; назад — можно
-    if (v.currentTime > watched + 0.5) v.currentTime = watched;
-  });
-</script>
-</body></html>
-''';
 
 /// Просмотр урока. Перенесён один в один из макета Figma
 /// «pharmiq-learning-lesson».
@@ -67,22 +25,9 @@ class LessonViewScreen extends ConsumerStatefulWidget {
 class _LessonViewScreenState extends ConsumerState<LessonViewScreen> {
   int _tab = 0; // 0 = Текст урока, 1 = Материалы
   bool _loading = false;
-  WebViewController? _webCtrl;
+  String? _videoUrl; // непусто → плеер запущен
 
-  void _startVideo(String url) {
-    setState(() {
-      final ctrl = WebViewController()
-        ..setJavaScriptMode(JavaScriptMode.unrestricted)
-        ..setBackgroundColor(const Color(0xFF0B0F1A));
-      if (_isEmbeddable(url)) {
-        ctrl.loadRequest(Uri.parse(_embedUrl(url)));
-      } else {
-        // прямой файл — свой плеер с запретом перемотки вперёд
-        ctrl.loadHtmlString(_noSeekHtml(url));
-      }
-      _webCtrl = ctrl;
-    });
-  }
+  void _startVideo(String url) => setState(() => _videoUrl = url);
 
   Future<void> _complete(CourseDetail course) async {
     setState(() => _loading = true);
@@ -212,8 +157,8 @@ class _LessonViewScreenState extends ConsumerState<LessonViewScreen> {
                   child: SizedBox(
                     height: 200,
                     width: double.infinity,
-                    child: _webCtrl != null
-                        ? WebViewWidget(controller: _webCtrl!)
+                    child: _videoUrl != null
+                        ? VideoFrame(url: _videoUrl!)
                         : ColoredBox(
                             color: const Color(0xFF0B0F1A),
                             child: Center(

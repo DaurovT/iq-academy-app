@@ -183,3 +183,103 @@ abstract class PharmacistDetail with _$PharmacistDetail {
   factory PharmacistDetail.fromJson(Map<String, dynamic> json) =>
       _$PharmacistDetailFromJson(json);
 }
+
+// ── Врачи компании медпреда (рецептурные проекты) ───────────────────────────
+// Прямой связки «медпред → врач» в данных пока нет, поэтому бэкенд отдаёт всех
+// врачей рецептурного проекта КОМПАНИИ медпреда, сгруппированных по регионам.
+
+@freezed
+abstract class DoctorQuestDrug with _$DoctorQuestDrug {
+  const factory DoctorQuestDrug({
+    required String drug,
+    required double need,
+    @Default(0) double got,
+  }) = _DoctorQuestDrug;
+
+  factory DoctorQuestDrug.fromJson(Map<String, dynamic> json) =>
+      _$DoctorQuestDrugFromJson(json);
+}
+
+/// Рецептурный квест компании — по нему считается прогресс врачей.
+@freezed
+abstract class DoctorQuestInfo with _$DoctorQuestInfo {
+  const factory DoctorQuestInfo({
+    required int id,
+    required String name,
+    required double goal,
+    String? startDate,
+    String? endDate,
+    @Default([]) List<DoctorQuestDrug> drugs,
+  }) = _DoctorQuestInfo;
+
+  factory DoctorQuestInfo.fromJson(Map<String, dynamic> json) =>
+      _$DoctorQuestInfoFromJson(json);
+}
+
+@freezed
+abstract class DoctorRow with _$DoctorRow {
+  const factory DoctorRow({
+    required int telegramId,
+    required String name,
+    required String workplace,
+    required String city,
+    required String phone,
+    required int recipes,
+    required int approvedRecipes,
+    String? lastRecipeAt,
+
+    /// Сколько раз квест выполнен целиком.
+    required int done,
+
+    /// Набрано в текущем заходе (с капом по норме) и норма квеста.
+    required double collected,
+    required double goal,
+    required double progress,
+    @Default([]) List<DoctorQuestDrug> perDrug,
+  }) = _DoctorRow;
+
+  factory DoctorRow.fromJson(Map<String, dynamic> json) =>
+      _$DoctorRowFromJson(json);
+}
+
+@freezed
+abstract class DoctorRegionGroup with _$DoctorRegionGroup {
+  const factory DoctorRegionGroup({
+    required String region,
+    required int doctors,
+    required int completed,
+    @Default([]) List<DoctorRow> items,
+  }) = _DoctorRegionGroup;
+
+  factory DoctorRegionGroup.fromJson(Map<String, dynamic> json) =>
+      _$DoctorRegionGroupFromJson(json);
+}
+
+@freezed
+abstract class DoctorTotals with _$DoctorTotals {
+  const factory DoctorTotals({
+    @Default(0) int doctors,
+    @Default(0) int completed,
+    @Default(0) int inProgress,
+    @Default(0) int idle,
+  }) = _DoctorTotals;
+
+  factory DoctorTotals.fromJson(Map<String, dynamic> json) =>
+      _$DoctorTotalsFromJson(json);
+}
+
+@freezed
+abstract class DoctorsOverview with _$DoctorsOverview {
+  const factory DoctorsOverview({
+    /// false — у компании медпреда нет рецептурного проекта (это не ошибка).
+    required bool available,
+    String? companyName,
+    int? questId,
+    @Default([]) List<DoctorQuestInfo> quests,
+    @Default(DoctorTotals()) DoctorTotals totals,
+    @Default([]) List<DoctorRegionGroup> regions,
+  }) = _DoctorsOverview;
+
+  factory DoctorsOverview.fromJson(Map<String, dynamic> json) =>
+      _$DoctorsOverviewFromJson(json);
+}

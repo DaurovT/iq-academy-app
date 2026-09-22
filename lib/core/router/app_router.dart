@@ -1,3 +1,4 @@
+import '../app_modules.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../auth/auth_controller.dart';
 import '../../features/shared/splash/splash_screen.dart';
 import '../../features/shared/login/login_screen.dart';
+import '../../features/shared/login/oauth_link_screen.dart';
 import '../../features/shared/register/register_screen.dart';
 import '../../features/shared/role_select/role_select_screen.dart';
 import '../../features/shared/home/home_screen.dart';
@@ -22,6 +24,7 @@ import '../../features/pharmacist/voucher_screen.dart';
 import '../../features/pharmacist/learn_screen.dart';
 import '../../features/news/news_screen.dart';
 import '../../features/mini_apps/mini_apps_screens.dart';
+import '../../features/mini_apps/sapper_rules_screen.dart';
 import '../../features/pharmacist/course_detail_screen.dart';
 import '../../features/pharmacist/lesson_view_screen.dart';
 import '../../features/pharmacist/quiz_screen.dart';
@@ -29,6 +32,7 @@ import '../../features/doctor/recipes_screen.dart';
 import '../../features/doctor/recipe_detail_screen.dart';
 import '../../features/shared/quest_history/quest_history_screen.dart';
 import '../../features/medrep/portfolio_screen.dart';
+import '../../features/medrep/doctors_screen.dart';
 import '../../features/medrep/pharmacist_detail_screen.dart';
 import '../../features/medrep/quests_screen.dart';
 import '../../features/medrep/leaderboard_screen.dart';
@@ -46,6 +50,7 @@ int _intParam(GoRouterState s, String key) =>
 final routerProvider = Provider<GoRouter>((ref) {
   final refresh = ValueNotifier(0);
   ref.listen(authControllerProvider, (_, __) => refresh.value++);
+  ref.listen(appModulesProvider, (_, __) => refresh.value++);  // раздел скрыли, пока он открыт
   ref.onDispose(refresh.dispose);
 
   return GoRouter(
@@ -57,7 +62,14 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
           path: '/register',
           builder: (_, s) =>
-              RegisterScreen(phone: s.uri.queryParameters['phone'])),
+              RegisterScreen(
+                  phone: s.uri.queryParameters['phone'],
+                  linkToken: s.uri.queryParameters['link'])),
+      GoRoute(
+          path: '/oauth-link',
+          builder: (_, s) => OAuthLinkScreen(
+              linkToken: s.uri.queryParameters['token'] ?? '',
+              fullName: s.uri.queryParameters['name'])),
       GoRoute(path: '/role', builder: (_, __) => const RoleSelectScreen()),
 
       // Ваучер с QR — полноэкранный, без нижней навигации.
@@ -95,6 +107,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           // Мини-приложения (Супер Сапёр)
           GoRoute(path: '/app/mini-apps', builder: (_, __) => const MiniAppsHubScreen()),
           GoRoute(path: '/app/sapper', builder: (_, __) => const SapperDrawsScreen()),
+          GoRoute(path: '/app/sapper-rules', builder: (_, __) => const SapperRulesScreen()),
           GoRoute(
               path: '/app/sapper/:id',
               builder: (_, s) => SapperGameScreen(id: _intParam(s, 'id'))),
@@ -132,6 +145,7 @@ final routerProvider = Provider<GoRouter>((ref) {
               path: '/app/portfolio/:telegramId',
               builder: (_, s) => MedrepPharmacistDetailScreen(
                   telegramId: _intParam(s, 'telegramId'))),
+          GoRoute(path: '/app/doctors', builder: (_, __) => const DoctorsScreen()),
           GoRoute(path: '/app/leaderboard', builder: (_, __) => const LeaderboardScreen()),
           GoRoute(path: '/app/medrep/quests', builder: (_, __) => const MedrepQuestsScreen()),
           GoRoute(path: '/app/referrals', builder: (_, __) => const ReferralsScreen()),
@@ -175,12 +189,21 @@ final routerProvider = Provider<GoRouter>((ref) {
       final s = auth.asData?.value ?? const AuthState();
 
       if (!s.isAuthed) {
-        return (loc == '/login' || loc == '/register') ? null : '/login';
+        const guest = {'/login', '/register', '/oauth-link'};
+        return guest.contains(loc) ? null : '/login';
       }
       if (s.needsRole) return loc == '/role' ? null : '/role';
 
-      const gate = {'/splash', '/login', '/register', '/role'};
-      return gate.contains(loc) ? '/app' : null;
+      const gate = {'/splash', '/login', '/register', '/oauth-link', '/role'};
+      if (gate.contains(loc)) return '/app';
+
+      // Раздел скрыт в админке → на главную (в т.ч. переход из уведомления или ссылки).
+      final module = moduleForPath(loc);
+      final modules = ref.read(appModulesProvider).asData?.value;
+      if (module != null && modules != null && !modules.isVisible(module, s.activeRole)) {
+        return '/app';
+      }
+      return null;
     },
   );
 });

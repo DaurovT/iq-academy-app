@@ -215,7 +215,7 @@ abstract class AppLocalizations {
   /// No description provided for @navRecipes.
   ///
   /// In ru, this message translates to:
-  /// **'Рецепты'**
+  /// **'Бланки'**
   String get navRecipes;
 
   /// No description provided for @navPortfolio.
@@ -269,7 +269,7 @@ abstract class AppLocalizations {
   /// No description provided for @miniAppsSubtitle.
   ///
   /// In ru, this message translates to:
-  /// **'Играй и выигрывай призы за IQC'**
+  /// **'Акции для участников программы'**
   String get miniAppsSubtitle;
 
   /// No description provided for @miniAppsSoon.
@@ -311,25 +311,25 @@ abstract class AppLocalizations {
   /// No description provided for @sapperSubtitle.
   ///
   /// In ru, this message translates to:
-  /// **'Занимай клетки за IQC — в час вскрытия узнаешь, что под ними'**
+  /// **'Выбирайте клетки за IQC — при подведении итогов узнаете, что под ними'**
   String get sapperSubtitle;
 
   /// No description provided for @sapperNoDraws.
   ///
   /// In ru, this message translates to:
-  /// **'Нет розыгрышей'**
+  /// **'Нет активных акций'**
   String get sapperNoDraws;
 
   /// No description provided for @sapperRevealed.
   ///
   /// In ru, this message translates to:
-  /// **'Вскрыт'**
+  /// **'Завершена'**
   String get sapperRevealed;
 
   /// No description provided for @sapperPrizesAndPrice.
   ///
   /// In ru, this message translates to:
-  /// **'🎁 {prizeCount} призов  💎 {priceIqc} IQC/клетка  '**
+  /// **'🎁 призов: {prizeCount}  💎 {priceIqc} IQC/клетка  '**
   String sapperPrizesAndPrice(Object prizeCount, Object priceIqc);
 
   /// No description provided for @sapperMyCells.
@@ -347,7 +347,7 @@ abstract class AppLocalizations {
   /// No description provided for @sapperGoToGame.
   ///
   /// In ru, this message translates to:
-  /// **'Перейти к игре'**
+  /// **'Открыть поле'**
   String get sapperGoToGame;
 
   /// No description provided for @sapperReserveTitle.
@@ -359,7 +359,7 @@ abstract class AppLocalizations {
   /// No description provided for @sapperReserveBody.
   ///
   /// In ru, this message translates to:
-  /// **'Спишется {price} IQC. Отменить нельзя — клетка закрепится за вами до вскрытия.'**
+  /// **'Будет использовано {price} IQC. Отменить нельзя — клетка закрепится за вами до подведения итогов.'**
   String sapperReserveBody(Object price);
 
   /// No description provided for @sapperReserveConfirm.
@@ -374,34 +374,52 @@ abstract class AppLocalizations {
   /// **'Клетка №{number} занята'**
   String sapperCellReserved(Object number);
 
+  /// No description provided for @sapperNoIqcTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Недостаточно IQC'**
+  String get sapperNoIqcTitle;
+
+  /// No description provided for @sapperNoIqcBody.
+  ///
+  /// In ru, this message translates to:
+  /// **'Для участия нужно {price} IQC, у вас {have}. Заработайте IQC — пройдите обучение, квест или опрос.'**
+  String sapperNoIqcBody(Object price, Object have);
+
   /// No description provided for @sapperDraws.
   ///
   /// In ru, this message translates to:
-  /// **'Розыгрыши'**
+  /// **'Акции'**
   String get sapperDraws;
 
   /// No description provided for @sapperAcceptClosed.
   ///
   /// In ru, this message translates to:
-  /// **'Приём клеток закрыт — идёт подготовка к вскрытию'**
+  /// **'Выбор клеток закрыт — подводим итоги'**
   String get sapperAcceptClosed;
 
   /// No description provided for @sapperHiddenTitle.
   ///
   /// In ru, this message translates to:
-  /// **'НА ПОЛЕ СПРЯТАНО'**
+  /// **'ПРИЗЫ НА ПОЛЕ'**
   String get sapperHiddenTitle;
+
+  /// No description provided for @sapperFieldTotal.
+  ///
+  /// In ru, this message translates to:
+  /// **'НА ПОЛЕ {count, plural, one{{count} клетка} few{{count} клетки} many{{count} клеток} other{{count} клеток}}'**
+  String sapperFieldTotal(int count);
 
   /// No description provided for @sapperRevealIn.
   ///
   /// In ru, this message translates to:
-  /// **'вскрытие через {time}'**
+  /// **'итоги через {time}'**
   String sapperRevealIn(Object time);
 
   /// No description provided for @sapperNoPrizes.
   ///
   /// In ru, this message translates to:
-  /// **'призы не заявлены'**
+  /// **'призы не указаны'**
   String get sapperNoPrizes;
 
   /// No description provided for @sapperPrizeChip.
@@ -419,7 +437,7 @@ abstract class AppLocalizations {
   /// No description provided for @sapperCellPrice.
   ///
   /// In ru, this message translates to:
-  /// **'цена клетки {price} IQC'**
+  /// **'клетка — {price} IQC'**
   String sapperCellPrice(Object price);
 
   /// No description provided for @sapperYourBalance.
@@ -431,19 +449,19 @@ abstract class AppLocalizations {
   /// No description provided for @sapperCellPriceLabel.
   ///
   /// In ru, this message translates to:
-  /// **'цена клетки'**
+  /// **'за клетку'**
   String get sapperCellPriceLabel;
 
   /// No description provided for @sapperWinBannerWin.
   ///
   /// In ru, this message translates to:
-  /// **'🎉 Вы выиграли {count} {word}!'**
+  /// **'🎉 Вы получили {count} {word}!'**
   String sapperWinBannerWin(Object count, Object word);
 
   /// No description provided for @sapperNoWin.
   ///
   /// In ru, this message translates to:
-  /// **'В этот раз без выигрыша'**
+  /// **'В этот раз без приза'**
   String get sapperNoWin;
 
   /// No description provided for @sapperPrizeOne.
@@ -509,7 +527,7 @@ abstract class AppLocalizations {
   /// No description provided for @sapperWinners.
   ///
   /// In ru, this message translates to:
-  /// **'Победители'**
+  /// **'Получили призы'**
   String get sapperWinners;
 
   /// No description provided for @newsTitle.
@@ -620,6 +638,12 @@ abstract class AppLocalizations {
   /// **'Войдите по номеру телефона'**
   String get loginByPhone;
 
+  /// No description provided for @loginChooseMethod.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выберите удобный способ входа'**
+  String get loginChooseMethod;
+
   /// No description provided for @loginCodeSent.
   ///
   /// In ru, this message translates to:
@@ -655,6 +679,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Зарегистрироваться'**
   String get loginRegister;
+
+  /// No description provided for @loginNoAccount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет аккаунта?'**
+  String get loginNoAccount;
 
   /// No description provided for @loginEnter.
   ///
@@ -950,6 +980,12 @@ abstract class AppLocalizations {
   /// **'Выйти из аккаунта?'**
   String get profileLogoutConfirmTitle;
 
+  /// No description provided for @profileLogoutConfirmBody.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чтобы снова пользоваться приложением, нужно будет войти ещё раз.'**
+  String get profileLogoutConfirmBody;
+
   /// No description provided for @profileLogoutAction.
   ///
   /// In ru, this message translates to:
@@ -965,7 +1001,7 @@ abstract class AppLocalizations {
   /// No description provided for @profileDeleteConfirmBody.
   ///
   /// In ru, this message translates to:
-  /// **'Действие необратимо. Все данные будут удалены.'**
+  /// **'Удалим профиль, номер телефона, привязки входа, уведомления и переписку с поддержкой. Записи о начислениях и выданных ваучерах сохранятся без ваших персональных данных — они нужны для учёта. Действие необратимо.'**
   String get profileDeleteConfirmBody;
 
   /// No description provided for @profileStatQuests.
@@ -1187,7 +1223,7 @@ abstract class AppLocalizations {
   /// No description provided for @notifSettingsChecks.
   ///
   /// In ru, this message translates to:
-  /// **'Статусы чеков и рецептов'**
+  /// **'Статусы чеков и бланков'**
   String get notifSettingsChecks;
 
   /// No description provided for @notifSettingsQuests.
@@ -1535,7 +1571,7 @@ abstract class AppLocalizations {
   /// No description provided for @docHomeSubtitle.
   ///
   /// In ru, this message translates to:
-  /// **'Отправляйте рецепты и получайте вознаграждение'**
+  /// **'Отправляйте бланки и получайте вознаграждение'**
   String get docHomeSubtitle;
 
   /// No description provided for @docHomeWalletBalance.
@@ -1553,19 +1589,19 @@ abstract class AppLocalizations {
   /// No description provided for @docHomeSendRecipe.
   ///
   /// In ru, this message translates to:
-  /// **'Отправить рецепт'**
+  /// **'Отправить бланк'**
   String get docHomeSendRecipe;
 
   /// No description provided for @docHomeSendRecipeHint.
   ///
   /// In ru, this message translates to:
-  /// **'Сфотографируйте рецепт — ИИ распознает препараты'**
+  /// **'Сфотографируйте бланк — ИИ распознает препараты'**
   String get docHomeSendRecipeHint;
 
   /// No description provided for @docHomeStatRecipes.
   ///
   /// In ru, this message translates to:
-  /// **'всего рецептов'**
+  /// **'всего бланков'**
   String get docHomeStatRecipes;
 
   /// No description provided for @docHomeStatApproved.
@@ -1601,13 +1637,13 @@ abstract class AppLocalizations {
   /// No description provided for @recipeDetailMyRecipes.
   ///
   /// In ru, this message translates to:
-  /// **'Мои рецепты'**
+  /// **'Мои бланки'**
   String get recipeDetailMyRecipes;
 
   /// No description provided for @recipeDetailTitle.
   ///
   /// In ru, this message translates to:
-  /// **'Рецепт №{id}'**
+  /// **'Бланк №{id}'**
   String recipeDetailTitle(Object id);
 
   /// No description provided for @recipeDetailPhotoCount.
@@ -1649,7 +1685,7 @@ abstract class AppLocalizations {
   /// No description provided for @recipesTitle.
   ///
   /// In ru, this message translates to:
-  /// **'Мои рецепты'**
+  /// **'Мои бланки'**
   String get recipesTitle;
 
   /// No description provided for @recipesTotal.
@@ -1679,7 +1715,7 @@ abstract class AppLocalizations {
   /// No description provided for @recipesEmpty.
   ///
   /// In ru, this message translates to:
-  /// **'Рецептов пока нет'**
+  /// **'Бланков пока нет'**
   String get recipesEmpty;
 
   /// No description provided for @recipesTakePhoto.
@@ -1697,7 +1733,7 @@ abstract class AppLocalizations {
   /// No description provided for @recipesUploading.
   ///
   /// In ru, this message translates to:
-  /// **'Рецепт добавлен — загружается'**
+  /// **'Бланк добавлен — загружается'**
   String get recipesUploading;
 
   /// No description provided for @recipesDoctorInfoTitle.
@@ -1745,7 +1781,7 @@ abstract class AppLocalizations {
   /// No description provided for @recipesSubmitButton.
   ///
   /// In ru, this message translates to:
-  /// **'Отправить рецепт'**
+  /// **'Отправить бланк'**
   String get recipesSubmitButton;
 
   /// No description provided for @recipesPhotoCount.
@@ -3167,7 +3203,7 @@ abstract class AppLocalizations {
   /// No description provided for @walletRedeemTitle.
   ///
   /// In ru, this message translates to:
-  /// **'Обменять баллы?'**
+  /// **'Оформить ваучер?'**
   String get walletRedeemTitle;
 
   /// No description provided for @walletRedeemBody.
@@ -3185,7 +3221,7 @@ abstract class AppLocalizations {
   /// No description provided for @walletRedeem.
   ///
   /// In ru, this message translates to:
-  /// **'Обменять'**
+  /// **'Оформить'**
   String get walletRedeem;
 
   /// No description provided for @walletVoucherIssued.
@@ -3401,7 +3437,7 @@ abstract class AppLocalizations {
   /// No description provided for @questDetailRewardVoucherLine.
   ///
   /// In ru, this message translates to:
-  /// **'Korzinka · {amount} сум'**
+  /// **'Ваучер Korzinka · {amount} IQC'**
   String questDetailRewardVoucherLine(Object amount);
 
   /// No description provided for @questDetailRewardIqcLine.
@@ -3445,6 +3481,252 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Выберите язык'**
   String get profileChooseLanguage;
+
+  /// No description provided for @navDoctors.
+  ///
+  /// In ru, this message translates to:
+  /// **'Врачи'**
+  String get navDoctors;
+
+  /// No description provided for @doctorsTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Врачи'**
+  String get doctorsTitle;
+
+  /// No description provided for @doctorsHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Врачи вашей компании и их прогресс по квесту на бланки'**
+  String get doctorsHint;
+
+  /// No description provided for @doctorsSearchHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Поиск по врачу, клинике, городу'**
+  String get doctorsSearchHint;
+
+  /// No description provided for @doctorsCompleted.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выполнили'**
+  String get doctorsCompleted;
+
+  /// No description provided for @doctorsInProgress.
+  ///
+  /// In ru, this message translates to:
+  /// **'В процессе'**
+  String get doctorsInProgress;
+
+  /// No description provided for @doctorsIdle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не начали'**
+  String get doctorsIdle;
+
+  /// No description provided for @doctorsNoQuest.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет активного квеста на бланки'**
+  String get doctorsNoQuest;
+
+  /// No description provided for @doctorsUnavailable.
+  ///
+  /// In ru, this message translates to:
+  /// **'У вашей компании нет проекта с бланками, поэтому врачи не подключены'**
+  String get doctorsUnavailable;
+
+  /// No description provided for @doctorsEmpty.
+  ///
+  /// In ru, this message translates to:
+  /// **'Врачей пока нет'**
+  String get doctorsEmpty;
+
+  /// No description provided for @doctorsNotFound.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ничего не найдено'**
+  String get doctorsNotFound;
+
+  /// No description provided for @doctorsRegionUnknown.
+  ///
+  /// In ru, this message translates to:
+  /// **'Регион не указан'**
+  String get doctorsRegionUnknown;
+
+  /// No description provided for @doctorsRecipesCount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Бланков за всё время: {count}'**
+  String doctorsRecipesCount(Object count);
+
+  /// No description provided for @doctorsQuestGoal.
+  ///
+  /// In ru, this message translates to:
+  /// **'Норма: {goal}'**
+  String doctorsQuestGoal(Object goal);
+
+  /// No description provided for @doctorsDoneTimes.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выполнен ×{count}'**
+  String doctorsDoneTimes(Object count);
+
+  /// No description provided for @doctorsRegionSummary.
+  ///
+  /// In ru, this message translates to:
+  /// **'{doctors} врач. · {completed} вып.'**
+  String doctorsRegionSummary(Object doctors, Object completed);
+
+  /// No description provided for @doctorsAll.
+  ///
+  /// In ru, this message translates to:
+  /// **'Все'**
+  String get doctorsAll;
+
+  /// No description provided for @loginWithGoogle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Войти через Google'**
+  String get loginWithGoogle;
+
+  /// No description provided for @loginWithApple.
+  ///
+  /// In ru, this message translates to:
+  /// **'Войти через Apple'**
+  String get loginWithApple;
+
+  /// No description provided for @oauthLinkTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Подтвердите номер телефона'**
+  String get oauthLinkTitle;
+
+  /// No description provided for @oauthLinkBody.
+  ///
+  /// In ru, this message translates to:
+  /// **'Один раз подтвердите номер — так мы найдём ваш аккаунт и баллы. В следующий раз вход будет в одно касание.'**
+  String get oauthLinkBody;
+
+  /// No description provided for @oauthLinkPhoneLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Номер телефона'**
+  String get oauthLinkPhoneLabel;
+
+  /// No description provided for @oauthLinkSendCode.
+  ///
+  /// In ru, this message translates to:
+  /// **'Получить код'**
+  String get oauthLinkSendCode;
+
+  /// No description provided for @oauthLinkCodeSent.
+  ///
+  /// In ru, this message translates to:
+  /// **'Код отправлен на {phone}'**
+  String oauthLinkCodeSent(String phone);
+
+  /// No description provided for @oauthLinkCodeLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Код из SMS'**
+  String get oauthLinkCodeLabel;
+
+  /// No description provided for @oauthLinkConfirm.
+  ///
+  /// In ru, this message translates to:
+  /// **'Подтвердить'**
+  String get oauthLinkConfirm;
+
+  /// No description provided for @oauthLinkChangePhone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Изменить номер'**
+  String get oauthLinkChangePhone;
+
+  /// No description provided for @profilePrivacy.
+  ///
+  /// In ru, this message translates to:
+  /// **'Политика конфиденциальности'**
+  String get profilePrivacy;
+
+  /// No description provided for @profilePrivacySubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Какие данные мы собираем и как храним'**
+  String get profilePrivacySubtitle;
+
+  /// No description provided for @sapperRulesButton.
+  ///
+  /// In ru, this message translates to:
+  /// **'Правила акции'**
+  String get sapperRulesButton;
+
+  /// No description provided for @sapperRulesTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Правила акции «Супер Сапёр»'**
+  String get sapperRulesTitle;
+
+  /// No description provided for @sapperRulesFull.
+  ///
+  /// In ru, this message translates to:
+  /// **'Полные официальные правила'**
+  String get sapperRulesFull;
+
+  /// No description provided for @sapperRulesAccept.
+  ///
+  /// In ru, this message translates to:
+  /// **'Занимая клетку, вы принимаете правила акции.'**
+  String get sapperRulesAccept;
+
+  /// No description provided for @sapperRule1.
+  ///
+  /// In ru, this message translates to:
+  /// **'Организатор — ООО «PHARMIQ ACADEMY». Apple и Google не являются спонсорами акции и никак в ней не участвуют.'**
+  String get sapperRule1;
+
+  /// No description provided for @sapperRule2.
+  ///
+  /// In ru, this message translates to:
+  /// **'Деньги в акции не используются: участвовать можно только за баллы IQC.'**
+  String get sapperRule2;
+
+  /// No description provided for @sapperRule3.
+  ///
+  /// In ru, this message translates to:
+  /// **'Баллы IQC начисляются за обучение, опросы и подтверждённые квесты. Их нельзя купить, передать другому пользователю или обменять на деньги.'**
+  String get sapperRule3;
+
+  /// No description provided for @sapperRule4.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сроки, цена клетки и полный список призов показаны на странице акции до участия.'**
+  String get sapperRule4;
+
+  /// No description provided for @sapperRule5.
+  ///
+  /// In ru, this message translates to:
+  /// **'Баллы списываются при занятии клетки, отменить это нельзя. Одну клетку занимает один участник; приём закрывается за 1 минуту до итогов.'**
+  String get sapperRule5;
+
+  /// No description provided for @sapperRule6.
+  ///
+  /// In ru, this message translates to:
+  /// **'Призы размещаются в клетках до начала акции и после старта не меняются. В назначенное время все клетки открываются одновременно, приз из клетки автоматически получает участник, который её занял. Итоги видны всем.'**
+  String get sapperRule6;
+
+  /// No description provided for @sapperRule7.
+  ///
+  /// In ru, this message translates to:
+  /// **'Призы — подарочные ваучеры партнёров и бонусные баллы; на деньги они не обмениваются. Призы из незанятых клеток повторно не распределяются.'**
+  String get sapperRule7;
+
+  /// No description provided for @sapperRule8.
+  ///
+  /// In ru, this message translates to:
+  /// **'Если акция отменена, все потраченные баллы возвращаются. Участвовать могут пользователи старше 18 лет, участие добровольное.'**
+  String get sapperRule8;
 }
 
 class _AppLocalizationsDelegate
