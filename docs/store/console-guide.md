@@ -18,7 +18,8 @@
 
 ### A2. App Information (слева)
 - **Subtitle:** `Обучение и баллы для аптек`
-- **Category:** Primary — **Education**, Secondary — **Medical**.
+- **Category:** Primary — **Education**, Secondary — **не указывать** (Medical не ставим: лишний повод
+  для проверки по медицинским правилам; Entertainment не подходит — приложение обучающее).
 - **Content Rights:** «Contains third-party content» → **Yes** (курсы и материалы компаний-партнёров) → подтвердить, что права есть.
 - **Age Rating** → Edit → отвечать так:
   - Medical or Treatment-Focused Content → **Infrequent/Mild**

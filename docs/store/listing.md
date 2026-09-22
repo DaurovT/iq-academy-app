@@ -75,4 +75,4 @@ PharmIQ Academy is a learning and loyalty app for pharmacists and doctors taking
 - Удаление аккаунта (Google Play → Data safety): https://pharmview.uz/delete-account
 - Поддержка: support@pharmiq.uz, +998 90 027 69 69
 - Support URL (App Store требует именно ссылку): https://pharmview.uz/privacy — там есть все контакты; Google Play → «Контактные данные»: email support@pharmiq.uz, сайт https://pharmview.uz
-- Категория: App Store — Education (основная) / Medical (вторичная); Google Play — Education
+- Категория: App Store — Education (вторичная не указывается); Google Play — Education
