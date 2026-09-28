@@ -1,0 +1,35 @@
+Reply to App Review — Guideline 2.1(b), Information Needed
+Submission ID: 0451fb4f-bdf9-4ce7-8e00-cf9d33b903d3 — version 1.0.0 (2)
+
+Hello,
+
+Thank you for the questions. PharmIQ Academy sells nothing to its users: the app contains no in-app purchases, no subscriptions, no paid content and no payment flows of any kind. There is no payment SDK, no StoreKit code and no external checkout, web page or link where a user could buy anything. Everything in the app is free for the user.
+
+Our business model is B2B. Pharmaceutical companies pay us to produce and publish professional training for pharmacy employees in Uzbekistan. Users never pay us; they take courses and quizzes for free.
+
+Answers to your questions:
+
+1) Who are the users that will use the paid content and subscriptions in the app?
+There are no paid content and no subscriptions in the app, so no user buys anything. Our users are pharmacy employees in Uzbekistan who take part in partner programs of pharmaceutical companies. All of them get exactly the same free access to all courses, quizzes and surveys.
+
+2) Where can users purchase the content and subscriptions that can be accessed in the app?
+Nowhere. The content cannot be purchased anywhere — not in the app, not on our website, not through any other channel. There is no paid tier, no membership and no price for any course. Our customers are pharmaceutical companies, and they pay us outside the app, under B2B contracts, for content production and program management. That payment gives the company analytics on its own program; it does not buy anything for the individual user.
+
+3) What specific types of previously purchased content and subscriptions can a user access in the app?
+None. Users have no previous purchases with us, because nothing is ever sold to them.
+
+4) What paid content, subscriptions, or features are unlocked within the app that do not use In-App Purchase?
+None. No feature of the app is unlocked by any payment.
+
+For clarity, two things in the app may look like a purchase but are not:
+
+- IQC points. IQC are internal loyalty points. They cannot be bought, topped up, transferred or exchanged for money, and there is no server endpoint or app screen that would allow it. Points are earned only by learning activity: completing lessons, quizzes and surveys. Points can be redeemed for partner gift vouchers (for example a Korzinka grocery voucher) and for cells in our loyalty prize promotion "Супер Сапёр". Both are rewards of the loyalty program, paid for by us and our partners, not digital content or app functionality.
+
+- Locked lessons. A lesson shown as locked simply becomes available after the previous lesson of the same course is finished. It is sequential course progression, not a paywall: no payment and no points are required.
+
+You can verify all of this with the demo account from our review notes: phone +998 90 111 22 33, confirmation code 00000 (no real SMS needed). The account is topped up to 60 IQC on each sign-in, so you can try the voucher redemption and the promotion without any payment.
+
+Please let us know if you need any further detail — we are happy to provide it.
+
+Best regards,
+PharmIQ Academy team
