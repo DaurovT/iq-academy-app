@@ -1,8 +1,8 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../widgets/local_photo.dart';
 import '../../core/uploads/upload_queue.dart';
 import '../../core/uploads/pending_upload.dart';
 import '../../core/format.dart';
@@ -140,7 +140,7 @@ class _NewCheckSheetState extends ConsumerState<_NewCheckSheet> {
     final l10n = context.l10n;
     await ref
         .read(uploadQueueProvider.notifier)
-        .enqueueCheck(_photos.map((x) => x.path).toList());
+        .enqueueCheck(_photos);
     nav.pop();
     messenger.showSnackBar(
         SnackBar(content: Text(l10n.checksAddedUploading)));
@@ -297,8 +297,7 @@ class _Thumb extends StatelessWidget {
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(12),
-          child: Image.file(File(path),
-              width: 140, height: double.infinity, fit: BoxFit.cover),
+          child: localPhoto(path, width: 140, height: double.infinity),
         ),
         Positioned(
           top: 4,
@@ -626,8 +625,7 @@ class _QueueRow extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: path != null
-                ? Image.file(File(path),
-                    width: 48, height: 48, fit: BoxFit.cover)
+                ? localPhoto(path, width: 48, height: 48)
                 : Container(width: 48, height: 48, color: trackBg),
           ),
           const SizedBox(width: 12),

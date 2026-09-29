@@ -1,10 +1,13 @@
+import '../../../core/app_modules.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../core/api/providers.dart';
 import '../../../core/auth/auth_controller.dart';
 import '../../../core/l10n/l10n.dart';
+import '../../../core/legal.dart';
 import '../../../core/l10n/locale_controller.dart';
 import '../../../core/models/common.dart';
 import '../../../core/models/quest.dart';
@@ -13,6 +16,7 @@ import '../../pharmacist/providers.dart';
 import '../role_select/role_select_screen.dart';
 import '../widgets/pharm_top_bar.dart';
 import '../widgets/screen_decor.dart';
+import '../../../widgets/dialog_buttons.dart';
 
 /// Профиль пользователя. Перенесён один в один из макета Figma
 /// «pharmiq-profile-connected» (node 20:493 / 46:1147).
@@ -204,16 +208,30 @@ class ProfileScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 15),
 
-                // ── Поддержка ──
+                // ── Поддержка ── (можно спрятать из админки)
+                if (ref.moduleVisible('support')) ...[
+                  _TileCard(
+                    c: c,
+                    circle: const Color(0xFF1A3566),
+                    icon: Icons.headset_mic_outlined,
+                    iconColor: Colors.white,
+                    title: context.l10n.profileSupport,
+                    subtitle: context.l10n.profileSupportSubtitle,
+                    chevron: true,
+                    onTap: () => context.push('/app/support'),
+                  ),
+                  const SizedBox(height: 12),
+                ],
                 _TileCard(
                   c: c,
-                  circle: const Color(0xFF1A3566),
-                  icon: Icons.headset_mic_outlined,
-                  iconColor: Colors.white,
-                  title: context.l10n.profileSupport,
-                  subtitle: context.l10n.profileSupportSubtitle,
+                  circle: c.circlePlain,
+                  icon: Icons.privacy_tip_outlined,
+                  iconColor: c.iconOnNavy,
+                  title: context.l10n.profilePrivacy,
+                  subtitle: context.l10n.profilePrivacySubtitle,
                   chevron: true,
-                  onTap: () => context.push('/app/support'),
+                  onTap: () => launchUrl(Uri.parse(kPrivacyPolicyUrl),
+                      mode: LaunchMode.externalApplication),
                 ),
                 const SizedBox(height: 12),
                 _TileCard(
@@ -410,12 +428,12 @@ class ProfileScreen extends ConsumerWidget {
           decoration: InputDecoration(labelText: ctx.l10n.profilePhone),
         ),
         actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: Text(ctx.l10n.profileCancel)),
-          FilledButton(
-              onPressed: () => Navigator.pop(ctx, true),
-              child: Text(ctx.l10n.profileNext)),
+          DialogButtons(
+            cancelLabel: ctx.l10n.profileCancel,
+            onCancel: () => Navigator.pop(ctx, false),
+            confirmLabel: ctx.l10n.profileNext,
+            onConfirm: () => Navigator.pop(ctx, true),
+          ),
         ],
       ),
     );
@@ -441,12 +459,12 @@ class ProfileScreen extends ConsumerWidget {
           decoration: InputDecoration(labelText: ctx.l10n.profileCodeLabel),
         ),
         actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: Text(ctx.l10n.profileCancel)),
-          FilledButton(
-              onPressed: () => Navigator.pop(ctx, true),
-              child: Text(ctx.l10n.profileConfirm)),
+          DialogButtons(
+            cancelLabel: ctx.l10n.profileCancel,
+            onCancel: () => Navigator.pop(ctx, false),
+            confirmLabel: ctx.l10n.profileConfirm,
+            onConfirm: () => Navigator.pop(ctx, true),
+          ),
         ],
       ),
     );
@@ -471,13 +489,15 @@ class ProfileScreen extends ConsumerWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text(ctx.l10n.profileLogoutConfirmTitle),
+        content: Text(ctx.l10n.profileLogoutConfirmBody),
         actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: Text(ctx.l10n.profileCancel)),
-          FilledButton(
-              onPressed: () => Navigator.pop(ctx, true),
-              child: Text(ctx.l10n.profileLogoutAction)),
+          DialogButtons(
+            cancelLabel: ctx.l10n.profileCancel,
+            onCancel: () => Navigator.pop(ctx, false),
+            confirmLabel: ctx.l10n.profileLogoutAction,
+            onConfirm: () => Navigator.pop(ctx, true),
+            destructive: true,
+          ),
         ],
       ),
     );
@@ -491,14 +511,12 @@ class ProfileScreen extends ConsumerWidget {
         title: Text(ctx.l10n.profileDeleteConfirmTitle),
         content: Text(ctx.l10n.profileDeleteConfirmBody),
         actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: Text(ctx.l10n.profileCancel)),
-          FilledButton(
-            style: FilledButton.styleFrom(
-                backgroundColor: Theme.of(ctx).colorScheme.error),
-            onPressed: () => Navigator.pop(ctx, true),
-            child: Text(ctx.l10n.profileDelete),
+          DialogButtons(
+            cancelLabel: ctx.l10n.profileCancel,
+            onCancel: () => Navigator.pop(ctx, false),
+            confirmLabel: ctx.l10n.profileDelete,
+            onConfirm: () => Navigator.pop(ctx, true),
+            destructive: true,
           ),
         ],
       ),

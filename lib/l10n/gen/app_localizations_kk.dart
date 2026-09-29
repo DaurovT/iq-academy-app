@@ -63,7 +63,7 @@ class AppLocalizationsKk extends AppLocalizations {
   String get navWallet => 'Әмиян';
 
   @override
-  String get navRecipes => 'Рецепттер';
+  String get navRecipes => 'Бланктар';
 
   @override
   String get navPortfolio => 'Портфель';
@@ -90,7 +90,7 @@ class AppLocalizationsKk extends AppLocalizations {
   String get miniAppsTitle => 'Шағын қолданбалар';
 
   @override
-  String get miniAppsSubtitle => 'Ойнап, IQC-ға жүлделер ұтып алыңыз';
+  String get miniAppsSubtitle => 'Бағдарлама қатысушыларына арналған акциялар';
 
   @override
   String get miniAppsSoon => 'Жақында';
@@ -118,17 +118,17 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get sapperSubtitle =>
-      'IQC-ға ұяшықтарды иеленіңіз — ашылу сағатында астында не барын білесіз';
+      'IQC-ға ұяшықтарды таңдаңыз — қорытынды шығарылғанда астында не барын білесіз';
 
   @override
-  String get sapperNoDraws => 'Ұтыс ойындары жоқ';
+  String get sapperNoDraws => 'Белсенді акциялар жоқ';
 
   @override
-  String get sapperRevealed => 'Ашылды';
+  String get sapperRevealed => 'Аяқталды';
 
   @override
   String sapperPrizesAndPrice(Object prizeCount, Object priceIqc) {
-    return '🎁 $prizeCount жүлде  💎 $priceIqc IQC/ұяшық  ';
+    return '🎁 жүлделер: $prizeCount  💎 $priceIqc IQC/ұяшық  ';
   }
 
   @override
@@ -142,7 +142,7 @@ class AppLocalizationsKk extends AppLocalizations {
   }
 
   @override
-  String get sapperGoToGame => 'Ойынға өту';
+  String get sapperGoToGame => 'Алаңды ашу';
 
   @override
   String sapperReserveTitle(Object number) {
@@ -151,7 +151,7 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String sapperReserveBody(Object price) {
-    return '$price IQC шегеріледі. Болдырмауға болмайды — ұяшық ашылғанға дейін сізге бекітіледі.';
+    return '$price IQC пайдаланылады. Болдырмауға болмайды — ұяшық қорытынды шығарылғанға дейін сізге бекітіледі.';
   }
 
   @override
@@ -165,22 +165,35 @@ class AppLocalizationsKk extends AppLocalizations {
   }
 
   @override
-  String get sapperDraws => 'Ұтыс ойындары';
+  String get sapperNoIqcTitle => 'IQC жеткіліксіз';
 
   @override
-  String get sapperAcceptClosed =>
-      'Ұяшық қабылдау жабылды — ашылуға дайындық жүріп жатыр';
-
-  @override
-  String get sapperHiddenTitle => 'АЛАҢДА ЖАСЫРЫЛҒАН';
-
-  @override
-  String sapperRevealIn(Object time) {
-    return 'ашылуға $time қалды';
+  String sapperNoIqcBody(Object price, Object have) {
+    return 'Қатысу үшін $price IQC қажет, сізде $have. IQC жинаңыз — оқу, квест немесе сауалнамадан өтіңіз.';
   }
 
   @override
-  String get sapperNoPrizes => 'жүлделер жарияланбаған';
+  String get sapperDraws => 'Акциялар';
+
+  @override
+  String get sapperAcceptClosed =>
+      'Ұяшық таңдау жабылды — қорытынды шығарылуда';
+
+  @override
+  String get sapperHiddenTitle => 'АЛАҢДАҒЫ ЖҮЛДЕЛЕР';
+
+  @override
+  String sapperFieldTotal(int count) {
+    return 'Алаңда $count ұяшық';
+  }
+
+  @override
+  String sapperRevealIn(Object time) {
+    return 'қорытындыға $time қалды';
+  }
+
+  @override
+  String get sapperNoPrizes => 'жүлделер көрсетілмеген';
 
   @override
   String sapperPrizeChip(Object count, Object label) {
@@ -194,22 +207,22 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String sapperCellPrice(Object price) {
-    return 'ұяшық бағасы $price IQC';
+    return 'ұяшық — $price IQC';
   }
 
   @override
   String get sapperYourBalance => 'Сіздің балансыңыз';
 
   @override
-  String get sapperCellPriceLabel => 'ұяшық бағасы';
+  String get sapperCellPriceLabel => 'бір ұяшыққа';
 
   @override
   String sapperWinBannerWin(Object count, Object word) {
-    return '🎉 Сіз $count $word ұттыңыз!';
+    return '🎉 Сіз $count $word алдыңыз!';
   }
 
   @override
-  String get sapperNoWin => 'Бұл жолы ұтыссыз';
+  String get sapperNoWin => 'Бұл жолы жүлдесіз';
 
   @override
   String get sapperPrizeOne => 'жүлде';
@@ -242,7 +255,7 @@ class AppLocalizationsKk extends AppLocalizations {
   String get sapperLegendFree => 'Бос';
 
   @override
-  String get sapperWinners => 'Жеңімпаздар';
+  String get sapperWinners => 'Жүлде алғандар';
 
   @override
   String get newsTitle => 'Жаңалықтар';
@@ -306,6 +319,9 @@ class AppLocalizationsKk extends AppLocalizations {
   String get loginByPhone => 'Телефон нөмірі арқылы кіріңіз';
 
   @override
+  String get loginChooseMethod => 'Кірудің ыңғайлы тәсілін таңдаңыз';
+
+  @override
   String loginCodeSent(Object phone) {
     return '$phone нөміріне SMS-код жіберілді';
   }
@@ -324,6 +340,9 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get loginRegister => 'Тіркелу';
+
+  @override
+  String get loginNoAccount => 'Аккаунтыңыз жоқ па?';
 
   @override
   String get loginEnter => 'Кіру';
@@ -482,6 +501,10 @@ class AppLocalizationsKk extends AppLocalizations {
   String get profileLogoutConfirmTitle => 'Аккаунттан шығасыз ба?';
 
   @override
+  String get profileLogoutConfirmBody =>
+      'Қолданбаны қайта пайдалану үшін қайтадан кіру қажет болады.';
+
+  @override
   String get profileLogoutAction => 'Шығу';
 
   @override
@@ -489,7 +512,7 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get profileDeleteConfirmBody =>
-      'Бұл әрекетті қайтару мүмкін емес. Барлық деректер жойылады.';
+      'Профиль, телефон нөмірі, кіру байланыстары, хабарламалар және қолдау қызметімен хат алмасу жойылады. Есептеулер мен берілген ваучерлер туралы жазбалар жеке деректеріңізсіз сақталады — олар есеп үшін қажет. Бұл әрекетті қайтару мүмкін емес.';
 
   @override
   String get profileStatQuests => 'КВЕСТТЕР';
@@ -616,7 +639,7 @@ class AppLocalizationsKk extends AppLocalizations {
   String get notifSettingsTitle => 'Хабарлама баптаулары';
 
   @override
-  String get notifSettingsChecks => 'Чек және рецепт мәртебелері';
+  String get notifSettingsChecks => 'Чек және бланк мәртебелері';
 
   @override
   String get notifSettingsQuests => 'Квесттер мен сыйақылар';
@@ -800,7 +823,7 @@ class AppLocalizationsKk extends AppLocalizations {
   }
 
   @override
-  String get docHomeSubtitle => 'Рецепттерді жіберіп, сыйақы алыңыз';
+  String get docHomeSubtitle => 'Бланктарды жіберіп, сыйақы алыңыз';
 
   @override
   String get docHomeWalletBalance => 'ӘМИЯН БАЛАНСЫ';
@@ -809,14 +832,14 @@ class AppLocalizationsKk extends AppLocalizations {
   String get docHomeWallet => 'Әмиян';
 
   @override
-  String get docHomeSendRecipe => 'Рецепт жіберу';
+  String get docHomeSendRecipe => 'Бланк жіберу';
 
   @override
   String get docHomeSendRecipeHint =>
-      'Рецептті суретке түсіріңіз — AI дәрілерді таниды';
+      'Бланкты суретке түсіріңіз — AI дәрілерді таниды';
 
   @override
-  String get docHomeStatRecipes => 'барлық рецепттер';
+  String get docHomeStatRecipes => 'барлық бланктар';
 
   @override
   String get docHomeStatApproved => 'мақұлданды';
@@ -836,11 +859,11 @@ class AppLocalizationsKk extends AppLocalizations {
   }
 
   @override
-  String get recipeDetailMyRecipes => 'Менің рецепттерім';
+  String get recipeDetailMyRecipes => 'Менің бланктарым';
 
   @override
   String recipeDetailTitle(Object id) {
-    return 'Рецепт №$id';
+    return 'Бланк №$id';
   }
 
   @override
@@ -864,7 +887,7 @@ class AppLocalizationsKk extends AppLocalizations {
   String get recipeDetailNoDrugs => 'Дәрілер танылмады';
 
   @override
-  String get recipesTitle => 'Менің рецепттерім';
+  String get recipesTitle => 'Менің бланктарым';
 
   @override
   String recipesTotal(Object p1) {
@@ -881,7 +904,7 @@ class AppLocalizationsKk extends AppLocalizations {
   String get recipesTabDone => 'Аяқталған';
 
   @override
-  String get recipesEmpty => 'Әзірге рецепттер жоқ';
+  String get recipesEmpty => 'Әзірге бланктар жоқ';
 
   @override
   String get recipesTakePhoto => 'Суретке түсіру';
@@ -890,7 +913,7 @@ class AppLocalizationsKk extends AppLocalizations {
   String get recipesFromGallery => 'Галереядан таңдау';
 
   @override
-  String get recipesUploading => 'Рецепт қосылды — жүктелуде';
+  String get recipesUploading => 'Бланк қосылды — жүктелуде';
 
   @override
   String get recipesDoctorInfoTitle => 'Дәрігер деректері (қалауыңызша)';
@@ -914,7 +937,7 @@ class AppLocalizationsKk extends AppLocalizations {
   String get recipesSend => 'Жіберу';
 
   @override
-  String get recipesSubmitButton => 'Рецепт жіберу';
+  String get recipesSubmitButton => 'Бланк жіберу';
 
   @override
   String recipesPhotoCount(Object p1) {
@@ -1700,7 +1723,7 @@ class AppLocalizationsKk extends AppLocalizations {
   String get walletNoVouchers => 'Әзірге ваучерлер жоқ';
 
   @override
-  String get walletRedeemTitle => 'Ұпайлар айырбастала ма?';
+  String get walletRedeemTitle => 'Ваучерді рәсімдейсіз бе?';
 
   @override
   String walletRedeemBody(Object p1, Object p2) {
@@ -1711,7 +1734,7 @@ class AppLocalizationsKk extends AppLocalizations {
   String get walletCancel => 'Болдырмау';
 
   @override
-  String get walletRedeem => 'Айырбастау';
+  String get walletRedeem => 'Рәсімдеу';
 
   @override
   String get walletVoucherIssued => 'Ваучер рәсімделді';
@@ -1837,7 +1860,7 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String questDetailRewardVoucherLine(Object amount) {
-    return 'Korzinka · $amount сум';
+    return 'Korzinka ваучері · $amount IQC';
   }
 
   @override
@@ -1866,4 +1889,150 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get profileChooseLanguage => 'Тілді таңдаңыз';
+
+  @override
+  String get navDoctors => 'Дәрігерлер';
+
+  @override
+  String get doctorsTitle => 'Дәрігерлер';
+
+  @override
+  String get doctorsHint =>
+      'Компанияңыздың дәрігерлері және олардың бланк квесті бойынша үлгерімі';
+
+  @override
+  String get doctorsSearchHint => 'Дәрігер, клиника, қала бойынша іздеу';
+
+  @override
+  String get doctorsCompleted => 'Орындады';
+
+  @override
+  String get doctorsInProgress => 'Орындалуда';
+
+  @override
+  String get doctorsIdle => 'Бастамаған';
+
+  @override
+  String get doctorsNoQuest => 'Белсенді бланк квесті жоқ';
+
+  @override
+  String get doctorsUnavailable =>
+      'Компанияңызда бланк жобасы жоқ, сондықтан дәрігерлер қосылмаған';
+
+  @override
+  String get doctorsEmpty => 'Әзірге дәрігерлер жоқ';
+
+  @override
+  String get doctorsNotFound => 'Ештеңе табылмады';
+
+  @override
+  String get doctorsRegionUnknown => 'Аймақ көрсетілмеген';
+
+  @override
+  String doctorsRecipesCount(Object count) {
+    return 'Барлық уақыттағы бланктар: $count';
+  }
+
+  @override
+  String doctorsQuestGoal(Object goal) {
+    return 'Норма: $goal';
+  }
+
+  @override
+  String doctorsDoneTimes(Object count) {
+    return 'Орындалды ×$count';
+  }
+
+  @override
+  String doctorsRegionSummary(Object doctors, Object completed) {
+    return '$doctors дәрігер · $completed орындады';
+  }
+
+  @override
+  String get doctorsAll => 'Барлығы';
+
+  @override
+  String get loginWithGoogle => 'Google арқылы кіру';
+
+  @override
+  String get loginWithApple => 'Apple арқылы кіру';
+
+  @override
+  String get oauthLinkTitle => 'Телефон нөміріңізді растаңыз';
+
+  @override
+  String get oauthLinkBody =>
+      'Нөмірді бір рет растаңыз — осылайша аккаунтыңыз бен ұпайларыңызды табамыз. Келесі жолы бір түртумен кіресіз.';
+
+  @override
+  String get oauthLinkPhoneLabel => 'Телефон нөмірі';
+
+  @override
+  String get oauthLinkSendCode => 'Кодты алу';
+
+  @override
+  String oauthLinkCodeSent(String phone) {
+    return 'Код $phone нөміріне жіберілді';
+  }
+
+  @override
+  String get oauthLinkCodeLabel => 'SMS коды';
+
+  @override
+  String get oauthLinkConfirm => 'Растау';
+
+  @override
+  String get oauthLinkChangePhone => 'Нөмірді өзгерту';
+
+  @override
+  String get profilePrivacy => 'Құпиялық саясаты';
+
+  @override
+  String get profilePrivacySubtitle =>
+      'Қандай деректер жинаймыз және қалай сақтаймыз';
+
+  @override
+  String get sapperRulesButton => 'Акция ережелері';
+
+  @override
+  String get sapperRulesTitle => '«Супер Сапёр» акциясының ережелері';
+
+  @override
+  String get sapperRulesFull => 'Толық ресми ережелер';
+
+  @override
+  String get sapperRulesAccept =>
+      'Ұяшықты алу арқылы сіз акция ережелерін қабылдайсыз.';
+
+  @override
+  String get sapperRule1 =>
+      'Ұйымдастырушы — «PHARMIQ ACADEMY» ЖШС. Apple мен Google акцияның демеушісі емес және оған қатыспайды.';
+
+  @override
+  String get sapperRule2 =>
+      'Акцияда ақша қолданылмайды: тек IQC ұпайларымен қатысуға болады.';
+
+  @override
+  String get sapperRule3 =>
+      'IQC ұпайлары оқу, сауалнамалар және расталған квесттер үшін беріледі. Оларды сатып алуға, басқа пайдаланушыға беруге немесе ақшаға айырбастауға болмайды.';
+
+  @override
+  String get sapperRule4 =>
+      'Мерзімдер, ұяшық бағасы және жүлделердің толық тізімі қатысуға дейін акция бетінде көрсетіледі.';
+
+  @override
+  String get sapperRule5 =>
+      'Ұпайлар ұяшықты алғанда шегеріледі, мұны болдырмауға болмайды. Бір ұяшықты бір қатысушы алады; қабылдау қорытындыдан 1 минут бұрын жабылады.';
+
+  @override
+  String get sapperRule6 =>
+      'Жүлделер ұяшықтарға акция басталғанға дейін орналастырылады және кейін өзгермейді. Белгіленген уақытта барлық ұяшықтар бір мезгілде ашылады, ұяшықтағы жүлдені оны алған қатысушы автоматты түрде алады. Қорытынды бәріне көрінеді.';
+
+  @override
+  String get sapperRule7 =>
+      'Жүлделер — серіктестердің сыйлық ваучерлері мен бонус ұпайлар; ақшаға айырбасталмайды. Бос ұяшықтардағы жүлделер қайта таратылмайды.';
+
+  @override
+  String get sapperRule8 =>
+      'Акция тоқтатылса, жұмсалған барлық ұпайлар қайтарылады. 18 жастан асқан пайдаланушылар қатыса алады, қатысу ерікті.';
 }

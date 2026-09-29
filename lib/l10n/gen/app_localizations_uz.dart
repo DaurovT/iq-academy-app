@@ -63,7 +63,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get navWallet => 'Hamyon';
 
   @override
-  String get navRecipes => 'Retseptlar';
+  String get navRecipes => 'Blanklar';
 
   @override
   String get navPortfolio => 'Portfel';
@@ -90,8 +90,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get miniAppsTitle => 'Mini-ilovalar';
 
   @override
-  String get miniAppsSubtitle =>
-      'O\'ynang va IQC evaziga sovg\'alar yutib oling';
+  String get miniAppsSubtitle => 'Dastur ishtirokchilari uchun aksiyalar';
 
   @override
   String get miniAppsSoon => 'Tez orada';
@@ -119,17 +118,17 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get sapperSubtitle =>
-      'IQC evaziga kataklarni egallang — ochilish soatida ular ostida nima borligini bilib olasiz';
+      'IQC evaziga kataklarni tanlang — natijalar e\'lon qilinganda ular ostida nima borligini bilib olasiz';
 
   @override
-  String get sapperNoDraws => 'O\'yinlar yo\'q';
+  String get sapperNoDraws => 'Faol aksiyalar yo\'q';
 
   @override
-  String get sapperRevealed => 'Ochilgan';
+  String get sapperRevealed => 'Yakunlangan';
 
   @override
   String sapperPrizesAndPrice(Object prizeCount, Object priceIqc) {
-    return '🎁 $prizeCount ta sovg\'a  💎 $priceIqc IQC/katak  ';
+    return '🎁 sovrinlar: $prizeCount  💎 $priceIqc IQC/katak  ';
   }
 
   @override
@@ -143,7 +142,7 @@ class AppLocalizationsUz extends AppLocalizations {
   }
 
   @override
-  String get sapperGoToGame => 'O\'yinga o\'tish';
+  String get sapperGoToGame => 'Maydonni ochish';
 
   @override
   String sapperReserveTitle(Object number) {
@@ -152,7 +151,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String sapperReserveBody(Object price) {
-    return '$price IQC yechiladi. Bekor qilib bo\'lmaydi — katak ochilishgacha sizniki bo\'lib qoladi.';
+    return '$price IQC ishlatiladi. Bekor qilib bo\'lmaydi — katak natijalar e\'lon qilingunga qadar sizniki bo\'lib qoladi.';
   }
 
   @override
@@ -166,22 +165,35 @@ class AppLocalizationsUz extends AppLocalizations {
   }
 
   @override
-  String get sapperDraws => 'Yutuq o\'yinlari';
+  String get sapperNoIqcTitle => 'IQC yetarli emas';
 
   @override
-  String get sapperAcceptClosed =>
-      'Kataklarni band qilish yopildi — ochilishga tayyorgarlik ketmoqda';
-
-  @override
-  String get sapperHiddenTitle => 'MAYDONDA YASHIRINGAN';
-
-  @override
-  String sapperRevealIn(Object time) {
-    return 'ochilishgacha $time';
+  String sapperNoIqcBody(Object price, Object have) {
+    return 'Ishtirok etish uchun $price IQC kerak, sizda $have. IQC toplang — ta\'lim, kvest yoki so\'rovnomadan o\'ting.';
   }
 
   @override
-  String get sapperNoPrizes => 'sovg\'alar e\'lon qilinmagan';
+  String get sapperDraws => 'Aksiyalar';
+
+  @override
+  String get sapperAcceptClosed =>
+      'Kataklarni tanlash yopildi — natijalar tayyorlanmoqda';
+
+  @override
+  String get sapperHiddenTitle => 'MAYDONDAGI SOVRINLAR';
+
+  @override
+  String sapperFieldTotal(int count) {
+    return 'Maydonda $count ta katak';
+  }
+
+  @override
+  String sapperRevealIn(Object time) {
+    return 'natijalargacha $time';
+  }
+
+  @override
+  String get sapperNoPrizes => 'sovrinlar ko\'rsatilmagan';
 
   @override
   String sapperPrizeChip(Object count, Object label) {
@@ -195,31 +207,31 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String sapperCellPrice(Object price) {
-    return 'katak narxi $price IQC';
+    return 'katak — $price IQC';
   }
 
   @override
   String get sapperYourBalance => 'Sizning balansingiz';
 
   @override
-  String get sapperCellPriceLabel => 'katak narxi';
+  String get sapperCellPriceLabel => 'bir katak uchun';
 
   @override
   String sapperWinBannerWin(Object count, Object word) {
-    return '🎉 Siz $count $word yutdingiz!';
+    return '🎉 Siz $count $word oldingiz!';
   }
 
   @override
-  String get sapperNoWin => 'Bu safar yutuqsiz';
+  String get sapperNoWin => 'Bu safar sovrinsiz';
 
   @override
-  String get sapperPrizeOne => 'sovg\'a';
+  String get sapperPrizeOne => 'sovrin';
 
   @override
-  String get sapperPrizeFew => 'sovg\'a';
+  String get sapperPrizeFew => 'sovrin';
 
   @override
-  String get sapperPrizeMany => 'sovg\'a';
+  String get sapperPrizeMany => 'sovrin';
 
   @override
   String get sapperLegendMine => 'Meniki';
@@ -243,7 +255,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get sapperLegendFree => 'Bo\'sh';
 
   @override
-  String get sapperWinners => 'G\'oliblar';
+  String get sapperWinners => 'Sovrin olganlar';
 
   @override
   String get newsTitle => 'Yangiliklar';
@@ -307,6 +319,9 @@ class AppLocalizationsUz extends AppLocalizations {
   String get loginByPhone => 'Telefon raqami orqali kiring';
 
   @override
+  String get loginChooseMethod => 'Kirishning qulay usulini tanlang';
+
+  @override
   String loginCodeSent(Object phone) {
     return '$phone raqamiga SMS-kod yuborildi';
   }
@@ -325,6 +340,9 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get loginRegister => 'Ro\'yxatdan o\'tish';
+
+  @override
+  String get loginNoAccount => 'Akkauntingiz yo\'qmi?';
 
   @override
   String get loginEnter => 'Kirish';
@@ -484,6 +502,10 @@ class AppLocalizationsUz extends AppLocalizations {
   String get profileLogoutConfirmTitle => 'Hisobdan chiqasizmi?';
 
   @override
+  String get profileLogoutConfirmBody =>
+      'Ilovadan yana foydalanish uchun qaytadan kirishingiz kerak bo\'ladi.';
+
+  @override
   String get profileLogoutAction => 'Chiqish';
 
   @override
@@ -491,7 +513,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get profileDeleteConfirmBody =>
-      'Bu amalni qaytarib bo\'lmaydi. Barcha ma\'lumotlar o\'chiriladi.';
+      'Profil, telefon raqami, kirish bog\'lanishlari, bildirishnomalar va qo\'llab-quvvatlash bilan yozishmalar o\'chiriladi. Hisoblangan ballar va berilgan vaucherlar haqidagi yozuvlar shaxsiy ma\'lumotlaringizsiz saqlanadi — ular hisob uchun kerak. Bu amalni qaytarib bo\'lmaydi.';
 
   @override
   String get profileStatQuests => 'KVESTLAR';
@@ -621,7 +643,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get notifSettingsTitle => 'Bildirishnoma sozlamalari';
 
   @override
-  String get notifSettingsChecks => 'Chek va retsept holatlari';
+  String get notifSettingsChecks => 'Chek va blank holatlari';
 
   @override
   String get notifSettingsQuests => 'Kvestlar va mukofotlar';
@@ -805,7 +827,7 @@ class AppLocalizationsUz extends AppLocalizations {
   }
 
   @override
-  String get docHomeSubtitle => 'Retseptlarni yuboring va mukofot oling';
+  String get docHomeSubtitle => 'Blanklarni yuboring va mukofot oling';
 
   @override
   String get docHomeWalletBalance => 'HAMYON BALANSI';
@@ -814,14 +836,14 @@ class AppLocalizationsUz extends AppLocalizations {
   String get docHomeWallet => 'Hamyon';
 
   @override
-  String get docHomeSendRecipe => 'Retsept yuborish';
+  String get docHomeSendRecipe => 'Blank yuborish';
 
   @override
   String get docHomeSendRecipeHint =>
-      'Retseptni suratga oling — AI dorilarni taniydi';
+      'Blankni suratga oling — AI dorilarni taniydi';
 
   @override
-  String get docHomeStatRecipes => 'jami retseptlar';
+  String get docHomeStatRecipes => 'jami blanklar';
 
   @override
   String get docHomeStatApproved => 'tasdiqlangan';
@@ -841,11 +863,11 @@ class AppLocalizationsUz extends AppLocalizations {
   }
 
   @override
-  String get recipeDetailMyRecipes => 'Mening retseptlarim';
+  String get recipeDetailMyRecipes => 'Mening blanklarim';
 
   @override
   String recipeDetailTitle(Object id) {
-    return 'Retsept №$id';
+    return 'Blank №$id';
   }
 
   @override
@@ -869,7 +891,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get recipeDetailNoDrugs => 'Dorilar tanilmadi';
 
   @override
-  String get recipesTitle => 'Mening retseptlarim';
+  String get recipesTitle => 'Mening blanklarim';
 
   @override
   String recipesTotal(Object p1) {
@@ -886,7 +908,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get recipesTabDone => 'Yakunlangan';
 
   @override
-  String get recipesEmpty => 'Hozircha retseptlar yo\'q';
+  String get recipesEmpty => 'Hozircha blanklar yo\'q';
 
   @override
   String get recipesTakePhoto => 'Suratga olish';
@@ -895,7 +917,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get recipesFromGallery => 'Galereyadan tanlash';
 
   @override
-  String get recipesUploading => 'Retsept qo\'shildi — yuklanmoqda';
+  String get recipesUploading => 'Blank qo\'shildi — yuklanmoqda';
 
   @override
   String get recipesDoctorInfoTitle => 'Shifokor ma\'lumotlari (ixtiyoriy)';
@@ -919,7 +941,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get recipesSend => 'Yuborish';
 
   @override
-  String get recipesSubmitButton => 'Retsept yuborish';
+  String get recipesSubmitButton => 'Blank yuborish';
 
   @override
   String recipesPhotoCount(Object p1) {
@@ -1706,7 +1728,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get walletNoVouchers => 'Hozircha vaucherlar yo\'q';
 
   @override
-  String get walletRedeemTitle => 'Ballar almashtirilsinmi?';
+  String get walletRedeemTitle => 'Vaucherni rasmiylashtirasizmi?';
 
   @override
   String walletRedeemBody(Object p1, Object p2) {
@@ -1717,7 +1739,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get walletCancel => 'Bekor qilish';
 
   @override
-  String get walletRedeem => 'Almashtirish';
+  String get walletRedeem => 'Rasmiylashtirish';
 
   @override
   String get walletVoucherIssued => 'Vaucher rasmiylashtirildi';
@@ -1843,7 +1865,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String questDetailRewardVoucherLine(Object amount) {
-    return 'Korzinka · $amount so\'m';
+    return 'Korzinka vaucheri · $amount IQC';
   }
 
   @override
@@ -1872,4 +1894,151 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get profileChooseLanguage => 'Tilni tanlang';
+
+  @override
+  String get navDoctors => 'Shifokorlar';
+
+  @override
+  String get doctorsTitle => 'Shifokorlar';
+
+  @override
+  String get doctorsHint =>
+      'Kompaniyangiz shifokorlari va ularning blank kvesti bo‘yicha natijasi';
+
+  @override
+  String get doctorsSearchHint =>
+      'Shifokor, klinika yoki shahar bo‘yicha qidirish';
+
+  @override
+  String get doctorsCompleted => 'Bajardi';
+
+  @override
+  String get doctorsInProgress => 'Jarayonda';
+
+  @override
+  String get doctorsIdle => 'Boshlamagan';
+
+  @override
+  String get doctorsNoQuest => 'Faol blank kvesti yo‘q';
+
+  @override
+  String get doctorsUnavailable =>
+      'Kompaniyangizda blank loyihasi yo‘q, shuning uchun shifokorlar ulanmagan';
+
+  @override
+  String get doctorsEmpty => 'Hozircha shifokorlar yo‘q';
+
+  @override
+  String get doctorsNotFound => 'Hech narsa topilmadi';
+
+  @override
+  String get doctorsRegionUnknown => 'Hudud ko‘rsatilmagan';
+
+  @override
+  String doctorsRecipesCount(Object count) {
+    return 'Barcha vaqt uchun blanklar: $count';
+  }
+
+  @override
+  String doctorsQuestGoal(Object goal) {
+    return 'Norma: $goal';
+  }
+
+  @override
+  String doctorsDoneTimes(Object count) {
+    return 'Bajarilgan ×$count';
+  }
+
+  @override
+  String doctorsRegionSummary(Object doctors, Object completed) {
+    return '$doctors shifokor · $completed bajardi';
+  }
+
+  @override
+  String get doctorsAll => 'Barchasi';
+
+  @override
+  String get loginWithGoogle => 'Google orqali kirish';
+
+  @override
+  String get loginWithApple => 'Apple orqali kirish';
+
+  @override
+  String get oauthLinkTitle => 'Telefon raqamingizni tasdiqlang';
+
+  @override
+  String get oauthLinkBody =>
+      'Raqamni bir marta tasdiqlang — shunda hisobingiz va ballaringizni topamiz. Keyingi safar bir bosishda kirasiz.';
+
+  @override
+  String get oauthLinkPhoneLabel => 'Telefon raqami';
+
+  @override
+  String get oauthLinkSendCode => 'Kodni olish';
+
+  @override
+  String oauthLinkCodeSent(String phone) {
+    return 'Kod $phone raqamiga yuborildi';
+  }
+
+  @override
+  String get oauthLinkCodeLabel => 'SMS kodi';
+
+  @override
+  String get oauthLinkConfirm => 'Tasdiqlash';
+
+  @override
+  String get oauthLinkChangePhone => 'Raqamni o‘zgartirish';
+
+  @override
+  String get profilePrivacy => 'Maxfiylik siyosati';
+
+  @override
+  String get profilePrivacySubtitle =>
+      'Qanday ma\'lumotlarni yig\'amiz va qanday saqlaymiz';
+
+  @override
+  String get sapperRulesButton => 'Aksiya qoidalari';
+
+  @override
+  String get sapperRulesTitle => '«Super Saper» aksiyasi qoidalari';
+
+  @override
+  String get sapperRulesFull => 'To‘liq rasmiy qoidalar';
+
+  @override
+  String get sapperRulesAccept =>
+      'Katakni egallash orqali siz aksiya qoidalarini qabul qilasiz.';
+
+  @override
+  String get sapperRule1 =>
+      'Tashkilotchi — «PHARMIQ ACADEMY» MChJ. Apple va Google aksiya homiysi emas va unda ishtirok etmaydi.';
+
+  @override
+  String get sapperRule2 =>
+      'Aksiyada pul ishlatilmaydi: faqat IQC ballari evaziga ishtirok etish mumkin.';
+
+  @override
+  String get sapperRule3 =>
+      'IQC ballari ta’lim, so‘rovnomalar va tasdiqlangan kvestlar uchun beriladi. Ularni sotib olib, boshqa foydalanuvchiga o‘tkazib yoki pulga almashtirib bo‘lmaydi.';
+
+  @override
+  String get sapperRule4 =>
+      'Muddatlar, katak narxi va sovrinlarning to‘liq ro‘yxati ishtirokdan oldin aksiya sahifasida ko‘rsatiladi.';
+
+  @override
+  String get sapperRule5 =>
+      'Ballar katak egallanganda yechiladi, buni bekor qilib bo‘lmaydi. Bitta katakni bitta ishtirokchi egallaydi; qabul natijalardan 1 daqiqa oldin yopiladi.';
+
+  @override
+  String get sapperRule6 =>
+      'Sovrinlar aksiya boshlanishidan oldin kataklarga joylashtiriladi va keyin o‘zgarmaydi. Belgilangan vaqtda barcha kataklar bir vaqtda ochiladi, katakdagi sovrinni uni egallagan ishtirokchi avtomatik oladi. Natijalar hammaga ko‘rinadi.';
+
+  @override
+  String get sapperRule7 =>
+      'Sovrinlar — hamkorlarning sovg‘a vaucherlari va bonus ballar; pulga almashtirilmaydi. Egallanmagan kataklardagi sovrinlar qayta taqsimlanmaydi.';
+
+  @override
+  String get sapperRule8 =>
+      'Aksiya bekor qilinsa, sarflangan barcha ballar qaytariladi. 18 yoshdan katta foydalanuvchilar ishtirok etishi mumkin, ishtirok ixtiyoriy.';
 }

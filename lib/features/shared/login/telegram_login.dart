@@ -8,6 +8,7 @@ import '../../../core/api/providers.dart';
 import '../../../core/auth/auth_controller.dart';
 import '../../../core/l10n/l10n.dart';
 import '../../../core/models/account.dart';
+import 'social_login_buttons.dart';
 
 /// Кнопка входа через Telegram-бота: открывает deep-link и опрашивает статус
 /// по nonce, пока пользователь подтверждает вход в боте.
@@ -88,29 +89,13 @@ class _TelegramLoginButtonState extends ConsumerState<TelegramLoginButton> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 52,
-      width: double.infinity,
-      child: FilledButton.icon(
-        style: FilledButton.styleFrom(
-          backgroundColor: const Color(0xFF2AABEE),
-          foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14)),
-        ),
-        onPressed: _busy ? null : _start,
-        icon: _busy
-            ? const SizedBox(
-                height: 18,
-                width: 18,
-                child: CircularProgressIndicator(
-                    strokeWidth: 2, color: Colors.white))
-            : const Icon(Icons.telegram, size: 22),
-        label: Text(
-          _busy ? context.l10n.tgWaitingConfirm : context.l10n.tgLoginButton,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-        ),
-      ),
+    return SocialButton(
+      label: _busy ? context.l10n.tgWaitingConfirm : context.l10n.tgLoginButton,
+      icon: const Icon(Icons.telegram, size: 24, color: Colors.white),
+      background: const Color(0xFF2AABEE),
+      foreground: Colors.white,
+      busy: _busy,
+      onTap: _start,
     );
   }
 }

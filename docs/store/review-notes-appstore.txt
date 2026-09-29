@@ -1,0 +1,27 @@
+WHAT THE APP IS
+PharmIQ Academy is a professional learning and loyalty app for pharmacy staff and doctors in Uzbekistan who take part in partner programs of pharmaceutical companies. Users take short courses and quizzes, answer surveys, complete activity quests and earn IQC points. The interface is in Russian (also Uzbek, Kazakh, Kyrgyz, Tajik); Russian button names are given in quotes below.
+
+DEMO ACCOUNTS (no SMS needed — enter the phone number, then the fixed code 00000)
+- Pharmacist: +998 90 111 22 33 / code 00000 (use this one to try everything)
+- Doctor (also pharmacist): +998 90 777 88 99 / code 00000
+- Medical representative / brand manager: +998 90 123 45 67 / code 00000
+Demo accounts are not linked to real participants, so their history is empty; active quests and courses are the same as for regular users. Deleting a demo account is safe — it is recreated on the next sign-in.
+
+IQC POINTS
+IQC are internal loyalty points. They cannot be purchased (no in-app purchases, no payments of any kind) and cannot be withdrawn or exchanged for money. Points are earned only by completing courses, surveys and verified quests, and can be redeemed for partner gift vouchers.
+
+QUESTS
+Pharmacists upload a photo of a pharmacy receipt, doctors a photo of a prescription form they issued. An AI model (Microsoft Azure, disclosed in the privacy policy) reads the medicine names and a moderator verifies the submission. Medical representatives see aggregated activity of the pharmacists linked to them.
+
+SUPER SAPPER («Супер Сапёр») — LOYALTY POINTS PRIZE PROMOTION
+A scheduled prize promotion for program participants. No money is involved: participants pick cells on a shared field using IQC loyalty points, which cannot be purchased, transferred or exchanged for money. The full prize list, cell price and dates are shown before participation; all cells are revealed at the announced time and prizes (partner gift vouchers or bonus points) are delivered automatically; if a promotion is cancelled, all points are refunded. The organizer is PHARMIQ ACADEMY LLC; Apple is not a sponsor and is not involved.
+To try it: sign in as the Pharmacist demo account — it is topped up to 60 IQC on every sign-in (one cell costs 5 IQC); a promotion is active until 13 October 2026. «Главная» (Home) → «Мини-приложения» (Mini apps) → «Супер Сапёр» → pick a cell → confirm.
+Official rules: in the app — «Правила акции» (Promotion rules) on the promotion page and in the cell confirmation dialog — and at https://pharmview.uz/legal/sapper-rules
+
+SIGN-IN
+Phone number with an SMS code, Sign in with Apple, Google or Telegram. On first sign-in with Apple/Google the user confirms a phone number once, because the program account is identified by phone.
+
+ACCOUNT DELETION
+«Профиль» (Profile) → «Удалить аккаунт и данные» (Delete account and data). Personal data is deleted immediately; anonymized accrual and voucher records are kept for accounting. Sign in with Apple access is revoked on deletion. Web: https://pharmview.uz/delete-account
+
+Privacy policy: https://pharmview.uz/privacy

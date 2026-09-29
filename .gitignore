@@ -46,3 +46,6 @@ app.*.map.json
 
 # Локальные пути SDK
 /android/local.properties
+
+# Локальные настройки Claude Code (права доступа)
+.claude/

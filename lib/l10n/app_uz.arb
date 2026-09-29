@@ -18,7 +18,7 @@
   "navQuests": "Kvestlar",
   "navLearn": "Ta'lim",
   "navWallet": "Hamyon",
-  "navRecipes": "Retseptlar",
+  "navRecipes": "Blanklar",
   "navPortfolio": "Portfel",
   "navPharm": "Farm.",
   "navTop": "Top",
@@ -27,7 +27,7 @@
   "navBrands": "Brendlar",
   "navProfile": "Profil",
   "miniAppsTitle": "Mini-ilovalar",
-  "miniAppsSubtitle": "O'ynang va IQC evaziga sovg'alar yutib oling",
+  "miniAppsSubtitle": "Dastur ishtirokchilari uchun aksiyalar",
   "miniAppsSoon": "Tez orada",
   "sapperCountdownSoon": "tez orada",
   "sapperCountdownDaysHours": "{days}k {hours}s",
@@ -64,10 +64,10 @@
     }
   },
   "sapperTitle": "Super Sapyor",
-  "sapperSubtitle": "IQC evaziga kataklarni egallang — ochilish soatida ular ostida nima borligini bilib olasiz",
-  "sapperNoDraws": "O'yinlar yo'q",
-  "sapperRevealed": "Ochilgan",
-  "sapperPrizesAndPrice": "🎁 {prizeCount} ta sovg'a  💎 {priceIqc} IQC/katak  ",
+  "sapperSubtitle": "IQC evaziga kataklarni tanlang — natijalar e'lon qilinganda ular ostida nima borligini bilib olasiz",
+  "sapperNoDraws": "Faol aksiyalar yo'q",
+  "sapperRevealed": "Yakunlangan",
+  "sapperPrizesAndPrice": "🎁 sovrinlar: {prizeCount}  💎 {priceIqc} IQC/katak  ",
   "@sapperPrizesAndPrice": {
     "placeholders": {
       "prizeCount": {
@@ -100,7 +100,7 @@
       }
     }
   },
-  "sapperGoToGame": "O'yinga o'tish",
+  "sapperGoToGame": "Maydonni ochish",
   "sapperReserveTitle": "{number}-katakni egallaysizmi?",
   "@sapperReserveTitle": {
     "placeholders": {
@@ -109,7 +109,7 @@
       }
     }
   },
-  "sapperReserveBody": "{price} IQC yechiladi. Bekor qilib bo'lmaydi — katak ochilishgacha sizniki bo'lib qoladi.",
+  "sapperReserveBody": "{price} IQC ishlatiladi. Bekor qilib bo'lmaydi — katak natijalar e'lon qilingunga qadar sizniki bo'lib qoladi.",
   "@sapperReserveBody": {
     "placeholders": {
       "price": {
@@ -133,10 +133,13 @@
       }
     }
   },
-  "sapperDraws": "Yutuq o'yinlari",
-  "sapperAcceptClosed": "Kataklarni band qilish yopildi — ochilishga tayyorgarlik ketmoqda",
-  "sapperHiddenTitle": "MAYDONDA YASHIRINGAN",
-  "sapperRevealIn": "ochilishgacha {time}",
+  "sapperNoIqcTitle": "IQC yetarli emas",
+  "sapperNoIqcBody": "Ishtirok etish uchun {price} IQC kerak, sizda {have}. IQC toplang — ta'lim, kvest yoki so'rovnomadan o'ting.",
+  "sapperDraws": "Aksiyalar",
+  "sapperAcceptClosed": "Kataklarni tanlash yopildi — natijalar tayyorlanmoqda",
+  "sapperHiddenTitle": "MAYDONDAGI SOVRINLAR",
+  "sapperFieldTotal": "Maydonda {count} ta katak",
+  "sapperRevealIn": "natijalargacha {time}",
   "@sapperRevealIn": {
     "placeholders": {
       "time": {
@@ -144,7 +147,7 @@
       }
     }
   },
-  "sapperNoPrizes": "sovg'alar e'lon qilinmagan",
+  "sapperNoPrizes": "sovrinlar ko'rsatilmagan",
   "sapperPrizeChip": "🎁 {count}× {label}",
   "@sapperPrizeChip": {
     "placeholders": {
@@ -164,7 +167,7 @@
       }
     }
   },
-  "sapperCellPrice": "katak narxi {price} IQC",
+  "sapperCellPrice": "katak — {price} IQC",
   "@sapperCellPrice": {
     "placeholders": {
       "price": {
@@ -173,8 +176,8 @@
     }
   },
   "sapperYourBalance": "Sizning balansingiz",
-  "sapperCellPriceLabel": "katak narxi",
-  "sapperWinBannerWin": "🎉 Siz {count} {word} yutdingiz!",
+  "sapperCellPriceLabel": "bir katak uchun",
+  "sapperWinBannerWin": "🎉 Siz {count} {word} oldingiz!",
   "@sapperWinBannerWin": {
     "placeholders": {
       "count": {
@@ -185,10 +188,10 @@
       }
     }
   },
-  "sapperNoWin": "Bu safar yutuqsiz",
-  "sapperPrizeOne": "sovg'a",
-  "sapperPrizeFew": "sovg'a",
-  "sapperPrizeMany": "sovg'a",
+  "sapperNoWin": "Bu safar sovrinsiz",
+  "sapperPrizeOne": "sovrin",
+  "sapperPrizeFew": "sovrin",
+  "sapperPrizeMany": "sovrin",
   "sapperLegendMine": "Meniki",
   "sapperLegendTheirs": "Boshqalarniki",
   "sapperLegendEmpty": "Bo'sh",
@@ -196,7 +199,7 @@
   "sapperLegendSelected": "Tanlangan",
   "sapperLegendOccupied": "Band",
   "sapperLegendFree": "Bo'sh",
-  "sapperWinners": "G'oliblar",
+  "sapperWinners": "Sovrin olganlar",
   "newsTitle": "Yangiliklar",
   "newsAll": "Barcha yangiliklar",
   "newsMore": "Batafsil →",
@@ -236,6 +239,7 @@
   "loginTagline": "O'rgan.\nQo'lla.\nErish.",
   "loginTitle": "Kirish",
   "loginByPhone": "Telefon raqami orqali kiring",
+  "loginChooseMethod": "Kirishning qulay usulini tanlang",
   "loginCodeSent": "{phone} raqamiga SMS-kod yuborildi",
   "@loginCodeSent": {
     "placeholders": {
@@ -249,6 +253,7 @@
   "loginConfirm": "Tasdiqlash",
   "loginGoRegister": "Ro'yxatdan o'tish",
   "loginRegister": "Ro'yxatdan o'tish",
+  "loginNoAccount": "Akkauntingiz yo'qmi?",
   "loginEnter": "Kirish",
   "loginResendIn": "{seconds} soniyadan so'ng qayta yuborish",
   "@loginResendIn": {
@@ -326,9 +331,10 @@
   "profileConfirm": "Tasdiqlash",
   "profilePhoneChanged": "Telefon o'zgartirildi",
   "profileLogoutConfirmTitle": "Hisobdan chiqasizmi?",
+  "profileLogoutConfirmBody": "Ilovadan yana foydalanish uchun qaytadan kirishingiz kerak bo'ladi.",
   "profileLogoutAction": "Chiqish",
   "profileDeleteConfirmTitle": "Hisob o'chirilsinmi?",
-  "profileDeleteConfirmBody": "Bu amalni qaytarib bo'lmaydi. Barcha ma'lumotlar o'chiriladi.",
+  "profileDeleteConfirmBody": "Profil, telefon raqami, kirish bog'lanishlari, bildirishnomalar va qo'llab-quvvatlash bilan yozishmalar o'chiriladi. Hisoblangan ballar va berilgan vaucherlar haqidagi yozuvlar shaxsiy ma'lumotlaringizsiz saqlanadi — ular hisob uchun kerak. Bu amalni qaytarib bo'lmaydi.",
   "profileStatQuests": "KVESTLAR",
   "profileStatLevel": "DARAJA",
   "questHistoryTitle": "Ishtirok tarixi",
@@ -421,7 +427,7 @@
   "roleSelectSheetTitle": "Rolni tanlang",
   "roleSelectEnter": "Kirish",
   "notifSettingsTitle": "Bildirishnoma sozlamalari",
-  "notifSettingsChecks": "Chek va retsept holatlari",
+  "notifSettingsChecks": "Chek va blank holatlari",
   "notifSettingsQuests": "Kvestlar va mukofotlar",
   "notifSettingsLearning": "Ta'lim",
   "notifSettingsMarketing": "Yangiliklar va aksiyalar",
@@ -520,12 +526,12 @@
       }
     }
   },
-  "docHomeSubtitle": "Retseptlarni yuboring va mukofot oling",
+  "docHomeSubtitle": "Blanklarni yuboring va mukofot oling",
   "docHomeWalletBalance": "HAMYON BALANSI",
   "docHomeWallet": "Hamyon",
-  "docHomeSendRecipe": "Retsept yuborish",
-  "docHomeSendRecipeHint": "Retseptni suratga oling — AI dorilarni taniydi",
-  "docHomeStatRecipes": "jami retseptlar",
+  "docHomeSendRecipe": "Blank yuborish",
+  "docHomeSendRecipeHint": "Blankni suratga oling — AI dorilarni taniydi",
+  "docHomeStatRecipes": "jami blanklar",
   "docHomeStatApproved": "tasdiqlangan",
   "docHomeStatIqc": "IQC ball",
   "docHomeVoucher": "VAUCHER",
@@ -538,8 +544,8 @@
       }
     }
   },
-  "recipeDetailMyRecipes": "Mening retseptlarim",
-  "recipeDetailTitle": "Retsept №{id}",
+  "recipeDetailMyRecipes": "Mening blanklarim",
+  "recipeDetailTitle": "Blank №{id}",
   "@recipeDetailTitle": {
     "placeholders": {
       "id": {
@@ -560,7 +566,7 @@
   "recipeDetailStatusPending": "Tekshirilmoqda",
   "recipeDetailAiRecognized": "AI tanidi",
   "recipeDetailNoDrugs": "Dorilar tanilmadi",
-  "recipesTitle": "Mening retseptlarim",
+  "recipesTitle": "Mening blanklarim",
   "recipesTotal": "jami {p1}",
   "@recipesTotal": {
     "placeholders": {
@@ -572,10 +578,10 @@
   "recipesTabAll": "Barchasi",
   "recipesTabActive": "Faol",
   "recipesTabDone": "Yakunlangan",
-  "recipesEmpty": "Hozircha retseptlar yo'q",
+  "recipesEmpty": "Hozircha blanklar yo'q",
   "recipesTakePhoto": "Suratga olish",
   "recipesFromGallery": "Galereyadan tanlash",
-  "recipesUploading": "Retsept qo'shildi — yuklanmoqda",
+  "recipesUploading": "Blank qo'shildi — yuklanmoqda",
   "recipesDoctorInfoTitle": "Shifokor ma'lumotlari (ixtiyoriy)",
   "recipesDoctorName": "F.I.Sh.",
   "recipesDoctorWorkplace": "Ish joyi",
@@ -583,7 +589,7 @@
   "recipesDoctorPhone": "Telefon",
   "recipesSkip": "O'tkazib yuborish",
   "recipesSend": "Yuborish",
-  "recipesSubmitButton": "Retsept yuborish",
+  "recipesSubmitButton": "Blank yuborish",
   "recipesPhotoCount": "surat: {p1}",
   "@recipesPhotoCount": {
     "placeholders": {
@@ -1076,7 +1082,7 @@
   "walletUseIqc": "IQC dan foydalanish",
   "walletMyVouchers": "Mening vaucherlarim",
   "walletNoVouchers": "Hozircha vaucherlar yo'q",
-  "walletRedeemTitle": "Ballar almashtirilsinmi?",
+  "walletRedeemTitle": "Vaucherni rasmiylashtirasizmi?",
   "walletRedeemBody": "{p1} — {p2} IQC evaziga",
   "@walletRedeemBody": {
     "placeholders": {
@@ -1089,7 +1095,7 @@
     }
   },
   "walletCancel": "Bekor qilish",
-  "walletRedeem": "Almashtirish",
+  "walletRedeem": "Rasmiylashtirish",
   "walletVoucherIssued": "Vaucher rasmiylashtirildi",
   "walletTitle": "Hamyon",
   "walletBalanceLabel": "BALANS",
@@ -1187,7 +1193,7 @@
   "checksStatusApproved": "Tasdiqlangan",
   "checksStatusRejected": "Rad etilgan",
   "checksStatusPending": "Tekshirilmoqda",
-  "questDetailRewardVoucherLine": "Korzinka · {amount} so'm",
+  "questDetailRewardVoucherLine": "Korzinka vaucheri · {amount} IQC",
   "@questDetailRewardVoucherLine": {
     "placeholders": {
       "amount": {
@@ -1225,5 +1231,84 @@
     }
   },
   "profileLanguageTitle": "Til",
-  "profileChooseLanguage": "Tilni tanlang"
+  "profileChooseLanguage": "Tilni tanlang",
+  "navDoctors": "Shifokorlar",
+  "doctorsTitle": "Shifokorlar",
+  "doctorsHint": "Kompaniyangiz shifokorlari va ularning blank kvesti bo‘yicha natijasi",
+  "doctorsSearchHint": "Shifokor, klinika yoki shahar bo‘yicha qidirish",
+  "doctorsCompleted": "Bajardi",
+  "doctorsInProgress": "Jarayonda",
+  "doctorsIdle": "Boshlamagan",
+  "doctorsNoQuest": "Faol blank kvesti yo‘q",
+  "doctorsUnavailable": "Kompaniyangizda blank loyihasi yo‘q, shuning uchun shifokorlar ulanmagan",
+  "doctorsEmpty": "Hozircha shifokorlar yo‘q",
+  "doctorsNotFound": "Hech narsa topilmadi",
+  "doctorsRegionUnknown": "Hudud ko‘rsatilmagan",
+  "doctorsRecipesCount": "Barcha vaqt uchun blanklar: {count}",
+  "@doctorsRecipesCount": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "doctorsQuestGoal": "Norma: {goal}",
+  "@doctorsQuestGoal": {
+    "placeholders": {
+      "goal": {
+        "type": "Object"
+      }
+    }
+  },
+  "doctorsDoneTimes": "Bajarilgan ×{count}",
+  "@doctorsDoneTimes": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "doctorsRegionSummary": "{doctors} shifokor · {completed} bajardi",
+  "@doctorsRegionSummary": {
+    "placeholders": {
+      "doctors": {
+        "type": "Object"
+      },
+      "completed": {
+        "type": "Object"
+      }
+    }
+  },
+  "doctorsAll": "Barchasi",
+  "loginWithGoogle": "Google orqali kirish",
+  "loginWithApple": "Apple orqali kirish",
+  "oauthLinkTitle": "Telefon raqamingizni tasdiqlang",
+  "oauthLinkBody": "Raqamni bir marta tasdiqlang — shunda hisobingiz va ballaringizni topamiz. Keyingi safar bir bosishda kirasiz.",
+  "oauthLinkPhoneLabel": "Telefon raqami",
+  "oauthLinkSendCode": "Kodni olish",
+  "oauthLinkCodeSent": "Kod {phone} raqamiga yuborildi",
+  "@oauthLinkCodeSent": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "oauthLinkCodeLabel": "SMS kodi",
+  "oauthLinkConfirm": "Tasdiqlash",
+  "oauthLinkChangePhone": "Raqamni o‘zgartirish",
+  "profilePrivacy": "Maxfiylik siyosati",
+  "profilePrivacySubtitle": "Qanday ma'lumotlarni yig'amiz va qanday saqlaymiz",
+  "sapperRulesButton": "Aksiya qoidalari",
+  "sapperRulesTitle": "«Super Saper» aksiyasi qoidalari",
+  "sapperRulesFull": "To‘liq rasmiy qoidalar",
+  "sapperRulesAccept": "Katakni egallash orqali siz aksiya qoidalarini qabul qilasiz.",
+  "sapperRule1": "Tashkilotchi — «PHARMIQ ACADEMY» MChJ. Apple va Google aksiya homiysi emas va unda ishtirok etmaydi.",
+  "sapperRule2": "Aksiyada pul ishlatilmaydi: faqat IQC ballari evaziga ishtirok etish mumkin.",
+  "sapperRule3": "IQC ballari ta’lim, so‘rovnomalar va tasdiqlangan kvestlar uchun beriladi. Ularni sotib olib, boshqa foydalanuvchiga o‘tkazib yoki pulga almashtirib bo‘lmaydi.",
+  "sapperRule4": "Muddatlar, katak narxi va sovrinlarning to‘liq ro‘yxati ishtirokdan oldin aksiya sahifasida ko‘rsatiladi.",
+  "sapperRule5": "Ballar katak egallanganda yechiladi, buni bekor qilib bo‘lmaydi. Bitta katakni bitta ishtirokchi egallaydi; qabul natijalardan 1 daqiqa oldin yopiladi.",
+  "sapperRule6": "Sovrinlar aksiya boshlanishidan oldin kataklarga joylashtiriladi va keyin o‘zgarmaydi. Belgilangan vaqtda barcha kataklar bir vaqtda ochiladi, katakdagi sovrinni uni egallagan ishtirokchi avtomatik oladi. Natijalar hammaga ko‘rinadi.",
+  "sapperRule7": "Sovrinlar — hamkorlarning sovg‘a vaucherlari va bonus ballar; pulga almashtirilmaydi. Egallanmagan kataklardagi sovrinlar qayta taqsimlanmaydi.",
+  "sapperRule8": "Aksiya bekor qilinsa, sarflangan barcha ballar qaytariladi. 18 yoshdan katta foydalanuvchilar ishtirok etishi mumkin, ishtirok ixtiyoriy."
 }

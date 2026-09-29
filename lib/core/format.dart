@@ -5,8 +5,13 @@ final _uzs = NumberFormat.decimalPattern('ru');
 /// «100000» → «100 000 сум».
 String formatUzs(num v) => '${_uzs.format(v)} сум';
 
-/// Баллы IQC (1 IQC = 1000 UZS).
+/// Баллы IQC.
 String formatIqc(num v) => '${_uzs.format(v)} IQC';
+
+/// История кошелька приходит с бэкенда в UZS — на экране показываем в IQC.
+/// TODO: убрать, когда API начнёт отдавать движения сразу в IQC (delta_iqc).
+const _uzsPerIqc = 1000;
+num iqcFromUzs(num uzs) => uzs / _uzsPerIqc;
 
 /// ISO-строка → «10.07.2026». При ошибке парсинга — исходная строка.
 String formatDate(String iso) {

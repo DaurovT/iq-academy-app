@@ -11,6 +11,7 @@ class TokenStore {
   static const _kActiveRole = 'activeRole';
   static const _kThemeMode = 'themeMode';
   static const _kLocale = 'locale';
+  static const _kModules = 'appModules';
 
   Future<String?> readToken() => _storage.read(key: _kToken);
   Future<void> writeToken(String token) => _write(_kToken, token);
@@ -34,6 +35,10 @@ class TokenStore {
     await _storage.delete(key: key);
     await _storage.write(key: key, value: value);
   }
+
+  /// Последняя известная видимость разделов (JSON). Не чистится при выходе.
+  Future<String?> readModules() => _storage.read(key: _kModules);
+  Future<void> writeModules(String json) => _write(_kModules, json);
 
   /// Чистит только сессию (токен + роль); настройки (тема) остаются.
   Future<void> clear() async {

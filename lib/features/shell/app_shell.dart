@@ -1,3 +1,4 @@
+import '../../core/app_modules.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -41,8 +42,11 @@ class AppShell extends ConsumerWidget {
     }
 
     final l10n = context.l10n;
+    // скрытые в админке разделы не показываем в меню (пока грузится — показываем всё)
+    final modules = ref.watch(appModulesProvider).asData?.value ?? AppModules.empty;
     final tabs = [
-      ...navConfig(l10n)[role]!.where((i) => i.tab),
+      ...navConfig(l10n)[role]!
+          .where((i) => i.tab && (i.module == null || modules.isVisible(i.module!, role))),
       NavItem(
         path: '/app/profile',
         label: l10n.navProfile,

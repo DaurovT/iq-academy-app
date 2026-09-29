@@ -18,7 +18,7 @@
   "navQuests": "Квесттер",
   "navLearn": "Оқыту",
   "navWallet": "Әмиян",
-  "navRecipes": "Рецепттер",
+  "navRecipes": "Бланктар",
   "navPortfolio": "Портфель",
   "navPharm": "Фарм.",
   "navTop": "Топ",
@@ -27,7 +27,7 @@
   "navBrands": "Брендтер",
   "navProfile": "Профиль",
   "miniAppsTitle": "Шағын қолданбалар",
-  "miniAppsSubtitle": "Ойнап, IQC-ға жүлделер ұтып алыңыз",
+  "miniAppsSubtitle": "Бағдарлама қатысушыларына арналған акциялар",
   "miniAppsSoon": "Жақында",
   "sapperCountdownSoon": "жақында",
   "sapperCountdownDaysHours": "{days}к {hours}с",
@@ -64,10 +64,10 @@
     }
   },
   "sapperTitle": "Супер Сапер",
-  "sapperSubtitle": "IQC-ға ұяшықтарды иеленіңіз — ашылу сағатында астында не барын білесіз",
-  "sapperNoDraws": "Ұтыс ойындары жоқ",
-  "sapperRevealed": "Ашылды",
-  "sapperPrizesAndPrice": "🎁 {prizeCount} жүлде  💎 {priceIqc} IQC/ұяшық  ",
+  "sapperSubtitle": "IQC-ға ұяшықтарды таңдаңыз — қорытынды шығарылғанда астында не барын білесіз",
+  "sapperNoDraws": "Белсенді акциялар жоқ",
+  "sapperRevealed": "Аяқталды",
+  "sapperPrizesAndPrice": "🎁 жүлделер: {prizeCount}  💎 {priceIqc} IQC/ұяшық  ",
   "@sapperPrizesAndPrice": {
     "placeholders": {
       "prizeCount": {
@@ -100,7 +100,7 @@
       }
     }
   },
-  "sapperGoToGame": "Ойынға өту",
+  "sapperGoToGame": "Алаңды ашу",
   "sapperReserveTitle": "№{number} ұяшықты иеленесіз бе?",
   "@sapperReserveTitle": {
     "placeholders": {
@@ -109,7 +109,7 @@
       }
     }
   },
-  "sapperReserveBody": "{price} IQC шегеріледі. Болдырмауға болмайды — ұяшық ашылғанға дейін сізге бекітіледі.",
+  "sapperReserveBody": "{price} IQC пайдаланылады. Болдырмауға болмайды — ұяшық қорытынды шығарылғанға дейін сізге бекітіледі.",
   "@sapperReserveBody": {
     "placeholders": {
       "price": {
@@ -133,10 +133,13 @@
       }
     }
   },
-  "sapperDraws": "Ұтыс ойындары",
-  "sapperAcceptClosed": "Ұяшық қабылдау жабылды — ашылуға дайындық жүріп жатыр",
-  "sapperHiddenTitle": "АЛАҢДА ЖАСЫРЫЛҒАН",
-  "sapperRevealIn": "ашылуға {time} қалды",
+  "sapperNoIqcTitle": "IQC жеткіліксіз",
+  "sapperNoIqcBody": "Қатысу үшін {price} IQC қажет, сізде {have}. IQC жинаңыз — оқу, квест немесе сауалнамадан өтіңіз.",
+  "sapperDraws": "Акциялар",
+  "sapperAcceptClosed": "Ұяшық таңдау жабылды — қорытынды шығарылуда",
+  "sapperHiddenTitle": "АЛАҢДАҒЫ ЖҮЛДЕЛЕР",
+  "sapperFieldTotal": "Алаңда {count} ұяшық",
+  "sapperRevealIn": "қорытындыға {time} қалды",
   "@sapperRevealIn": {
     "placeholders": {
       "time": {
@@ -144,7 +147,7 @@
       }
     }
   },
-  "sapperNoPrizes": "жүлделер жарияланбаған",
+  "sapperNoPrizes": "жүлделер көрсетілмеген",
   "sapperPrizeChip": "🎁 {count}× {label}",
   "@sapperPrizeChip": {
     "placeholders": {
@@ -164,7 +167,7 @@
       }
     }
   },
-  "sapperCellPrice": "ұяшық бағасы {price} IQC",
+  "sapperCellPrice": "ұяшық — {price} IQC",
   "@sapperCellPrice": {
     "placeholders": {
       "price": {
@@ -173,8 +176,8 @@
     }
   },
   "sapperYourBalance": "Сіздің балансыңыз",
-  "sapperCellPriceLabel": "ұяшық бағасы",
-  "sapperWinBannerWin": "🎉 Сіз {count} {word} ұттыңыз!",
+  "sapperCellPriceLabel": "бір ұяшыққа",
+  "sapperWinBannerWin": "🎉 Сіз {count} {word} алдыңыз!",
   "@sapperWinBannerWin": {
     "placeholders": {
       "count": {
@@ -185,7 +188,7 @@
       }
     }
   },
-  "sapperNoWin": "Бұл жолы ұтыссыз",
+  "sapperNoWin": "Бұл жолы жүлдесіз",
   "sapperPrizeOne": "жүлде",
   "sapperPrizeFew": "жүлде",
   "sapperPrizeMany": "жүлде",
@@ -196,7 +199,7 @@
   "sapperLegendSelected": "Таңдалды",
   "sapperLegendOccupied": "Бос емес",
   "sapperLegendFree": "Бос",
-  "sapperWinners": "Жеңімпаздар",
+  "sapperWinners": "Жүлде алғандар",
   "newsTitle": "Жаңалықтар",
   "newsAll": "Барлық жаңалықтар",
   "newsMore": "Толығырақ →",
@@ -236,6 +239,7 @@
   "loginTagline": "Үйрен.\nҚолдан.\nЖет.",
   "loginTitle": "Кіру",
   "loginByPhone": "Телефон нөмірі арқылы кіріңіз",
+  "loginChooseMethod": "Кірудің ыңғайлы тәсілін таңдаңыз",
   "loginCodeSent": "{phone} нөміріне SMS-код жіберілді",
   "@loginCodeSent": {
     "placeholders": {
@@ -249,6 +253,7 @@
   "loginConfirm": "Растау",
   "loginGoRegister": "Тіркелуден өту",
   "loginRegister": "Тіркелу",
+  "loginNoAccount": "Аккаунтыңыз жоқ па?",
   "loginEnter": "Кіру",
   "loginResendIn": "{seconds} секундтан кейін қайталау",
   "@loginResendIn": {
@@ -326,9 +331,10 @@
   "profileConfirm": "Растау",
   "profilePhoneChanged": "Телефон өзгертілді",
   "profileLogoutConfirmTitle": "Аккаунттан шығасыз ба?",
+  "profileLogoutConfirmBody": "Қолданбаны қайта пайдалану үшін қайтадан кіру қажет болады.",
   "profileLogoutAction": "Шығу",
   "profileDeleteConfirmTitle": "Аккаунт жойылсын ба?",
-  "profileDeleteConfirmBody": "Бұл әрекетті қайтару мүмкін емес. Барлық деректер жойылады.",
+  "profileDeleteConfirmBody": "Профиль, телефон нөмірі, кіру байланыстары, хабарламалар және қолдау қызметімен хат алмасу жойылады. Есептеулер мен берілген ваучерлер туралы жазбалар жеке деректеріңізсіз сақталады — олар есеп үшін қажет. Бұл әрекетті қайтару мүмкін емес.",
   "profileStatQuests": "КВЕСТТЕР",
   "profileStatLevel": "ДЕҢГЕЙ",
   "questHistoryTitle": "Қатысу тарихы",
@@ -421,7 +427,7 @@
   "roleSelectSheetTitle": "Рөлді таңдаңыз",
   "roleSelectEnter": "Кіру",
   "notifSettingsTitle": "Хабарлама баптаулары",
-  "notifSettingsChecks": "Чек және рецепт мәртебелері",
+  "notifSettingsChecks": "Чек және бланк мәртебелері",
   "notifSettingsQuests": "Квесттер мен сыйақылар",
   "notifSettingsLearning": "Оқыту",
   "notifSettingsMarketing": "Жаңалықтар мен акциялар",
@@ -520,12 +526,12 @@
       }
     }
   },
-  "docHomeSubtitle": "Рецепттерді жіберіп, сыйақы алыңыз",
+  "docHomeSubtitle": "Бланктарды жіберіп, сыйақы алыңыз",
   "docHomeWalletBalance": "ӘМИЯН БАЛАНСЫ",
   "docHomeWallet": "Әмиян",
-  "docHomeSendRecipe": "Рецепт жіберу",
-  "docHomeSendRecipeHint": "Рецептті суретке түсіріңіз — AI дәрілерді таниды",
-  "docHomeStatRecipes": "барлық рецепттер",
+  "docHomeSendRecipe": "Бланк жіберу",
+  "docHomeSendRecipeHint": "Бланкты суретке түсіріңіз — AI дәрілерді таниды",
+  "docHomeStatRecipes": "барлық бланктар",
   "docHomeStatApproved": "мақұлданды",
   "docHomeStatIqc": "IQC ұпайы",
   "docHomeVoucher": "ВАУЧЕР",
@@ -538,8 +544,8 @@
       }
     }
   },
-  "recipeDetailMyRecipes": "Менің рецепттерім",
-  "recipeDetailTitle": "Рецепт №{id}",
+  "recipeDetailMyRecipes": "Менің бланктарым",
+  "recipeDetailTitle": "Бланк №{id}",
   "@recipeDetailTitle": {
     "placeholders": {
       "id": {
@@ -560,7 +566,7 @@
   "recipeDetailStatusPending": "Тексерілуде",
   "recipeDetailAiRecognized": "AI таныды",
   "recipeDetailNoDrugs": "Дәрілер танылмады",
-  "recipesTitle": "Менің рецепттерім",
+  "recipesTitle": "Менің бланктарым",
   "recipesTotal": "барлығы {p1}",
   "@recipesTotal": {
     "placeholders": {
@@ -572,10 +578,10 @@
   "recipesTabAll": "Барлығы",
   "recipesTabActive": "Белсенді",
   "recipesTabDone": "Аяқталған",
-  "recipesEmpty": "Әзірге рецепттер жоқ",
+  "recipesEmpty": "Әзірге бланктар жоқ",
   "recipesTakePhoto": "Суретке түсіру",
   "recipesFromGallery": "Галереядан таңдау",
-  "recipesUploading": "Рецепт қосылды — жүктелуде",
+  "recipesUploading": "Бланк қосылды — жүктелуде",
   "recipesDoctorInfoTitle": "Дәрігер деректері (қалауыңызша)",
   "recipesDoctorName": "Т.А.Ә.",
   "recipesDoctorWorkplace": "Жұмыс орны",
@@ -583,7 +589,7 @@
   "recipesDoctorPhone": "Телефон",
   "recipesSkip": "Өткізіп жіберу",
   "recipesSend": "Жіберу",
-  "recipesSubmitButton": "Рецепт жіберу",
+  "recipesSubmitButton": "Бланк жіберу",
   "recipesPhotoCount": "сурет: {p1}",
   "@recipesPhotoCount": {
     "placeholders": {
@@ -1076,7 +1082,7 @@
   "walletUseIqc": "IQC пайдалану",
   "walletMyVouchers": "Менің ваучерлерім",
   "walletNoVouchers": "Әзірге ваучерлер жоқ",
-  "walletRedeemTitle": "Ұпайлар айырбастала ма?",
+  "walletRedeemTitle": "Ваучерді рәсімдейсіз бе?",
   "walletRedeemBody": "{p1} — {p2} IQC-ға",
   "@walletRedeemBody": {
     "placeholders": {
@@ -1089,7 +1095,7 @@
     }
   },
   "walletCancel": "Болдырмау",
-  "walletRedeem": "Айырбастау",
+  "walletRedeem": "Рәсімдеу",
   "walletVoucherIssued": "Ваучер рәсімделді",
   "walletTitle": "Әмиян",
   "walletBalanceLabel": "БАЛАНС",
@@ -1187,7 +1193,7 @@
   "checksStatusApproved": "Мақұлданды",
   "checksStatusRejected": "Қабылданбады",
   "checksStatusPending": "Тексерілуде",
-  "questDetailRewardVoucherLine": "Korzinka · {amount} сум",
+  "questDetailRewardVoucherLine": "Korzinka ваучері · {amount} IQC",
   "@questDetailRewardVoucherLine": {
     "placeholders": {
       "amount": {
@@ -1225,5 +1231,84 @@
     }
   },
   "profileLanguageTitle": "Тіл",
-  "profileChooseLanguage": "Тілді таңдаңыз"
+  "profileChooseLanguage": "Тілді таңдаңыз",
+  "navDoctors": "Дәрігерлер",
+  "doctorsTitle": "Дәрігерлер",
+  "doctorsHint": "Компанияңыздың дәрігерлері және олардың бланк квесті бойынша үлгерімі",
+  "doctorsSearchHint": "Дәрігер, клиника, қала бойынша іздеу",
+  "doctorsCompleted": "Орындады",
+  "doctorsInProgress": "Орындалуда",
+  "doctorsIdle": "Бастамаған",
+  "doctorsNoQuest": "Белсенді бланк квесті жоқ",
+  "doctorsUnavailable": "Компанияңызда бланк жобасы жоқ, сондықтан дәрігерлер қосылмаған",
+  "doctorsEmpty": "Әзірге дәрігерлер жоқ",
+  "doctorsNotFound": "Ештеңе табылмады",
+  "doctorsRegionUnknown": "Аймақ көрсетілмеген",
+  "doctorsRecipesCount": "Барлық уақыттағы бланктар: {count}",
+  "@doctorsRecipesCount": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "doctorsQuestGoal": "Норма: {goal}",
+  "@doctorsQuestGoal": {
+    "placeholders": {
+      "goal": {
+        "type": "Object"
+      }
+    }
+  },
+  "doctorsDoneTimes": "Орындалды ×{count}",
+  "@doctorsDoneTimes": {
+    "placeholders": {
+      "count": {
+        "type": "Object"
+      }
+    }
+  },
+  "doctorsRegionSummary": "{doctors} дәрігер · {completed} орындады",
+  "@doctorsRegionSummary": {
+    "placeholders": {
+      "doctors": {
+        "type": "Object"
+      },
+      "completed": {
+        "type": "Object"
+      }
+    }
+  },
+  "doctorsAll": "Барлығы",
+  "loginWithGoogle": "Google арқылы кіру",
+  "loginWithApple": "Apple арқылы кіру",
+  "oauthLinkTitle": "Телефон нөміріңізді растаңыз",
+  "oauthLinkBody": "Нөмірді бір рет растаңыз — осылайша аккаунтыңыз бен ұпайларыңызды табамыз. Келесі жолы бір түртумен кіресіз.",
+  "oauthLinkPhoneLabel": "Телефон нөмірі",
+  "oauthLinkSendCode": "Кодты алу",
+  "oauthLinkCodeSent": "Код {phone} нөміріне жіберілді",
+  "@oauthLinkCodeSent": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "oauthLinkCodeLabel": "SMS коды",
+  "oauthLinkConfirm": "Растау",
+  "oauthLinkChangePhone": "Нөмірді өзгерту",
+  "profilePrivacy": "Құпиялық саясаты",
+  "profilePrivacySubtitle": "Қандай деректер жинаймыз және қалай сақтаймыз",
+  "sapperRulesButton": "Акция ережелері",
+  "sapperRulesTitle": "«Супер Сапёр» акциясының ережелері",
+  "sapperRulesFull": "Толық ресми ережелер",
+  "sapperRulesAccept": "Ұяшықты алу арқылы сіз акция ережелерін қабылдайсыз.",
+  "sapperRule1": "Ұйымдастырушы — «PHARMIQ ACADEMY» ЖШС. Apple мен Google акцияның демеушісі емес және оған қатыспайды.",
+  "sapperRule2": "Акцияда ақша қолданылмайды: тек IQC ұпайларымен қатысуға болады.",
+  "sapperRule3": "IQC ұпайлары оқу, сауалнамалар және расталған квесттер үшін беріледі. Оларды сатып алуға, басқа пайдаланушыға беруге немесе ақшаға айырбастауға болмайды.",
+  "sapperRule4": "Мерзімдер, ұяшық бағасы және жүлделердің толық тізімі қатысуға дейін акция бетінде көрсетіледі.",
+  "sapperRule5": "Ұпайлар ұяшықты алғанда шегеріледі, мұны болдырмауға болмайды. Бір ұяшықты бір қатысушы алады; қабылдау қорытындыдан 1 минут бұрын жабылады.",
+  "sapperRule6": "Жүлделер ұяшықтарға акция басталғанға дейін орналастырылады және кейін өзгермейді. Белгіленген уақытта барлық ұяшықтар бір мезгілде ашылады, ұяшықтағы жүлдені оны алған қатысушы автоматты түрде алады. Қорытынды бәріне көрінеді.",
+  "sapperRule7": "Жүлделер — серіктестердің сыйлық ваучерлері мен бонус ұпайлар; ақшаға айырбасталмайды. Бос ұяшықтардағы жүлделер қайта таратылмайды.",
+  "sapperRule8": "Акция тоқтатылса, жұмсалған барлық ұпайлар қайтарылады. 18 жастан асқан пайдаланушылар қатыса алады, қатысу ерікті."
 }

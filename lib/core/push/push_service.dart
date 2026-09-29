@@ -1,11 +1,11 @@
 import 'dart:convert';
-import 'dart:io' show Platform;
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'dart:ui' show Color;
 
 import 'package:flutter/foundation.dart';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -33,17 +33,30 @@ Future<void> firebaseBackgroundHandler(RemoteMessage message) async {}
 const _channel = AndroidNotificationChannel(
   'pharmiq_default', // должен совпадать с default_notification_channel_id в AndroidManifest
   'Уведомления',
-  description: 'Начисления IQC, розыгрыши, опросы и новости',
+  description: 'Начисления IQC, акции, опросы и новости',
   importance: Importance.high,
 );
 
 class PushService {
+  /// На вебе пушей нет: Firebase Messaging требует своего JS-SDK и
+  /// service worker'а, а веб-версия — временная витрина до релиза в сторах.
+  /// Один флаг гасит весь модуль, не трогая мобильные ветки.
+  static bool get _supported =>
+      !kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.android ||
+          defaultTargetPlatform == TargetPlatform.iOS);
+
+  static bool get _isIos => !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
+  static bool get _isAndroid =>
+      !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
+
   static final _local = FlutterLocalNotificationsPlugin();
   static bool _ready = false;
   static String? _token;
 
   /// Шаг 1 — до runApp: поднять Firebase и локальные уведомления.
   static Future<void> initFirebase() async {
+    if (!_supported) return;
     try {
       await Firebase.initializeApp();
       FirebaseMessaging.onBackgroundMessage(firebaseBackgroundHandler);
@@ -81,12 +94,13 @@ class PushService {
   static void attach(WidgetRef ref) {
     if (!_ready) return;
     try {
-      _requestPermission();
+      // Разрешение на уведомления спрашиваем только после входа: до входа человек ещё
+      // не понимает, зачем они (так рекомендует Apple), и токен всё равно некуда привязать.
 
       // приложение открыто → рисуем сами (Android). На iOS покажет система.
       FirebaseMessaging.onMessage.listen((m) {
         final n = m.notification;
-        if (n == null || !Platform.isAndroid) return;
+        if (n == null || !_isAndroid) return;
         _local.show(
           n.hashCode,
           n.title,
@@ -127,7 +141,7 @@ class PushService {
         final wasAuthed = prev?.asData?.value.isAuthed ?? false;
         final isAuthed = next.asData?.value.isAuthed ?? false;
         if (isAuthed && !wasAuthed) {
-          syncToken(ref);
+          _requestPermission().then((_) => syncToken(ref));
         } else if (!isAuthed && wasAuthed) {
           dropToken(ref);
         }
@@ -164,7 +178,7 @@ class PushService {
   static Future<void> syncToken(WidgetRef ref) async {
     try {
       final fm = FirebaseMessaging.instance;
-      if (Platform.isIOS) {
+      if (_isIos) {
         // iOS: FCM-токен доступен только после APNs-токена от Apple. Регистрация
         // асинхронна и завершается уже после логина — ждём токен с ретраями,
         // иначе на iOS он никогда не уйдёт на бэкенд.
@@ -189,7 +203,7 @@ class PushService {
 
   static Future<void> _sendToken(WidgetRef ref, String token) async {
     try {
-      await ref.read(apiProvider).devices.register(token, Platform.isIOS ? 'ios' : 'android');
+      await ref.read(apiProvider).devices.register(token, _isIos ? 'ios' : 'android');
     } catch (e) {
       debugPrint('PushService._sendToken: $e');
     }

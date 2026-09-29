@@ -9,6 +9,7 @@ import '../../core/models/wallet.dart';
 import '../shared/widgets/pharm_top_bar.dart';
 import '../shared/widgets/screen_decor.dart';
 import 'providers.dart';
+import '../../widgets/dialog_buttons.dart';
 
 final _num = NumberFormat.decimalPattern('ru');
 String _uzs(num v) => '${_num.format(v)} UZS';
@@ -52,7 +53,6 @@ class WalletScreen extends ConsumerWidget {
                     child: _BalanceCard(
                       c: c,
                       iqc: iqc,
-                      uzs: wallet?.balanceUzs ?? 0,
                       onHistory: () => Navigator.of(context).push(
                         MaterialPageRoute(builder: (_) => const _HistoryScreen()),
                       ),
@@ -137,12 +137,12 @@ class WalletScreen extends ConsumerWidget {
         title: Text(context.l10n.walletRedeemTitle),
         content: Text(context.l10n.walletRedeemBody(v.label, v.costIqc)),
         actions: [
-          TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: Text(context.l10n.walletCancel)),
-          FilledButton(
-              onPressed: () => Navigator.pop(ctx, true),
-              child: Text(context.l10n.walletRedeem)),
+          DialogButtons(
+            cancelLabel: context.l10n.walletCancel,
+            onCancel: () => Navigator.pop(ctx, false),
+            confirmLabel: context.l10n.walletRedeem,
+            onConfirm: () => Navigator.pop(ctx, true),
+          ),
         ],
       ),
     );
@@ -182,13 +182,11 @@ class _BalanceCard extends StatelessWidget {
   const _BalanceCard({
     required this.c,
     required this.iqc,
-    required this.uzs,
     required this.onHistory,
   });
 
   final _W c;
   final int iqc;
-  final int uzs;
   final VoidCallback onHistory;
 
   @override
@@ -231,9 +229,6 @@ class _BalanceCard extends StatelessWidget {
                       color: c.balLabel)),
             ],
           ),
-          const SizedBox(height: 8),
-          Text(_uzs(uzs),
-              style: TextStyle(fontSize: 14, color: c.balSub)),
           Padding(
             padding: const EdgeInsets.only(top: 12),
             child: Row(
@@ -560,7 +555,7 @@ class _HistoryScreen extends ConsumerWidget {
                     title: Text(t.note ?? t.refType),
                     subtitle: Text(formatDateTime(t.createdAt)),
                     trailing: Text(
-                      '${positive ? '+' : ''}${formatUzs(t.deltaUzs)}',
+                      '${positive ? '+' : ''}${formatIqc(iqcFromUzs(t.deltaUzs))}',
                       style: TextStyle(
                         color: positive ? Colors.green : Colors.red,
                         fontWeight: FontWeight.w600,

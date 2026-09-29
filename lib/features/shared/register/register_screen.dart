@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../core/api/providers.dart';
 import '../../../core/auth/auth_controller.dart';
 import '../../../core/l10n/l10n.dart';
+import '../../../core/legal.dart';
 import '../../../core/models/account.dart';
 import '../../../core/models/common.dart';
 import '../../../core/models/registration.dart';
@@ -93,9 +94,13 @@ class _ProgressBar extends StatelessWidget {
 /// Регистрация: шаг 1 — выбор роли, шаг 2 — динамическая форма по
 /// RegistrationSchema (types.ts: A.2). Телефон приходит из экрана входа.
 class RegisterScreen extends ConsumerStatefulWidget {
-  const RegisterScreen({super.key, this.phone});
+  const RegisterScreen({super.key, this.phone, this.linkToken});
 
   final String? phone;
+
+  /// Токен привязки после входа через Google/Apple: номер уже подтверждён по SMS,
+  /// после регистрации этот вход привязывается к новому аккаунту.
+  final String? linkToken;
 
   @override
   ConsumerState<RegisterScreen> createState() => _RegisterScreenState();
@@ -153,6 +158,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     return _SchemaForm(
       role: _role!,
       phone: widget.phone,
+      linkToken: widget.linkToken,
       onBack: () => setState(() => _role = null),
     );
   }
@@ -197,10 +203,14 @@ class _RolePickCard extends StatelessWidget {
 
 class _SchemaForm extends ConsumerStatefulWidget {
   const _SchemaForm(
-      {required this.role, required this.phone, required this.onBack});
+      {required this.role,
+      required this.phone,
+      this.linkToken,
+      required this.onBack});
 
   final Role role;
   final String? phone;
+  final String? linkToken;
   final VoidCallback onBack;
 
   @override
@@ -277,7 +287,8 @@ class _SchemaFormState extends ConsumerState<_SchemaForm> {
       final session = await ref
           .read(apiProvider)
           .auth
-          .register(widget.role, schema.version, _values);
+          .register(widget.role, schema.version, _values,
+              oauthLinkToken: widget.linkToken);
       // Не логиним сразу — показываем экран успеха.
       if (mounted) {
         setState(() {
@@ -549,7 +560,7 @@ class _SchemaFormState extends ConsumerState<_SchemaForm> {
                       style: const TextStyle(fontSize: 13, color: _kLabel)),
                   if (f.consentUrl != null)
                     GestureDetector(
-                      onTap: () => launchUrl(Uri.parse(f.consentUrl!),
+                      onTap: () => launchUrl(Uri.parse(kSiteBaseUrl).resolve(f.consentUrl!),
                           mode: LaunchMode.externalApplication),
                       child: Text(context.l10n.registerConsentMore,
                           style: const TextStyle(

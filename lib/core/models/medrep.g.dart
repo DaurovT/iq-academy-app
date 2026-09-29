@@ -261,3 +261,147 @@ Map<String, dynamic> _$PharmacistDetailToJson(_PharmacistDetail instance) =>
       'lastActivity': instance.lastActivity,
       'recentChecks': instance.recentChecks,
     };
+
+_DoctorQuestDrug _$DoctorQuestDrugFromJson(Map<String, dynamic> json) =>
+    _DoctorQuestDrug(
+      drug: json['drug'] as String,
+      need: (json['need'] as num).toDouble(),
+      got: (json['got'] as num?)?.toDouble() ?? 0,
+    );
+
+Map<String, dynamic> _$DoctorQuestDrugToJson(_DoctorQuestDrug instance) =>
+    <String, dynamic>{
+      'drug': instance.drug,
+      'need': instance.need,
+      'got': instance.got,
+    };
+
+_DoctorQuestInfo _$DoctorQuestInfoFromJson(Map<String, dynamic> json) =>
+    _DoctorQuestInfo(
+      id: (json['id'] as num).toInt(),
+      name: json['name'] as String,
+      goal: (json['goal'] as num).toDouble(),
+      startDate: json['startDate'] as String?,
+      endDate: json['endDate'] as String?,
+      drugs:
+          (json['drugs'] as List<dynamic>?)
+              ?.map((e) => DoctorQuestDrug.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+    );
+
+Map<String, dynamic> _$DoctorQuestInfoToJson(_DoctorQuestInfo instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'goal': instance.goal,
+      'startDate': instance.startDate,
+      'endDate': instance.endDate,
+      'drugs': instance.drugs,
+    };
+
+_DoctorRow _$DoctorRowFromJson(Map<String, dynamic> json) => _DoctorRow(
+  telegramId: (json['telegramId'] as num).toInt(),
+  name: json['name'] as String,
+  workplace: json['workplace'] as String,
+  city: json['city'] as String,
+  phone: json['phone'] as String,
+  recipes: (json['recipes'] as num).toInt(),
+  approvedRecipes: (json['approvedRecipes'] as num).toInt(),
+  lastRecipeAt: json['lastRecipeAt'] as String?,
+  done: (json['done'] as num).toInt(),
+  collected: (json['collected'] as num).toDouble(),
+  goal: (json['goal'] as num).toDouble(),
+  progress: (json['progress'] as num).toDouble(),
+  perDrug:
+      (json['perDrug'] as List<dynamic>?)
+          ?.map((e) => DoctorQuestDrug.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const [],
+);
+
+Map<String, dynamic> _$DoctorRowToJson(_DoctorRow instance) =>
+    <String, dynamic>{
+      'telegramId': instance.telegramId,
+      'name': instance.name,
+      'workplace': instance.workplace,
+      'city': instance.city,
+      'phone': instance.phone,
+      'recipes': instance.recipes,
+      'approvedRecipes': instance.approvedRecipes,
+      'lastRecipeAt': instance.lastRecipeAt,
+      'done': instance.done,
+      'collected': instance.collected,
+      'goal': instance.goal,
+      'progress': instance.progress,
+      'perDrug': instance.perDrug,
+    };
+
+_DoctorRegionGroup _$DoctorRegionGroupFromJson(Map<String, dynamic> json) =>
+    _DoctorRegionGroup(
+      region: json['region'] as String,
+      doctors: (json['doctors'] as num).toInt(),
+      completed: (json['completed'] as num).toInt(),
+      items:
+          (json['items'] as List<dynamic>?)
+              ?.map((e) => DoctorRow.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+    );
+
+Map<String, dynamic> _$DoctorRegionGroupToJson(_DoctorRegionGroup instance) =>
+    <String, dynamic>{
+      'region': instance.region,
+      'doctors': instance.doctors,
+      'completed': instance.completed,
+      'items': instance.items,
+    };
+
+_DoctorTotals _$DoctorTotalsFromJson(Map<String, dynamic> json) =>
+    _DoctorTotals(
+      doctors: (json['doctors'] as num?)?.toInt() ?? 0,
+      completed: (json['completed'] as num?)?.toInt() ?? 0,
+      inProgress: (json['inProgress'] as num?)?.toInt() ?? 0,
+      idle: (json['idle'] as num?)?.toInt() ?? 0,
+    );
+
+Map<String, dynamic> _$DoctorTotalsToJson(_DoctorTotals instance) =>
+    <String, dynamic>{
+      'doctors': instance.doctors,
+      'completed': instance.completed,
+      'inProgress': instance.inProgress,
+      'idle': instance.idle,
+    };
+
+_DoctorsOverview _$DoctorsOverviewFromJson(Map<String, dynamic> json) =>
+    _DoctorsOverview(
+      available: json['available'] as bool,
+      companyName: json['companyName'] as String?,
+      questId: (json['questId'] as num?)?.toInt(),
+      quests:
+          (json['quests'] as List<dynamic>?)
+              ?.map((e) => DoctorQuestInfo.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      totals:
+          json['totals'] == null
+              ? const DoctorTotals()
+              : DoctorTotals.fromJson(json['totals'] as Map<String, dynamic>),
+      regions:
+          (json['regions'] as List<dynamic>?)
+              ?.map(
+                (e) => DoctorRegionGroup.fromJson(e as Map<String, dynamic>),
+              )
+              .toList() ??
+          const [],
+    );
+
+Map<String, dynamic> _$DoctorsOverviewToJson(_DoctorsOverview instance) =>
+    <String, dynamic>{
+      'available': instance.available,
+      'companyName': instance.companyName,
+      'questId': instance.questId,
+      'quests': instance.quests,
+      'totals': instance.totals,
+      'regions': instance.regions,
+    };

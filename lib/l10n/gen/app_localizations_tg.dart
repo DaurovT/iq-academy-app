@@ -63,7 +63,7 @@ class AppLocalizationsTg extends AppLocalizations {
   String get navWallet => 'Ҳамён';
 
   @override
-  String get navRecipes => 'Дорунома';
+  String get navRecipes => 'Бланкҳо';
 
   @override
   String get navPortfolio => 'Портфел';
@@ -90,7 +90,7 @@ class AppLocalizationsTg extends AppLocalizations {
   String get miniAppsTitle => 'Мини-барномаҳо';
 
   @override
-  String get miniAppsSubtitle => 'Бозӣ кунед ва бо IQC тӯҳфаҳо баред';
+  String get miniAppsSubtitle => 'Аксияҳо барои иштирокчиёни барнома';
 
   @override
   String get miniAppsSoon => 'Ба зудӣ';
@@ -118,17 +118,17 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get sapperSubtitle =>
-      'Бо IQC катакҳоро гиред — дар соати кушодан мефаҳмед, ки зери онҳо чист';
+      'Бо IQC катакҳоро интихоб кунед — ҳангоми эълони натиҷаҳо мефаҳмед, ки зери онҳо чист';
 
   @override
-  String get sapperNoDraws => 'Бозиҳо нестанд';
+  String get sapperNoDraws => 'Аксияҳои фаъол нестанд';
 
   @override
-  String get sapperRevealed => 'Кушода шуд';
+  String get sapperRevealed => 'Анҷом ёфт';
 
   @override
   String sapperPrizesAndPrice(Object prizeCount, Object priceIqc) {
-    return '🎁 $prizeCount тӯҳфа  💎 $priceIqc IQC/катак  ';
+    return '🎁 ҷоизаҳо: $prizeCount  💎 $priceIqc IQC/катак  ';
   }
 
   @override
@@ -142,7 +142,7 @@ class AppLocalizationsTg extends AppLocalizations {
   }
 
   @override
-  String get sapperGoToGame => 'Гузаштан ба бозӣ';
+  String get sapperGoToGame => 'Кушодани майдон';
 
   @override
   String sapperReserveTitle(Object number) {
@@ -151,7 +151,7 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String sapperReserveBody(Object price) {
-    return '$price IQC гирифта мешавад. Бекор кардан мумкин нест — катак то кушодан аз они шумо мешавад.';
+    return '$price IQC истифода мешавад. Бекор кардан мумкин нест — катак то эълони натиҷаҳо аз они шумо мешавад.';
   }
 
   @override
@@ -165,22 +165,35 @@ class AppLocalizationsTg extends AppLocalizations {
   }
 
   @override
-  String get sapperDraws => 'Бозиҳои тӯҳфаӣ';
+  String get sapperNoIqcTitle => 'IQC кофӣ нест';
 
   @override
-  String get sapperAcceptClosed =>
-      'Қабули катакҳо пӯшида шуд — омодагӣ ба кушодан рафта истодааст';
-
-  @override
-  String get sapperHiddenTitle => 'ДАР МАЙДОН ПИНҲОН АСТ';
-
-  @override
-  String sapperRevealIn(Object time) {
-    return 'кушодан баъд аз $time';
+  String sapperNoIqcBody(Object price, Object have) {
+    return 'Барои иштирок $price IQC лозим аст, шумо $have доред. IQC ҷамъ кунед — таълим, квест ё пурсишро гузаред.';
   }
 
   @override
-  String get sapperNoPrizes => 'тӯҳфаҳо эълон нашудаанд';
+  String get sapperDraws => 'Аксияҳо';
+
+  @override
+  String get sapperAcceptClosed =>
+      'Интихоби катакҳо пӯшида шуд — натиҷаҳо омода мешаванд';
+
+  @override
+  String get sapperHiddenTitle => 'ҶОИЗАҲО ДАР МАЙДОН';
+
+  @override
+  String sapperFieldTotal(int count) {
+    return 'Дар майдон $count катак';
+  }
+
+  @override
+  String sapperRevealIn(Object time) {
+    return 'натиҷаҳо баъд аз $time';
+  }
+
+  @override
+  String get sapperNoPrizes => 'ҷоизаҳо нишон дода нашудаанд';
 
   @override
   String sapperPrizeChip(Object count, Object label) {
@@ -194,31 +207,31 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String sapperCellPrice(Object price) {
-    return 'нархи катак $price IQC';
+    return 'катак — $price IQC';
   }
 
   @override
   String get sapperYourBalance => 'Баланси шумо';
 
   @override
-  String get sapperCellPriceLabel => 'нархи катак';
+  String get sapperCellPriceLabel => 'барои як катак';
 
   @override
   String sapperWinBannerWin(Object count, Object word) {
-    return '🎉 Шумо $count $word бурдед!';
+    return '🎉 Шумо $count $word гирифтед!';
   }
 
   @override
-  String get sapperNoWin => 'Ин дафъа бе бурд';
+  String get sapperNoWin => 'Ин дафъа бе ҷоиза';
 
   @override
-  String get sapperPrizeOne => 'тӯҳфа';
+  String get sapperPrizeOne => 'ҷоиза';
 
   @override
-  String get sapperPrizeFew => 'тӯҳфа';
+  String get sapperPrizeFew => 'ҷоиза';
 
   @override
-  String get sapperPrizeMany => 'тӯҳфа';
+  String get sapperPrizeMany => 'ҷоиза';
 
   @override
   String get sapperLegendMine => 'Аз они ман';
@@ -242,7 +255,7 @@ class AppLocalizationsTg extends AppLocalizations {
   String get sapperLegendFree => 'Озод';
 
   @override
-  String get sapperWinners => 'Ғолибон';
+  String get sapperWinners => 'Ҷоиза гирифтагон';
 
   @override
   String get newsTitle => 'Хабарҳо';
@@ -306,6 +319,9 @@ class AppLocalizationsTg extends AppLocalizations {
   String get loginByPhone => 'Бо рақами телефон ворид шавед';
 
   @override
+  String get loginChooseMethod => 'Усули қулайи воридшавиро интихоб кунед';
+
+  @override
   String loginCodeSent(Object phone) {
     return 'Рамз аз SMS ба $phone';
   }
@@ -324,6 +340,9 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get loginRegister => 'Қайд шудан';
+
+  @override
+  String get loginNoAccount => 'Аккаунт надоред?';
 
   @override
   String get loginEnter => 'Ворид шудан';
@@ -483,6 +502,10 @@ class AppLocalizationsTg extends AppLocalizations {
   String get profileLogoutConfirmTitle => 'Аз ҳисоб мебароед?';
 
   @override
+  String get profileLogoutConfirmBody =>
+      'Барои боз истифода бурдани барнома бояд аз нав ворид шавед.';
+
+  @override
   String get profileLogoutAction => 'Баромадан';
 
   @override
@@ -490,7 +513,7 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get profileDeleteConfirmBody =>
-      'Ин амал бебозгашт аст. Ҳамаи маълумот нест мешавад.';
+      'Профил, рақами телефон, пайвандҳои воридшавӣ, огоҳиномаҳо ва мукотиба бо дастгирӣ нест карда мешаванд. Сабтҳои ҳисобҳо ва ваучерҳои додашуда бе маълумоти шахсии шумо нигоҳ дошта мешаванд — онҳо барои баҳисобгирӣ лозиманд. Ин амал бебозгашт аст.';
 
   @override
   String get profileStatQuests => 'КВЕСТҲО';
@@ -618,7 +641,7 @@ class AppLocalizationsTg extends AppLocalizations {
   String get notifSettingsTitle => 'Танзимоти огоҳиномаҳо';
 
   @override
-  String get notifSettingsChecks => 'Ҳолати чекҳо ва доруномаҳо';
+  String get notifSettingsChecks => 'Ҳолати чекҳо ва бланкҳо';
 
   @override
   String get notifSettingsQuests => 'Квестҳо ва мукофотҳо';
@@ -802,7 +825,7 @@ class AppLocalizationsTg extends AppLocalizations {
   }
 
   @override
-  String get docHomeSubtitle => 'Доруномаҳоро фиристед ва мукофот гиред';
+  String get docHomeSubtitle => 'Бланкҳоро фиристед ва мукофот гиред';
 
   @override
   String get docHomeWalletBalance => 'БАЛАНСИ ҲАМЁН';
@@ -811,14 +834,14 @@ class AppLocalizationsTg extends AppLocalizations {
   String get docHomeWallet => 'Ҳамён';
 
   @override
-  String get docHomeSendRecipe => 'Фиристодани дорунома';
+  String get docHomeSendRecipe => 'Фиристодани бланк';
 
   @override
   String get docHomeSendRecipeHint =>
-      'Доруномаро акс гиред — AI доруҳоро мешиносад';
+      'Бланкро акс гиред — AI доруҳоро мешиносад';
 
   @override
-  String get docHomeStatRecipes => 'ҳамаи доруномаҳо';
+  String get docHomeStatRecipes => 'ҳамаи бланкҳо';
 
   @override
   String get docHomeStatApproved => 'тасдиқшуда';
@@ -838,11 +861,11 @@ class AppLocalizationsTg extends AppLocalizations {
   }
 
   @override
-  String get recipeDetailMyRecipes => 'Доруномаҳои ман';
+  String get recipeDetailMyRecipes => 'Бланкҳои ман';
 
   @override
   String recipeDetailTitle(Object id) {
-    return 'Доруномаи №$id';
+    return 'Бланки №$id';
   }
 
   @override
@@ -866,7 +889,7 @@ class AppLocalizationsTg extends AppLocalizations {
   String get recipeDetailNoDrugs => 'Доруҳо шинохта нашуданд';
 
   @override
-  String get recipesTitle => 'Доруномаҳои ман';
+  String get recipesTitle => 'Бланкҳои ман';
 
   @override
   String recipesTotal(Object p1) {
@@ -883,7 +906,7 @@ class AppLocalizationsTg extends AppLocalizations {
   String get recipesTabDone => 'Анҷомёфта';
 
   @override
-  String get recipesEmpty => 'Ҳоло доруномаҳо нестанд';
+  String get recipesEmpty => 'Ҳоло бланкҳо нестанд';
 
   @override
   String get recipesTakePhoto => 'Акс гирифтан';
@@ -892,7 +915,7 @@ class AppLocalizationsTg extends AppLocalizations {
   String get recipesFromGallery => 'Интихоб аз галерея';
 
   @override
-  String get recipesUploading => 'Дорунома илова шуд — бор мешавад';
+  String get recipesUploading => 'Бланк илова шуд — бор мешавад';
 
   @override
   String get recipesDoctorInfoTitle => 'Маълумоти духтур (ихтиёрӣ)';
@@ -916,7 +939,7 @@ class AppLocalizationsTg extends AppLocalizations {
   String get recipesSend => 'Фиристодан';
 
   @override
-  String get recipesSubmitButton => 'Фиристодани дорунома';
+  String get recipesSubmitButton => 'Фиристодани бланк';
 
   @override
   String recipesPhotoCount(Object p1) {
@@ -1701,7 +1724,7 @@ class AppLocalizationsTg extends AppLocalizations {
   String get walletNoVouchers => 'Ҳоло ваучерҳо нестанд';
 
   @override
-  String get walletRedeemTitle => 'Холҳо иваз карда шаванд?';
+  String get walletRedeemTitle => 'Ваучер гиред?';
 
   @override
   String walletRedeemBody(Object p1, Object p2) {
@@ -1712,7 +1735,7 @@ class AppLocalizationsTg extends AppLocalizations {
   String get walletCancel => 'Бекор кардан';
 
   @override
-  String get walletRedeem => 'Иваз кардан';
+  String get walletRedeem => 'Гирифтан';
 
   @override
   String get walletVoucherIssued => 'Ваучер дода шуд';
@@ -1838,7 +1861,7 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String questDetailRewardVoucherLine(Object amount) {
-    return 'Korzinka · $amount сум';
+    return 'Ваучери Korzinka · $amount IQC';
   }
 
   @override
@@ -1867,4 +1890,150 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get profileChooseLanguage => 'Забонро интихоб кунед';
+
+  @override
+  String get navDoctors => 'Табибон';
+
+  @override
+  String get doctorsTitle => 'Табибон';
+
+  @override
+  String get doctorsHint =>
+      'Табибони ширкати шумо ва пешрафти онҳо аз рӯи квести бланк';
+
+  @override
+  String get doctorsSearchHint => 'Ҷустуҷӯ аз рӯи табиб, клиника, шаҳр';
+
+  @override
+  String get doctorsCompleted => 'Иҷро карданд';
+
+  @override
+  String get doctorsInProgress => 'Дар ҷараён';
+
+  @override
+  String get doctorsIdle => 'Оғоз накарданд';
+
+  @override
+  String get doctorsNoQuest => 'Квести фаъоли бланк нест';
+
+  @override
+  String get doctorsUnavailable =>
+      'Ширкати шумо лоиҳаи бланк надорад, бинобар ин табибон пайваст нашудаанд';
+
+  @override
+  String get doctorsEmpty => 'Ҳоло табибон нестанд';
+
+  @override
+  String get doctorsNotFound => 'Чизе ёфт нашуд';
+
+  @override
+  String get doctorsRegionUnknown => 'Минтақа нишон дода нашудааст';
+
+  @override
+  String doctorsRecipesCount(Object count) {
+    return 'Бланкҳо дар тамоми давра: $count';
+  }
+
+  @override
+  String doctorsQuestGoal(Object goal) {
+    return 'Меъёр: $goal';
+  }
+
+  @override
+  String doctorsDoneTimes(Object count) {
+    return 'Иҷрошуда ×$count';
+  }
+
+  @override
+  String doctorsRegionSummary(Object doctors, Object completed) {
+    return '$doctors табиб · $completed иҷро';
+  }
+
+  @override
+  String get doctorsAll => 'Ҳама';
+
+  @override
+  String get loginWithGoogle => 'Ворид шудан тавассути Google';
+
+  @override
+  String get loginWithApple => 'Ворид шудан тавассути Apple';
+
+  @override
+  String get oauthLinkTitle => 'Рақами телефонро тасдиқ кунед';
+
+  @override
+  String get oauthLinkBody =>
+      'Рақамро як бор тасдиқ кунед — ҳамин тавр ҳисоб ва холҳои шуморо меёбем. Дафъаи оянда бо як ламс ворид мешавед.';
+
+  @override
+  String get oauthLinkPhoneLabel => 'Рақами телефон';
+
+  @override
+  String get oauthLinkSendCode => 'Гирифтани рамз';
+
+  @override
+  String oauthLinkCodeSent(String phone) {
+    return 'Рамз ба $phone фиристода шуд';
+  }
+
+  @override
+  String get oauthLinkCodeLabel => 'Рамзи SMS';
+
+  @override
+  String get oauthLinkConfirm => 'Тасдиқ кардан';
+
+  @override
+  String get oauthLinkChangePhone => 'Иваз кардани рақам';
+
+  @override
+  String get profilePrivacy => 'Сиёсати махфият';
+
+  @override
+  String get profilePrivacySubtitle =>
+      'Кадом маълумотро ҷамъ мекунем ва чӣ тавр нигоҳ медорем';
+
+  @override
+  String get sapperRulesButton => 'Қоидаҳои аксия';
+
+  @override
+  String get sapperRulesTitle => 'Қоидаҳои аксияи «Супер Сапёр»';
+
+  @override
+  String get sapperRulesFull => 'Қоидаҳои пурраи расмӣ';
+
+  @override
+  String get sapperRulesAccept =>
+      'Бо ишғол кардани катак шумо қоидаҳои аксияро қабул мекунед.';
+
+  @override
+  String get sapperRule1 =>
+      'Ташкилотчӣ — ҶДММ «PHARMIQ ACADEMY». Apple ва Google сарпарасти аксия нестанд ва дар он иштирок намекунанд.';
+
+  @override
+  String get sapperRule2 =>
+      'Дар аксия пул истифода намешавад: танҳо бо холҳои IQC иштирок кардан мумкин аст.';
+
+  @override
+  String get sapperRule3 =>
+      'Холҳои IQC барои таълим, пурсишҳо ва квестҳои тасдиқшуда дода мешаванд. Онҳоро харидан, ба корбари дигар додан ё ба пул иваз кардан мумкин нест.';
+
+  @override
+  String get sapperRule4 =>
+      'Мӯҳлатҳо, нархи катак ва рӯйхати пурраи ҷоизаҳо то иштирок дар саҳифаи аксия нишон дода мешаванд.';
+
+  @override
+  String get sapperRule5 =>
+      'Холҳо ҳангоми ишғоли катак хориҷ мешаванд, бекор кардан мумкин нест. Як катакро як иштирокчӣ ишғол мекунад; қабул 1 дақиқа пеш аз натиҷаҳо баста мешавад.';
+
+  @override
+  String get sapperRule6 =>
+      'Ҷоизаҳо то оғози аксия дар катакҳо ҷойгир карда мешаванд ва баъд тағйир намеёбанд. Дар вақти муайяншуда ҳамаи катакҳо якбора кушода мешаванд, ҷоизаи катакро иштирокчие, ки онро ишғол кардааст, худкор мегирад. Натиҷаҳо ба ҳама намоёнанд.';
+
+  @override
+  String get sapperRule7 =>
+      'Ҷоизаҳо — ваучерҳои тӯҳфавии шарикон ва холҳои бонусӣ; ба пул иваз намешаванд. Ҷоизаҳои катакҳои ишғолнашуда дубора тақсим намешаванд.';
+
+  @override
+  String get sapperRule8 =>
+      'Агар аксия бекор шавад, ҳамаи холҳои сарфшуда баргардонида мешаванд. Корбарони аз 18 сола боло иштирок карда метавонанд, иштирок ихтиёрӣ аст.';
 }

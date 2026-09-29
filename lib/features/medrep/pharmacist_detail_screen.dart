@@ -12,6 +12,7 @@ import '../shared/widgets/screen_decor.dart';
 import 'home_screen.dart' show StatTile;
 import 'portfolio_screen.dart' show initialsOf;
 import 'providers.dart';
+import '../../widgets/dialog_buttons.dart';
 
 /// Деталь фармацевта (портфель медпреда). Дизайн перенесён из макета Figma
 /// (тёмная 149:7 и светлая 149:106 темы).
@@ -47,12 +48,12 @@ class MedrepPharmacistDetailScreen extends ConsumerWidget {
             ],
           ),
           actions: [
-            TextButton(
-                onPressed: () => Navigator.pop(ctx, false),
-                child: Text(ctx.l10n.pharmDetailCancel)),
-            FilledButton(
-                onPressed: () => Navigator.pop(ctx, true),
-                child: Text(ctx.l10n.pharmDetailSend)),
+            DialogButtons(
+              cancelLabel: ctx.l10n.pharmDetailCancel,
+              onCancel: () => Navigator.pop(ctx, false),
+              confirmLabel: ctx.l10n.pharmDetailSend,
+              onConfirm: () => Navigator.pop(ctx, true),
+            ),
           ],
         ),
       ),

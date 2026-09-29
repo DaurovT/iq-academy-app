@@ -5,7 +5,7 @@ import 'token_store.dart';
 
 /// Базовый адрес platform_api (совпадает с VITE_API_BASE веба).
 /// Позже вынесем в конфиг сборки (--dart-define).
-const kApiBase = 'http://194.5.157.183:4000/api/1.0';
+const kApiBase = 'https://pharmview.uz/api/1.0';
 
 /// Собирает настроенный Dio: подставляет Bearer-токен и превращает
 /// ошибки бэка в [ApiException] с текстом из поля `detail`.
@@ -53,11 +53,15 @@ DioException _toApiException(DioException e, AppLocalizations l10n) {
     message = l10n.apiNoAccess;
   }
 
-  return e.copyWith(
+  final out = e.copyWith(
     error: ApiException(
       message,
       statusCode: status,
       unauthorized: status == 401,
     ),
   );
+  // Экраны показывают ошибку через e.toString(); без этого там простыня
+  // «DioException [bad response]: …» вместо текста сервера.
+  out.stringBuilder = (_) => message;
+  return out;
 }

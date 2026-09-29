@@ -16,10 +16,12 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0+1
+version: 1.0.0+2
 
 environment:
   sdk: ^3.7.0
+  # sign_in_with_apple 8.x требует Flutter 3.44+ (Dart 3.12) — на старой версии pub get упадёт
+  flutter: ">=3.44.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -50,12 +52,17 @@ dependencies:
   url_launcher: ^6.3.2
   uuid: ^4.5.3
   connectivity_plus: ^7.2.0
+  # доступ к DOM в веб-сборке (iframe-плеер уроков)
+  web: ^1.1.0
   path_provider: ^2.1.5
   # Пуш-уведомления (Android + iOS через Firebase Cloud Messaging)
   firebase_core: ^3.8.0
   firebase_messaging: ^15.1.5
   # Показ уведомлений, когда приложение открыто (Android сам их не рисует в foreground)
   flutter_local_notifications: ^18.0.1
+  google_sign_in: ^7.2.0
+  sign_in_with_apple: ^8.2.0
+  crypto: ^3.0.6
 
 dev_dependencies:
   flutter_test:
