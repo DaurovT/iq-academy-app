@@ -6,10 +6,10 @@
     ios: "https://apps.apple.com/in/app/pharmiq/id6448833841",
     android: "https://play.google.com/store/apps/details?id=uz.iqacademy.platform_app"
   };
-  var FAQ_COUNT = 10;
 
   var dict = window.I18N || {};
   var lang = pickLang();
+  var reduceMotion = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   // Браузер может восстановить прошлую позицию прокрутки — лендинг всегда открываем сверху.
   if ("scrollRestoration" in history) history.scrollRestoration = "manual";
@@ -30,7 +30,7 @@
 
   function t(key) {
     var d = dict[lang] || {};
-    return key in d ? d[key] : (dict.ru[key] || "");
+    return key in d ? d[key] : ((dict.ru || {})[key] || "");
   }
 
   function applyLang(next) {
@@ -54,34 +54,61 @@
     });
     var note = document.querySelector("[data-legal-note]");
     if (note) note.hidden = !t("legal.note");
-
-    renderFaq();
   }
 
   document.querySelectorAll("[data-lang]").forEach(function (b) {
     b.addEventListener("click", function () { applyLang(b.getAttribute("data-lang")); });
   });
 
-  // ---------- FAQ ----------
-  function renderFaq() {
-    var list = document.getElementById("faq-list");
-    if (!list) return;
-    var open = list.querySelector("details[open]");
-    var openIdx = open ? open.getAttribute("data-i") : null;
-    var html = "";
-    for (var i = 1; i <= FAQ_COUNT; i++) {
-      html +=
-        '<details class="faq__item" data-i="' + i + '"' + (String(i) === openIdx ? " open" : "") + ">" +
-        "<summary>" + esc(t("faq.q" + i)) + '<span class="faq__icon" aria-hidden="true"></span></summary>' +
-        "<p>" + esc(t("faq.a" + i)) + "</p></details>";
-    }
-    list.innerHTML = html;
+  // ---------- Mobile menu (dialog, lpMenu) ----------
+  var menu = document.getElementById("menu");
+  var burger = document.querySelector(".burger");
+  var lastFocus = null;
+
+  function openMenu() {
+    if (!menu) return;
+    lastFocus = document.activeElement;
+    menu.hidden = false;
+    document.body.classList.add("menu-open");
+    if (burger) burger.setAttribute("aria-expanded", "true");
+    var close = menu.querySelector(".menu__close");
+    if (close) close.focus();
   }
 
-  function esc(s) {
-    return String(s).replace(/[&<>"]/g, function (c) {
-      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+  function closeMenu(restoreFocus) {
+    if (!menu || menu.hidden) return;
+    menu.hidden = true;
+    document.body.classList.remove("menu-open");
+    if (burger) burger.setAttribute("aria-expanded", "false");
+    if (restoreFocus !== false && lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+
+  if (menu && burger) {
+    burger.addEventListener("click", openMenu);
+    menu.querySelector(".menu__close").addEventListener("click", function () { closeMenu(); });
+    // Пункт меню: закрываем меню, прокрутку делает общий обработчик якорей.
+    menu.addEventListener("click", function (e) {
+      if (e.target.closest("a")) closeMenu(false);
     });
+    document.addEventListener("keydown", function (e) {
+      if (menu.hidden) return;
+      if (e.key === "Escape") { closeMenu(); return; }
+      if (e.key !== "Tab") return;
+      // простая ловушка фокуса внутри диалога
+      var items = Array.prototype.filter.call(
+        menu.querySelectorAll("a[href], button"),
+        function (el) { return el.offsetParent !== null; }
+      );
+      if (!items.length) return;
+      var first = items[0], last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
+    // Меню существует только на узких экранах: при расширении окна — закрываем.
+    var wide = matchMedia("(min-width: 1181px)");
+    var onWide = function () { if (wide.matches) closeMenu(false); };
+    if (wide.addEventListener) wide.addEventListener("change", onWide);
+    else if (wide.addListener) wide.addListener(onWide);
   }
 
   // Ссылки-якоря прокручивают страницу, но не оставляют #раздел в адресе:
@@ -92,32 +119,18 @@
       var target = id ? document.getElementById(id) : null;
       if (!target) return;
       e.preventDefault();
-      target.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
-      if (id !== "top") target.setAttribute("tabindex", "-1"), target.focus({ preventScroll: true });
+      target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+      if (id !== "top") {
+        target.setAttribute("tabindex", "-1");
+        target.focus({ preventScroll: true });
+      }
       history.replaceState(null, "", location.pathname + location.search);
     });
   });
 
-  // ---------- Mobile menu ----------
-  var burger = document.querySelector(".burger");
-  var nav = document.getElementById("nav");
-  if (burger && nav) {
-    burger.addEventListener("click", function () {
-      var isOpen = burger.getAttribute("aria-expanded") === "true";
-      burger.setAttribute("aria-expanded", String(!isOpen));
-      document.body.classList.toggle("menu-open", !isOpen);
-    });
-    nav.addEventListener("click", function (e) {
-      if (e.target.closest("a")) {
-        burger.setAttribute("aria-expanded", "false");
-        document.body.classList.remove("menu-open");
-      }
-    });
-  }
-
-  // ---------- Header shadow ----------
+  // ---------- Header: фон появляется после начала прокрутки ----------
   var header = document.querySelector(".header");
-  function onScroll() { header && header.classList.toggle("is-scrolled", window.scrollY > 8); }
+  function onScroll() { if (header) header.classList.toggle("is-scrolled", window.scrollY > 8); }
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
 
@@ -130,14 +143,15 @@
     });
   });
 
-  // ---------- Tabs ----------
-  var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+  // ---------- Partners tabs (видны только в мобильной раскладке) ----------
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.tabs [role="tab"]'));
   function selectTab(tab) {
     tabs.forEach(function (tb) {
       var on = tb === tab;
       tb.setAttribute("aria-selected", String(on));
       tb.tabIndex = on ? 0 : -1;
-      document.getElementById(tb.getAttribute("aria-controls")).hidden = !on;
+      var panel = document.getElementById(tb.getAttribute("aria-controls"));
+      if (panel) panel.classList.toggle("is-active", on);
     });
   }
   tabs.forEach(function (tab, i) {
@@ -149,6 +163,25 @@
       next.focus();
     });
   });
+
+  // ---------- Benefits carousel dots (мобильная раскладка) ----------
+  var track = document.querySelector(".benefits");
+  var dots = document.querySelectorAll(".dots span");
+  if (track && dots.length) {
+    var ticking = false;
+    var updateDots = function () {
+      ticking = false;
+      var cards = track.querySelectorAll(".benefit");
+      if (!cards.length) return;
+      var step = cards.length > 1 ? cards[1].offsetLeft - cards[0].offsetLeft : track.clientWidth;
+      var max = track.scrollWidth - track.clientWidth;
+      var idx = track.scrollLeft >= max - 2 ? cards.length - 1 : Math.round(track.scrollLeft / Math.max(step, 1));
+      dots.forEach(function (d, i) { d.classList.toggle("is-on", i === idx); });
+    };
+    track.addEventListener("scroll", function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(updateDots); }
+    }, { passive: true });
+  }
 
   // ---------- Video ----------
   var video = document.getElementById("promo");
@@ -183,7 +216,7 @@
     });
   }
 
-  if (form) {
+  if (form && phone) {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       var digits = "998" + phone.value.replace(/\D/g, "").replace(/^998/, "");
@@ -226,17 +259,17 @@
     msg.className = "form__msg form__msg--" + kind;
   }
 
-  // ---------- Reveal on scroll ----------
+  // ---------- Появление при прокрутке (lpUp, задержки — через --d) ----------
   var reveals = document.querySelectorAll(".reveal");
-  if ("IntersectionObserver" in window && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  if ("IntersectionObserver" in window && !reduceMotion) {
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {
-        if (en.isIntersecting) { en.target.classList.add("is-visible"); io.unobserve(en.target); }
+        if (en.isIntersecting) { en.target.classList.add("is-in"); io.unobserve(en.target); }
       });
     }, { rootMargin: "0px 0px -8% 0px" });
     reveals.forEach(function (el) { io.observe(el); });
   } else {
-    reveals.forEach(function (el) { el.classList.add("is-visible"); });
+    reveals.forEach(function (el) { el.classList.add("is-in"); });
   }
 
   document.querySelectorAll("[data-year]").forEach(function (el) { el.textContent = new Date().getFullYear(); });

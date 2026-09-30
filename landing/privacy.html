@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Программа лояльности — PharmIQ Academy</title>
   <meta name="description" content="Программа лояльности. PharmIQ Academy — онлайн-платформа для обучения сотрудников аптек Узбекистана." />
+  <meta name="color-scheme" content="dark light" />
   <meta name="theme-color" content="#0B0B10" media="(prefers-color-scheme: dark)" />
   <meta name="theme-color" content="#F6F7FB" media="(prefers-color-scheme: light)" />
   <link rel="icon" href="/favicon.ico" />
@@ -18,14 +19,14 @@
     <div class="container header__inner header__inner--legal">
       <a class="logo" href="/" aria-label="PharmIQ Academy">
         <span class="mark" style="--mw:30px;--mh:29px" aria-hidden="true"></span>
-        <span class="logo__text"><b>PharmIQ</b><i>ACADEMY</i></span>
+        <span class="logo__text" aria-hidden="true"><b>PharmIQ</b><i>ACADEMY</i></span>
       </a>
 
 
       <div class="header__right">
-        <div class="lang" role="group" aria-label="Language">
-          <button type="button" data-lang="ru">RU</button>
-          <button type="button" data-lang="uz">UZ</button>
+        <div class="lang" role="group" data-i18n-attr="aria-label:lang.label" aria-label="Язык сайта">
+          <button type="button" data-lang="ru" aria-pressed="true">RU</button>
+          <button type="button" data-lang="uz" aria-pressed="false">UZ</button>
         </div>
         <a class="header__login" href="https://go.pharmiq.uz/login" data-auth="login" data-i18n="nav.login">Войти</a>
       </div>
@@ -65,17 +66,18 @@
         <nav class="footer__nav" data-i18n-attr="aria-label:footer.nav" aria-label="Разделы">
           <a href="/#about" data-i18n="nav.about">О нас</a>
           <a href="/#partners" data-i18n="nav.partners">Партнёрам</a>
-          <a href="/#platform" data-i18n="nav.platform">Платформа</a>
+          <a class="hide-m" href="/#platform" data-i18n="nav.platform">Платформа</a>
+          <a class="show-m" href="/#benefits" data-i18n="nav.benefits">Преимущества</a>
           <a href="/#contacts" data-i18n="nav.contacts">Контакты</a>
         </nav>
       </div>
       <div class="footer__bottom">
-        <span>© <span data-year></span> <span data-i18n="footer.rights">PharmIQ Academy. Все права защищены</span></span>
+        <span class="footer__copy">© <span data-year>2026</span> <span data-i18n="footer.rights">PharmIQ Academy. Все права защищены</span></span>
         <span class="footer__links">
           <a href="/user-agreement.html" data-i18n="footer.terms">Пользовательское соглашение</a>
           <a href="/privacy.html" data-i18n="footer.loyalty">Программа лояльности</a>
-          <a class="footer__up" href="#top"><span data-i18n="footer.top">Наверх</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg></a>
         </span>
+        <a class="footer__up" href="#top"><span class="footer__up-label" data-i18n="footer.top">Наверх</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 15-6-6-6 6"/></svg></a>
       </div>
     </div>
   </footer>

@@ -19,7 +19,7 @@ window.I18N = {
     "hero.desc": "Уделяй обучению 20 минут ежедневно и становись мастером аптечных продаж",
     "hero.gp.small": "Скачать в",
     "hero.as.small": "Скачать в",
-    "hero.qr": "Отсканируй QR-код и скачай приложение, чтобы PharmIQ Academy был у тебя в кармане и в разы быстрее",
+    "hero.qr": "Отсканируй QR-код и скачай приложение, чтобы PharmIQ Academy был у тебя в кармане",
 
     "about.eyebrow": "О нас",
     "about.title": "PharmIQ Academy — онлайн-академия фармацевта",
@@ -42,11 +42,11 @@ window.I18N = {
 
     "platform.eyebrow": "Платформа",
     "platform.title": "Как устроена платформа",
-    "platform.d1": "Обучение проходит онлайн, без отрыва от работы и личных дел.",
+    "platform.d1": "Обучение проходит онлайн, без отрыва от работы и личных дел",
     "platform.d2": "Видео-курсы доступны после регистрации",
     "platform.d3": "Ежедневное пополнение новыми уроками",
     "platform.s1": "Регистрация",
-    "platform.s2": "Бесплатный доступ к курсам",
+    "platform.s2": "Доступ к курсам",
     "platform.s3": "Просмотр курсов",
     "platform.s4": "Тестирование и ситуационные задачи",
     "platform.s5": "Сдача теста",
@@ -56,7 +56,7 @@ window.I18N = {
     "benefits.eyebrow": "Преимущества",
     "benefits.title": "Преимущества нашей платформы",
     "benefits.l1": "Удобство",
-    "benefits.t1": "1 тема = 1 видео. Уроки доступны в видео и текстовом формате",
+    "benefits.t1": "Уроки доступны в видео и текстовом формате",
     "benefits.l2": "Ценность",
     "benefits.t2": "Курсы созданы экспертами в своей области, консультантами из стран СНГ",
     "benefits.l3": "Мотивация",
@@ -130,7 +130,21 @@ window.I18N = {
     "faq.more": "Не нашли ответ?",
     "faq.more.text": "Позвоните нам — ответим на любой вопрос о платформе.",
     "cta.title": "Начни учиться уже сегодня",
-    "footer.tagline": "Онлайн-академия для провизоров и фармацевтов Узбекистана"
+    "footer.tagline": "Онлайн-академия для провизоров и фармацевтов Узбекистана",
+    // --- redesign 1.2 ---
+    "skip": "Перейти к содержимому",
+    "lang.label": "Язык сайта",
+    "nav.lang": "Язык",
+    "nav.benefits": "Преимущества",
+    "nav.menu.open": "Открыть меню",
+    "nav.menu.close": "Закрыть меню",
+    "hero.photo": "Фармацевты PharmIQ Academy",
+    "hero.qr.alt": "QR-код для скачивания приложения",
+    "partners.tabs": "Для кого",
+    "partners.tab1.short": "Производителю",
+    "partners.tab2.short": "Собственнику аптеки",
+    "platform.play.aria": "Смотреть видео о платформе",
+    "contact.phone": "Номер телефона"
   },
 
   uz: {
@@ -174,11 +188,11 @@ window.I18N = {
 
     "platform.eyebrow": "Platforma",
     "platform.title": "Platforma qanday ishlaydi",
-    "platform.d1": "O‘qish jarayoni ish va shaxsiy hayotdan uzilmay turib, onlayn tarzda o‘tadi.",
+    "platform.d1": "O‘qish jarayoni ish va shaxsiy hayotdan uzilmay turib, onlayn tarzda o‘tadi",
     "platform.d2": "Video-kurslardan ro‘yxatdan o‘tgandan keyin foydalanish mumkin",
     "platform.d3": "Har kuni yangi darslar qo‘shilib boradi",
     "platform.s1": "Roʻyxatdan oʻtish",
-    "platform.s2": "Kurslardan bepul foydalanish",
+    "platform.s2": "Kurslardan foydalanish",
     "platform.s3": "Kurslarni ko‘zdan kechirish",
     "platform.s4": "Testlar va vaziyat topshiriqlari",
     "platform.s5": "Test topshirish",
@@ -188,7 +202,7 @@ window.I18N = {
     "benefits.eyebrow": "Afzalliklar",
     "benefits.title": "Platformamizning afzalliklari",
     "benefits.l1": "Qulaylik",
-    "benefits.t1": "1 ta mavzu = 1 ta video. Darslar video va matn formatida mavjud",
+    "benefits.t1": "Darslar video va matn formatida mavjud",
     "benefits.l2": "Ahamiyatlilik",
     "benefits.t2": "Kurslar MDH davlatlarining soha mutaxassislari va konsultantlari tomonidan ishlab chiqilgan",
     "benefits.l3": "Motivatsiya",
@@ -262,6 +276,20 @@ window.I18N = {
     "faq.more": "Javob topmadingizmi?",
     "faq.more.text": "Bizga qo‘ng‘iroq qiling — platforma haqidagi har qanday savolga javob beramiz.",
     "cta.title": "Bugunoq o‘qishni boshlang",
-    "footer.tagline": "O‘zbekiston provizor va farmatsevtlari uchun onlayn-akademiya"
+    "footer.tagline": "O‘zbekiston provizor va farmatsevtlari uchun onlayn-akademiya",
+    // --- redesign 1.2 ---
+    "skip": "Asosiy qismga o‘tish",
+    "lang.label": "Sayt tili",
+    "nav.lang": "Til",
+    "nav.benefits": "Afzalliklar",
+    "nav.menu.open": "Menyuni ochish",
+    "nav.menu.close": "Menyuni yopish",
+    "hero.photo": "PharmIQ Academy farmatsevtlari",
+    "hero.qr.alt": "Ilovani yuklab olish uchun QR-kod",
+    "partners.tabs": "Kim uchun",
+    "partners.tab1.short": "Ishlab chiqaruvchiga",
+    "partners.tab2.short": "Dorixona egasiga",
+    "platform.play.aria": "Platforma haqidagi videoni ko‘rish",
+    "contact.phone": "Telefon raqami"
   }
 };
