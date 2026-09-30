@@ -1,136 +1,114 @@
-import '../../core/app_modules.dart';
+import 'dart:math' as math;
+import 'dart:ui' show PathMetric;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../core/app_modules.dart';
 import '../../core/auth/auth_controller.dart';
+import '../../core/design/design.dart';
 import '../../core/format.dart';
 import '../../core/l10n/l10n.dart';
 import '../../core/models/check.dart';
+import '../../core/models/learn.dart';
 import '../../core/models/quest.dart';
-import '../../core/theme/app_colors.dart';
-import '../shared/widgets/pharm_top_bar.dart';
-import 'checks_screen.dart';
-import '../news/news_home_block.dart';
-import '../news/survey_home_block.dart';
+import '../../core/models/wallet.dart';
+import '../../widgets/pq_states.dart';
 import '../mini_apps/mini_apps_home_block.dart';
+import '../news/news_home_block.dart';
+import '../news/news_screen.dart' show newsListProvider;
+import '../news/survey_home_block.dart';
+import '../shared/providers.dart' show unreadCountProvider;
+import '../tour/tour_controller.dart';
+import '../tour/tour_overlay.dart' show TourAutoStart;
+import 'checks_screen.dart' show showNewCheckSheet;
 import 'providers.dart';
 
-/// Главная фармацевта. Дизайн перенесён из макета Figma «pharmiq-home-md3»
-/// (тёмная и светлая темы). Цвета — из [PharmPalette].
+const _kSectionGap = 24.0;
+
+/// Главная фармацевта (макеты Refined — эталон, HomeNew — новый пользователь,
+/// SkelHome — загрузка, PullRefresh — обновление).
+///
+/// «Новый пользователь» — ни одного чека и нулевой баланс: вместо кошелька
+/// показываем «Первые шаги», курс и квест для старта.
 class PharmacistHome extends ConsumerWidget {
   const PharmacistHome({super.key});
 
+  Future<void> _refresh(WidgetRef ref) async {
+    ref.invalidate(unreadCountProvider);
+    ref.invalidate(questsListProvider(QuestTarget.checks));
+    ref.invalidate(questDetailProvider);
+    ref.invalidate(newsListProvider);
+    ref.invalidate(surveyNextProvider);
+    ref.invalidate(coursesProvider);
+    try {
+      await Future.wait([
+        ref.refresh(walletProvider.future),
+        ref.refresh(checksProvider.future),
+      ]);
+    } catch (_) {
+      // Ошибка отобразится состоянием экрана.
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final p = PharmPalette.of(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final l = context.l10n;
+    final wallet = ref.watch(walletProvider);
+    final checks = ref.watch(checksProvider);
+    final unread = (ref.watch(unreadCountProvider).asData?.value ?? 0) > 0;
 
-    final name = ref
-            .watch(authControllerProvider)
-            .asData
-            ?.value
-            .account
-            ?.fullName ??
-        '';
-    final wallet = ref.watch(walletProvider).asData?.value;
-    final quests =
-        ref.watch(questsListProvider(QuestTarget.checks)).asData?.value ??
-            const [];
-    final checks = ref.watch(checksProvider).asData?.value ?? const [];
+    final AsyncValue<(Wallet, List<Check>)> home;
+    if (wallet.hasValue && checks.hasValue) {
+      home = AsyncData((wallet.requireValue, checks.requireValue));
+    } else if (wallet.hasError) {
+      home = AsyncError(wallet.error!, wallet.stackTrace ?? StackTrace.empty);
+    } else if (checks.hasError) {
+      home = AsyncError(checks.error!, checks.stackTrace ?? StackTrace.empty);
+    } else {
+      home = const AsyncLoading();
+    }
 
-    final iqc = wallet?.balanceIqc ?? 0;
-    final approved =
-        checks.where((c) => c.status == CheckStatus.approved).length;
-
-    return Scaffold(
-      backgroundColor: p.bg,
-      body: Column(
+    return PqScreen(
+      safeBottom: false,
+      child: Column(
         children: [
-          const PharmTopBar(),
+          PqTabHeader(
+            onBell: () => context.push('/app/notifications'),
+            unread: unread,
+            bellLabel: unread ? l.homeBellUnread : l.notifTitle,
+          ),
           Expanded(
-            child: RefreshIndicator(
-              onRefresh: () async {
+            child: PqAsync<(Wallet, List<Check>)>(
+              value: home,
+              onRetry: () {
                 ref.invalidate(walletProvider);
-                ref.invalidate(questsListProvider(QuestTarget.checks));
                 ref.invalidate(checksProvider);
               },
-              child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                child: Stack(
+              loadingBuilder:
+                  (_) => const SingleChildScrollView(
+                    physics: NeverScrollableScrollPhysics(),
+                    padding: EdgeInsets.fromLTRB(16, 4, 16, kPqNavClearance),
+                    child: PqSkeletonHome(),
+                  ),
+              data: (d) {
+                final (w, list) = d;
+                final isNew = list.isEmpty && w.balanceIqc == 0;
+                return Stack(
                   children: [
-                    // Декоративные абстракции на фоне (только светлая тема),
-                    // растянуты на всю высоту контента и скроллятся вместе с ним.
-                    if (!isDark)
-                      const Positioned.fill(
-                        child: IgnorePointer(child: _HomeDecor()),
-                      ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                      _Greeting(palette: p, name: name),
-                      const SizedBox(height: 24),
-                      _WalletCard(
-                        palette: p,
-                        iqc: iqc,
-                        onWallet: () => context.go('/app/wallet'),
-                      ),
-                      const SizedBox(height: 16),
-                      _QuickAction(
-                        palette: p,
-                        onTap: () => showNewCheckSheet(context),
-                      ),
-                      const SizedBox(height: 24),
-                      _StatsRow(
-                        palette: p,
-                        activeQuests: quests.length,
-                        approvedChecks: approved,
-                        iqc: iqc,
-                      ),
-                      const SizedBox(height: 24),
-                      _SectionHeader(
-                        palette: p,
-                        title: context.l10n.homePhActiveQuests,
-                        action: context.l10n.homePhAllQuests,
-                        onAction: () => context.go('/app/quests'),
-                      ),
-                      const SizedBox(height: 16),
-                      if (quests.isEmpty)
-                        _EmptyCard(
-                            palette: p, text: context.l10n.homePhNoActiveQuests)
-                      else
-                        for (final q in quests.take(3)) ...[
-                          _QuestCard(quest: q),
-                          const SizedBox(height: 12),
-                        ],
-                      const SizedBox(height: 12),
-                      const ModuleGate(module: 'news', child: NewsHomeBlock()),
-                      const SizedBox(height: 24),
-                      const ModuleGate(module: 'surveys', child: SurveyHomeBlock()),
-                      const SizedBox(height: 24),
-                      const ModuleGate(module: 'mini_apps', child: MiniAppsHomeBlock()),
-                      const SizedBox(height: 24),
-                      _SectionHeader(
-                        palette: p,
-                        title: context.l10n.homePhRecentChecks,
-                        action: context.l10n.homePhAllChecks,
-                        onAction: () => context.go('/app/checks'),
-                      ),
-                      const SizedBox(height: 16),
-                      if (checks.isEmpty)
-                        _EmptyCard(palette: p, text: context.l10n.homePhNoChecks)
-                      else
-                        for (final c in checks.take(3)) ...[
-                          _ReceiptItem(palette: p, check: c),
-                          const SizedBox(height: 8),
-                        ],
-                        ],
-                      ),
+                    PqRefresh(
+                      onRefresh: () => _refresh(ref),
+                      child:
+                          isNew
+                              ? const _NewUserHome()
+                              : _ActiveHome(wallet: w, checks: list),
                     ),
+                    // Обучающий тур: один раз, когда главная загрузилась.
+                    const TourAutoStart(),
                   ],
-                ),
-              ),
+                );
+              },
             ),
           ),
         ],
@@ -139,430 +117,318 @@ class PharmacistHome extends ConsumerWidget {
   }
 }
 
-// ── Декоративные абстракции (светлая тема) ──────────────────────────────
+/// Прокручиваемый список секций главной с каскадным появлением
+/// (`.pq-stagger`, промежуток 24).
+class _HomeList extends StatelessWidget {
+  const _HomeList({required this.sections});
 
-/// Декоративный фон светлой темы. Перенесён 1:1 из макета Figma
-/// (bg-decorative-pattern, нода 164:4): плоские круги и скруглённые
-/// прямоугольники с низкой прозрачностью, слегка размытые для мягкости.
-class _HomeDecor extends StatelessWidget {
-  const _HomeDecor();
-
-  static const _blue = Color(0xFF2563EB);
-  static const _pink = Color(0xFFEC4899);
-  static const _purple = Color(0xFF7C3AED);
+  final List<Widget> sections;
 
   @override
   Widget build(BuildContext context) {
-    return ClipRect(
-      child: Stack(
-        children: const [
-          // blob-blue
-          _Circle(top: -140, left: -120, size: 360, color: _blue, a: 0.20),
-          // rect-purple
-          _Rect(
-              top: -120,
-              right: -80,
-              width: 320,
-              height: 220,
-              radius: 56,
-              color: _purple,
-              a: 0.16),
-          // circle-pink
-          _Circle(top: 430, left: -200, size: 260, color: _pink, a: 0.22),
-          // blob-blue-soft
-          _Circle(top: 260, right: -110, size: 300, color: _blue, a: 0.16),
-          // rect-purple-soft
-          _Rect(
-              bottom: -81,
-              left: -154,
-              width: 280,
-              height: 180,
-              radius: 48,
-              color: _purple,
-              a: 0.14),
-          // circle-pink-small
-          _Circle(bottom: -140, right: -120, size: 180, color: _pink, a: 0.20),
-        ],
-      ),
-    );
-  }
-}
-
-class _Circle extends StatelessWidget {
-  const _Circle({
-    this.top,
-    this.bottom,
-    this.left,
-    this.right,
-    required this.size,
-    required this.color,
-    required this.a,
-  });
-
-  final double? top;
-  final double? bottom;
-  final double? left;
-  final double? right;
-  final double size;
-  final Color color;
-  final double a;
-
-  @override
-  Widget build(BuildContext context) {
-    // Плоский полупрозрачный круг без размытия и градиентов.
-    return Positioned(
-      top: top,
-      bottom: bottom,
-      left: left,
-      right: right,
-      child: Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: color.withValues(alpha: a),
-        ),
-      ),
-    );
-  }
-}
-
-class _Rect extends StatelessWidget {
-  const _Rect({
-    this.top,
-    this.bottom,
-    this.left,
-    this.right,
-    required this.width,
-    required this.height,
-    required this.radius,
-    required this.color,
-    required this.a,
-  });
-
-  final double? top;
-  final double? bottom;
-  final double? left;
-  final double? right;
-  final double width;
-  final double height;
-  final double radius;
-  final Color color;
-  final double a;
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      top: top,
-      bottom: bottom,
-      left: left,
-      right: right,
-      child: Container(
-        width: width,
-        height: height,
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: a),
-          borderRadius: BorderRadius.circular(radius),
-        ),
-      ),
-    );
-  }
-}
-
-// ── Приветствие ─────────────────────────────────────────────────────────
-
-class _Greeting extends StatelessWidget {
-  const _Greeting({required this.palette, required this.name});
-
-  final PharmPalette palette;
-  final String name;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return ListView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, kPqNavClearance),
       children: [
-        Text(
-          name.isEmpty
-              ? context.l10n.homePhGreeting
-              : context.l10n.homePhGreetingName(name),
-          style: TextStyle(
-            fontSize: 32,
-            height: 1.1,
-            fontWeight: FontWeight.w700,
-            color: palette.textPrimary,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          context.l10n.homePhGreetingSub,
-          style: TextStyle(fontSize: 16, color: palette.textMuted),
-        ),
+        for (var i = 0; i < sections.length; i++)
+          PqAnimate(delay: PqMotion.staggerDelay(i), child: sections[i]),
       ],
     );
   }
 }
 
-// ── Карточка кошелька ───────────────────────────────────────────────────
+String _name(WidgetRef ref) =>
+    ref.watch(authControllerProvider).asData?.value.account?.fullName.trim() ??
+    '';
 
-class _WalletCard extends StatelessWidget {
-  const _WalletCard({
-    required this.palette,
-    required this.iqc,
-    required this.onWallet,
+// ── Главная (макет Refined) ─────────────────────────────────────────────
+
+class _ActiveHome extends ConsumerWidget {
+  const _ActiveHome({required this.wallet, required this.checks});
+
+  final Wallet wallet;
+  final List<Check> checks;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = context.l10n;
+    final name = _name(ref);
+    final showQuests = ref.moduleVisible('quests');
+    final quests =
+        showQuests
+            ? (ref
+                    .watch(questsListProvider(QuestTarget.checks))
+                    .asData
+                    ?.value ??
+                const <Quest>[])
+            : const <Quest>[];
+    final active = quests.where((q) => q.status == QuestStatus.active).toList();
+    final approved =
+        checks.where((c) => c.status == CheckStatus.approved).length;
+    final pending =
+        checks
+            .where(
+              (c) =>
+                  c.status != CheckStatus.approved &&
+                  c.status != CheckStatus.rejected,
+            )
+            .length;
+
+    const gap = EdgeInsets.only(top: _kSectionGap);
+    return _HomeList(
+      sections: [
+        PqPageTitle(
+          name.isEmpty ? l.homePhGreeting : l.homePhGreetingName(name),
+          subtitle: l.homePhGreetingSub,
+        ),
+        Padding(
+          padding: gap,
+          child: TourAnchor(
+            target: TourTarget.balance,
+            radius: 24,
+            child: _WalletCard(
+              iqc: wallet.balanceIqc,
+              activeQuests: active.length,
+              approved: approved,
+              pending: pending,
+              showWallet: ref.moduleVisible('wallet'),
+            ),
+          ),
+        ),
+        if (active.isNotEmpty)
+          Padding(
+            padding: gap,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                PqSectionHeader(
+                  l.homePhActiveQuests,
+                  actionLabel: l.homePhAllQuests,
+                  onAction: () => context.go('/app/quests'),
+                ),
+                const SizedBox(height: 12),
+                TourAnchor(
+                  target: TourTarget.quest,
+                  radius: 24,
+                  child: _QuestCard(quest: active.first),
+                ),
+              ],
+            ),
+          ),
+        if (ref.moduleVisible('news')) const NewsHomeBlock(padding: gap),
+        if (ref.moduleVisible('surveys')) const SurveyHomeBlock(padding: gap),
+        if (ref.moduleVisible('mini_apps'))
+          const Padding(padding: gap, child: MiniAppsHomeBlock()),
+        if (checks.isNotEmpty)
+          Padding(
+            padding: gap,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                PqSectionHeader(
+                  l.homePhRecentChecks,
+                  actionLabel: l.homePhAllChecks,
+                  onAction: () => context.go('/app/checks'),
+                ),
+                const SizedBox(height: 12),
+                PqListCard(
+                  children: [
+                    for (final c in checks.take(3)) _CheckRow(check: c),
+                  ],
+                ),
+              ],
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+// ── Карточка баланса ────────────────────────────────────────────────────
+
+/// Градиентная карточка (walletGradient 135°) — общая для баланса и «Первых шагов».
+class _GradientCard extends StatelessWidget {
+  const _GradientCard({
+    required this.child,
+    required this.padding,
+    this.lightBorder = false,
   });
 
-  final PharmPalette palette;
-  final int iqc;
-  final VoidCallback onWallet;
+  final Widget child;
+  final EdgeInsetsGeometry padding;
+
+  /// HomeNew: в светлой теме рамка 1 px прозрачная (сохраняет размер).
+  final bool lightBorder;
 
   @override
   Widget build(BuildContext context) {
+    final pq = context.pq;
+    final border = pq.isDark || lightBorder;
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(24),
+      padding: padding,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: palette.walletGradient,
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-        ),
         borderRadius: BorderRadius.circular(24),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                context.l10n.homePhWalletBalanceLabel,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0.5,
-                  color: palette.walletText.withValues(alpha: 0.75),
-                ),
-              ),
-              _WalletPill(palette: palette, onTap: onWallet),
-            ],
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: pq.walletGradient,
+        ),
+        // В светлой теме у карточки нет рамки (в тёмной — 1 px walletBorder).
+        border: border ? Border.all(color: pq.walletBorder) : null,
+        boxShadow: [
+          BoxShadow(
+            color: pq.walletShadow,
+            offset: const Offset(0, 16),
+            blurRadius: 32,
+            spreadRadius: pq.isDark ? -16 : -14,
           ),
-          const SizedBox(height: 16),
+        ],
+      ),
+      child: child,
+    );
+  }
+}
+
+class _WalletCard extends StatelessWidget {
+  const _WalletCard({
+    required this.iqc,
+    required this.activeQuests,
+    required this.approved,
+    required this.pending,
+    required this.showWallet,
+  });
+
+  final int iqc;
+  final int activeQuests;
+  final int approved;
+  final int pending;
+  final bool showWallet;
+
+  @override
+  Widget build(BuildContext context) {
+    final pq = context.pq;
+    final l = context.l10n;
+    return _GradientCard(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SizedBox(
+            height: 32,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    l.homePhWalletBalanceLabel.toUpperCase(),
+                    style: PqText.overline(c: pq.walletMuted),
+                  ),
+                ),
+                if (showWallet)
+                  PqPressable(
+                    onTap: () => context.go('/app/wallet'),
+                    semanticLabel: l.homePhWalletButton,
+                    scale: .96,
+                    child: Container(
+                      height: 32,
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      decoration: BoxDecoration(
+                        color: pq.walletPillBg,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: pq.walletPillBorder),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            l.homePhWalletButton,
+                            style: PqText.link(c: pq.walletText),
+                          ),
+                          const SizedBox(width: 4),
+                          PqIcon(
+                            PqIcons.chevronRight,
+                            size: 14,
+                            color: pq.walletText,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          // CSS выравнивает «0» и «IQC» по базовой линии в строке высотой 60:
+          // в браузере цифра стоит на 2 px ниже, а строка на 1 px выше, чем во Flutter.
+          const SizedBox(height: 22),
           Row(
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
             children: [
-              Text(
-                '$iqc',
-                style: TextStyle(
-                  fontSize: 56,
-                  height: 1.1,
-                  fontWeight: FontWeight.w800,
-                  color: palette.walletText,
+              Flexible(
+                child: Text(
+                  formatUzsPlain(iqc),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: PqText.balance(c: pq.walletText),
                 ),
               ),
-              const SizedBox(width: 6),
+              const SizedBox(width: 8),
               Text(
                 'IQC',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: palette.walletText.withValues(alpha: 0.9),
-                ),
+                style: PqText.text(18, FontWeight.w700, c: pq.walletText),
               ),
             ],
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class _WalletPill extends StatelessWidget {
-  const _WalletPill({required this.palette, required this.onTap});
-
-  final PharmPalette palette;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: palette.walletPillBg,
-          borderRadius: BorderRadius.circular(999),
-          border: Border.all(color: palette.walletPillBorder),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              context.l10n.homePhWalletButton,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: palette.walletText,
+          const SizedBox(height: 19),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            decoration: BoxDecoration(
+              border: Border(
+                top: BorderSide(color: pq.walletLine),
+                bottom: BorderSide(color: pq.walletLine),
               ),
             ),
-            const SizedBox(width: 6),
-            Icon(Icons.chevron_right, size: 16, color: palette.walletText),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// ── Быстрое действие ────────────────────────────────────────────────────
-
-class _QuickAction extends StatelessWidget {
-  const _QuickAction({required this.palette, required this.onTap});
-
-  final PharmPalette palette;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(24),
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: palette.quickBg,
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: palette.quickBorder),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                color: palette.quickIconBg,
-                borderRadius: BorderRadius.circular(24),
-              ),
-              child: const Icon(Icons.photo_camera_outlined,
-                  size: 24, color: Colors.white),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            child: IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(
-                    context.l10n.homePhSendCheck,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: palette.textPrimary,
+                  Expanded(
+                    child: _Stat(
+                      value: activeQuests,
+                      label: l.homeStatActiveQuests(activeQuests),
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    context.l10n.homePhSendCheckSub,
-                    style: TextStyle(fontSize: 14, color: palette.textMuted),
+                  Expanded(
+                    child: _Stat(
+                      value: approved,
+                      label: l.homeStatApproved,
+                      divider: true,
+                    ),
+                  ),
+                  Expanded(
+                    child: _Stat(
+                      value: pending,
+                      label: l.homeStatPending,
+                      divider: true,
+                    ),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// ── Статистика ──────────────────────────────────────────────────────────
-
-class _StatsRow extends StatelessWidget {
-  const _StatsRow({
-    required this.palette,
-    required this.activeQuests,
-    required this.approvedChecks,
-    required this.iqc,
-  });
-
-  final PharmPalette palette;
-  final int activeQuests;
-  final int approvedChecks;
-  final int iqc;
-
-  @override
-  Widget build(BuildContext context) {
-    // IntrinsicHeight + stretch: все плитки по высоте самой высокой, без
-    // жёсткого height (на Android шрифт выше, чем на iOS, — был overflow).
-    return IntrinsicHeight(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            child: _StatItem(
-                palette: palette,
-                value: '$activeQuests',
-                label: context.l10n.homePhStatActiveQuests),
           ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: _StatItem(
-                palette: palette,
-                value: '$approvedChecks',
-                label: context.l10n.homePhStatApprovedChecks),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: _StatItem(
-                palette: palette,
-                value: '$iqc',
-                label: context.l10n.homePhStatIqcPoints),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _StatItem extends StatelessWidget {
-  const _StatItem({
-    required this.palette,
-    required this.value,
-    required this.label,
-  });
-
-  final PharmPalette palette;
-  final String value;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Container(
-      constraints: const BoxConstraints(minHeight: 100),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: palette.card,
-        borderRadius: BorderRadius.circular(16),
-        border: isDark ? null : Border.all(color: palette.cardBorder),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w700,
-              color: palette.accent,
+          const SizedBox(height: 20),
+          TourAnchor(
+            target: TourTarget.sendCheck,
+            radius: 16,
+            child: _SendCheckButton(
+              label: l.homePhSendCheck,
+              lightForeground: pq.accent,
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 10),
           Text(
-            label,
+            l.homePhSendCheckSub,
             textAlign: TextAlign.center,
-            style: TextStyle(
-                fontSize: 12, height: 1.4, color: palette.textMuted),
+            style: PqText.caption(c: pq.walletMuted),
           ),
         ],
       ),
@@ -570,344 +436,829 @@ class _StatItem extends StatelessWidget {
   }
 }
 
-// ── Заголовок секции ────────────────────────────────────────────────────
+class _Stat extends StatelessWidget {
+  const _Stat({required this.value, required this.label, this.divider = false});
 
-class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({
-    required this.palette,
-    required this.title,
-    required this.action,
-    required this.onAction,
-  });
-
-  final PharmPalette palette;
-  final String title;
-  final String action;
-  final VoidCallback onAction;
+  final int value;
+  final String label;
+  final bool divider;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-            color: palette.textPrimary,
-          ),
-        ),
-        InkWell(
-          onTap: onAction,
-          borderRadius: BorderRadius.circular(8),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            child: Text(
-              action,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: palette.accent,
-              ),
-            ),
-          ),
-        ),
-      ],
+    final pq = context.pq;
+    return Container(
+      padding: EdgeInsets.only(left: divider ? 14 : 0),
+      decoration:
+          divider
+              ? BoxDecoration(
+                border: Border(left: BorderSide(color: pq.walletLine)),
+              )
+              : null,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('$value', style: PqText.statSmall(c: Colors.white)),
+          const SizedBox(height: 2),
+          Text(label, style: PqText.caption(c: pq.walletMuted)),
+        ],
+      ),
     );
   }
 }
 
-// ── Карточка квеста ─────────────────────────────────────────────────────
+/// «Отправить чек» на градиентной карточке: 54/16, камера; тёмная тема —
+/// акцентная заливка, светлая — белая с цветным текстом. pqPulse ×3 после .8s.
+/// Запускает существующий поток отправки чека ([showNewCheckSheet]).
+class _SendCheckButton extends StatelessWidget {
+  const _SendCheckButton({required this.label, required this.lightForeground});
 
-class _QuestCard extends StatelessWidget {
+  final String label;
+  final Color lightForeground;
+
+  @override
+  Widget build(BuildContext context) {
+    final pq = context.pq;
+    final bg = pq.isDark ? pq.accent : Colors.white;
+    final fg = pq.isDark ? pq.onAccent : lightForeground;
+    return PqPulseRing.pulse(
+      borderRadius: BorderRadius.circular(16),
+      color: pq.accent,
+      delay: const Duration(milliseconds: 800),
+      repeat: 3,
+      child: PqPressable(
+        onTap: () => showNewCheckSheet(context),
+        semanticLabel: label,
+        child: Builder(
+          builder: (context) {
+            final pressed = PqPressedScope.of(context);
+            return AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              height: 54,
+              decoration: BoxDecoration(
+                color:
+                    pressed
+                        ? Color.lerp(
+                          bg,
+                          pq.isDark ? Colors.black : pq.accent,
+                          .08,
+                        )
+                        : bg,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow:
+                    pq.isDark
+                        ? null
+                        : const [
+                          BoxShadow(
+                            color: Color(0x59111827),
+                            offset: Offset(0, 6),
+                            blurRadius: 14,
+                            spreadRadius: -6,
+                          ),
+                        ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  PqIcon(PqIcons.camera, size: 20, color: fg),
+                  const SizedBox(width: 10),
+                  Flexible(
+                    child: Text(
+                      label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: PqText.button(c: fg),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+// ── Карточка активного квеста ───────────────────────────────────────────
+
+class _QuestCard extends ConsumerWidget {
   const _QuestCard({required this.quest});
 
   final Quest quest;
 
   @override
-  Widget build(BuildContext context) {
-    final pct = (quest.progress.clamp(0, 1) * 100).round();
-    final isVoucher = quest.rewardType == RewardType.voucher;
-    return GestureDetector(
-      onTap: () => context.go('/app/quests'),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final pq = context.pq;
+    final l = context.l10n;
+    final dark = pq.isDark;
+    // Цель и прогресс «N из M продаж» есть только в детали квеста.
+    final detail = ref.watch(questDetailProvider(quest.id)).asData?.value;
+    final goal = detail?.goal ?? 0;
+    final done = detail == null ? 0 : math.min(detail.myCount, detail.goal);
+
+    final int total;
+    final int filled;
+    if (goal > 0 && goal <= 20) {
+      total = goal;
+      filled = done;
+    } else {
+      total = 10;
+      filled =
+          goal > 0
+              ? (done / goal * 10).floor()
+              : (quest.progress.clamp(0, 1) * 10).floor();
+    }
+
+    final fg = dark ? const Color(0xFFF9FAFB) : Colors.white;
+    final soft = dark ? pq.textSecondary : const Color(0xE0FFFFFF);
+    final accent = dark ? PqColors.questProgress : PqColors.voucher;
+    final desc =
+        quest.description.replaceFirst(RegExp(r'^\s*🛒\s*'), '').trim();
+    final left = goal - done;
+
+    return PqPressable(
+      onTap: () => context.push('/app/quests/${quest.id}'),
+      semanticLabel: quest.name,
       child: Container(
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFF241C52), Color(0xFF2E2470), Color(0xFF4B2A93)],
-        ),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x40632CD4),
-            blurRadius: 28,
-            offset: Offset(0, 12),
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(24),
+          gradient: LinearGradient(
+            begin: const Alignment(-1, -.36),
+            end: const Alignment(1, .36),
+            colors:
+                dark
+                    ? const [
+                      Color(0xFF0B1020),
+                      Color(0xFF1E1B4B),
+                      Color(0xFF312E81),
+                    ]
+                    : const [Color(0xFF0EA5E9), Color(0xFF6366F1)],
+            stops: dark ? const [0, .55, 1] : null,
           ),
-        ],
-      ),
-      child: Stack(
-        children: [
-          // Мягкое свечение в правом верхнем углу для глубины.
-          Positioned(
-            top: -50,
-            right: -30,
-            child: Container(
-              width: 170,
-              height: 170,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: RadialGradient(
-                  colors: [Color(0x66A855F7), Color(0x00A855F7)],
+          border: Border.all(color: dark ? PqColors.questBorder : Colors.white),
+          boxShadow: [
+            dark
+                ? const BoxShadow(
+                  color: Color(0x4DA855F7),
+                  offset: Offset(0, 10),
+                  blurRadius: 24,
+                  spreadRadius: -10,
+                )
+                : const BoxShadow(
+                  color: Color(0x806366F1),
+                  offset: Offset(0, 14),
+                  blurRadius: 30,
+                  spreadRadius: -14,
+                ),
+          ],
+        ),
+        child: Stack(
+          children: [
+            if (dark)
+              const Positioned(
+                left: 0,
+                right: 0,
+                top: -20,
+                height: 44,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Color(0x8CA855F7), Color(0x00A855F7)],
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        quest.name,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          height: 1.35,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                        ),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Row(
+                    children: [
+                      quest.rewardType == RewardType.voucher
+                          ? PqRewardTag.voucher(l.questDetailPillVoucher)
+                          : PqRewardTag.iqc(l.homeRewardIqc(quest.prizeIqc)),
+                      const Spacer(),
+                      PqIcon(
+                        PqIcons.chevronRight,
+                        size: 20,
+                        color: dark ? const Color(0xFFC4B5FD) : Colors.white,
                       ),
-                    ),
-                    const SizedBox(width: 12),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: isVoucher
-                            ? const Color(0xFFFACC15)
-                            : Colors.white.withValues(alpha: 0.16),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        isVoucher ? context.l10n.homePhVoucherBadge : 'IQC',
-                        style: TextStyle(
-                          fontSize: 11,
-                          letterSpacing: 0.4,
-                          fontWeight: FontWeight.w800,
-                          color: isVoucher
-                              ? const Color(0xFF1F2937)
-                              : Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 18),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(context.l10n.homePhProgress,
-                        style: TextStyle(
-                            fontSize: 13,
-                            color: Colors.white.withValues(alpha: 0.65))),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    quest.name,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: PqText.title(c: fg),
+                  ),
+                  if (desc.isNotEmpty) ...[
+                    const SizedBox(height: 4),
                     Text(
-                      context.l10n.homePhPctDone(pct),
-                      style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFFC4B5FD),
-                      ),
+                      desc,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: PqText.text(14, FontWeight.w400, c: soft),
                     ),
                   ],
-                ),
-                const SizedBox(height: 10),
-                _ProgressBar(value: quest.progress.clamp(0, 1).toDouble()),
-              ],
-            ),
-          ),
-        ],
-      ),
-      ),
-    );
-  }
-}
-
-/// Гладкий прогресс-бар: полупрозрачная дорожка + градиентная заливка
-/// (фиолетовый → голубой) с мягким свечением.
-class _ProgressBar extends StatelessWidget {
-  const _ProgressBar({required this.value});
-
-  final double value;
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(999),
-      child: Container(
-        height: 8,
-        color: Colors.white.withValues(alpha: 0.14),
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: FractionallySizedBox(
-            widthFactor: value <= 0 ? 0.03 : value,
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFFA855F7), Color(0xFF38BDF8)],
-                ),
-                borderRadius: BorderRadius.circular(999),
-                boxShadow: const [
-                  BoxShadow(color: Color(0x80A855F7), blurRadius: 8),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          goal > 0
+                              ? l.homeQuestSales(done, goal)
+                              : l.homePhPctDone(
+                                (quest.progress.clamp(0, 1) * 100).round(),
+                              ),
+                          style: PqText.text(
+                            14,
+                            FontWeight.w400,
+                            c:
+                                dark
+                                    ? const Color(0xFFE5E7EB)
+                                    : const Color(0xE0FFFFFF),
+                          ),
+                        ),
+                      ),
+                      if (goal > 0)
+                        Text(
+                          left > 0 ? l.homeQuestLeft(left) : l.homeQuestDone,
+                          style: PqText.text(14, FontWeight.w700, c: accent),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  PqSegmentProgress(
+                    total: total,
+                    filled: filled,
+                    fillColor: accent,
+                    trackColor:
+                        dark
+                            ? const Color(0x1AFFFFFF)
+                            : const Color(0x40FFFFFF),
+                  ),
                 ],
               ),
             ),
-          ),
+          ],
         ),
       ),
     );
   }
 }
 
-// ── Строка чека ─────────────────────────────────────────────────────────
+// ── Строка последнего чека ──────────────────────────────────────────────
 
-class _ReceiptItem extends StatelessWidget {
-  const _ReceiptItem({required this.palette, required this.check});
+class _CheckRow extends StatelessWidget {
+  const _CheckRow({required this.check});
 
-  final PharmPalette palette;
   final Check check;
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final status = check.status;
-    final approved = status == CheckStatus.approved;
-    final rejected = status == CheckStatus.rejected;
-
-    final (Color chipBg, Color chipFg) = approved
-        ? (palette.approvedChipBg, palette.approvedText)
-        : rejected
-            ? (palette.rejectedChipBg, palette.rejectedText)
-            : (palette.chipNeutralBg, palette.chipNeutralText);
-
-    final iconBg = (isDark && approved)
-        ? const Color(0xFF173F20)
-        : palette.receiptIconBg;
-    final iconColor =
-        (isDark && approved) ? palette.approvedText : palette.textMuted;
-
-    return Material(
-      color: palette.card,
-      borderRadius: BorderRadius.circular(16),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: () => context.push('/app/checks/${check.id}'),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            border: isDark ? null : Border.all(color: palette.cardBorder),
+    final l = context.l10n;
+    final c = check;
+    final meta = l.homeCheckMeta(c.id, formatShortDateTime(c.createdAt));
+    void open() => context.push('/app/checks/${c.id}');
+    switch (c.status) {
+      case CheckStatus.approved:
+        final packs = c.drugs.fold<int>(0, (s, d) => s + d.packs);
+        final names =
+            c.drugs.map((d) => d.name).where((n) => n.isNotEmpty).toList();
+        return PqListRow(
+          icon: PqIcons.check,
+          tone: PqTone.success,
+          title:
+              names.isEmpty
+                  ? l.homePhCheckNumber(c.id)
+                  : names.length == 1
+                  ? names.first
+                  : '${names.first} +${names.length - 1}',
+          subtitle: meta,
+          value: l.checksStatusApproved,
+          valueTone: PqTone.success,
+          valueCaption: packs > 0 ? l.checkDetailPacks(packs) : null,
+          onTap: open,
+        );
+      case CheckStatus.rejected:
+        final reason = c.rejectReason?.trim() ?? '';
+        return PqListRow(
+          icon: PqIcons.alertTriangle,
+          tone: PqTone.danger,
+          title: reason.isEmpty ? l.checkDetailRejectedFallback : reason,
+          subtitle: meta,
+          onTap: open,
+          trailing: PqPillButton(
+            label: l.homeCheckRetake,
+            icon: PqIcons.camera,
+            onPressed: () => showNewCheckSheet(context),
           ),
-          child: Row(
+        );
+      case CheckStatus.pending:
+      case CheckStatus.aiDetected:
+      case CheckStatus.aiWrong:
+        return PqListRow(
+          icon: PqIcons.clock,
+          tone: PqTone.warning,
+          title: c.status.label(l),
+          subtitle: meta,
+          value: l.homeCheckWait,
+          valueIsAmount: false,
+          valueTone: PqTone.warning,
+          valueCaption: l.homeCheckWaitCaption,
+          onTap: open,
+        );
+    }
+  }
+}
+
+// ── Новый пользователь (макет HomeNew) ──────────────────────────────────
+
+class _NewUserHome extends ConsumerWidget {
+  const _NewUserHome();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = context.l10n;
+    final showLearn = ref.moduleVisible('learn');
+    final showQuests = ref.moduleVisible('quests');
+    final courses =
+        showLearn
+            ? (ref.watch(coursesProvider).asData?.value ?? const <Course>[])
+            : const <Course>[];
+    final quests =
+        showQuests
+            ? (ref
+                    .watch(questsListProvider(QuestTarget.checks))
+                    .asData
+                    ?.value ??
+                const <Quest>[])
+            : const <Quest>[];
+
+    // Курс для старта: сначала обязательный, затем любой непройденный.
+    final open = courses.where((c) => c.progress < 1).toList();
+    final course =
+        open.where((c) => c.mandatory == true).firstOrNull ?? open.firstOrNull;
+    final courseDone = courses.any((c) => c.progress >= 1);
+    final quest =
+        quests.where((q) => q.status == QuestStatus.active).firstOrNull;
+
+    const gap = EdgeInsets.only(top: _kSectionGap);
+    return _HomeList(
+      sections: [
+        PqPageTitle(l.homeNewTitle, subtitle: l.homeNewSubtitle),
+        Padding(
+          padding: gap,
+          child: _FirstStepsCard(course: course, courseDone: courseDone),
+        ),
+        if (course != null)
+          Padding(
+            padding: gap,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                PqSectionHeader(
+                  l.homeNewCourseSection,
+                  actionLabel: l.homeNewAllCourses,
+                  onAction: () => context.go('/app/learn'),
+                ),
+                const SizedBox(height: 10),
+                _CourseCard(course: course),
+              ],
+            ),
+          ),
+        if (quest != null)
+          Padding(
+            padding: gap,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                PqSectionHeader(
+                  l.homeNewQuestSection,
+                  actionLabel: l.homePhAllQuests,
+                  onAction: () => context.go('/app/quests'),
+                ),
+                const SizedBox(height: 10),
+                TourAnchor(
+                  target: TourTarget.quest,
+                  radius: 20,
+                  child: _StartQuestCard(quest: quest),
+                ),
+              ],
+            ),
+          ),
+        Padding(
+          padding: gap,
+          child: _DashedHint(
+            text: l.homeNewHint,
+            onTap:
+                ref.moduleVisible('mini_apps')
+                    ? () => context.push('/app/mini-apps')
+                    : null,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// «Доритрицин (Андижан)» → «Доритрицин» — короткое имя для подписи шага.
+String _shortTitle(String t) {
+  final s = t.replaceAll(RegExp(r'\s*\([^)]*\)'), '').trim();
+  return s.isEmpty ? t : s;
+}
+
+/// Сумма наград за уроки курса (из детали курса), 0 — неизвестно.
+int _courseReward(CourseDetail? d) =>
+    d == null ? 0 : d.lessons.fold<int>(0, (s, x) => s + x.rewardIqc);
+
+class _FirstStepsCard extends ConsumerWidget {
+  const _FirstStepsCard({required this.course, required this.courseDone});
+
+  final Course? course;
+  final bool courseDone;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final pq = context.pq;
+    final l = context.l10n;
+    final c = course;
+    final reward =
+        c == null
+            ? 0
+            : _courseReward(
+              ref.watch(courseDetailProvider(c.id)).asData?.value,
+            );
+    final courseSub =
+        c == null
+            ? l.homeNewStepCourseAny
+            : reward > 0
+            ? l.homeNewStepCourseReward(reward, _shortTitle(c.title))
+            : l.homeNewStepCourseSub(_shortTitle(c.title));
+    final steps = [
+      (l.homeNewStepRegister, l.homeNewStepDone, true),
+      (l.homeNewStepCheck, l.homeNewStepCheckSub, false),
+      (
+        l.homeNewStepCourse,
+        courseDone ? l.homeNewStepDone : courseSub,
+        courseDone,
+      ),
+    ];
+    final doneCount = steps.where((s) => s.$3).length;
+    final line = pq.isDark ? const Color(0x29D6E3FF) : const Color(0x47FFFFFF);
+    return _GradientCard(
+      padding: const EdgeInsets.all(18),
+      lightBorder: true,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
             children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration:
-                    BoxDecoration(color: iconBg, shape: BoxShape.circle),
-                child: Icon(Icons.description_outlined,
-                    size: 20, color: iconColor),
-              ),
-              const SizedBox(width: 16),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      context.l10n.homePhCheckNumber(check.id),
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: palette.textPrimary,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      formatDate(check.createdAt),
-                      style: TextStyle(fontSize: 12, color: palette.textMuted),
-                    ),
-                  ],
+                child: Text(
+                  l.homeNewStepsLabel.toUpperCase(),
+                  style: PqText.overline(c: pq.walletMuted),
                 ),
               ),
-              _Chip(label: status.label(context.l10n), bg: chipBg, fg: chipFg),
+              Text(
+                l.homeNewStepsCount(doneCount, steps.length),
+                style: PqText.text(14, FontWeight.w700, c: Colors.white),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          Row(
+            children: [
+              for (var i = 0; i < steps.length; i++) ...[
+                if (i > 0) const SizedBox(width: 4),
+                Expanded(
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    height: 6,
+                    decoration: BoxDecoration(
+                      color:
+                          steps[i].$3
+                              ? const Color(0xFF22C55E)
+                              : const Color(0x33FFFFFF),
+                      borderRadius: BorderRadius.circular(3),
+                    ),
+                  ),
+                ),
+              ],
+            ],
+          ),
+          const SizedBox(height: 14),
+          Text(
+            l.homeNewHeadline,
+            style: PqText.heading(
+              22,
+              FontWeight.w700,
+              height: 1.25,
+              c: Colors.white,
+            ),
+          ),
+          const SizedBox(height: 14),
+          Column(
+            children: [
+              for (var i = 0; i < steps.length; i++)
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  decoration:
+                      i < steps.length - 1
+                          ? BoxDecoration(
+                            border: Border(bottom: BorderSide(color: line)),
+                          )
+                          : null,
+                  child: Row(
+                    children: [
+                      _StepDot(number: i + 1, done: steps[i].$3),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Opacity(
+                              opacity: steps[i].$3 ? .7 : 1,
+                              child: Text(
+                                steps[i].$1,
+                                style: PqText.text(
+                                  15,
+                                  FontWeight.w600,
+                                  c: Colors.white,
+                                ).copyWith(
+                                  decoration:
+                                      steps[i].$3
+                                          ? TextDecoration.lineThrough
+                                          : null,
+                                  decorationColor: Colors.white,
+                                ),
+                              ),
+                            ),
+                            Text(
+                              steps[i].$2,
+                              style: PqText.caption(c: pq.walletMuted),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          TourAnchor(
+            target: TourTarget.sendCheck,
+            radius: 16,
+            child: _SendCheckButton(
+              label: l.homeNewSendFirst,
+              lightForeground: pq.accentText,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _StepDot extends StatelessWidget {
+  const _StepDot({required this.number, required this.done});
+
+  final int number;
+  final bool done;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 28,
+      height: 28,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: done ? const Color(0xFF22C55E) : const Color(0x24FFFFFF),
+        border:
+            done
+                ? null
+                : Border.all(color: const Color(0x80FFFFFF), width: 1.5),
+      ),
+      alignment: Alignment.center,
+      child:
+          done
+              ? const PqIcon(PqIcons.check, size: 16, color: Colors.white)
+              : Text('$number', style: PqText.tag(c: Colors.white)),
+    );
+  }
+}
+
+class _CourseCard extends ConsumerWidget {
+  const _CourseCard({required this.course});
+
+  final Course course;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final pq = context.pq;
+    final l = context.l10n;
+    final detail = ref.watch(courseDetailProvider(course.id)).asData?.value;
+    final reward = _courseReward(detail);
+    final lessons = detail?.lessons ?? const <Lesson>[];
+    final videoMin = lessons
+        .where((x) => x.kind == 'video')
+        .fold<int>(0, (s, x) => s + x.durationMin);
+    final quizLesson = lessons.where((x) => x.kind == 'quiz').firstOrNull;
+    final hasQuiz = quizLesson != null;
+    // Число вопросов теста — из самого теста (как «тест 5 вопросов» в макете).
+    final questions =
+        quizLesson == null
+            ? null
+            : ref
+                .watch(quizProvider((course.id, quizLesson.id)))
+                .asData
+                ?.value
+                .questions
+                .length;
+    final sub =
+        detail == null || (videoMin == 0 && !hasQuiz)
+            ? l.homeNewCourseLessons(
+              detail?.lessons.length ?? course.lessonCount,
+            )
+            : [
+              if (videoMin > 0) l.homeNewCourseVideo(videoMin),
+              if (hasQuiz)
+                questions != null && questions > 0
+                    ? l.homeNewCourseQuizQuestions(questions)
+                    : l.homeNewCourseQuiz,
+            ].join(' · ');
+    return PqCard(
+      padding: const EdgeInsets.all(14),
+      onTap: () => context.push('/app/learn/${course.id}'),
+      child: Row(
+        children: [
+          Container(
+            width: 56,
+            height: 56,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              gradient: const LinearGradient(
+                begin: Alignment(-1, -.6),
+                end: Alignment(1, .6),
+                colors: [Color(0xFFE8611A), Color(0xFFF5A031)],
+              ),
+            ),
+            alignment: Alignment.center,
+            child: const PqIcon(PqIcons.play, size: 22, color: Colors.white),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  course.title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: PqText.heading(16, FontWeight.w700, c: pq.text),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  sub,
+                  style: PqText.text(14, FontWeight.w400, c: pq.textMuted),
+                ),
+              ],
+            ),
+          ),
+          if (reward > 0) ...[
+            const SizedBox(width: 14),
+            PqRewardTag.iqc(l.homeRewardIqc(reward)),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _StartQuestCard extends ConsumerWidget {
+  const _StartQuestCard({required this.quest});
+
+  final Quest quest;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final pq = context.pq;
+    final l = context.l10n;
+    final detail = ref.watch(questDetailProvider(quest.id)).asData?.value;
+    final sub = [
+      if (detail != null && detail.goal > 0) l.homeNewQuestGoal(detail.goal),
+      quest.rewardType == RewardType.voucher
+          ? l.homeNewQuestVoucher
+          : l.homeNewQuestIqc,
+    ].join(' · ');
+    return PqCard(
+      padding: const EdgeInsets.all(14),
+      onTap: () => context.push('/app/quests/${quest.id}'),
+      child: Row(
+        children: [
+          const PqIconTile(
+            PqIcons.target,
+            tone: PqTone.warning,
+            size: 56,
+            radius: 16,
+            iconSize: 24,
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  quest.name,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: PqText.heading(16, FontWeight.w700, c: pq.text),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  sub,
+                  style: PqText.text(14, FontWeight.w400, c: pq.textMuted),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 14),
+          PqIcon(PqIcons.chevronRight, size: 18, color: pq.textMuted),
+        ],
+      ),
+    );
+  }
+}
+
+/// Пунктирная подсказка «Баланс, ваучеры и игры появятся после первых IQC».
+class _DashedHint extends StatelessWidget {
+  const _DashedHint({required this.text, this.onTap});
+
+  final String text;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final pq = context.pq;
+    final body = CustomPaint(
+      painter: _DashedRRectPainter(color: pq.borderStrong, radius: 20),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 56),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          child: Row(
+            children: [
+              PqIcon(PqIcons.grid, size: 20, color: pq.textSecondary),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  text,
+                  style: PqText.text(15, FontWeight.w400, c: pq.textSecondary),
+                ),
+              ),
             ],
           ),
         ),
       ),
     );
+    return onTap == null ? body : PqPressable(onTap: onTap, child: body);
   }
 }
 
-// ── Мелкие элементы ─────────────────────────────────────────────────────
+class _DashedRRectPainter extends CustomPainter {
+  _DashedRRectPainter({required this.color, required this.radius});
 
-class _Chip extends StatelessWidget {
-  const _Chip({required this.label, required this.bg, required this.fg});
-
-  final String label;
-  final Color bg;
-  final Color fg;
+  final Color color;
+  final double radius;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: bg,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(
-        label.toUpperCase(),
-        style: TextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.w600,
-          letterSpacing: 0.3,
-          color: fg,
-        ),
-      ),
-    );
+  void paint(Canvas canvas, Size size) {
+    final paint =
+        Paint()
+          ..color = color
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1;
+    final path =
+        Path()..addRRect(
+          RRect.fromRectAndRadius(
+            Offset.zero & size,
+            Radius.circular(radius),
+          ).deflate(.5),
+        );
+    for (final PathMetric m in path.computeMetrics()) {
+      for (double d = 0; d < m.length; d += 7) {
+        canvas.drawPath(m.extractPath(d, math.min(d + 4, m.length)), paint);
+      }
+    }
   }
-}
-
-class _EmptyCard extends StatelessWidget {
-  const _EmptyCard({required this.palette, required this.text});
-
-  final PharmPalette palette;
-  final String text;
 
   @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: palette.card,
-        borderRadius: BorderRadius.circular(16),
-        border: isDark ? null : Border.all(color: palette.cardBorder),
-      ),
-      child: Text(
-        text,
-        textAlign: TextAlign.center,
-        style: TextStyle(color: palette.textMuted),
-      ),
-    );
-  }
+  bool shouldRepaint(_DashedRRectPainter old) =>
+      old.color != color || old.radius != radius;
 }

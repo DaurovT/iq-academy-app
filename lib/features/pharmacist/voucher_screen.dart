@@ -1,354 +1,241 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:intl/intl.dart';
+
+import '../../core/design/design.dart';
 import '../../core/l10n/l10n.dart';
 import '../../core/models/wallet.dart';
-import '../../widgets/async_view.dart';
-import '../shared/widgets/screen_decor.dart';
+import '../../widgets/pq_states.dart';
 import 'providers.dart';
+import 'wallet/voucher_archive.dart';
+import 'wallet/wallet_common.dart';
+import 'wallet/wallet_toast.dart';
 
-final _num = NumberFormat.decimalPattern('ru');
+const _supportPhone = '+998900276969';
+const _supportPhoneLabel = '+998 90-027-69-69';
 
-/// Экран ваучера — подарочная карта Korzinka с QR.
-/// Перенесён один в один из макета Figma «wallet-voucher-korzinka».
+/// Мой ваучер (макет Voucher): подарочная карта Korzinka с QR-кодом.
 class VoucherScreen extends ConsumerWidget {
   const VoucherScreen({super.key, required this.id});
+
   final int id;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = context.l10n;
     final mine = ref.watch(myVouchersProvider);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final page = isDark ? const Color(0xFF0D1117) : const Color(0xFFF5F6FA);
-
-    return Scaffold(
-      backgroundColor: page,
-      body: Stack(children: [Positioned.fill(child: ScreenDecor(voucherDecor)), SafeArea(
-        child: AsyncView(
-          value: mine,
-          onRetry: () => ref.invalidate(myVouchersProvider),
-          data: (list) {
-            final v = list.where((e) => e.id == id).firstOrNull;
-            if (v == null) {
-              return EmptyState(text: context.l10n.voucherNotFound);
-            }
-            return _VoucherBody(voucher: v, isDark: isDark, page: page);
-          },
-        ),
-      )]),
+    final v = mine.asData?.value.where((e) => e.id == id).firstOrNull;
+    return PqScreen(
+      child: Column(
+        children: [
+          PqTopBar(
+            title: l.voucherTitle,
+            backLabel: l.walletBack,
+            trailing:
+                v == null
+                    ? null
+                    : PqIconButton(
+                      icon: PqIcons.share,
+                      iconSize: 19,
+                      label: l.walletShare,
+                      onTap: () => copyVoucherCode(context, v.code),
+                    ),
+          ),
+          Expanded(
+            child: PqAsync<List<IssuedVoucher>>(
+              value: mine,
+              loading: PqLoadingKind.spinner,
+              onRetry: () => ref.invalidate(myVouchersProvider),
+              data: (list) {
+                final v = list.where((e) => e.id == id).firstOrNull;
+                if (v == null) {
+                  return PqEmptyState(
+                    icon: PqIcons.ticket,
+                    title: l.voucherNotFound,
+                  );
+                }
+                return _Body(voucher: v, all: list);
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
 
-class _VoucherBody extends StatelessWidget {
-  const _VoucherBody({
-    required this.voucher,
-    required this.isDark,
-    required this.page,
-  });
+class _Body extends ConsumerWidget {
+  const _Body({required this.voucher, required this.all});
 
   final IssuedVoucher voucher;
-  final bool isDark;
-  final Color page;
+  final List<IssuedVoucher> all;
 
   @override
-  Widget build(BuildContext context) {
-    final used = voucher.status == 'used';
-    final muted = isDark ? const Color(0xFF8F909A) : const Color(0xFF6B7280);
-    final titleColor = isDark ? const Color(0xFF8F909A) : const Color(0xFF6B7280);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final pq = context.pq;
+    final l = context.l10n;
+    final archive = ref.watch(voucherArchiveProvider);
+    final used = isUsed(voucher);
+    final archived = archive.contains(voucher.id);
+    final others =
+        activeVouchers(all, archive).where((v) => v.id != voucher.id).length;
+    final peeks = used || archived ? 0 : others.clamp(0, 2);
+    final status =
+        used
+            ? l.walletVoucherUsed
+            : archived
+            ? l.walletStatusArchived
+            : l.walletVoucherActive;
 
-    return Column(
-      children: [
-        // top-nav
-        SizedBox(
-          height: 56,
-          child: Padding(
+    Widget peek(double inset, Color color, double opacity) => SizedBox(
+      height: 10,
+      child: OverflowBox(
+        alignment: Alignment.topCenter,
+        minHeight: 14,
+        maxHeight: 14,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: inset),
+          child: Opacity(
+            opacity: opacity,
+            child: Container(
+              height: 14,
+              decoration: BoxDecoration(
+                color: color,
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(14),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    Widget link(
+      PqIcons icon,
+      String title,
+      Widget trailing,
+      VoidCallback onTap, {
+      bool last = false,
+    }) => PqPressable(
+      onTap: onTap,
+      child: Container(
+        // <a> min-height 52 + нижняя рамка (content-box)
+        constraints: BoxConstraints(minHeight: last ? 52 : 53),
+        decoration: BoxDecoration(
+          border: last ? null : Border(bottom: BorderSide(color: pq.divider)),
+        ),
+        child: Row(
+          children: [
+            PqIcon(icon, size: 18, color: pq.textMuted),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                title,
+                style: PqText.text(15, FontWeight.w400, c: pq.text),
+              ),
+            ),
+            trailing,
+          ],
+        ),
+      ),
+    );
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, 40),
+      child: PqStagger(
+        gap: 16,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (peeks >= 2) peek(18, const Color(0xFFB92624), .55),
+              if (peeks >= 1) peek(10, const Color(0xFFCF2F2C), .75),
+              VoucherTicket(
+                voucher: voucher,
+                status: status,
+                archived: archived,
+                notchColor: pq.bg,
+              ),
+            ],
+          ),
+          PqCard(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Column(
               children: [
-                InkWell(
-                  onTap: () => Navigator.of(context).maybePop(),
-                  borderRadius: BorderRadius.circular(20),
-                  child: Padding(
-                    padding: const EdgeInsets.all(4),
+                link(
+                  PqIcons.cart,
+                  l.walletStores,
+                  PqIcon(PqIcons.externalLink, size: 16, color: pq.textMuted),
+                  () => launchUrl(
+                    Uri.parse('https://korzinka.uz'),
+                    mode: LaunchMode.externalApplication,
+                  ),
+                ),
+                link(
+                  PqIcons.phone,
+                  l.voucherSupport,
+                  Text(
+                    _supportPhoneLabel,
+                    style: PqText.text(15, FontWeight.w700, c: pq.accent),
+                  ),
+                  () => launchUrl(Uri.parse('tel:$_supportPhone')),
+                  last: true,
+                ),
+              ],
+            ),
+          ),
+          if (!used)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                PqPressable(
+                  onTap: () {
+                    if (archived) {
+                      ref
+                          .read(voucherArchiveProvider.notifier)
+                          .restore(voucher.id);
+                    } else {
+                      archiveVoucherWithUndo(ref, voucher);
+                      Navigator.of(context).maybePop();
+                    }
+                  },
+                  child: Container(
+                    height: 52,
+                    decoration: BoxDecoration(
+                      color: pq.surface,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: pq.border),
+                    ),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.chevron_left, size: 24, color: titleColor),
+                        PqIcon(
+                          archived ? PqIcons.undo : PqIcons.archive,
+                          size: 18,
+                          color: pq.text,
+                        ),
                         const SizedBox(width: 8),
-                        Text(context.l10n.voucherTitle,
-                            style: TextStyle(fontSize: 16, color: titleColor)),
+                        Text(
+                          archived
+                              ? l.walletRestoreFromArchive
+                              : l.walletToArchive,
+                          style: PqText.button(c: pq.text),
+                        ),
                       ],
                     ),
                   ),
                 ),
-                IconButton(
-                  icon: Icon(Icons.ios_share, size: 22, color: titleColor),
-                  onPressed: () => Clipboard.setData(
-                    ClipboardData(text: voucher.code),
-                  ).then((_) {
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(context.l10n.voucherCodeCopied)));
-                    }
-                  }),
-                ),
-              ],
-            ),
-          ),
-        ),
-        Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.only(top: 8, bottom: 24),
-            child: Column(
-              children: [
-                // status-row
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: used
-                              ? const Color(0xFF2A2A2A)
-                              : const Color(0xFF1A3A2A),
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                              color: used
-                                  ? const Color(0xFF6B7280)
-                                  : const Color(0xFF22C55E)),
-                        ),
-                        child: Text(
-                            used
-                                ? context.l10n.voucherUsed
-                                : context.l10n.voucherActive,
-                            style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: used
-                                    ? const Color(0xFF9CA3AF)
-                                    : const Color(0xFF22C55E))),
-                      ),
-                      Text(context.l10n.voucherIssuedAt(_date(voucher.issuedAt)),
-                          style: TextStyle(fontSize: 12, color: muted)),
-                    ],
+                if (!archived) ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    l.walletToArchiveHint,
+                    textAlign: TextAlign.center,
+                    style: PqText.body(c: pq.textMuted),
                   ),
-                ),
-                const SizedBox(height: 16),
-                // voucher-card (Korzinka)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: _KorzinkaCard(voucher: voucher, used: used),
-                ),
+                ],
               ],
             ),
-          ),
-        ),
-        // bottom-info
-        _BottomInfo(isDark: isDark, page: page, muted: muted),
-      ],
-    );
-  }
-
-  static String _date(String iso) {
-    final d = DateTime.tryParse(iso);
-    if (d == null) return iso;
-    return DateFormat('dd.MM.yyyy').format(d.toLocal());
-  }
-}
-
-class _KorzinkaCard extends StatelessWidget {
-  const _KorzinkaCard({required this.voucher, required this.used});
-  final IssuedVoucher voucher;
-  final bool used;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        color: const Color(0xFFE31E24),
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: const [
-          BoxShadow(color: Color(0x99000000), blurRadius: 40, offset: Offset(0, 12)),
-        ],
-      ),
-      child: Column(
-        children: [
-          const SizedBox(height: 16),
-          // логотип korzinka
-          Padding(
-            padding: const EdgeInsets.only(top: 8, bottom: 16),
-            child: SvgPicture.asset(
-              'assets/korzinka.svg',
-              height: 44,
-              colorFilter:
-                  const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.only(top: 8, bottom: 12),
-            child: Opacity(
-              opacity: 0.8,
-              child: Text("SOVG'A KARTASI",
-                  style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 1,
-                      color: Colors.white)),
-            ),
-          ),
-          const _DashedDivider(),
-          // сумма
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(_num.format(voucher.amountUzs),
-                    style: const TextStyle(
-                        fontSize: 44,
-                        fontWeight: FontWeight.w800,
-                        color: Colors.white)),
-                const SizedBox(height: 2),
-                Text(context.l10n.voucherGiftCardLabel,
-                    style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white.withValues(alpha: 0.7))),
-              ],
-            ),
-          ),
-          const _DashedDivider(),
-          // QR
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                Container(
-                  width: 180,
-                  height: 180,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Opacity(
-                    opacity: used ? 0.3 : 1,
-                    child: QrImageView(
-                      data: voucher.code,
-                      size: 150,
-                      backgroundColor: Colors.white,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                SelectableText(voucher.code,
-                    style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white)),
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: 260,
-                  child: Text(context.l10n.voucherShowQr,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.white.withValues(alpha: 0.7))),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _DashedDivider extends StatelessWidget {
-  const _DashedDivider();
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        const dash = 6.0;
-        const gap = 4.0;
-        final count = (constraints.maxWidth / (dash + gap)).floor();
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: List.generate(
-            count,
-            (_) => Container(
-              width: dash,
-              height: 1,
-              color: Colors.white.withValues(alpha: 0.25),
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
-
-class _BottomInfo extends StatelessWidget {
-  const _BottomInfo({required this.isDark, required this.page, required this.muted});
-  final bool isDark;
-  final Color page;
-  final Color muted;
-
-  @override
-  Widget build(BuildContext context) {
-    final border = isDark ? const Color(0xFF1E2A3A) : const Color(0xFFEBEDF0);
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: page,
-        border: Border(top: BorderSide(color: border)),
-      ),
-      child: Column(
-        children: [
-          InkWell(
-            onTap: () => launchUrl(Uri.parse('https://korzinka.uz'),
-                mode: LaunchMode.externalApplication),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(context.l10n.voucherStores,
-                    style: TextStyle(fontSize: 13, color: muted)),
-                Icon(Icons.open_in_new, size: 16, color: muted),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Divider(height: 1, color: border),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(context.l10n.voucherSupport,
-                  style: TextStyle(fontSize: 13, color: muted)),
-              GestureDetector(
-                onTap: () => launchUrl(Uri.parse('tel:+998900276969')),
-                child: const Text('+998 90-027-69-69',
-                    style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF60A5FA))),
-              ),
-            ],
-          ),
         ],
       ),
     );

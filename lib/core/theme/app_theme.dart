@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../design/pq_colors.dart';
 import 'app_colors.dart';
 
 /// Размер FilledButton в диалогах. Тема растягивает FilledButton на всю ширину
@@ -28,10 +29,17 @@ class AppTheme {
       outline: p.cardBorder,
     );
 
+    final pq = dark ? PqColors.dark : PqColors.light;
+
     return ThemeData(
       useMaterial3: true,
       colorScheme: scheme,
-      scaffoldBackgroundColor: p.bg,
+      // Редизайн 1.2: Inter — основной шрифт, токены — в PqColors.
+      fontFamily: 'Inter',
+      extensions: [pq],
+      scaffoldBackgroundColor: pq.bg,
+      splashFactory: NoSplash.splashFactory,
+      highlightColor: Colors.transparent,
       appBarTheme: AppBarTheme(
         centerTitle: false,
         backgroundColor: p.bg,

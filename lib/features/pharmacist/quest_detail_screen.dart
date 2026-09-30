@@ -1,367 +1,51 @@
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
+
+import '../../core/design/design.dart';
 import '../../core/l10n/l10n.dart';
 import '../../core/models/quest.dart';
-import '../../widgets/async_view.dart';
-import '../shared/widgets/screen_decor.dart';
+import '../../widgets/pq_states.dart';
+import '../shared/providers.dart';
+import '../doctor/rx_common.dart';
+import 'checks_screen.dart';
 import 'providers.dart';
+import 'quests/quest_ui.dart';
 
-final _dm = DateFormat('dd.MM');
-final _dmy = DateFormat('dd.MM.yyyy');
-final _numFmt = NumberFormat.decimalPattern('ru');
-
-String _fmt(String? iso, DateFormat f) {
-  if (iso == null) return '';
-  final d = DateTime.tryParse(iso);
-  return d == null ? iso : f.format(d);
-}
-
-/// Деталь квеста. Перенесена один в один из макета Figma «quest-detail».
+/// Карточка квеста (макет QuestDetail): «‹ Квесты», метки и заголовок,
+/// прогресс (pq-seg), награда на градиенте, шаги, условия, засчитанные
+/// чеки и закреплённая над меню кнопка «Отправить чек по квесту».
 class QuestDetailScreen extends ConsumerWidget {
   const QuestDetailScreen({super.key, required this.id});
+
   final int id;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final c = _QD.of(context);
+    final l = context.l10n;
     final detail = ref.watch(questDetailProvider(id));
-    return Scaffold(
-      backgroundColor: c.page,
-      body: Stack(children: [Positioned.fill(child: ScreenDecor(questDetailDecor)), SafeArea(
-        bottom: false,
-        child: AsyncView(
-          value: detail,
-          onRetry: () => ref.invalidate(questDetailProvider(id)),
-          data: (q) => _Body(c: c, q: q),
-        ),
-      )]),
-    );
-  }
-}
-
-class _Body extends StatelessWidget {
-  const _Body({required this.c, required this.q});
-  final _QD c;
-  final QuestDetail q;
-
-  @override
-  Widget build(BuildContext context) {
-    final isVoucher = q.rewardType == RewardType.voucher;
-    final pct = q.goal == 0 ? 0 : (q.myCount / q.goal * 100).round();
-    final left = (q.goal - q.myCount).clamp(0, q.goal);
-    final period =
-        '${_fmt(q.startDate, _dm)} — ${_fmt(q.endDate, _dmy)}';
-    final rewardLine = isVoucher
-        ? context.l10n
-            .questDetailRewardVoucherLine(_numFmt.format(q.prizeIqc))
-        : context.l10n.questDetailRewardIqcLine;
-
-    return ListView(
-      padding: const EdgeInsets.only(bottom: 24),
-      children: [
-        // top-nav
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: InkWell(
-            onTap: () =>
-                context.canPop() ? context.pop() : context.go('/app/quests'),
-            child: Row(
-              children: [
-                Icon(Icons.chevron_left, size: 24, color: c.muted),
-                const SizedBox(width: 8),
-                Text(context.l10n.questDetailBackQuests,
-                    style: TextStyle(fontSize: 16, color: c.muted)),
-              ],
-            ),
-          ),
-        ),
-        // header
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(q.name,
-                  style: TextStyle(
-                      fontSize: 22,
-                      height: 1.2,
-                      fontWeight: FontWeight.w700,
-                      color: c.text)),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  _Pill(
-                    text: isVoucher ? context.l10n.questDetailPillVoucher : 'IQC',
-                    bg: isVoucher
-                        ? const Color(0xFFF59E0B)
-                        : const Color(0xFF7C3AED),
-                    fg: isVoucher ? const Color(0xFF1C1B1F) : Colors.white,
-                  ),
-                  const SizedBox(width: 8),
-                  _Pill(
-                    text: q.status == QuestStatus.active
-                        ? context.l10n
-                            .questDetailActiveUntil(_fmt(q.endDate, _dmy))
-                        : context.l10n.questDetailFinished,
-                    bg: q.status == QuestStatus.active
-                        ? const Color(0xFF22C55E)
-                        : c.card,
-                    fg: q.status == QuestStatus.active
-                        ? const Color(0xFF0D1117)
-                        : c.muted,
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        // meta
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Row(
-            children: [
-              Icon(Icons.calendar_today_outlined, size: 14, color: c.muted),
-              const SizedBox(width: 4),
-              Text(period, style: TextStyle(fontSize: 13, color: c.muted)),
-              Container(
-                  width: 1,
-                  height: 12,
-                  margin: const EdgeInsets.symmetric(horizontal: 12),
-                  color: c.muted.withValues(alpha: 0.5)),
-              Icon(Icons.shopping_cart_outlined, size: 14, color: c.muted),
-              const SizedBox(width: 4),
-              Flexible(
-                child: Text(rewardLine,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 13, color: c.muted)),
-              ),
-            ],
-          ),
-        ),
-        // progress-card
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              _Ring(
-                c: c,
-                value: q.goal == 0 ? 0 : (q.myCount / q.goal).clamp(0, 1),
-                count: q.myCount,
-                goal: q.goal,
-              ),
-              const SizedBox(width: 20),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _StatBlock(
-                        c: c,
-                        value: '$left',
-                        label: context.l10n.questDetailLeftLabel),
-                    Container(
-                        height: 1,
-                        margin: const EdgeInsets.symmetric(vertical: 12),
-                        color: c.divider),
-                    _StatBlock(
-                        c: c,
-                        value: '$pct%',
-                        label: context.l10n.questDetailDoneLabel,
-                        valueColor: const Color(0xFFF59E0B)),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-        // НАГРАДА
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(context.l10n.questDetailRewardLabel,
-                  style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 0.5,
-                      color: c.muted)),
-              const SizedBox(height: 4),
-              Text(
-                isVoucher
-                    ? context.l10n.questDetailVoucherManual
-                    : context.l10n.questDetailIqcToBalance(q.prizeIqc),
-                style: TextStyle(fontSize: 14, color: c.text),
-              ),
-            ],
-          ),
-        ),
-        // Как засчитываются чеки
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: c.card,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: c.cardBorder),
-            ),
-            child: Row(
-              children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      color: c.iconBg, borderRadius: BorderRadius.circular(20)),
-                  child: Icon(Icons.document_scanner_outlined,
-                      size: 20, color: c.muted),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(context.l10n.questDetailHowTitle,
-                          style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: c.text)),
-                      const SizedBox(height: 2),
-                      Text(
-                        context.l10n.questDetailHowBody,
-                        style: TextStyle(
-                            fontSize: 13, height: 1.4, color: c.muted),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        // Что нужно сделать
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
-          child: Container(
-            clipBehavior: Clip.antiAlias,
-            decoration: BoxDecoration(
-              color: c.card,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: c.cardBorder),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  child: Text(context.l10n.questDetailTodoTitle,
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: c.text)),
-                ),
-                _rowDivider(c),
-                _TableRow(
-                    c: c,
-                    label: context.l10n.questDetailDrugLabel,
-                    value: q.mechanics.isNotEmpty
-                        ? q.mechanics
-                            .map((m) => '${m.drug} × ${m.qty}')
-                            .join(', ')
-                        : (q.drug ?? '—')),
-                _rowDivider(c),
-                _TableRow(
-                    c: c,
-                    label: context.l10n.questDetailLimitsLabel,
-                    value: q.perUserLimit != null ? '${q.perUserLimit}' : '∞'),
-                _rowDivider(c),
-                _TableRow(
-                    c: c,
-                    label: context.l10n.questDetailPeriodLabel,
-                    value: period),
-                // «Участников» скрыто по требованию — счётчик участников пользователю не показываем.
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _rowDivider(_QD c) => Container(height: 1, color: c.tableDivider);
-}
-
-class _Pill extends StatelessWidget {
-  const _Pill({required this.text, required this.bg, required this.fg});
-  final String text;
-  final Color bg;
-  final Color fg;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration:
-          BoxDecoration(color: bg, borderRadius: BorderRadius.circular(999)),
-      child: Text(text,
-          style: TextStyle(
-              fontSize: 12, fontWeight: FontWeight.w700, color: fg)),
-    );
-  }
-}
-
-class _StatBlock extends StatelessWidget {
-  const _StatBlock({
-    required this.c,
-    required this.value,
-    required this.label,
-    this.valueColor,
-  });
-  final _QD c;
-  final String value;
-  final String label;
-  final Color? valueColor;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(value,
-            style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w700,
-                color: valueColor ?? c.text)),
-        const SizedBox(height: 4),
-        Text(label, style: TextStyle(fontSize: 11, color: c.muted)),
-      ],
-    );
-  }
-}
-
-class _TableRow extends StatelessWidget {
-  const _TableRow({required this.c, required this.label, required this.value});
-  final _QD c;
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    final unread = ref.watch(unreadCountProvider).asData?.value ?? 0;
+    return PqScreen(
+      safeBottom: false,
+      child: Column(
         children: [
-          Text(label, style: TextStyle(fontSize: 13, color: c.muted)),
-          const SizedBox(width: 12),
+          PqTabHeader(
+            onBell: () => context.go('/app/notifications'),
+            bellLabel: l.notifTitle,
+            unread: unread > 0,
+          ),
           Expanded(
-            child: Text(value,
-                textAlign: TextAlign.right,
-                style: TextStyle(fontSize: 13, color: c.text)),
+            child: PqAsync<QuestDetail>(
+              value: detail,
+              onRetry: () => ref.invalidate(questDetailProvider(id)),
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, kPqNavClearance),
+              data:
+                  (q) => _Body(
+                    q: q,
+                    onRefresh:
+                        () => ref.refresh(questDetailProvider(id).future),
+                  ),
+            ),
           ),
         ],
       ),
@@ -369,141 +53,606 @@ class _TableRow extends StatelessWidget {
   }
 }
 
-class _Ring extends StatelessWidget {
-  const _Ring(
-      {required this.c,
-      required this.value,
-      required this.count,
-      required this.goal});
-  final _QD c;
-  final double value;
-  final int count;
-  final int goal;
+class _Body extends StatelessWidget {
+  const _Body({required this.q, required this.onRefresh});
+
+  final QuestDetail q;
+  final Future<void> Function() onRefresh;
+
+  void _back(BuildContext context) =>
+      context.canPop() ? context.pop() : context.go('/app/quests');
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 110,
-      height: 110,
-      child: CustomPaint(
-        painter: _RingPainter(
-          value: value.toDouble(),
-          track: c.ringTrack,
-          fill: const Color(0xFFF59E0B),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+    final pq = context.pq;
+    final l = context.l10n;
+    final recipes = q.target == QuestTarget.recipes;
+    final active = q.status == QuestStatus.active;
+    final info = questInfoLine(q.description, drug: q.drug, brand: q.brand);
+
+    final blocks = <Widget>[
+      _Header(q: q, info: info),
+      _ProgressCard(q: q),
+      _RewardCard(q: q),
+      _Steps(q: q),
+      _Conditions(q: q),
+      _Counted(q: q),
+    ];
+
+    final navBottom = MediaQuery.paddingOf(context).bottom;
+    return Stack(
+      children: [
+        PqRefresh(
+          onRefresh: onRefresh,
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.fromLTRB(
+              16,
+              0,
+              16,
+              active ? 200 : kPqNavClearance,
+            ),
             children: [
-              Text('$count',
-                  style: const TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white)),
-              Text('/$goal',
-                  style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: c.muted)),
-              Text(context.l10n.questDetailPurchases,
-                  style: TextStyle(fontSize: 10, color: c.muted)),
+              // «‹ Квесты» (min-height 44, margin-top −8).
+              PqAnimate(
+                child: Transform.translate(
+                  offset: const Offset(0, -8),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: PqPressable(
+                      onTap: () => _back(context),
+                      semanticLabel: l.questDetailBackQuests,
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(minHeight: 44),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            PqIcon(
+                              PqIcons.chevronLeft,
+                              size: 20,
+                              color: pq.textSecondary,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              l.questDetailBackQuests,
+                              style: PqText.text(
+                                15,
+                                FontWeight.w600,
+                                c: pq.textSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 4),
+              for (var i = 0; i < blocks.length; i++) ...[
+                if (i > 0) const SizedBox(height: 24),
+                PqAnimate(
+                  delay: PqMotion.staggerDelay(i + 1),
+                  child: blocks[i],
+                ),
+              ],
             ],
           ),
         ),
+        if (active)
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: navBottom,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [pq.bg.withValues(alpha: 0), pq.bg, pq.bg],
+                  stops: const [0, .45, 1],
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 24, 16, 14),
+                child: PqButton(
+                  label: recipes ? l.questsSendRecipe : l.questsSendCheck,
+                  icon: PqIcons.camera,
+                  // API не привязывает загрузку к квесту — засчитывается
+                  // автоматически, поэтому запускаем обычную отправку.
+                  onPressed:
+                      () =>
+                          recipes
+                              ? context.push(kRxCameraPath)
+                              : showNewCheckSheet(context),
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+/// Метки (награда · статус), заголовок h1 и пояснение.
+class _Header extends StatelessWidget {
+  const _Header({required this.q, required this.info});
+
+  final QuestDetail q;
+  final String? info;
+
+  @override
+  Widget build(BuildContext context) {
+    final pq = context.pq;
+    final l = context.l10n;
+    final end = questDate(q.endDate);
+    final active = q.status == QuestStatus.active;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            QuestRewardTag(q.rewardType),
+            const SizedBox(width: 8),
+            Flexible(
+              child: QuestStatusBadge(
+                active
+                    ? (end == null
+                        ? l.questsActive
+                        : l.questDetailActiveUntil(questDm(end)))
+                    : l.questDetailFinished,
+                tone: active ? PqTone.success : PqTone.neutral,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        Text(
+          q.name,
+          style: PqText.heading(
+            30,
+            FontWeight.w700,
+            height: 1.1,
+            ls: -0.3,
+            c: pq.text,
+          ),
+        ),
+        if (info != null) ...[
+          const SizedBox(height: 10),
+          Text(info!, style: PqText.subtitle(c: pq.textMuted)),
+        ],
+      ],
+    );
+  }
+}
+
+/// Прогресс: «0 из 10 продаж» (40/800) · процент, сегменты, «Осталось …».
+class _ProgressCard extends StatelessWidget {
+  const _ProgressCard({required this.q});
+
+  final QuestDetail q;
+
+  @override
+  Widget build(BuildContext context) {
+    final pq = context.pq;
+    final l = context.l10n;
+    final p = QuestProgress.detail(q);
+    final colors = QuestColors.of(context, q.rewardType);
+    final recipes = q.target == QuestTarget.recipes;
+    final end = questDate(q.endDate);
+    final left = p.left ?? 0;
+
+    final Widget remain;
+    if (p.done) {
+      remain = Text(
+        l.questsGoalReached,
+        style: PqText.body(c: pq.textSecondary),
+      );
+    } else {
+      remain = Text.rich(
+        TextSpan(
+          children: [
+            TextSpan(
+              text:
+                  '${recipes ? l.questsRecipesLeftPrefix : l.questsSalesLeftPrefix} ',
+            ),
+            TextSpan(
+              text: recipes ? l.questsRecipesCount(left) : l.questsPacks(left),
+              style: TextStyle(fontWeight: FontWeight.w700, color: pq.text),
+            ),
+            if (end != null)
+              TextSpan(text: ' ${l.questsPeriodUntil(questDmy(end))}'),
+          ],
+        ),
+        style: PqText.body(c: pq.textSecondary),
+      );
+    }
+
+    return PqCard(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Expanded(
+                child: QuestCountText(
+                  progress: p,
+                  recipes: recipes,
+                  size: 40,
+                  weight: FontWeight.w800,
+                  tailSize: 18,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                '${p.percent}%',
+                style: PqText.text(15, FontWeight.w700, c: colors.accent),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          PqSegmentProgress(
+            total: p.segments,
+            filled: p.filledSegments,
+            fillColor: colors.fill,
+            trackColor: colors.track,
+            height: 8,
+          ),
+          if (p.goal != null && p.goal! > 0) ...[
+            const SizedBox(height: 14),
+            remain,
+          ],
+        ],
       ),
     );
   }
 }
 
-class _RingPainter extends CustomPainter {
-  _RingPainter({required this.value, required this.track, required this.fill});
-  final double value;
-  final Color track;
-  final Color fill;
+/// Награда на градиенте кошелька: плитка 52 с подарком, «НАГРАДА», сумма.
+class _RewardCard extends StatelessWidget {
+  const _RewardCard({required this.q});
+
+  final QuestDetail q;
 
   @override
-  void paint(Canvas canvas, Size size) {
-    const stroke = 9.0;
-    final rect = Offset.zero & size;
-    final center = rect.center;
-    final radius = (size.width - stroke) / 2;
-
-    final trackPaint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = stroke
-      ..color = track;
-    canvas.drawCircle(center, radius, trackPaint);
-
-    if (value > 0) {
-      final fillPaint = Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = stroke
-        ..strokeCap = StrokeCap.round
-        ..color = fill;
-      canvas.drawArc(
-        Rect.fromCircle(center: center, radius: radius),
-        -math.pi / 2,
-        2 * math.pi * value,
-        false,
-        fillPaint,
-      );
-    }
+  Widget build(BuildContext context) {
+    final pq = context.pq;
+    final l = context.l10n;
+    final voucher = q.rewardType == RewardType.voucher;
+    final shop = questVoucherShop(q.description);
+    final title =
+        voucher
+            ? (shop == null ? l.questsPillVoucher : l.questsVoucherTitle(shop))
+            : '+${q.prizeIqc} IQC';
+    final sub =
+        q.rewardReceived
+            ? l.questsRewardReceived
+            : voucher
+            ? l.questsRewardManual
+            : l.questsRewardIqcSub;
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: pq.walletGradient,
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 52,
+            height: 52,
+            decoration: BoxDecoration(
+              color: voucher ? PqColors.voucher : PqColors.reward,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            alignment: Alignment.center,
+            child: PqIcon(
+              q.rewardReceived ? PqIcons.checkCheck : PqIcons.gift,
+              size: 24,
+              color: voucher ? PqColors.onVoucher : Colors.white,
+            ),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l.questsRewardLabel.toUpperCase(),
+                  style: PqText.overline(c: pq.walletMuted),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  title,
+                  style: PqText.heading(18, FontWeight.w700, c: Colors.white),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  sub,
+                  style: PqText.body(c: pq.walletMuted).copyWith(height: 1.4),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
-
-  @override
-  bool shouldRepaint(_RingPainter old) =>
-      old.value != value || old.track != track || old.fill != fill;
 }
 
-// ── Палитра ─────────────────────────────────────────────────────────────
+/// «Что нужно сделать»: три пронумерованных шага.
+class _Steps extends StatelessWidget {
+  const _Steps({required this.q});
 
-class _QD {
-  const _QD({
-    required this.page,
-    required this.card,
-    required this.cardBorder,
-    required this.tableDivider,
-    required this.divider,
-    required this.iconBg,
-    required this.ringTrack,
-    required this.text,
-    required this.muted,
-  });
+  final QuestDetail q;
 
-  final Color page;
-  final Color card;
-  final Color cardBorder;
-  final Color tableDivider;
-  final Color divider;
-  final Color iconBg;
-  final Color ringTrack;
-  final Color text;
-  final Color muted;
+  @override
+  Widget build(BuildContext context) {
+    final pq = context.pq;
+    final l = context.l10n;
+    final recipes = q.target == QuestTarget.recipes;
+    final voucher = q.rewardType == RewardType.voucher;
+    final drugs =
+        q.mechanics.isNotEmpty
+            ? q.mechanics.map((m) => m.drug).join(', ')
+            : (q.drug ?? q.name);
+    final goal = q.goal;
+    final steps = [
+      (
+        recipes
+            ? l.questsStepPrescribeDrug(drugs)
+            : l.questsStepSellDrug(drugs),
+        goal <= 0
+            ? null
+            : recipes
+            ? l.questsNeedPrescribe(l.questsRecipesCount(goal))
+            : l.questsNeedSell(l.questsPacks(goal)),
+      ),
+      (
+        recipes ? l.questsStepPhotoRecipe : l.questsStepPhotoCheck,
+        recipes ? l.questsStepPhotoRecipeSub : l.questsStepPhotoCheckSub,
+      ),
+      (
+        voucher ? l.questsStepGetVoucher : l.questsStepGetIqc(q.prizeIqc),
+        voucher ? l.questsRewardManual : l.questsRewardIqcSub,
+      ),
+    ];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        PqSectionHeader(l.questDetailTodoTitle),
+        const SizedBox(height: 12),
+        PqCard(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          child: Column(
+            children: [
+              for (var i = 0; i < steps.length; i++)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 32,
+                        height: 32,
+                        decoration: BoxDecoration(
+                          color: pq.accentSoft,
+                          shape: BoxShape.circle,
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          '${i + 1}',
+                          style: PqText.heading(
+                            16,
+                            FontWeight.w700,
+                            c: pq.accentText,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              steps[i].$1,
+                              style: PqText.text(
+                                15,
+                                FontWeight.w600,
+                                c: pq.text,
+                              ),
+                            ),
+                            if (steps[i].$2 != null) ...[
+                              const SizedBox(height: 2),
+                              Text(
+                                steps[i].$2!,
+                                style: PqText.body(
+                                  c: pq.textMuted,
+                                ).copyWith(height: 1.4),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
 
-  static _QD of(BuildContext context) =>
-      Theme.of(context).brightness == Brightness.dark ? _dark : _light;
+/// «Условия»: период, лимит, препараты механики.
+class _Conditions extends StatelessWidget {
+  const _Conditions({required this.q});
 
-  static const _dark = _QD(
-    page: Color(0xFF0D1117),
-    card: Color(0xFF151B2A),
-    cardBorder: Color(0xFF1F2530),
-    tableDivider: Color(0xFF3A3458),
-    divider: Color(0xFF1E2A3A),
-    iconBg: Color(0xFF1F2937),
-    ringTrack: Color(0xFF1E2A3A),
-    text: Color(0xFFE4E2ED),
-    muted: Color(0xFF8F909A),
-  );
+  final QuestDetail q;
 
-  static const _light = _QD(
-    page: Color(0xFFF5F6FA),
-    card: Colors.white,
-    cardBorder: Color(0xFFEBEDF0),
-    tableDivider: Color(0xFFEBEDF0),
-    divider: Color(0xFFEBEDF0),
-    iconBg: Color(0xFFF2F4F7),
-    ringTrack: Color(0xFFE8EBF0),
-    text: Color(0xFF1A1D26),
-    muted: Color(0xFF6B7280),
-  );
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l10n;
+    final recipes = q.target == QuestTarget.recipes;
+    final rows = <(PqIcons, String, String)>[
+      (
+        PqIcons.calendar,
+        l.questDetailPeriodLabel,
+        questPeriod(l, q.startDate, q.endDate),
+      ),
+      (
+        PqIcons.infinity,
+        recipes ? l.questsRecipesLimit : l.questsSalesLimit,
+        q.perUserLimit == null ? l.questsNoLimit : '${q.perUserLimit}',
+      ),
+      (PqIcons.users, l.questDetailParticipantsLabel, '${q.participants}'),
+      for (final m in q.mechanics)
+        (PqIcons.pill, m.drug, l.questsPacksShort(m.qty)),
+    ];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        PqSectionHeader(l.questsConditionsTitle),
+        const SizedBox(height: 12),
+        _RowsCard(rows: rows),
+      ],
+    );
+  }
+}
+
+class _RowsCard extends StatelessWidget {
+  const _RowsCard({required this.rows});
+
+  final List<(PqIcons, String, String)> rows;
+
+  @override
+  Widget build(BuildContext context) {
+    final pq = context.pq;
+    return PqCard(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      child: Column(
+        children: [
+          for (var i = 0; i < rows.length; i++)
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              decoration: BoxDecoration(
+                border:
+                    i < rows.length - 1
+                        ? Border(bottom: BorderSide(color: pq.divider))
+                        : null,
+              ),
+              child: Row(
+                children: [
+                  // Иконка в строчном span макета — строка 23.4, svg сверху.
+                  SizedBox(
+                    height: 23.4,
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: PqIcon(rows[i].$1, size: 18, color: pq.textMuted),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      rows[i].$2,
+                      style: PqText.body(c: pq.textMuted).copyWith(height: 1.4),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 220),
+                    child: Text(
+                      rows[i].$3,
+                      textAlign: TextAlign.right,
+                      style: PqText.text(14, FontWeight.w600, c: pq.text),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+/// «Засчитанные чеки»: пусто — заглушка; иначе итог и переход к чекам.
+/// Списка чеков по квесту API не отдаёт — только счётчик.
+class _Counted extends StatelessWidget {
+  const _Counted({required this.q});
+
+  final QuestDetail q;
+
+  @override
+  Widget build(BuildContext context) {
+    final pq = context.pq;
+    final l = context.l10n;
+    final recipes = q.target == QuestTarget.recipes;
+    final Widget content;
+    if (q.myCount <= 0) {
+      content = Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 20),
+        child: Column(
+          children: [
+            // Иконка в строчном span: строка 33.4 (svg на базовой линии
+            // 16px-строки с интерлиньяжем 1.4).
+            SizedBox(
+              height: 33.4,
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: PqIcon(PqIcons.receipt, size: 28, color: pq.textMuted),
+              ),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              recipes ? l.questsCountedEmptyRecipes : l.questsCountedEmpty,
+              textAlign: TextAlign.center,
+              style: PqText.text(15, FontWeight.w600, c: pq.text),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              recipes
+                  ? l.questsCountedEmptySubRecipes
+                  : l.questsCountedEmptySub,
+              textAlign: TextAlign.center,
+              style: PqText.body(c: pq.textMuted).copyWith(height: 1.4),
+            ),
+          ],
+        ),
+      );
+    } else {
+      content = PqListRow(
+        icon: PqIcons.receipt,
+        tone: PqTone.success,
+        title:
+            recipes
+                ? l.questsCountedRecipes(q.myCount)
+                : l.questsCountedSales(q.myCount),
+        subtitle: recipes ? l.questsAllRecipes : l.questsAllChecks,
+        chevron: true,
+        onTap: () => context.go(recipes ? '/app/recipes' : '/app/checks'),
+      );
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        PqSectionHeader(
+          recipes ? l.questsCountedRecipesTitle : l.questsCountedTitle,
+        ),
+        const SizedBox(height: 12),
+        PqCard(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          child: content,
+        ),
+      ],
+    );
+  }
 }

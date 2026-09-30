@@ -1,404 +1,107 @@
-import '../../../core/app_modules.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import '../../../core/api/providers.dart';
+import '../../../core/app_modules.dart';
 import '../../../core/auth/auth_controller.dart';
+import '../../../core/design/design.dart';
 import '../../../core/l10n/l10n.dart';
-import '../../../core/legal.dart';
 import '../../../core/l10n/locale_controller.dart';
 import '../../../core/models/common.dart';
-import '../../../core/models/quest.dart';
 import '../../../core/theme/theme_controller.dart';
-import '../../pharmacist/providers.dart';
-import '../role_select/role_select_screen.dart';
-import '../widgets/pharm_top_bar.dart';
-import '../widgets/screen_decor.dart';
-import '../../../widgets/dialog_buttons.dart';
+import '../../../widgets/pq_states.dart';
+import '../../medrep/providers.dart';
+import '../providers.dart';
+import '../../tour/tour_controller.dart';
+import '../settings/notification_settings_screen.dart';
+import 'delete_account_sheet.dart';
+import 'profile_phone_sheet.dart';
+import 'profile_role_sheet.dart';
+import 'profile_widgets.dart';
 
-/// Профиль пользователя. Перенесён один в один из макета Figma
-/// «pharmiq-profile-connected» (node 20:493 / 46:1147).
-class ProfileScreen extends ConsumerWidget {
+/// Профиль (макеты Profile / DocProfile / MedProfile / ProfileNew).
+///
+/// Один экран с вариантами по активной роли: фармацевт, врач, медпред
+/// (строка «Компания» — из списка компаний медпреда). Пока ФИО не заполнено,
+/// показывается вариант «Новый пользователь» с карточкой активации.
+class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final c = _Pal.of(context);
-    final auth = ref.watch(authControllerProvider).asData?.value;
-    final account = auth?.account;
-    final themeMode = ref.watch(themeModeProvider);
-    final iqc = ref.watch(walletProvider).asData?.value.balanceIqc ?? 0;
-    // Счётчик квестов — только для активной роли (врач: рецепты, иначе чеки).
-    final questTarget = auth?.activeRole == Role.doctor
-        ? QuestTarget.recipes
-        : QuestTarget.checks;
-    final questsCount =
-        ref.watch(questsListProvider(questTarget)).asData?.value.length ?? 0;
-    final multiRole = (account?.roles.length ?? 0) > 1;
-    final roleLabel = auth?.activeRole?.label(context.l10n) ?? '';
-    final name = account?.fullName ?? '—';
+  ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
+}
 
-    return Scaffold(
-      backgroundColor: c.page,
-      body: Stack(children: [Positioned.fill(child: ScreenDecor(profileDecor)), Column(
-        children: [
-          const PharmTopBar(),
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
-              children: [
-                Text(context.l10n.profileTitle,
-                    style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w700,
-                        color: c.text)),
-                const SizedBox(height: 15),
+class _ProfileScreenState extends ConsumerState<ProfileScreen> with WidgetsBindingObserver {
+  /// Пользователь ушёл в Telegram-бот привязывать аккаунт — по возвращении
+  /// в приложение проверяем привязку (AccountApi.telegramLinkConfirm).
+  bool _awaitingTelegram = false;
 
-                // ── Карточка профиля ──
-                _ProfileCard(
-                  c: c,
-                  name: name,
-                  roleLabel: roleLabel,
-                  subtitle: account?.phone ?? '',
-                  iqc: iqc,
-                  quests: questsCount,
-                ),
-                const SizedBox(height: 15),
-
-                // ── Настройки ──
-                Text(context.l10n.profileSettings,
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                        color: c.text)),
-                const SizedBox(height: 12),
-                _Card(
-                  c: c,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Компактная строка языка (как у роли): «Язык · текущий»
-                      // + «Сменить» → модалка выбора из 5 языков.
-                      _AccountRow(
-                        c: c,
-                        circle: c.circleRole,
-                        icon: Icons.language,
-                        iconColor: c.iconOnNavy,
-                        title: context.l10n.profileLanguageTitle,
-                        subtitle: _localeName(
-                            ref.watch(localeProvider).languageCode),
-                        trailing: _ChangeBtn(
-                          c: c,
-                          text: context.l10n.profileChange,
-                          border: c.changeAccent,
-                          textColor: c.changeAccentText,
-                          onTap: () => _showLanguageSheet(context, ref),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      _Divider(c: c),
-                      const SizedBox(height: 12),
-                      _MiniLabel(c: c, text: context.l10n.profileAppearance),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          for (final (m, label) in [
-                            (ThemeMode.light, context.l10n.profileThemeLight),
-                            (ThemeMode.dark, context.l10n.profileThemeDark),
-                            (ThemeMode.system, context.l10n.profileThemeSystem),
-                          ]) ...[
-                            _Pill(
-                              c: c,
-                              label: label,
-                              selected: themeMode == m,
-                              onTap: () =>
-                                  ref.read(themeModeProvider.notifier).set(m),
-                            ),
-                            const SizedBox(width: 4),
-                          ],
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 15),
-
-                // ── Аккаунт ──
-                Padding(
-                  padding: const EdgeInsets.only(top: 12, bottom: 8),
-                  child: Text(context.l10n.profileAccount,
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: c.text)),
-                ),
-                _Card(
-                  c: c,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _MiniLabel(c: c, text: context.l10n.profilePersonalData),
-                      const SizedBox(height: 12),
-                      _AccountRow(
-                        c: c,
-                        circle: c.circleNavy,
-                        icon: Icons.person_outline,
-                        iconColor: c.iconOnNavy,
-                        title: name,
-                        trailing: _OutlineBadge(c: c, text: roleLabel),
-                      ),
-                      const SizedBox(height: 12),
-                      _AccountRow(
-                        c: c,
-                        circle: c.circleRole,
-                        icon: Icons.work_outline,
-                        iconColor: c.iconOnNavy,
-                        title: context.l10n.profileRole,
-                        subtitle: roleLabel,
-                        trailing: multiRole
-                            ? _ChangeBtn(
-                                c: c,
-                                text: context.l10n.profileChange,
-                                border: c.changeAccent,
-                                textColor: c.changeAccentText,
-                                onTap: () => showRoleSelectSheet(context),
-                              )
-                            : null,
-                      ),
-                      const SizedBox(height: 12),
-                      _Divider(c: c),
-                      const SizedBox(height: 12),
-                      _MiniLabel(
-                          c: c, text: context.l10n.profileLinkedServices),
-                      const SizedBox(height: 12),
-                      _AccountRow(
-                        c: c,
-                        circle: c.circlePhone,
-                        icon: Icons.phone_outlined,
-                        iconColor: c.iconOnNavy,
-                        title: context.l10n.profilePhone,
-                        subtitle: account?.phone ?? '—',
-                        trailing: _ChangeBtn(
-                          c: c,
-                          text: context.l10n.profileChange,
-                          border: c.changeNeutral,
-                          textColor: c.text,
-                          onTap: () => _changePhone(context, ref),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      _Divider(c: c),
-                      const SizedBox(height: 12),
-                      _AccountRow(
-                        c: c,
-                        circle: const Color(0xFF1A73C8),
-                        icon: Icons.send,
-                        iconColor: Colors.white,
-                        title: 'Telegram',
-                        subtitle: context.l10n.profileTgConnected,
-                        trailing: _StatusPill(
-                          bg: c.tgPillBg,
-                          text: context.l10n.profileTgLinked,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 15),
-
-                // ── Поддержка ── (можно спрятать из админки)
-                if (ref.moduleVisible('support')) ...[
-                  _TileCard(
-                    c: c,
-                    circle: const Color(0xFF1A3566),
-                    icon: Icons.headset_mic_outlined,
-                    iconColor: Colors.white,
-                    title: context.l10n.profileSupport,
-                    subtitle: context.l10n.profileSupportSubtitle,
-                    chevron: true,
-                    onTap: () => context.push('/app/support'),
-                  ),
-                  const SizedBox(height: 12),
-                ],
-                _TileCard(
-                  c: c,
-                  circle: c.circlePlain,
-                  icon: Icons.privacy_tip_outlined,
-                  iconColor: c.iconOnNavy,
-                  title: context.l10n.profilePrivacy,
-                  subtitle: context.l10n.profilePrivacySubtitle,
-                  chevron: true,
-                  onTap: () => launchUrl(Uri.parse(kPrivacyPolicyUrl),
-                      mode: LaunchMode.externalApplication),
-                ),
-                const SizedBox(height: 12),
-                _TileCard(
-                  c: c,
-                  circle: c.circlePlain,
-                  icon: Icons.logout,
-                  iconColor: c.iconOnNavy,
-                  title: context.l10n.profileLogout,
-                  onTap: () => _confirmLogout(context, ref),
-                ),
-                const SizedBox(height: 15),
-
-                // ── Удаление ──
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(context.l10n.profileDeleteTitle,
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                    color: c.deleteText)),
-                            const SizedBox(height: 2),
-                            Text(context.l10n.profileDeleteIrreversible,
-                                style: TextStyle(
-                                    fontSize: 11, color: c.deleteSub)),
-                          ],
-                        ),
-                      ),
-                      Material(
-                        color: c.deleteBtn,
-                        borderRadius: BorderRadius.circular(20),
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(20),
-                          onTap: () => _deleteAccount(context, ref),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 8),
-                            child: Text(context.l10n.profileDelete,
-                                style: const TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.white)),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      )]),
-    );
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
   }
 
-  /// Названия языков всегда пишутся на самом языке — не локализуются.
-  static String _localeName(String code) => switch (code) {
-        'ru' => 'Русский',
-        'uz' => "O'zbekcha",
-        'kk' => 'Қазақша',
-        'tg' => 'Тоҷикӣ',
-        'ky' => 'Кыргызча',
-        _ => code,
-      };
-
-  /// Модалка выбора языка интерфейса (в стиле шита смены роли).
-  Future<void> _showLanguageSheet(BuildContext context, WidgetRef ref) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final sheetBg = isDark ? const Color(0xFF1E2039) : Colors.white;
-    final divider =
-        isDark ? const Color(0xFF3F4168) : const Color(0xFFF3F4F6);
-    final textColor =
-        isDark ? const Color(0xFFFEFEFE) : const Color(0xFF111827);
-    const brandBlue = Color(0xFF2563EB);
-    final current = ref.read(localeProvider).languageCode;
-
-    return showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (sheetCtx) => Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: sheetBg,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-        ),
-        child: SafeArea(
-          top: false,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const SizedBox(height: 10),
-              Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: divider,
-                  borderRadius: BorderRadius.circular(999),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                context.l10n.profileChooseLanguage,
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w700,
-                  color: textColor,
-                ),
-              ),
-              const SizedBox(height: 8),
-              for (final l in supportedAppLocales) ...[
-                InkWell(
-                  onTap: () {
-                    Navigator.of(sheetCtx).pop();
-                    _setLocale(context, ref, l);
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24, vertical: 14),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            _localeName(l.languageCode),
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: l.languageCode == current
-                                  ? FontWeight.w700
-                                  : FontWeight.w500,
-                              color: l.languageCode == current
-                                  ? brandBlue
-                                  : textColor,
-                            ),
-                          ),
-                        ),
-                        if (l.languageCode == current)
-                          const Icon(Icons.check_circle,
-                              size: 22, color: brandBlue),
-                      ],
-                    ),
-                  ),
-                ),
-                if (l != supportedAppLocales.last)
-                  Divider(height: 1, color: divider),
-              ],
-              const SizedBox(height: 12),
-            ],
-          ),
-        ),
-      ),
-    );
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
-  Future<void> _setLocale(
-      BuildContext context, WidgetRef ref, Locale locale) async {
-    final messenger = ScaffoldMessenger.of(context);
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && _awaitingTelegram) {
+      _awaitingTelegram = false;
+      _confirmTelegram();
+    }
+  }
+
+  // ── Действия ──────────────────────────────────────────────────────────
+
+  Future<void> _linkTelegram() async {
+    try {
+      final r = await ref.read(apiProvider).account.telegramLinkStart();
+      var opened = false;
+      final deep = Uri.tryParse(r.deepLink);
+      if (deep != null) {
+        try {
+          opened = await launchUrl(deep, mode: LaunchMode.externalApplication);
+        } catch (_) {
+          opened = false;
+        }
+      }
+      if (!opened) {
+        await launchUrl(Uri.parse(r.botUrl), mode: LaunchMode.externalApplication);
+      }
+      _awaitingTelegram = true;
+    } catch (e) {
+      if (mounted) showPqToast(context, profileErrorText(context, e), tone: PqTone.danger);
+    }
+  }
+
+  Future<void> _confirmTelegram() async {
+    try {
+      final r = await ref.read(apiProvider).account.telegramLinkConfirm();
+      ref.invalidate(accountSettingsProvider);
+      if (!mounted) return;
+      final l = context.l10n;
+      if (r.linked) {
+        showPqToast(context, l.profileTgLinkedToast, icon: PqIcons.send);
+      } else {
+        showPqToast(context, l.profileTgNotYet, tone: PqTone.warning, icon: PqIcons.send);
+      }
+    } catch (_) {
+      // Проверка по возвращении — best effort; статус подтянется при обновлении.
+    }
+  }
+
+  Future<void> _setLocale(Locale locale) async {
     // Интерфейс переключаем сразу и локально — это главное действие.
     ref.read(localeProvider.notifier).set(locale);
-    // Снекбар — уже на новом языке (context ещё не перестроен, берём напрямую).
-    messenger.showSnackBar(SnackBar(
-        content:
-            Text(lookupAppLocalizations(locale).profileLanguageUpdated)));
+    showPqToast(context, lookupAppLocalizations(locale).profileLanguageUpdated,
+        icon: PqIcons.globe);
     // Бэкенд знает только ru/uz/kz — синхронизируем, где возможно (для
     // рассылок/контента). tg и ky на сервере не представлены — пропускаем.
     final backendLang = switch (locale.languageCode) {
@@ -416,692 +119,512 @@ class ProfileScreen extends ConsumerWidget {
     }
   }
 
-  Future<void> _changePhone(BuildContext context, WidgetRef ref) async {
-    final phone = TextEditingController(text: '+998');
-    final started = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(ctx.l10n.profileNewPhoneTitle),
-        content: TextField(
-          controller: phone,
-          keyboardType: TextInputType.phone,
-          decoration: InputDecoration(labelText: ctx.l10n.profilePhone),
-        ),
-        actions: [
-          DialogButtons(
-            cancelLabel: ctx.l10n.profileCancel,
-            onCancel: () => Navigator.pop(ctx, false),
-            confirmLabel: ctx.l10n.profileNext,
-            onConfirm: () => Navigator.pop(ctx, true),
-          ),
-        ],
-      ),
+  Future<void> _logout() async {
+    final l = context.l10n;
+    final ok = await showPqConfirm(
+      context,
+      title: l.profileLogoutConfirmTitle,
+      message: l.profileLogoutConfirmBody,
+      confirmLabel: l.profileLogoutAction,
+      cancelLabel: l.profileCancel,
+      danger: true,
+      icon: PqIcons.logout,
     );
-    if (started != true || !context.mounted) return;
-
-    final messenger = ScaffoldMessenger.of(context);
-    try {
-      await ref.read(apiProvider).account.changePhoneStart(phone.text.trim());
-    } catch (e) {
-      messenger.showSnackBar(SnackBar(content: Text(e.toString())));
-      return;
-    }
-    if (!context.mounted) return;
-
-    final code = TextEditingController();
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(ctx.l10n.profileSmsCodeTitle),
-        content: TextField(
-          controller: code,
-          keyboardType: TextInputType.number,
-          decoration: InputDecoration(labelText: ctx.l10n.profileCodeLabel),
-        ),
-        actions: [
-          DialogButtons(
-            cancelLabel: ctx.l10n.profileCancel,
-            onCancel: () => Navigator.pop(ctx, false),
-            confirmLabel: ctx.l10n.profileConfirm,
-            onConfirm: () => Navigator.pop(ctx, true),
-          ),
-        ],
-      ),
-    );
-    if (confirmed != true || !context.mounted) return;
-    try {
-      await ref
-          .read(apiProvider)
-          .account
-          .changePhoneConfirm(phone.text.trim(), code.text.trim());
-      ref.invalidate(authControllerProvider);
-      if (context.mounted) {
-        messenger.showSnackBar(
-            SnackBar(content: Text(context.l10n.profilePhoneChanged)));
-      }
-    } catch (e) {
-      messenger.showSnackBar(SnackBar(content: Text(e.toString())));
-    }
+    if (ok) await ref.read(authControllerProvider.notifier).logout();
   }
 
-  Future<void> _confirmLogout(BuildContext context, WidgetRef ref) async {
-    final ok = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(ctx.l10n.profileLogoutConfirmTitle),
-        content: Text(ctx.l10n.profileLogoutConfirmBody),
-        actions: [
-          DialogButtons(
-            cancelLabel: ctx.l10n.profileCancel,
-            onCancel: () => Navigator.pop(ctx, false),
-            confirmLabel: ctx.l10n.profileLogoutAction,
-            onConfirm: () => Navigator.pop(ctx, true),
-            destructive: true,
-          ),
-        ],
-      ),
-    );
-    if (ok == true) await ref.read(authControllerProvider.notifier).logout();
+  Future<void> _refresh() async {
+    ref.invalidate(accountSettingsProvider);
+    ref.invalidate(notificationSettingsProvider);
+    ref.invalidate(unreadCountProvider);
+    await Future.wait<Object?>([
+      ref.read(accountSettingsProvider.future).then<Object?>((v) => v, onError: (_) => null),
+      ref.read(notificationSettingsProvider.future).then<Object?>((v) => v, onError: (_) => null),
+    ]);
   }
 
-  Future<void> _deleteAccount(BuildContext context, WidgetRef ref) async {
-    final ok = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(ctx.l10n.profileDeleteConfirmTitle),
-        content: Text(ctx.l10n.profileDeleteConfirmBody),
-        actions: [
-          DialogButtons(
-            cancelLabel: ctx.l10n.profileCancel,
-            onCancel: () => Navigator.pop(ctx, false),
-            confirmLabel: ctx.l10n.profileDelete,
-            onConfirm: () => Navigator.pop(ctx, true),
-            destructive: true,
-          ),
-        ],
-      ),
-    );
-    if (ok != true || !context.mounted) return;
-    final messenger = ScaffoldMessenger.of(context);
-    try {
-      await ref.read(apiProvider).account.deleteAccount();
-      await ref.read(authControllerProvider.notifier).logout();
-    } catch (e) {
-      messenger.showSnackBar(SnackBar(content: Text(e.toString())));
-    }
-  }
-}
+  /// Названия языков всегда пишутся на самом языке — не локализуются.
+  static String _localeName(String code) => switch (code) {
+        'ru' => 'Русский',
+        'uz' => "O'zbekcha",
+        'kk' => 'Қазақша',
+        'tg' => 'Тоҷикӣ',
+        'ky' => 'Кыргызча',
+        _ => code,
+      };
 
-// ── Карточка профиля ────────────────────────────────────────────────────
-
-class _ProfileCard extends StatelessWidget {
-  const _ProfileCard({
-    required this.c,
-    required this.name,
-    required this.roleLabel,
-    required this.subtitle,
-    required this.iqc,
-    required this.quests,
-  });
-
-  final _Pal c;
-  final String name;
-  final String roleLabel;
-  final String subtitle;
-  final int iqc;
-  final int quests;
+  // ── Разметка ──────────────────────────────────────────────────────────
 
   @override
   Widget build(BuildContext context) {
-    final initials = name.trim().isEmpty
-        ? '?'
-        : name
-            .trim()
-            .split(RegExp(r'\s+'))
-            .take(2)
-            .map((w) => w[0])
-            .join()
-            .toUpperCase();
-    final fmt = NumberFormat.decimalPattern('ru');
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: c.card,
-        borderRadius: BorderRadius.circular(16),
-        border: c.cardBorder == null ? null : Border.all(color: c.cardBorder!),
+    final pq = context.pq;
+    final l = context.l10n;
+    final auth = ref.watch(authControllerProvider).asData?.value;
+    final account = auth?.account;
+    final role = auth?.activeRole;
+    final name = account?.fullName.trim() ?? '';
+    final isNew = account != null && name.isEmpty;
+    final tgLinked = ref.watch(accountSettingsProvider).asData?.value.telegramLinked;
+    final notif = ref.watch(notificationSettingsProvider).asData?.value;
+    final unread = ref.watch(unreadCountProvider).asData?.value ?? 0;
+    final companies = role == Role.medrep
+        ? ref.watch(companiesProvider).asData?.value.map((c) => c.name).join(', ')
+        : null;
+    final roleLabel = role?.label(l) ?? '';
+
+    final (workLabel, noWork) = switch (role) {
+      Role.pharmacist => (l.profilePharmacy, l.profileNoPharmacy),
+      Role.doctor => (l.profileClinic, l.profileNoClinic),
+      _ => (l.profileCompany, l.profileNoCompany),
+    };
+    final hasCompany = companies != null && companies.isNotEmpty;
+
+    void edit() => context.push('/app/profile/edit');
+
+    final sections = <Widget>[
+      Semantics(header: true, child: Text(l.profileTitle, style: PqText.display(c: pq.text))),
+      _HeaderCard(
+        name: isNew ? l.profileNewUser : name,
+        avatarName: name,
+        subtitle: isNew
+            ? (hasCompany ? companies : noWork)
+            : [roleLabel, if (hasCompany) companies].join(' · '),
+        subtitleWarning: isNew && !hasCompany,
+        onEdit: edit,
       ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 56,
-                height: 56,
+      if (isNew)
+        _ActivationCard(
+          role: role,
+          phone: profileFormatPhone(account.phone),
+          tgLinked: tgLinked ?? false,
+          onSpecify: edit,
+          onLinkTelegram: _linkTelegram,
+          onSupport: ref.moduleVisible('support') ? () => context.push('/app/support') : null,
+        ),
+      ProfileSection(title: l.profileAccount, children: [
+        ProfileRow(
+          icon: PqIcons.user,
+          title: l.profilePersonalDataRow,
+          subtitle: isNew ? l.profileNameNotSet : name,
+          onTap: edit,
+        ),
+        if (isNew || hasCompany)
+          ProfileRow(
+            icon: PqIcons.building,
+            title: workLabel,
+            value: hasCompany ? companies : l.profileNotSpecified,
+            valueColor: hasCompany ? null : pq.warning,
+            onTap: role == Role.medrep ? () => context.push('/app/companies') : edit,
+          ),
+        ProfileRow(
+          icon: PqIcons.shieldCheck,
+          title: l.profileRole,
+          value: role == Role.medrep ? l.profileRoleShortMedrep : roleLabel,
+          onTap: () => showProfileRoleSheet(context),
+        ),
+      ]),
+      ProfileSection(title: l.profileSectionContact, children: [
+        ProfileRow(
+          icon: PqIcons.phone,
+          title: l.profilePhone,
+          value: account == null ? '—' : profileFormatPhone(account.phone),
+          onTap: () => showProfilePhoneSheet(context),
+        ),
+        ProfileRow(
+          icon: PqIcons.send,
+          title: 'Telegram',
+          subtitle: tgLinked == false ? l.profileTgNotLinked : null,
+          trailing: switch (tgLinked) {
+            true => Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: pq.successSoft,
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(l.profileTgLinked, style: PqText.tag(c: pq.success)),
+              ),
+            false => Container(
+                height: 32,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: c.avatarBg,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: c.avatarBorder),
+                  color: pq.accent,
+                  borderRadius: BorderRadius.circular(16),
                 ),
-                child: Text(initials,
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        color: c.text)),
+                child: Text(l.profileTgLink,
+                    style: PqText.text(13, FontWeight.w700, c: pq.onAccent)),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Flexible(
-                          child: Text(name,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w700,
-                                  color: c.text)),
-                        ),
-                        const SizedBox(width: 8),
-                        if (roleLabel.isNotEmpty)
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: c.badgeBg,
-                              borderRadius: BorderRadius.circular(999),
-                            ),
-                            child: Text(roleLabel.toUpperCase(),
-                                style: TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w700,
-                                    color: c.text)),
-                          ),
-                      ],
-                    ),
-                    const SizedBox(height: 4),
-                    Text(subtitle,
-                        style: TextStyle(fontSize: 13, color: c.muted)),
-                  ],
-                ),
-              ),
-            ],
+            null => const SizedBox.shrink(),
+          },
+          onTap: tgLinked == false ? _linkTelegram : null,
+        ),
+      ]),
+      ProfileSection(title: l.profileSettings, children: [
+        _SettingGroup(
+          icon: PqIcons.globe,
+          title: l.profileLanguageTitle,
+          child: ProfileSegGrid<String>(
+            semanticLabel: l.profileLanguageTitle,
+            columns: 2,
+            values: [for (final loc in supportedAppLocales) loc.languageCode],
+            selected: ref.watch(localeProvider).languageCode,
+            labelOf: _localeName,
+            onChanged: (code) =>
+                _setLocale(supportedAppLocales.firstWhere((x) => x.languageCode == code)),
           ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(child: _Stat(c: c, value: fmt.format(iqc), label: 'IQC')),
-              _statDivider(c),
-              Expanded(
-                  child: _Stat(
-                      c: c,
-                      value: '$quests',
-                      label: context.l10n.profileStatQuests)),
-              // «УРОВЕНЬ» скрыт по требованию (был заглушкой '1' — фактического уровня нет).
-            ],
+        ),
+        _SettingGroup(
+          icon: PqIcons.moon,
+          title: l.profileAppearanceTitle,
+          child: ProfileSegGrid<ThemeMode>(
+            semanticLabel: l.profileAppearanceTitle,
+            columns: 3,
+            values: const [ThemeMode.light, ThemeMode.dark, ThemeMode.system],
+            selected: ref.watch(themeModeProvider),
+            labelOf: (m) => switch (m) {
+              ThemeMode.light => l.profileThemeLight,
+              ThemeMode.dark => l.profileThemeDark,
+              ThemeMode.system => l.profileThemeSystem,
+            },
+            onChanged: (m) => ref.read(themeModeProvider.notifier).set(m),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _statDivider(_Pal c) =>
-      Container(width: 1, height: 40, color: c.divider);
-}
-
-class _Stat extends StatelessWidget {
-  const _Stat({required this.c, required this.value, required this.label});
-  final _Pal c;
-  final String value;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(value,
-            style: TextStyle(
-                fontSize: 24, fontWeight: FontWeight.w700, color: c.text)),
-        const SizedBox(height: 4),
-        Text(label,
-            style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
-                color: c.muted)),
-      ],
-    );
-  }
-}
-
-// ── Строки аккаунта / плитки ────────────────────────────────────────────
-
-class _AccountRow extends StatelessWidget {
-  const _AccountRow({
-    required this.c,
-    required this.circle,
-    required this.icon,
-    required this.iconColor,
-    required this.title,
-    this.subtitle,
-    this.trailing,
-  });
-
-  final _Pal c;
-  final Color circle;
-  final IconData icon;
-  final Color iconColor;
-  final String title;
-  final String? subtitle;
-  final Widget? trailing;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 40,
-      child: Row(
-        children: [
-          Container(
-            width: 36,
-            height: 36,
-            alignment: Alignment.center,
-            decoration:
-                BoxDecoration(color: circle, borderRadius: BorderRadius.circular(18)),
-            child: Icon(icon, size: 18, color: iconColor),
+        ),
+        ProfileRow(
+          icon: PqIcons.bell,
+          title: l.notifTitle,
+          value: notif == null
+              ? null
+              : (notif.checks || notif.quests || notif.learning || notif.marketing)
+                  ? l.profileNotifOn
+                  : l.profileNotifOff,
+          onTap: () => showNotificationSettingsSheet(context),
+        ),
+      ]),
+      ProfileSection(children: [
+        if (ref.moduleVisible('support'))
+          ProfileRow(
+            icon: PqIcons.headphones,
+            accent: true,
+            title: l.profileSupport,
+            subtitle: l.profileSupportSubtitle,
+            onTap: () => context.push('/app/support'),
           ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        color: c.text)),
-                if (subtitle != null) ...[
-                  const SizedBox(height: 2),
-                  Text(subtitle!,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 12, color: c.muted)),
-                ],
-              ],
+        ProfileRow(
+          icon: PqIcons.shield,
+          title: l.profilePrivacyShort,
+          subtitle: l.profilePrivacySubtitle,
+          onTap: () => context.push('/app/privacy'),
+        ),
+        // Повтор обучающего тура (спецификация TourSpec: «Профиль → Пройти
+        // обучение заново» запускает тур с приветствия на главной).
+        if (TourController.supports(
+            ref.watch(authControllerProvider).asData?.value.activeRole))
+          ProfileRow(
+            icon: PqIcons.sparkles,
+            title: l.profileTourAgain,
+            onTap: () {
+              context.go('/app');
+              WidgetsBinding.instance.addPostFrameCallback(
+                  (_) => ref.read(tourProvider.notifier).start());
+            },
+          ),
+      ]),
+      ProfileSection(children: [
+        ProfileRow(
+          icon: PqIcons.logout,
+          title: l.profileLogout,
+          chevron: false,
+          onTap: _logout,
+        ),
+      ]),
+      Padding(
+        padding: const EdgeInsets.only(top: 4),
+        child: Column(children: [
+          PqPressable(
+            onTap: () => showDeleteAccountSheet(context),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minHeight: 44),
+              child: Row(mainAxisSize: MainAxisSize.min, children: [
+                PqIcon(PqIcons.trash, size: 16, color: pq.danger),
+                const SizedBox(width: 6),
+                Text(l.profileDeleteAccount, style: PqText.link(c: pq.danger)),
+              ]),
             ),
           ),
-          if (trailing != null) ...[const SizedBox(width: 8), trailing!],
-        ],
+          const SizedBox(height: 4),
+          Text(l.profileVersion(kProfileAppVersion), style: PqText.caption(c: pq.textMuted)),
+        ]),
       ),
+    ];
+
+    return PqScreen(
+      safeBottom: false,
+      child: Column(children: [
+        PqTabHeader(
+          onBell: () => context.push('/app/notifications'),
+          bellLabel: l.notifTitle,
+          unread: unread > 0,
+        ),
+        Expanded(
+          child: PqRefresh(
+            onRefresh: _refresh,
+            child: ListView.separated(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, kPqNavClearance),
+              itemCount: sections.length,
+              separatorBuilder: (_, __) => const SizedBox(height: 22),
+              itemBuilder: (_, i) =>
+                  PqAnimate(delay: PqMotion.staggerDelay(i), child: sections[i]),
+            ),
+          ),
+        ),
+      ]),
     );
   }
 }
 
-class _TileCard extends StatelessWidget {
-  const _TileCard({
-    required this.c,
-    required this.circle,
-    required this.icon,
-    required this.iconColor,
-    required this.title,
-    this.subtitle,
-    this.chevron = false,
-    required this.onTap,
+/// Карточка профиля: аватар 64 · имя Onest 20/700 + подпись 14 · «редактировать» 44.
+class _HeaderCard extends StatelessWidget {
+  const _HeaderCard({
+    required this.name,
+    required this.avatarName,
+    required this.subtitle,
+    required this.subtitleWarning,
+    required this.onEdit,
   });
 
-  final _Pal c;
-  final Color circle;
-  final IconData icon;
-  final Color iconColor;
-  final String title;
-  final String? subtitle;
-  final bool chevron;
-  final VoidCallback onTap;
+  final String name;
+  final String avatarName;
+  final String subtitle;
+  final bool subtitleWarning;
+  final VoidCallback onEdit;
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: c.card,
-      borderRadius: BorderRadius.circular(16),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(16),
-        onTap: onTap,
-        child: Container(
-          constraints: const BoxConstraints(minHeight: 56),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            border:
-                c.cardBorder == null ? null : Border.all(color: c.cardBorder!),
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 36,
-                height: 36,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    color: circle, borderRadius: BorderRadius.circular(18)),
-                child: Icon(icon, size: 20, color: iconColor),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(title,
-                        style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                            color: c.text)),
-                    if (subtitle != null) ...[
-                      const SizedBox(height: 2),
-                      Text(subtitle!,
-                          style: TextStyle(fontSize: 12, color: c.muted)),
-                    ],
-                  ],
-                ),
-              ),
-              if (chevron)
-                Container(
-                  width: 28,
-                  height: 28,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      color: c.circlePlain,
-                      borderRadius: BorderRadius.circular(14)),
-                  child: Icon(Icons.chevron_right, size: 16, color: c.muted),
-                ),
+    final pq = context.pq;
+    return PqCard(
+      radius: 24,
+      padding: const EdgeInsets.all(18),
+      child: Row(children: [
+        ProfileAvatar(name: avatarName),
+        const SizedBox(width: 14),
+        Expanded(
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(name, style: PqText.heading(20, FontWeight.w700, c: pq.text)),
+            if (subtitle.isNotEmpty) ...[
+              const SizedBox(height: 3),
+              Text(subtitle,
+                  style: PqText.text(14, FontWeight.w400,
+                      c: subtitleWarning ? pq.warning : pq.textMuted)),
             ],
-          ),
+          ]),
         ),
-      ),
+        const SizedBox(width: 14),
+        PqIconButton(
+          icon: PqIcons.pen,
+          iconSize: 18,
+          label: context.l10n.profileEditAria,
+          background: pq.surfaceAlt,
+          onTap: onEdit,
+        ),
+      ]),
     );
   }
 }
 
-// ── Мелкие элементы ─────────────────────────────────────────────────────
+/// Группа настройки: строка «плитка + название» и сегменты под ней.
+class _SettingGroup extends StatelessWidget {
+  const _SettingGroup({required this.icon, required this.title, required this.child});
 
-class _Card extends StatelessWidget {
-  const _Card({required this.c, required this.child});
-  final _Pal c;
+  final PqIcons icon;
+  final String title;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
+    final pq = context.pq;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        Row(children: [
+          ProfileRowTile(icon),
+          const SizedBox(width: 12),
+          Text(title, style: PqText.text(16, FontWeight.w500, c: pq.text)),
+        ]),
+        const SizedBox(height: 10),
+        child,
+      ]),
+    );
+  }
+}
+
+/// «Активируйте профиль» (макет ProfileNew): прогресс 4 шага + шаги.
+class _ActivationCard extends StatelessWidget {
+  const _ActivationCard({
+    required this.role,
+    required this.phone,
+    required this.tgLinked,
+    required this.onSpecify,
+    required this.onLinkTelegram,
+    required this.onSupport,
+  });
+
+  final Role? role;
+  final String phone;
+  final bool tgLinked;
+  final VoidCallback onSpecify;
+  final VoidCallback onLinkTelegram;
+  final VoidCallback? onSupport;
+
+  @override
+  Widget build(BuildContext context) {
+    final pq = context.pq;
+    final l = context.l10n;
+    const total = 4;
+    final done = 1 + (tgLinked ? 1 : 0);
+    final (workTitle, workHint) = switch (role) {
+      Role.pharmacist => (l.profileStepPharmacy, l.profileStepWorkHint),
+      Role.doctor => (l.profileStepClinic, l.profileStepWorkHint),
+      _ => (l.profileStepProfile, l.profileStepProfileHint),
+    };
+    // Номер «ожидающего» шага — по порядку среди невыполненных.
+    var n = 1;
+
+    Widget step({
+      required Widget mark,
+      required String title,
+      required String hint,
+      bool done = false,
+      String? action,
+      VoidCallback? onAction,
+    }) =>
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: Row(children: [
+            mark,
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(title,
+                    style: PqText.text(15, FontWeight.w600, c: done ? pq.textMuted : pq.text)
+                        .copyWith(decoration: done ? TextDecoration.lineThrough : null)),
+                const SizedBox(height: 1),
+                Text(hint, style: PqText.text(13, FontWeight.w400, c: pq.textMuted)),
+              ]),
+            ),
+            if (action != null) ...[
+              const SizedBox(width: 12),
+              PqPillButton(label: action, height: 36, onPressed: onAction),
+            ],
+          ]),
+        );
+
+    Widget doneMark() => Container(
+          width: 28,
+          height: 28,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(color: pq.success, shape: BoxShape.circle),
+          child: PqIcon(PqIcons.check, size: 16, color: pq.bg),
+        );
+    Widget numMark(int i) => Container(
+          width: 28,
+          height: 28,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: pq.warning, width: 2),
+          ),
+          child: Text('$i', style: PqText.text(13, FontWeight.w700, c: pq.warning)),
+        );
+
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
       decoration: BoxDecoration(
-        color: c.card,
-        borderRadius: BorderRadius.circular(16),
-        border: c.cardBorder == null ? null : Border.all(color: c.cardBorder!),
+        color: pq.surface,
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: pq.warning),
+        boxShadow: pq.cardShadow,
       ),
-      child: child,
-    );
-  }
-}
-
-class _MiniLabel extends StatelessWidget {
-  const _MiniLabel({required this.c, required this.text});
-  final _Pal c;
-  final String text;
-
-  @override
-  Widget build(BuildContext context) => Text(text,
-      style: TextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.w600,
-          letterSpacing: 0.5,
-          color: c.muted));
-}
-
-class _Divider extends StatelessWidget {
-  const _Divider({required this.c});
-  final _Pal c;
-  @override
-  Widget build(BuildContext context) =>
-      Container(height: 1, color: c.divider);
-}
-
-class _Pill extends StatelessWidget {
-  const _Pill({
-    required this.c,
-    required this.label,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final _Pal c;
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        height: 32,
-        alignment: Alignment.center,
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        decoration: BoxDecoration(
-          color: selected ? c.pillSelBg : c.pillUnselBg,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-              color: selected ? c.pillSelBorder : c.pillUnselBorder),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        Row(children: [
+          PqIcon(PqIcons.alertCircle, size: 20, color: pq.warning),
+          const SizedBox(width: 10),
+          Expanded(child: Text(l.profileActivateTitle, style: PqText.title(c: pq.text))),
+          const SizedBox(width: 10),
+          Text(l.profileActivateProgress(done, total),
+              style: PqText.text(14, FontWeight.w700, c: pq.warning)),
+        ]),
+        const SizedBox(height: 6),
+        Text(l.profileActivateBody, style: PqText.body(c: pq.textSecondary)),
+        const SizedBox(height: 4 + 6),
+        PqSegmentProgress(
+          total: total,
+          filled: done,
+          height: 4,
+          fillColor: pq.success,
+          trackColor: pq.isDark ? pq.border : const Color(0xFFE5E7EB),
         ),
-        child: Text(label,
-            style: TextStyle(
-                fontSize: 14,
-                fontWeight: selected ? FontWeight.w700 : FontWeight.w600,
-                color: selected ? c.pillSelText : c.pillUnselText)),
-      ),
-    );
-  }
-}
-
-class _OutlineBadge extends StatelessWidget {
-  const _OutlineBadge({required this.c, required this.text});
-  final _Pal c;
-  final String text;
-  @override
-  Widget build(BuildContext context) {
-    if (text.isEmpty) return const SizedBox.shrink();
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: c.circleNavy),
-      ),
-      child: Text(text,
-          style: TextStyle(
-              fontSize: 11, fontWeight: FontWeight.w600, color: c.text)),
-    );
-  }
-}
-
-class _ChangeBtn extends StatelessWidget {
-  const _ChangeBtn({
-    required this.c,
-    required this.text,
-    required this.border,
-    required this.textColor,
-    required this.onTap,
-  });
-
-  final _Pal c;
-  final String text;
-  final Color border;
-  final Color textColor;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
-      child: Container(
-        height: 28,
-        alignment: Alignment.center,
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: border),
+        const SizedBox(height: 4 + 6),
+        step(
+          mark: doneMark(),
+          title: l.profileStepPhone,
+          hint: phone,
+          done: true,
         ),
-        child: Text(text,
-            style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: textColor)),
-      ),
+        const SizedBox(height: 6),
+        step(
+          mark: numMark(++n),
+          title: workTitle,
+          hint: workHint,
+          action: l.profileStepSpecify,
+          onAction: onSpecify,
+        ),
+        const SizedBox(height: 6),
+        tgLinked
+            ? step(
+                mark: doneMark(),
+                title: l.profileTgLinkedToast,
+                hint: l.profileStepTelegramHint,
+                done: true,
+              )
+            : step(
+                mark: numMark(++n),
+                title: l.profileStepTelegram,
+                hint: l.profileStepTelegramHint,
+                action: l.profileTgLink,
+                onAction: onLinkTelegram,
+              ),
+        const SizedBox(height: 6),
+        step(
+          mark: ProfileDashedCircle(
+            size: 28,
+            color: pq.borderStrong,
+            child: PqIcon(PqIcons.clock, size: 14, color: pq.textMuted),
+          ),
+          title: l.profileStepAdmin,
+          hint: l.profileStepAdminHint,
+        ),
+        if (onSupport != null) ...[
+          const SizedBox(height: 2 + 6),
+          DecoratedBox(
+            decoration: BoxDecoration(border: Border(top: BorderSide(color: pq.divider))),
+            child: PqPressable(
+              onTap: onSupport,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(minHeight: 44),
+                child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  PqIcon(PqIcons.headphones, size: 16, color: pq.accent),
+                  const SizedBox(width: 6),
+                  Flexible(
+                    child: Text(l.profileActivateHelp,
+                        textAlign: TextAlign.center, style: PqText.link(c: pq.accent)),
+                  ),
+                ]),
+              ),
+            ),
+          ),
+        ],
+      ]),
     );
   }
-}
-
-class _StatusPill extends StatelessWidget {
-  const _StatusPill({required this.bg, required this.text});
-  final Color bg;
-  final String text;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
-      child: Text(text.toUpperCase(),
-          style: const TextStyle(
-              fontSize: 11, fontWeight: FontWeight.w700, color: Colors.white)),
-    );
-  }
-}
-
-// ── Палитра профиля (точные токены макета) ──────────────────────────────
-
-class _Pal {
-  const _Pal({
-    required this.page,
-    required this.card,
-    required this.cardBorder,
-    required this.text,
-    required this.muted,
-    required this.divider,
-    required this.avatarBg,
-    required this.avatarBorder,
-    required this.badgeBg,
-    required this.pillSelBg,
-    required this.pillSelBorder,
-    required this.pillSelText,
-    required this.pillUnselBg,
-    required this.pillUnselBorder,
-    required this.pillUnselText,
-    required this.circleNavy,
-    required this.circleRole,
-    required this.circlePhone,
-    required this.circlePlain,
-    required this.iconOnNavy,
-    required this.changeAccent,
-    required this.changeAccentText,
-    required this.changeNeutral,
-    required this.tgPillBg,
-    required this.deleteText,
-    required this.deleteSub,
-    required this.deleteBtn,
-  });
-
-  final Color page;
-  final Color card;
-  final Color? cardBorder;
-  final Color text;
-  final Color muted;
-  final Color divider;
-  final Color avatarBg;
-  final Color avatarBorder;
-  final Color badgeBg;
-  final Color pillSelBg;
-  final Color pillSelBorder;
-  final Color pillSelText;
-  final Color pillUnselBg;
-  final Color pillUnselBorder;
-  final Color pillUnselText;
-  final Color circleNavy;
-  final Color circleRole;
-  final Color circlePhone;
-  final Color circlePlain;
-  final Color iconOnNavy;
-  final Color changeAccent;
-  final Color changeAccentText;
-  final Color changeNeutral;
-  final Color tgPillBg;
-  final Color deleteText;
-  final Color deleteSub;
-  final Color deleteBtn;
-
-  static _Pal of(BuildContext context) =>
-      Theme.of(context).brightness == Brightness.dark ? _dark : _light;
-
-  static const _dark = _Pal(
-    page: Color(0xFF0B0E17),
-    card: Color(0xFF12192B),
-    cardBorder: null,
-    text: Color(0xFFE4E2ED),
-    muted: Color(0xFF8F909A),
-    divider: Color(0x14FFFFFF),
-    avatarBg: Color(0xFF0B0E17),
-    avatarBorder: Color(0x1FFFFFFF),
-    badgeBg: Color(0x14FFFFFF),
-    pillSelBg: Color(0xFF151B2A),
-    pillSelBorder: Color(0x1FFFFFFF),
-    pillSelText: Color(0xFFE4E2ED),
-    pillUnselBg: Color(0xFF0B0E17),
-    pillUnselBorder: Color(0x14FFFFFF),
-    pillUnselText: Color(0xFF8F909A),
-    circleNavy: Color(0xFF1A2540),
-    circleRole: Color(0xFF1E202D),
-    circlePhone: Color(0xFF2D2E38),
-    circlePlain: Color(0xFF0B0E17),
-    iconOnNavy: Color(0xFFAAB6DA),
-    changeAccent: Color(0xFF2563EB),
-    changeAccentText: Color(0xFF60A5FA),
-    changeNeutral: Colors.white,
-    tgPillBg: Color(0xFF1B5E20),
-    deleteText: Color(0xFFFF5252),
-    deleteSub: Color(0xFF6B7280),
-    deleteBtn: Color(0xFFB71C1C),
-  );
-
-  static const _light = _Pal(
-    page: Color(0xFFF5F6FA),
-    card: Colors.white,
-    cardBorder: Color(0xFFEBEDF0),
-    text: Color(0xFF1A1D26),
-    muted: Color(0xFF6B7280),
-    divider: Color(0xFFEBEDF0),
-    avatarBg: Color(0xFFEEF2FF),
-    avatarBorder: Color(0xFFD4DAFB),
-    badgeBg: Color(0xFFEEF2FF),
-    pillSelBg: Color(0xFF2563EB),
-    pillSelBorder: Color(0xFF2563EB),
-    pillSelText: Colors.white,
-    pillUnselBg: Colors.white,
-    pillUnselBorder: Color(0xFFEBEDF0),
-    pillUnselText: Color(0xFF6B7280),
-    circleNavy: Color(0xFFEEF2FF),
-    circleRole: Color(0xFFEEF2FF),
-    circlePhone: Color(0xFFF2F5F7),
-    circlePlain: Color(0xFFF2F5F7),
-    iconOnNavy: Color(0xFF2563EB),
-    changeAccent: Color(0xFF2563EB),
-    changeAccentText: Color(0xFF2563EB),
-    changeNeutral: Color(0xFFD0D5DD),
-    tgPillBg: Color(0xFF10B981),
-    deleteText: Color(0xFFEF4444),
-    deleteSub: Color(0xFF9CA3AF),
-    deleteBtn: Color(0xFFDC2626),
-  );
 }

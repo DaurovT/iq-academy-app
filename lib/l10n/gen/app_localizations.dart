@@ -497,7 +497,7 @@ abstract class AppLocalizations {
   /// No description provided for @sapperLegendEmpty.
   ///
   /// In ru, this message translates to:
-  /// **'Пустые'**
+  /// **'Пусто'**
   String get sapperLegendEmpty;
 
   /// No description provided for @sapperLegendVoucher.
@@ -515,7 +515,7 @@ abstract class AppLocalizations {
   /// No description provided for @sapperLegendOccupied.
   ///
   /// In ru, this message translates to:
-  /// **'Занято'**
+  /// **'Заняты другими'**
   String get sapperLegendOccupied;
 
   /// No description provided for @sapperLegendFree.
@@ -899,7 +899,7 @@ abstract class AppLocalizations {
   /// No description provided for @profileSupportSubtitle.
   ///
   /// In ru, this message translates to:
-  /// **'Мы всегда на связи'**
+  /// **'Отвечаем в Telegram и по телефону'**
   String get profileSupportSubtitle;
 
   /// No description provided for @profileLogout.
@@ -3727,6 +3727,5166 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Если акция отменена, все потраченные баллы возвращаются. Участвовать могут пользователи старше 18 лет, участие добровольное.'**
   String get sapperRule8;
+
+  /// No description provided for @stateServerErrorTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Что-то пошло не так'**
+  String get stateServerErrorTitle;
+
+  /// No description provided for @stateServerErrorText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Мы уже знаем о проблеме и чиним её. Попробуйте ещё раз через минуту'**
+  String get stateServerErrorText;
+
+  /// No description provided for @stateWriteSupport.
+  ///
+  /// In ru, this message translates to:
+  /// **'Написать в поддержку'**
+  String get stateWriteSupport;
+
+  /// No description provided for @stateErrorCode.
+  ///
+  /// In ru, this message translates to:
+  /// **'Код ошибки: {code}'**
+  String stateErrorCode(String code);
+
+  /// No description provided for @stateOfflineTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет подключения к интернету'**
+  String get stateOfflineTitle;
+
+  /// No description provided for @stateOfflineText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Проверьте Wi‑Fi или мобильный интернет. Экран обновится сам, как только связь появится'**
+  String get stateOfflineText;
+
+  /// No description provided for @stateOfflineBanner.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет соединения · данные от {time}'**
+  String stateOfflineBanner(String time);
+
+  /// No description provided for @stateOfflineBannerShort.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет соединения'**
+  String get stateOfflineBannerShort;
+
+  /// No description provided for @stateOfflineSendHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправка станет доступна, когда появится интернет'**
+  String get stateOfflineSendHint;
+
+  /// No description provided for @stateRefreshing.
+  ///
+  /// In ru, this message translates to:
+  /// **'Обновляем…'**
+  String get stateRefreshing;
+
+  /// No description provided for @miniAppsNewGamesTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Новые мини-приложения'**
+  String get miniAppsNewGamesTitle;
+
+  /// No description provided for @miniAppsNewGamesText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Уже в разработке — сообщим, когда появятся'**
+  String get miniAppsNewGamesText;
+
+  /// No description provided for @sapperBackTo.
+  ///
+  /// In ru, this message translates to:
+  /// **'Назад: {label}'**
+  String sapperBackTo(String label);
+
+  /// No description provided for @sapperPrizesCount.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{{n} приз} few{{n} приза} many{{n} призов} other{{n} приза}}'**
+  String sapperPrizesCount(int n);
+
+  /// No description provided for @sapperMyCellsCount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ваших клеток: {n}'**
+  String sapperMyCellsCount(int n);
+
+  /// No description provided for @sapperResultsIn.
+  ///
+  /// In ru, this message translates to:
+  /// **'Итоги через {time}'**
+  String sapperResultsIn(String time);
+
+  /// No description provided for @sapperCellPriceTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Цена клетки'**
+  String get sapperCellPriceTitle;
+
+  /// No description provided for @sapperMyCellsTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ваших клеток'**
+  String get sapperMyCellsTitle;
+
+  /// No description provided for @sapperOccupiedTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Занято клеток'**
+  String get sapperOccupiedTitle;
+
+  /// No description provided for @sapperOccupiedOf.
+  ///
+  /// In ru, this message translates to:
+  /// **'{occupied} из {total}'**
+  String sapperOccupiedOf(int occupied, int total);
+
+  /// No description provided for @sapperOfTotal.
+  ///
+  /// In ru, this message translates to:
+  /// **'из {total}'**
+  String sapperOfTotal(int total);
+
+  /// No description provided for @sapperHiddenLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'На поле спрятано'**
+  String get sapperHiddenLabel;
+
+  /// No description provided for @sapperHowTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Как участвовать'**
+  String get sapperHowTitle;
+
+  /// No description provided for @sapperStep1Title.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выберите клетки'**
+  String get sapperStep1Title;
+
+  /// No description provided for @sapperStep1Text.
+  ///
+  /// In ru, this message translates to:
+  /// **'Каждая стоит {price} IQC. Можно занять сразу несколько'**
+  String sapperStep1Text(int price);
+
+  /// No description provided for @sapperStep2Title.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дождитесь подведения итогов'**
+  String get sapperStep2Title;
+
+  /// No description provided for @sapperStep2Text.
+  ///
+  /// In ru, this message translates to:
+  /// **'Раз в неделю поле открывается для всех'**
+  String get sapperStep2Text;
+
+  /// No description provided for @sapperStep3Title.
+  ///
+  /// In ru, this message translates to:
+  /// **'Получите приз'**
+  String get sapperStep3Title;
+
+  /// No description provided for @sapperStep3Text.
+  ///
+  /// In ru, this message translates to:
+  /// **'IQC зачислим на баланс, ваучер появится в кошельке'**
+  String get sapperStep3Text;
+
+  /// No description provided for @sapperSelectHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нажмите на свободные клетки, чтобы выбрать'**
+  String get sapperSelectHint;
+
+  /// No description provided for @sapperSelectedHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выбрано: {n} · спишем {price} IQC'**
+  String sapperSelectedHint(int n, int price);
+
+  /// No description provided for @sapperTakeCta.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{Занять {n} клетку} few{Занять {n} клетки} many{Занять {n} клеток} other{Занять {n} клетки}} · {price} IQC'**
+  String sapperTakeCta(int n, int price);
+
+  /// No description provided for @sapperTakenToast.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{+{n} клетку} few{+{n} клетки} many{+{n} клеток} other{+{n} клетки}} — ждём итогов'**
+  String sapperTakenToast(int n);
+
+  /// No description provided for @sapperReserveManyTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{Занять {n} клетку?} few{Занять {n} клетки?} many{Занять {n} клеток?} other{Занять {n} клетки?}}'**
+  String sapperReserveManyTitle(int n);
+
+  /// No description provided for @sapperCellFree.
+  ///
+  /// In ru, this message translates to:
+  /// **'Свободная клетка'**
+  String get sapperCellFree;
+
+  /// No description provided for @sapperCellTheirs.
+  ///
+  /// In ru, this message translates to:
+  /// **'Занята другим участником'**
+  String get sapperCellTheirs;
+
+  /// No description provided for @sapperCellMine.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ваша клетка'**
+  String get sapperCellMine;
+
+  /// No description provided for @sapperCellSelected.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выбрана, нажмите чтобы снять'**
+  String get sapperCellSelected;
+
+  /// No description provided for @sapperCellEmpty.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пусто'**
+  String get sapperCellEmpty;
+
+  /// No description provided for @sapperCellPrize.
+  ///
+  /// In ru, this message translates to:
+  /// **'Приз: {label}'**
+  String sapperCellPrize(String label);
+
+  /// No description provided for @sapperGridLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Поле {cols} на {rows}'**
+  String sapperGridLabel(int cols, int rows);
+
+  /// No description provided for @sapperGridRevealed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Открытое поле'**
+  String get sapperGridRevealed;
+
+  /// No description provided for @sapperWonTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вы получили {prize}'**
+  String sapperWonTitle(String prize);
+
+  /// No description provided for @sapperWonText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Уже на балансе · призовых клеток: {wins} из {total}'**
+  String sapperWonText(int wins, int total);
+
+  /// No description provided for @sapperNotParticipated.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вы не участвовали в этой акции'**
+  String get sapperNotParticipated;
+
+  /// No description provided for @sapperRevealedOn.
+  ///
+  /// In ru, this message translates to:
+  /// **'Итоги подведены · {date}'**
+  String sapperRevealedOn(String date);
+
+  /// No description provided for @sapperWinnerYou.
+  ///
+  /// In ru, this message translates to:
+  /// **'вы'**
+  String get sapperWinnerYou;
+
+  /// No description provided for @sapperWinnerCell.
+  ///
+  /// In ru, this message translates to:
+  /// **'Клетка №{n}'**
+  String sapperWinnerCell(int n);
+
+  /// No description provided for @sapperPlayNew.
+  ///
+  /// In ru, this message translates to:
+  /// **'Участвовать в новой акции'**
+  String get sapperPlayNew;
+
+  /// No description provided for @sapperViewResults.
+  ///
+  /// In ru, this message translates to:
+  /// **'Посмотреть итоги'**
+  String get sapperViewResults;
+
+  /// No description provided for @questsSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Продавайте и получайте награды'**
+  String get questsSubtitle;
+
+  /// No description provided for @questsSubtitleDoctor.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выписывайте рецепты и получайте награды'**
+  String get questsSubtitleDoctor;
+
+  /// No description provided for @questsSearchLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Поиск квестов'**
+  String get questsSearchLabel;
+
+  /// No description provided for @questsTabDone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Завершённые'**
+  String get questsTabDone;
+
+  /// No description provided for @questsSortHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сначала — ближе всего к награде'**
+  String get questsSortHint;
+
+  /// No description provided for @questsAlmostDone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Почти готово'**
+  String get questsAlmostDone;
+
+  /// No description provided for @questsCompleted.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выполнено'**
+  String get questsCompleted;
+
+  /// No description provided for @questsOfGoalSales.
+  ///
+  /// In ru, this message translates to:
+  /// **'{goal, plural, one{из {goal} продажи} few{из {goal} продаж} many{из {goal} продаж} other{из {goal} продаж}}'**
+  String questsOfGoalSales(int goal);
+
+  /// No description provided for @questsOfGoalRecipes.
+  ///
+  /// In ru, this message translates to:
+  /// **'{goal, plural, one{из {goal} рецепта} few{из {goal} рецептов} many{из {goal} рецептов} other{из {goal} рецептов}}'**
+  String questsOfGoalRecipes(int goal);
+
+  /// No description provided for @questsLeftShort.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ещё {n}'**
+  String questsLeftShort(int n);
+
+  /// No description provided for @questsMore.
+  ///
+  /// In ru, this message translates to:
+  /// **'Подробнее'**
+  String get questsMore;
+
+  /// No description provided for @questsHowTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Как работают квесты'**
+  String get questsHowTitle;
+
+  /// No description provided for @questsStepSellTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Продайте'**
+  String get questsStepSellTitle;
+
+  /// No description provided for @questsStepSellSub.
+  ///
+  /// In ru, this message translates to:
+  /// **'препарат'**
+  String get questsStepSellSub;
+
+  /// No description provided for @questsStepPrescribeTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выпишите'**
+  String get questsStepPrescribeTitle;
+
+  /// No description provided for @questsStepPrescribeSub.
+  ///
+  /// In ru, this message translates to:
+  /// **'рецепт'**
+  String get questsStepPrescribeSub;
+
+  /// No description provided for @questsStepSendTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправьте'**
+  String get questsStepSendTitle;
+
+  /// No description provided for @questsStepSendCheckSub.
+  ///
+  /// In ru, this message translates to:
+  /// **'фото чека'**
+  String get questsStepSendCheckSub;
+
+  /// No description provided for @questsStepSendRecipeSub.
+  ///
+  /// In ru, this message translates to:
+  /// **'фото рецепта'**
+  String get questsStepSendRecipeSub;
+
+  /// No description provided for @questsStepGetTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Получите'**
+  String get questsStepGetTitle;
+
+  /// No description provided for @questsStepGetSub.
+  ///
+  /// In ru, this message translates to:
+  /// **'награду'**
+  String get questsStepGetSub;
+
+  /// No description provided for @questsDoneFooter.
+  ///
+  /// In ru, this message translates to:
+  /// **'Здесь хранятся выполненные и завершённые квесты — с датой и полученной наградой'**
+  String get questsDoneFooter;
+
+  /// No description provided for @questsDoneOn.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выполнен · {date}'**
+  String questsDoneOn(String date);
+
+  /// No description provided for @questsEndedOn.
+  ///
+  /// In ru, this message translates to:
+  /// **'Завершён · {date}'**
+  String questsEndedOn(String date);
+
+  /// No description provided for @questsEmptyDoneTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пока нет завершённых квестов'**
+  String get questsEmptyDoneTitle;
+
+  /// No description provided for @questsMonthName.
+  ///
+  /// In ru, this message translates to:
+  /// **'{m, select, m1{Январь} m2{Февраль} m3{Март} m4{Апрель} m5{Май} m6{Июнь} m7{Июль} m8{Август} m9{Сентябрь} m10{Октябрь} m11{Ноябрь} m12{Декабрь} other{}}'**
+  String questsMonthName(String m);
+
+  /// No description provided for @questsSalesLeftPrefix.
+  ///
+  /// In ru, this message translates to:
+  /// **'Осталось продать'**
+  String get questsSalesLeftPrefix;
+
+  /// No description provided for @questsRecipesLeftPrefix.
+  ///
+  /// In ru, this message translates to:
+  /// **'Осталось выписать'**
+  String get questsRecipesLeftPrefix;
+
+  /// No description provided for @questsPacks.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{{n} упаковку} few{{n} упаковки} many{{n} упаковок} other{{n} упаковки}}'**
+  String questsPacks(int n);
+
+  /// No description provided for @questsRecipesCount.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{{n} рецепт} few{{n} рецепта} many{{n} рецептов} other{{n} рецепта}}'**
+  String questsRecipesCount(int n);
+
+  /// No description provided for @questsGoalReached.
+  ///
+  /// In ru, this message translates to:
+  /// **'Цель достигнута — награда будет начислена после проверки'**
+  String get questsGoalReached;
+
+  /// No description provided for @questsRewardLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Награда'**
+  String get questsRewardLabel;
+
+  /// No description provided for @questsVoucherTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ваучер {shop}'**
+  String questsVoucherTitle(String shop);
+
+  /// No description provided for @questsRewardManual.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выдаётся вручную после проверки'**
+  String get questsRewardManual;
+
+  /// No description provided for @questsRewardIqcSub.
+  ///
+  /// In ru, this message translates to:
+  /// **'Баллы придут на баланс после проверки'**
+  String get questsRewardIqcSub;
+
+  /// No description provided for @questsRewardReceived.
+  ///
+  /// In ru, this message translates to:
+  /// **'Награда получена'**
+  String get questsRewardReceived;
+
+  /// No description provided for @questsStepSellDrug.
+  ///
+  /// In ru, this message translates to:
+  /// **'Продайте {drug}'**
+  String questsStepSellDrug(String drug);
+
+  /// No description provided for @questsStepPrescribeDrug.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выпишите {drug}'**
+  String questsStepPrescribeDrug(String drug);
+
+  /// No description provided for @questsNeedSell.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нужно продать {packs}'**
+  String questsNeedSell(String packs);
+
+  /// No description provided for @questsNeedPrescribe.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нужно выписать {recipes}'**
+  String questsNeedPrescribe(String recipes);
+
+  /// No description provided for @questsStepPhotoCheck.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сфотографируйте чек'**
+  String get questsStepPhotoCheck;
+
+  /// No description provided for @questsStepPhotoCheckSub.
+  ///
+  /// In ru, this message translates to:
+  /// **'ИИ проверит упаковку автоматически'**
+  String get questsStepPhotoCheckSub;
+
+  /// No description provided for @questsStepPhotoRecipe.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сфотографируйте рецепт'**
+  String get questsStepPhotoRecipe;
+
+  /// No description provided for @questsStepPhotoRecipeSub.
+  ///
+  /// In ru, this message translates to:
+  /// **'ИИ проверит рецепт автоматически'**
+  String get questsStepPhotoRecipeSub;
+
+  /// No description provided for @questsStepGetVoucher.
+  ///
+  /// In ru, this message translates to:
+  /// **'Получите ваучер'**
+  String get questsStepGetVoucher;
+
+  /// No description provided for @questsStepGetIqc.
+  ///
+  /// In ru, this message translates to:
+  /// **'Получите {n} IQC'**
+  String questsStepGetIqc(int n);
+
+  /// No description provided for @questsConditionsTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Условия'**
+  String get questsConditionsTitle;
+
+  /// No description provided for @questsSalesLimit.
+  ///
+  /// In ru, this message translates to:
+  /// **'Лимит продаж'**
+  String get questsSalesLimit;
+
+  /// No description provided for @questsRecipesLimit.
+  ///
+  /// In ru, this message translates to:
+  /// **'Лимит рецептов'**
+  String get questsRecipesLimit;
+
+  /// No description provided for @questsNoLimit.
+  ///
+  /// In ru, this message translates to:
+  /// **'Без ограничений'**
+  String get questsNoLimit;
+
+  /// No description provided for @questsPacksShort.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n} уп.'**
+  String questsPacksShort(int n);
+
+  /// No description provided for @questsCountedTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Засчитанные чеки'**
+  String get questsCountedTitle;
+
+  /// No description provided for @questsCountedRecipesTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Засчитанные рецепты'**
+  String get questsCountedRecipesTitle;
+
+  /// No description provided for @questsCountedEmpty.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пока ни одного чека'**
+  String get questsCountedEmpty;
+
+  /// No description provided for @questsCountedEmptyRecipes.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пока ни одного рецепта'**
+  String get questsCountedEmptyRecipes;
+
+  /// No description provided for @questsCountedEmptySub.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чеки по квесту появятся здесь после проверки'**
+  String get questsCountedEmptySub;
+
+  /// No description provided for @questsCountedEmptySubRecipes.
+  ///
+  /// In ru, this message translates to:
+  /// **'Рецепты по квесту появятся здесь после проверки'**
+  String get questsCountedEmptySubRecipes;
+
+  /// No description provided for @questsCountedSales.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{Засчитана {n} продажа} few{Засчитано {n} продажи} many{Засчитано {n} продаж} other{Засчитано {n} продажи}}'**
+  String questsCountedSales(int n);
+
+  /// No description provided for @questsCountedRecipes.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{Засчитан {n} рецепт} few{Засчитано {n} рецепта} many{Засчитано {n} рецептов} other{Засчитано {n} рецепта}}'**
+  String questsCountedRecipes(int n);
+
+  /// No description provided for @questsAllChecks.
+  ///
+  /// In ru, this message translates to:
+  /// **'Все чеки'**
+  String get questsAllChecks;
+
+  /// No description provided for @questsAllRecipes.
+  ///
+  /// In ru, this message translates to:
+  /// **'Все рецепты'**
+  String get questsAllRecipes;
+
+  /// No description provided for @questsSendCheck.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправить чек по квесту'**
+  String get questsSendCheck;
+
+  /// No description provided for @questsSendRecipe.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправить рецепт по квесту'**
+  String get questsSendRecipe;
+
+  /// No description provided for @questsSearchPlaceholder.
+  ///
+  /// In ru, this message translates to:
+  /// **'Название или препарат'**
+  String get questsSearchPlaceholder;
+
+  /// No description provided for @questsSearchClear.
+  ///
+  /// In ru, this message translates to:
+  /// **'Очистить'**
+  String get questsSearchClear;
+
+  /// No description provided for @questsFound.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{Найден {n} квест} few{Найдено {n} квеста} many{Найдено {n} квестов} other{Найдено {n} квеста}}'**
+  String questsFound(int n);
+
+  /// No description provided for @questsPopular.
+  ///
+  /// In ru, this message translates to:
+  /// **'Часто ищут'**
+  String get questsPopular;
+
+  /// No description provided for @questsNothingFound.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ничего не найдено'**
+  String get questsNothingFound;
+
+  /// No description provided for @questsNothingFoundSub.
+  ///
+  /// In ru, this message translates to:
+  /// **'Проверьте название препарата или попробуйте другой запрос'**
+  String get questsNothingFoundSub;
+
+  /// No description provided for @questsReceived.
+  ///
+  /// In ru, this message translates to:
+  /// **'получено'**
+  String get questsReceived;
+
+  /// No description provided for @questsPending.
+  ///
+  /// In ru, this message translates to:
+  /// **'ожидает'**
+  String get questsPending;
+
+  /// No description provided for @walletAccruedAllTime.
+  ///
+  /// In ru, this message translates to:
+  /// **'начислено за всё время'**
+  String get walletAccruedAllTime;
+
+  /// No description provided for @walletAwaitingStat.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{ваучер ждёт выдачи} few{ваучера ждут выдачи} many{ваучеров ждут выдачи} other{ваучера ждут выдачи}}'**
+  String walletAwaitingStat(int n);
+
+  /// No description provided for @walletArchive.
+  ///
+  /// In ru, this message translates to:
+  /// **'Архив'**
+  String get walletArchive;
+
+  /// No description provided for @walletArchiveTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Архив ваучеров'**
+  String get walletArchiveTitle;
+
+  /// No description provided for @walletTapCardHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нажмите на карту — покажем QR-код'**
+  String get walletTapCardHint;
+
+  /// No description provided for @walletAllArchivedTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Все ваучеры в архиве'**
+  String get walletAllArchivedTitle;
+
+  /// No description provided for @walletAllArchivedText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Новые появятся после выполнения квестов'**
+  String get walletAllArchivedText;
+
+  /// No description provided for @walletGiftCard.
+  ///
+  /// In ru, this message translates to:
+  /// **'Подарочная карта'**
+  String get walletGiftCard;
+
+  /// No description provided for @walletGiftCardBoth.
+  ///
+  /// In ru, this message translates to:
+  /// **'ПОДАРОЧНАЯ КАРТА · SOVG\'A KARTASI'**
+  String get walletGiftCardBoth;
+
+  /// No description provided for @walletGiftCardKorzinka.
+  ///
+  /// In ru, this message translates to:
+  /// **'Подарочная карта Korzinka'**
+  String get walletGiftCardKorzinka;
+
+  /// No description provided for @walletReceived.
+  ///
+  /// In ru, this message translates to:
+  /// **'Получен'**
+  String get walletReceived;
+
+  /// No description provided for @walletCode.
+  ///
+  /// In ru, this message translates to:
+  /// **'Код'**
+  String get walletCode;
+
+  /// No description provided for @walletShowQr.
+  ///
+  /// In ru, this message translates to:
+  /// **'Показать'**
+  String get walletShowQr;
+
+  /// No description provided for @walletStatusLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Статус'**
+  String get walletStatusLabel;
+
+  /// No description provided for @walletWhere.
+  ///
+  /// In ru, this message translates to:
+  /// **'Где'**
+  String get walletWhere;
+
+  /// No description provided for @walletStatusArchived.
+  ///
+  /// In ru, this message translates to:
+  /// **'В архиве'**
+  String get walletStatusArchived;
+
+  /// No description provided for @walletAwaitingTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ждут выдачи'**
+  String get walletAwaitingTitle;
+
+  /// No description provided for @walletQuestDoneOn.
+  ///
+  /// In ru, this message translates to:
+  /// **'Квест выполнен · {date}'**
+  String walletQuestDoneOn(String date);
+
+  /// No description provided for @walletPcs.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n} шт.'**
+  String walletPcs(int n);
+
+  /// No description provided for @walletVouchersCaption.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{ваучер} few{ваучера} many{ваучеров} other{ваучера}}'**
+  String walletVouchersCaption(int n);
+
+  /// No description provided for @walletManualHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ваучеры выдаются вручную после проверки — обычно в течение нескольких дней'**
+  String get walletManualHint;
+
+  /// No description provided for @walletShowAll.
+  ///
+  /// In ru, this message translates to:
+  /// **'Показать все {n}'**
+  String walletShowAll(int n);
+
+  /// No description provided for @walletExchangeTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Обменять IQC'**
+  String get walletExchangeTitle;
+
+  /// No description provided for @walletShopTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Обмен IQC'**
+  String get walletShopTitle;
+
+  /// No description provided for @walletProgressOf.
+  ///
+  /// In ru, this message translates to:
+  /// **'{have} из {need} IQC'**
+  String walletProgressOf(String have, String need);
+
+  /// No description provided for @walletMore.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ещё {n}'**
+  String walletMore(String n);
+
+  /// No description provided for @walletSaveUp.
+  ///
+  /// In ru, this message translates to:
+  /// **'Копите IQC, чтобы обменять'**
+  String get walletSaveUp;
+
+  /// No description provided for @walletExchangeFor.
+  ///
+  /// In ru, this message translates to:
+  /// **'Обменять за {amount} IQC'**
+  String walletExchangeFor(String amount);
+
+  /// No description provided for @walletOpenVoucher.
+  ///
+  /// In ru, this message translates to:
+  /// **'Открыть ваучер {sum}'**
+  String walletOpenVoucher(String sum);
+
+  /// No description provided for @walletClose.
+  ///
+  /// In ru, this message translates to:
+  /// **'Закрыть'**
+  String get walletClose;
+
+  /// No description provided for @walletVoucherDialog.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ваучер Korzinka'**
+  String get walletVoucherDialog;
+
+  /// No description provided for @walletArchiveUsed.
+  ///
+  /// In ru, this message translates to:
+  /// **'В архив — ваучер использован'**
+  String get walletArchiveUsed;
+
+  /// No description provided for @walletArchivedToast.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ваучер ••{code} в архиве'**
+  String walletArchivedToast(String code);
+
+  /// No description provided for @walletUndo.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отменить'**
+  String get walletUndo;
+
+  /// No description provided for @walletBack.
+  ///
+  /// In ru, this message translates to:
+  /// **'Назад'**
+  String get walletBack;
+
+  /// No description provided for @walletBackToWallet.
+  ///
+  /// In ru, this message translates to:
+  /// **'Назад в кошелёк'**
+  String get walletBackToWallet;
+
+  /// No description provided for @walletArchiveSummary.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{{n} ваучер} few{{n} ваучера} many{{n} ваучеров} other{{n} ваучера}} · {sum}'**
+  String walletArchiveSummary(int n, String sum);
+
+  /// No description provided for @walletRestore.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вернуть'**
+  String get walletRestore;
+
+  /// No description provided for @walletRestoreA11y.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вернуть ваучер ••{code}'**
+  String walletRestoreA11y(String code);
+
+  /// No description provided for @walletRestoreHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нажмите «Вернуть», если убрали ваучер по ошибке — он снова появится в кошельке'**
+  String get walletRestoreHint;
+
+  /// No description provided for @walletArchiveEmptyTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Архив пуст'**
+  String get walletArchiveEmptyTitle;
+
+  /// No description provided for @walletArchiveEmptyText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Использовали ваучер? Уберите его сюда — в кошельке останутся только действующие'**
+  String get walletArchiveEmptyText;
+
+  /// No description provided for @walletReceivedMeta.
+  ///
+  /// In ru, this message translates to:
+  /// **'Получен {date} · код ••{code}'**
+  String walletReceivedMeta(String date, String code);
+
+  /// No description provided for @walletHistoryAll.
+  ///
+  /// In ru, this message translates to:
+  /// **'Все'**
+  String get walletHistoryAll;
+
+  /// No description provided for @walletHistoryEarned.
+  ///
+  /// In ru, this message translates to:
+  /// **'Начисления'**
+  String get walletHistoryEarned;
+
+  /// No description provided for @walletHistorySpent.
+  ///
+  /// In ru, this message translates to:
+  /// **'Списания'**
+  String get walletHistorySpent;
+
+  /// No description provided for @walletEarnedMonth.
+  ///
+  /// In ru, this message translates to:
+  /// **'Начислено в этом месяце'**
+  String get walletEarnedMonth;
+
+  /// No description provided for @walletSpentMonth.
+  ///
+  /// In ru, this message translates to:
+  /// **'Потрачено в этом месяце'**
+  String get walletSpentMonth;
+
+  /// No description provided for @walletMonths.
+  ///
+  /// In ru, this message translates to:
+  /// **'Январь,Февраль,Март,Апрель,Май,Июнь,Июль,Август,Сентябрь,Октябрь,Ноябрь,Декабрь'**
+  String get walletMonths;
+
+  /// No description provided for @walletAccrued.
+  ///
+  /// In ru, this message translates to:
+  /// **'начислено'**
+  String get walletAccrued;
+
+  /// No description provided for @walletDebited.
+  ///
+  /// In ru, this message translates to:
+  /// **'списано'**
+  String get walletDebited;
+
+  /// No description provided for @walletTxnCheck.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек'**
+  String get walletTxnCheck;
+
+  /// No description provided for @walletTxnRecipe.
+  ///
+  /// In ru, this message translates to:
+  /// **'Рецепт'**
+  String get walletTxnRecipe;
+
+  /// No description provided for @walletTxnSurvey.
+  ///
+  /// In ru, this message translates to:
+  /// **'Опрос'**
+  String get walletTxnSurvey;
+
+  /// No description provided for @walletTxnQuest.
+  ///
+  /// In ru, this message translates to:
+  /// **'Квест выполнен'**
+  String get walletTxnQuest;
+
+  /// No description provided for @walletTxnCourse.
+  ///
+  /// In ru, this message translates to:
+  /// **'Курс пройден'**
+  String get walletTxnCourse;
+
+  /// No description provided for @walletTxnRedeem.
+  ///
+  /// In ru, this message translates to:
+  /// **'Обмен на ваучер'**
+  String get walletTxnRedeem;
+
+  /// No description provided for @walletTxnReversal.
+  ///
+  /// In ru, this message translates to:
+  /// **'Возврат'**
+  String get walletTxnReversal;
+
+  /// No description provided for @walletTxnAdjust.
+  ///
+  /// In ru, this message translates to:
+  /// **'Корректировка'**
+  String get walletTxnAdjust;
+
+  /// No description provided for @walletTxnOther.
+  ///
+  /// In ru, this message translates to:
+  /// **'Начисление'**
+  String get walletTxnOther;
+
+  /// No description provided for @walletQueueQuests.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{{n} квест} few{{n} квеста} many{{n} квестов} other{{n} квеста}}'**
+  String walletQueueQuests(int n);
+
+  /// No description provided for @walletQueueVouchers.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{{n} ваучер ждёт выдачи} few{{n} ваучера ждут выдачи} many{{n} ваучеров ждут выдачи} other{{n} ваучера ждут выдачи}}'**
+  String walletQueueVouchers(int n);
+
+  /// No description provided for @walletStepDone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Квест выполнен'**
+  String get walletStepDone;
+
+  /// No description provided for @walletStepReview.
+  ///
+  /// In ru, this message translates to:
+  /// **'Проверка'**
+  String get walletStepReview;
+
+  /// No description provided for @walletStepIssue.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выдача'**
+  String get walletStepIssue;
+
+  /// No description provided for @walletQueueHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ваучеры выдаются вручную после проверки — обычно в течение нескольких дней. Пришлём уведомление, когда ваучер появится в кошельке'**
+  String get walletQueueHint;
+
+  /// No description provided for @walletQueueEmptyTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Очередь пуста'**
+  String get walletQueueEmptyTitle;
+
+  /// No description provided for @walletQueueEmptyText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выполните квест с наградой-ваучером — он появится здесь до выдачи'**
+  String get walletQueueEmptyText;
+
+  /// No description provided for @walletYourBalance.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ваш баланс'**
+  String get walletYourBalance;
+
+  /// No description provided for @walletEnoughFor.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, =0{Пока не хватает на ваучер} one{Хватает на {n} ваучер} few{Хватает на {n} ваучера} many{Хватает на {n} ваучеров} other{Хватает на {n} ваучера}}'**
+  String walletEnoughFor(int n);
+
+  /// No description provided for @walletShopNote.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ваучер появится в кошельке после подтверждения обмена'**
+  String get walletShopNote;
+
+  /// No description provided for @walletConfirmTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Обменять {amount} IQC?'**
+  String walletConfirmTitle(String amount);
+
+  /// No description provided for @walletConfirmText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Получите подарочную карту Korzinka на {sum}'**
+  String walletConfirmText(String sum);
+
+  /// No description provided for @walletWillDebit.
+  ///
+  /// In ru, this message translates to:
+  /// **'Спишем'**
+  String get walletWillDebit;
+
+  /// No description provided for @walletWillRemain.
+  ///
+  /// In ru, this message translates to:
+  /// **'Останется'**
+  String get walletWillRemain;
+
+  /// No description provided for @walletWhereTo.
+  ///
+  /// In ru, this message translates to:
+  /// **'Куда придёт'**
+  String get walletWhereTo;
+
+  /// No description provided for @walletToWallet.
+  ///
+  /// In ru, this message translates to:
+  /// **'В кошелёк'**
+  String get walletToWallet;
+
+  /// No description provided for @walletExchange.
+  ///
+  /// In ru, this message translates to:
+  /// **'Обменять'**
+  String get walletExchange;
+
+  /// No description provided for @walletExchangeFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не удалось обменять IQC'**
+  String get walletExchangeFailed;
+
+  /// No description provided for @walletShare.
+  ///
+  /// In ru, this message translates to:
+  /// **'Поделиться ваучером'**
+  String get walletShare;
+
+  /// No description provided for @walletCopyCode.
+  ///
+  /// In ru, this message translates to:
+  /// **'Скопировать код'**
+  String get walletCopyCode;
+
+  /// No description provided for @walletQrLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'QR-код ваучера'**
+  String get walletQrLabel;
+
+  /// No description provided for @walletShowQrCashier.
+  ///
+  /// In ru, this message translates to:
+  /// **'Покажите QR-код кассиру или продиктуйте код'**
+  String get walletShowQrCashier;
+
+  /// No description provided for @walletStores.
+  ///
+  /// In ru, this message translates to:
+  /// **'Магазины Korzinka'**
+  String get walletStores;
+
+  /// No description provided for @walletToArchive.
+  ///
+  /// In ru, this message translates to:
+  /// **'В архив'**
+  String get walletToArchive;
+
+  /// No description provided for @walletToArchiveHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Использовали ваучер? Уберите его в архив — он останется в истории'**
+  String get walletToArchiveHint;
+
+  /// No description provided for @walletRestoreFromArchive.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вернуть из архива'**
+  String get walletRestoreFromArchive;
+
+  /// No description provided for @learnSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Проходите курсы — получайте IQC'**
+  String get learnSubtitle;
+
+  /// No description provided for @learnSearchA11y.
+  ///
+  /// In ru, this message translates to:
+  /// **'Поиск курсов'**
+  String get learnSearchA11y;
+
+  /// No description provided for @learnSearchPlaceholder.
+  ///
+  /// In ru, this message translates to:
+  /// **'Название курса или бренда'**
+  String get learnSearchPlaceholder;
+
+  /// No description provided for @learnSearchClear.
+  ///
+  /// In ru, this message translates to:
+  /// **'Очистить'**
+  String get learnSearchClear;
+
+  /// No description provided for @learnSegNew.
+  ///
+  /// In ru, this message translates to:
+  /// **'Новые'**
+  String get learnSegNew;
+
+  /// No description provided for @learnSegProgress.
+  ///
+  /// In ru, this message translates to:
+  /// **'В процессе'**
+  String get learnSegProgress;
+
+  /// No description provided for @learnSegDone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пройденные'**
+  String get learnSegDone;
+
+  /// No description provided for @learnTileVideo.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{{n} видеоурок} few{{n} видеоурока} many{{n} видеоуроков} other{{n} видеоурока}}'**
+  String learnTileVideo(int n);
+
+  /// No description provided for @learnTileQuiz.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{{n} тест} few{{n} теста} many{{n} тестов} other{{n} теста}}'**
+  String learnTileQuiz(int n);
+
+  /// No description provided for @learnTileReward.
+  ///
+  /// In ru, this message translates to:
+  /// **'Награда'**
+  String get learnTileReward;
+
+  /// No description provided for @learnMinutesShort.
+  ///
+  /// In ru, this message translates to:
+  /// **'~{n} мин'**
+  String learnMinutesShort(int n);
+
+  /// No description provided for @learnQuizStatusLocked.
+  ///
+  /// In ru, this message translates to:
+  /// **'Закрыт'**
+  String get learnQuizStatusLocked;
+
+  /// No description provided for @learnQuizStatusOpen.
+  ///
+  /// In ru, this message translates to:
+  /// **'Доступен'**
+  String get learnQuizStatusOpen;
+
+  /// No description provided for @learnIqc.
+  ///
+  /// In ru, this message translates to:
+  /// **'+{n} IQC'**
+  String learnIqc(int n);
+
+  /// No description provided for @learnCtaStart.
+  ///
+  /// In ru, this message translates to:
+  /// **'Начать курс'**
+  String get learnCtaStart;
+
+  /// No description provided for @learnCtaContinue.
+  ///
+  /// In ru, this message translates to:
+  /// **'Продолжить'**
+  String get learnCtaContinue;
+
+  /// No description provided for @learnCtaRepeat.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пройти повторно'**
+  String get learnCtaRepeat;
+
+  /// No description provided for @learnProgressLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пройдено {pct}%'**
+  String learnProgressLabel(int pct);
+
+  /// No description provided for @learnEmptyTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пока нет курсов'**
+  String get learnEmptyTitle;
+
+  /// No description provided for @learnEmptyText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Курсы для вашей аптеки ещё не добавлены. Как только появится новый курс, пришлём уведомление'**
+  String get learnEmptyText;
+
+  /// No description provided for @learnEnableNotifications.
+  ///
+  /// In ru, this message translates to:
+  /// **'Включить уведомления'**
+  String get learnEnableNotifications;
+
+  /// No description provided for @learnNoResultsTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ничего не нашлось'**
+  String get learnNoResultsTitle;
+
+  /// No description provided for @learnNoResultsInTab.
+  ///
+  /// In ru, this message translates to:
+  /// **'По запросу «{query}» во вкладке «{tab}» курсов нет. Проверьте написание или поищите во всех курсах'**
+  String learnNoResultsInTab(String query, String tab);
+
+  /// No description provided for @learnNoResultsAll.
+  ///
+  /// In ru, this message translates to:
+  /// **'По запросу «{query}» курсов нет. Проверьте написание или попробуйте другое название'**
+  String learnNoResultsAll(String query);
+
+  /// No description provided for @learnSearchEverywhere.
+  ///
+  /// In ru, this message translates to:
+  /// **'Искать во всех курсах'**
+  String get learnSearchEverywhere;
+
+  /// No description provided for @learnTabEmptyTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Здесь пока пусто'**
+  String get learnTabEmptyTitle;
+
+  /// No description provided for @learnTabEmptyNew.
+  ///
+  /// In ru, this message translates to:
+  /// **'Все курсы уже начаты — продолжайте обучение во вкладке «В процессе»'**
+  String get learnTabEmptyNew;
+
+  /// No description provided for @learnTabEmptyProgress.
+  ///
+  /// In ru, this message translates to:
+  /// **'Начните любой курс из вкладки «Новые» — он появится здесь'**
+  String get learnTabEmptyProgress;
+
+  /// No description provided for @learnTabEmptyDone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пройденные курсы появятся здесь после успешного теста'**
+  String get learnTabEmptyDone;
+
+  /// No description provided for @learnBack.
+  ///
+  /// In ru, this message translates to:
+  /// **'Назад'**
+  String get learnBack;
+
+  /// No description provided for @learnCourseTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Курс'**
+  String get learnCourseTitle;
+
+  /// No description provided for @learnMetaVideos.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{{n} видеоурок} few{{n} видеоурока} many{{n} видеоуроков} other{{n} видеоурока}}'**
+  String learnMetaVideos(int n);
+
+  /// No description provided for @learnMetaMinutes.
+  ///
+  /// In ru, this message translates to:
+  /// **'~{n, plural, one{{n} минута} few{{n} минуты} many{{n} минут} other{{n} минуты}}'**
+  String learnMetaMinutes(int n);
+
+  /// No description provided for @learnProgram.
+  ///
+  /// In ru, this message translates to:
+  /// **'Программа курса'**
+  String get learnProgram;
+
+  /// No description provided for @learnRowVideo.
+  ///
+  /// In ru, this message translates to:
+  /// **'Видеоурок'**
+  String get learnRowVideo;
+
+  /// No description provided for @learnRowQuiz.
+  ///
+  /// In ru, this message translates to:
+  /// **'Тест'**
+  String get learnRowQuiz;
+
+  /// No description provided for @learnRowQuizLocked.
+  ///
+  /// In ru, this message translates to:
+  /// **'Откроется после видео'**
+  String get learnRowQuizLocked;
+
+  /// No description provided for @learnRowRewardPending.
+  ///
+  /// In ru, this message translates to:
+  /// **'Начислим после теста'**
+  String get learnRowRewardPending;
+
+  /// No description provided for @learnRowRewardDone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Начислено'**
+  String get learnRowRewardDone;
+
+  /// No description provided for @learnLessonOf.
+  ///
+  /// In ru, this message translates to:
+  /// **'Урок {i} из {n}'**
+  String learnLessonOf(int i, int n);
+
+  /// No description provided for @learnLessonTabText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Текст урока'**
+  String get learnLessonTabText;
+
+  /// No description provided for @learnLessonTabMaterials.
+  ///
+  /// In ru, this message translates to:
+  /// **'Материалы'**
+  String get learnLessonTabMaterials;
+
+  /// No description provided for @learnWatchVideo.
+  ///
+  /// In ru, this message translates to:
+  /// **'Смотреть видео'**
+  String get learnWatchVideo;
+
+  /// No description provided for @learnVideoUnavailable.
+  ///
+  /// In ru, this message translates to:
+  /// **'Видео недоступно'**
+  String get learnVideoUnavailable;
+
+  /// No description provided for @learnLessonHintLocked.
+  ///
+  /// In ru, this message translates to:
+  /// **'Досмотрите видео — затем откроется тест'**
+  String get learnLessonHintLocked;
+
+  /// No description provided for @learnLessonHintFinish.
+  ///
+  /// In ru, this message translates to:
+  /// **'Посмотрели видео? Завершите урок, чтобы перейти дальше'**
+  String get learnLessonHintFinish;
+
+  /// No description provided for @learnStartTest.
+  ///
+  /// In ru, this message translates to:
+  /// **'Начать тест'**
+  String get learnStartTest;
+
+  /// No description provided for @learnNextLesson.
+  ///
+  /// In ru, this message translates to:
+  /// **'Следующий урок'**
+  String get learnNextLesson;
+
+  /// No description provided for @learnFinishLesson.
+  ///
+  /// In ru, this message translates to:
+  /// **'Завершить урок'**
+  String get learnFinishLesson;
+
+  /// No description provided for @learnFinishingLesson.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сохраняем…'**
+  String get learnFinishingLesson;
+
+  /// No description provided for @learnBackToCourse.
+  ///
+  /// In ru, this message translates to:
+  /// **'К курсу'**
+  String get learnBackToCourse;
+
+  /// No description provided for @learnTestTopBar.
+  ///
+  /// In ru, this message translates to:
+  /// **'Тест · {name}'**
+  String learnTestTopBar(String name);
+
+  /// No description provided for @learnQuestionOf.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вопрос {i} из {n}'**
+  String learnQuestionOf(String i, int n);
+
+  /// No description provided for @learnNext.
+  ///
+  /// In ru, this message translates to:
+  /// **'Далее'**
+  String get learnNext;
+
+  /// No description provided for @learnFinishTest.
+  ///
+  /// In ru, this message translates to:
+  /// **'Завершить тест'**
+  String get learnFinishTest;
+
+  /// No description provided for @learnSubmitting.
+  ///
+  /// In ru, this message translates to:
+  /// **'Проверяем…'**
+  String get learnSubmitting;
+
+  /// No description provided for @learnCoursePassed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Курс пройден!'**
+  String get learnCoursePassed;
+
+  /// No description provided for @learnTestPassed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Тест пройден!'**
+  String get learnTestPassed;
+
+  /// No description provided for @learnPassedText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отличная работа. Баллы уже на вашем балансе.'**
+  String get learnPassedText;
+
+  /// No description provided for @learnPassedTextNoReward.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отличная работа!'**
+  String get learnPassedTextNoReward;
+
+  /// No description provided for @learnScoreOf.
+  ///
+  /// In ru, this message translates to:
+  /// **'{score} из {total}'**
+  String learnScoreOf(int score, int total);
+
+  /// No description provided for @learnCorrectAnswers.
+  ///
+  /// In ru, this message translates to:
+  /// **'правильных ответов'**
+  String get learnCorrectAnswers;
+
+  /// No description provided for @learnOpenWallet.
+  ///
+  /// In ru, this message translates to:
+  /// **'Открыть кошелёк'**
+  String get learnOpenWallet;
+
+  /// No description provided for @learnToOtherCourses.
+  ///
+  /// In ru, this message translates to:
+  /// **'К другим курсам'**
+  String get learnToOtherCourses;
+
+  /// No description provided for @learnContinueCourse.
+  ///
+  /// In ru, this message translates to:
+  /// **'Продолжить курс'**
+  String get learnContinueCourse;
+
+  /// No description provided for @learnFailedTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Почти получилось'**
+  String get learnFailedTitle;
+
+  /// No description provided for @learnFailedText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Недостаточно правильных ответов. Пересмотрите урок — и попробуйте ещё раз, баллы ждут вас.'**
+  String get learnFailedText;
+
+  /// No description provided for @learnRewardStillAvailable.
+  ///
+  /// In ru, this message translates to:
+  /// **'+{n} IQC всё ещё доступны'**
+  String learnRewardStillAvailable(int n);
+
+  /// No description provided for @learnCanRetry.
+  ///
+  /// In ru, this message translates to:
+  /// **'Можно пройти тест повторно'**
+  String get learnCanRetry;
+
+  /// No description provided for @learnRewatchLesson.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пересмотреть урок'**
+  String get learnRewatchLesson;
+
+  /// No description provided for @learnRetryTest.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пройти тест снова'**
+  String get learnRetryTest;
+
+  /// No description provided for @rxHomeGreeting.
+  ///
+  /// In ru, this message translates to:
+  /// **'Привет, {name}!'**
+  String rxHomeGreeting(String name);
+
+  /// No description provided for @rxHomeSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправляйте бланки и получайте награды'**
+  String get rxHomeSubtitle;
+
+  /// No description provided for @rxHomeBellLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Уведомления'**
+  String get rxHomeBellLabel;
+
+  /// No description provided for @rxHomeBellUnread.
+  ///
+  /// In ru, this message translates to:
+  /// **'Уведомления, есть новые'**
+  String get rxHomeBellUnread;
+
+  /// No description provided for @rxHomeStatQuests.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{активный квест} few{активных квеста} many{активных квестов} other{активного квеста}}'**
+  String rxHomeStatQuests(int n);
+
+  /// No description provided for @rxHomeStatApproved.
+  ///
+  /// In ru, this message translates to:
+  /// **'одобрено бланков'**
+  String get rxHomeStatApproved;
+
+  /// No description provided for @rxHomeStatPending.
+  ///
+  /// In ru, this message translates to:
+  /// **'на проверке'**
+  String get rxHomeStatPending;
+
+  /// No description provided for @rxHomeRecent.
+  ///
+  /// In ru, this message translates to:
+  /// **'Последние бланки'**
+  String get rxHomeRecent;
+
+  /// No description provided for @rxHomeAllRecipes.
+  ///
+  /// In ru, this message translates to:
+  /// **'Все бланки'**
+  String get rxHomeAllRecipes;
+
+  /// No description provided for @rxQuestProgress.
+  ///
+  /// In ru, this message translates to:
+  /// **'{done} из {goal, plural, one{{goal} бланка} other{{goal} бланков}}'**
+  String rxQuestProgress(int done, int goal);
+
+  /// No description provided for @rxQuestLeft.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ещё {n}'**
+  String rxQuestLeft(int n);
+
+  /// No description provided for @rxQuestDone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выполнено {pct}%'**
+  String rxQuestDone(int pct);
+
+  /// No description provided for @rxRewardIqc.
+  ///
+  /// In ru, this message translates to:
+  /// **'+{n} IQC'**
+  String rxRewardIqc(int n);
+
+  /// No description provided for @rxRewardVoucher.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ваучер'**
+  String get rxRewardVoucher;
+
+  /// No description provided for @rxWaitValue.
+  ///
+  /// In ru, this message translates to:
+  /// **'~24 ч'**
+  String get rxWaitValue;
+
+  /// No description provided for @rxWaitCaption.
+  ///
+  /// In ru, this message translates to:
+  /// **'ожидание'**
+  String get rxWaitCaption;
+
+  /// No description provided for @rxSoon.
+  ///
+  /// In ru, this message translates to:
+  /// **'Скоро'**
+  String get rxSoon;
+
+  /// No description provided for @rxSoonCaption.
+  ///
+  /// In ru, this message translates to:
+  /// **'начисление'**
+  String get rxSoonCaption;
+
+  /// No description provided for @rxRetake.
+  ///
+  /// In ru, this message translates to:
+  /// **'Переснять'**
+  String get rxRetake;
+
+  /// No description provided for @rxRetakeRecipe.
+  ///
+  /// In ru, this message translates to:
+  /// **'Переснять бланк'**
+  String get rxRetakeRecipe;
+
+  /// No description provided for @rxMeta.
+  ///
+  /// In ru, this message translates to:
+  /// **'{date} · {n} фото'**
+  String rxMeta(String date, int n);
+
+  /// No description provided for @rxListCount.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{{n} бланк} few{{n} бланка} many{{n} бланков} other{{n} бланка}}'**
+  String rxListCount(int n);
+
+  /// No description provided for @rxTabPending.
+  ///
+  /// In ru, this message translates to:
+  /// **'На проверке'**
+  String get rxTabPending;
+
+  /// No description provided for @rxTabDone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Завершённые'**
+  String get rxTabDone;
+
+  /// No description provided for @rxFilterEmpty.
+  ///
+  /// In ru, this message translates to:
+  /// **'В этом разделе пока нет бланков'**
+  String get rxFilterEmpty;
+
+  /// No description provided for @rxPendingHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Проверим до 24 часов'**
+  String get rxPendingHint;
+
+  /// No description provided for @rxRejectedDefault.
+  ///
+  /// In ru, this message translates to:
+  /// **'Бланк не прошёл проверку'**
+  String get rxRejectedDefault;
+
+  /// No description provided for @rxEmptyTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Здесь появятся ваши бланки'**
+  String get rxEmptyTitle;
+
+  /// No description provided for @rxEmptyText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сфотографируйте выписанный бланк — ИИ распознает препараты, а после проверки вы получите IQC'**
+  String get rxEmptyText;
+
+  /// No description provided for @rxHowTo.
+  ///
+  /// In ru, this message translates to:
+  /// **'Как сфотографировать'**
+  String get rxHowTo;
+
+  /// No description provided for @rxTipWholeTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Бланк целиком'**
+  String get rxTipWholeTitle;
+
+  /// No description provided for @rxTipWholeText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Все края листа в кадре'**
+  String get rxTipWholeText;
+
+  /// No description provided for @rxTipStampTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Печать и подпись'**
+  String get rxTipStampTitle;
+
+  /// No description provided for @rxTipStampText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Без них бланк не примут'**
+  String get rxTipStampText;
+
+  /// No description provided for @rxTipLightTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Хороший свет'**
+  String get rxTipLightTitle;
+
+  /// No description provided for @rxTipLightText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Без бликов и тени от телефона'**
+  String get rxTipLightText;
+
+  /// No description provided for @rxSendFirst.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправить первый бланк'**
+  String get rxSendFirst;
+
+  /// No description provided for @rxStatePendingTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Бланк на проверке'**
+  String get rxStatePendingTitle;
+
+  /// No description provided for @rxStatePendingText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Специалист проверяет бланк. Обычно это занимает до 24 часов'**
+  String get rxStatePendingText;
+
+  /// No description provided for @rxStateApprovedTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Бланк одобрен'**
+  String get rxStateApprovedTitle;
+
+  /// No description provided for @rxStateApprovedText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Всё в порядке. IQC поступят на баланс в ближайшее время'**
+  String get rxStateApprovedText;
+
+  /// No description provided for @rxStateRejectedTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Бланк отклонён'**
+  String get rxStateRejectedTitle;
+
+  /// No description provided for @rxStateRejectedHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сфотографируйте бланк целиком при хорошем свете — баллы ещё можно получить'**
+  String get rxStateRejectedHint;
+
+  /// No description provided for @rxStepSent.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправлен'**
+  String get rxStepSent;
+
+  /// No description provided for @rxStepReview.
+  ///
+  /// In ru, this message translates to:
+  /// **'Проверка'**
+  String get rxStepReview;
+
+  /// No description provided for @rxStepApproved.
+  ///
+  /// In ru, this message translates to:
+  /// **'Одобрен'**
+  String get rxStepApproved;
+
+  /// No description provided for @rxStepCredited.
+  ///
+  /// In ru, this message translates to:
+  /// **'Начислено'**
+  String get rxStepCredited;
+
+  /// No description provided for @rxStepRejected.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отклонён'**
+  String get rxStepRejected;
+
+  /// No description provided for @rxPhotos.
+  ///
+  /// In ru, this message translates to:
+  /// **'Фото бланка'**
+  String get rxPhotos;
+
+  /// No description provided for @rxOpenPhoto.
+  ///
+  /// In ru, this message translates to:
+  /// **'Открыть фото бланка {n}'**
+  String rxOpenPhoto(int n);
+
+  /// No description provided for @rxAiLater.
+  ///
+  /// In ru, this message translates to:
+  /// **'Список препаратов появится после проверки'**
+  String get rxAiLater;
+
+  /// No description provided for @rxAccrual.
+  ///
+  /// In ru, this message translates to:
+  /// **'Начисление'**
+  String get rxAccrual;
+
+  /// No description provided for @rxAccrualPendingTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Начислим после одобрения'**
+  String get rxAccrualPendingTitle;
+
+  /// No description provided for @rxAccrualPendingText.
+  ///
+  /// In ru, this message translates to:
+  /// **'После одобрения бланка'**
+  String get rxAccrualPendingText;
+
+  /// No description provided for @rxAccrualApprovedTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ожидает начисления'**
+  String get rxAccrualApprovedTitle;
+
+  /// No description provided for @rxQuests.
+  ///
+  /// In ru, this message translates to:
+  /// **'Зачёт в квесты'**
+  String get rxQuests;
+
+  /// No description provided for @rxQuestsPending.
+  ///
+  /// In ru, this message translates to:
+  /// **'Появится после одобрения бланка'**
+  String get rxQuestsPending;
+
+  /// No description provided for @rxQuestsNone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пока не зачтён ни в один квест'**
+  String get rxQuestsNone;
+
+  /// No description provided for @rxData.
+  ///
+  /// In ru, this message translates to:
+  /// **'Данные бланка'**
+  String get rxData;
+
+  /// No description provided for @rxShowText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Показать распознанный текст'**
+  String get rxShowText;
+
+  /// No description provided for @rxSupport.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вопрос по бланку? Напишите нам'**
+  String get rxSupport;
+
+  /// No description provided for @rxCameraClose.
+  ///
+  /// In ru, this message translates to:
+  /// **'Закрыть'**
+  String get rxCameraClose;
+
+  /// No description provided for @rxCameraLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Бланк'**
+  String get rxCameraLabel;
+
+  /// No description provided for @rxCameraTip.
+  ///
+  /// In ru, this message translates to:
+  /// **'Печать и подпись должны быть видны'**
+  String get rxCameraTip;
+
+  /// No description provided for @rxCameraHold.
+  ///
+  /// In ru, this message translates to:
+  /// **'Держите телефон ровно над бланком'**
+  String get rxCameraHold;
+
+  /// No description provided for @rxCameraShoot.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сделать снимок'**
+  String get rxCameraShoot;
+
+  /// No description provided for @rxCameraDenied.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет доступа к камере. Разрешите его в настройках'**
+  String get rxCameraDenied;
+
+  /// No description provided for @rxOcrTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Распознанный текст'**
+  String get rxOcrTitle;
+
+  /// No description provided for @rxOcrSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Так ИИ прочитал фото бланка'**
+  String get rxOcrSubtitle;
+
+  /// No description provided for @rxOcrNote.
+  ///
+  /// In ru, this message translates to:
+  /// **'ФИО пациента скрыто. Текст распознан автоматически — возможны ошибки'**
+  String get rxOcrNote;
+
+  /// No description provided for @rxOcrEmpty.
+  ///
+  /// In ru, this message translates to:
+  /// **'Текст ещё не распознан'**
+  String get rxOcrEmpty;
+
+  /// No description provided for @rxOcrEmptyText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Он появится здесь после обработки фото'**
+  String get rxOcrEmptyText;
+
+  /// No description provided for @rxCopy.
+  ///
+  /// In ru, this message translates to:
+  /// **'Копировать'**
+  String get rxCopy;
+
+  /// No description provided for @rxCopied.
+  ///
+  /// In ru, this message translates to:
+  /// **'Текст скопирован'**
+  String get rxCopied;
+
+  /// No description provided for @rxReportError.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ошибка в тексте'**
+  String get rxReportError;
+
+  /// No description provided for @rxBack.
+  ///
+  /// In ru, this message translates to:
+  /// **'Назад'**
+  String get rxBack;
+
+  /// No description provided for @homeBellUnread.
+  ///
+  /// In ru, this message translates to:
+  /// **'Уведомления, есть новые'**
+  String get homeBellUnread;
+
+  /// No description provided for @homeStatActiveQuests.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{активный квест} few{активных квеста} many{активных квестов} other{активного квеста}}'**
+  String homeStatActiveQuests(int n);
+
+  /// No description provided for @homeStatApproved.
+  ///
+  /// In ru, this message translates to:
+  /// **'одобрено чеков'**
+  String get homeStatApproved;
+
+  /// No description provided for @homeStatPending.
+  ///
+  /// In ru, this message translates to:
+  /// **'на проверке'**
+  String get homeStatPending;
+
+  /// No description provided for @homeQuestSales.
+  ///
+  /// In ru, this message translates to:
+  /// **'{goal, plural, one{{done} из {goal} продажи} other{{done} из {goal} продаж}}'**
+  String homeQuestSales(int done, int goal);
+
+  /// No description provided for @homeQuestLeft.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ещё {n}'**
+  String homeQuestLeft(int n);
+
+  /// No description provided for @homeQuestDone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выполнено'**
+  String get homeQuestDone;
+
+  /// No description provided for @homeRewardIqc.
+  ///
+  /// In ru, this message translates to:
+  /// **'+{n} IQC'**
+  String homeRewardIqc(int n);
+
+  /// No description provided for @homeCheckMeta.
+  ///
+  /// In ru, this message translates to:
+  /// **'№{id} · {date}'**
+  String homeCheckMeta(int id, String date);
+
+  /// No description provided for @homeCheckWait.
+  ///
+  /// In ru, this message translates to:
+  /// **'~24 ч'**
+  String get homeCheckWait;
+
+  /// No description provided for @homeCheckWaitCaption.
+  ///
+  /// In ru, this message translates to:
+  /// **'ожидание'**
+  String get homeCheckWaitCaption;
+
+  /// No description provided for @homeCheckRetake.
+  ///
+  /// In ru, this message translates to:
+  /// **'Переснять'**
+  String get homeCheckRetake;
+
+  /// No description provided for @homeMiniAppsSub.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сапёр и другие акции'**
+  String get homeMiniAppsSub;
+
+  /// No description provided for @homeNewTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Добро пожаловать!'**
+  String get homeNewTitle;
+
+  /// No description provided for @homeNewSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Три шага — и вы в программе'**
+  String get homeNewSubtitle;
+
+  /// No description provided for @homeNewStepsLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Первые шаги'**
+  String get homeNewStepsLabel;
+
+  /// No description provided for @homeNewStepsCount.
+  ///
+  /// In ru, this message translates to:
+  /// **'{done} из {total}'**
+  String homeNewStepsCount(int done, int total);
+
+  /// No description provided for @homeNewHeadline.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправьте первый чек и получите IQC'**
+  String get homeNewHeadline;
+
+  /// No description provided for @homeNewStepRegister.
+  ///
+  /// In ru, this message translates to:
+  /// **'Регистрация'**
+  String get homeNewStepRegister;
+
+  /// No description provided for @homeNewStepDone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Готово'**
+  String get homeNewStepDone;
+
+  /// No description provided for @homeNewStepCheck.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправьте первый чек'**
+  String get homeNewStepCheck;
+
+  /// No description provided for @homeNewStepCheckSub.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сфотографируйте чек из аптеки'**
+  String get homeNewStepCheckSub;
+
+  /// No description provided for @homeNewStepCourse.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пройдите первый курс'**
+  String get homeNewStepCourse;
+
+  /// No description provided for @homeNewStepCourseReward.
+  ///
+  /// In ru, this message translates to:
+  /// **'+{iqc} IQC за «{title}»'**
+  String homeNewStepCourseReward(int iqc, String title);
+
+  /// No description provided for @homeNewStepCourseSub.
+  ///
+  /// In ru, this message translates to:
+  /// **'Курс «{title}»'**
+  String homeNewStepCourseSub(String title);
+
+  /// No description provided for @homeNewStepCourseAny.
+  ///
+  /// In ru, this message translates to:
+  /// **'Курсы — в разделе «Обучение»'**
+  String get homeNewStepCourseAny;
+
+  /// No description provided for @homeNewSendFirst.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправить первый чек'**
+  String get homeNewSendFirst;
+
+  /// No description provided for @homeNewCourseSection.
+  ///
+  /// In ru, this message translates to:
+  /// **'Начните с курса'**
+  String get homeNewCourseSection;
+
+  /// No description provided for @homeNewAllCourses.
+  ///
+  /// In ru, this message translates to:
+  /// **'Все курсы'**
+  String get homeNewAllCourses;
+
+  /// No description provided for @homeNewCourseLessons.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{{n} урок} few{{n} урока} many{{n} уроков} other{{n} урока}}'**
+  String homeNewCourseLessons(int n);
+
+  /// No description provided for @homeNewCourseMinutes.
+  ///
+  /// In ru, this message translates to:
+  /// **'~{n} мин'**
+  String homeNewCourseMinutes(int n);
+
+  /// No description provided for @homeNewQuestSection.
+  ///
+  /// In ru, this message translates to:
+  /// **'Квест для старта'**
+  String get homeNewQuestSection;
+
+  /// No description provided for @homeNewQuestGoal.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{Продайте {n} упаковку} few{Продайте {n} упаковки} many{Продайте {n} упаковок} other{Продайте {n} упаковки}}'**
+  String homeNewQuestGoal(int n);
+
+  /// No description provided for @homeNewQuestIqc.
+  ///
+  /// In ru, this message translates to:
+  /// **'IQC на баланс'**
+  String get homeNewQuestIqc;
+
+  /// No description provided for @homeNewQuestVoucher.
+  ///
+  /// In ru, this message translates to:
+  /// **'ваучер за выполнение'**
+  String get homeNewQuestVoucher;
+
+  /// No description provided for @homeNewHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Баланс, ваучеры и мини-приложения появятся после первых IQC'**
+  String get homeNewHint;
+
+  /// No description provided for @newsBack.
+  ///
+  /// In ru, this message translates to:
+  /// **'Назад'**
+  String get newsBack;
+
+  /// No description provided for @newsBackToList.
+  ///
+  /// In ru, this message translates to:
+  /// **'Назад к новостям'**
+  String get newsBackToList;
+
+  /// No description provided for @newsReadTime.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n} мин чтения'**
+  String newsReadTime(int n);
+
+  /// No description provided for @newsEmptyText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Здесь появятся новости программы и полезные материалы'**
+  String get newsEmptyText;
+
+  /// No description provided for @surveyYourAnswer.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ваш ответ'**
+  String get surveyYourAnswer;
+
+  /// No description provided for @surveySubmitReward.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ответить и получить {n} IQC'**
+  String surveySubmitReward(int n);
+
+  /// No description provided for @surveyWriteHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Напишите ответ, чтобы отправить'**
+  String get surveyWriteHint;
+
+  /// No description provided for @surveyRatingLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оценка'**
+  String get surveyRatingLabel;
+
+  /// No description provided for @surveyRatingOf.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n} из {max}'**
+  String surveyRatingOf(int n, int max);
+
+  /// No description provided for @surveyRatingWords.
+  ///
+  /// In ru, this message translates to:
+  /// **'Плохо,Так себе,Нормально,Хорошо,Отлично'**
+  String get surveyRatingWords;
+
+  /// No description provided for @surveyReward.
+  ///
+  /// In ru, this message translates to:
+  /// **'+{n} IQC'**
+  String surveyReward(int n);
+
+  /// No description provided for @surveyOnBalance.
+  ///
+  /// In ru, this message translates to:
+  /// **'уже на вашем балансе'**
+  String get surveyOnBalance;
+
+  /// No description provided for @surveySendFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не удалось отправить ответ. Попробуйте ещё раз'**
+  String get surveySendFailed;
+
+  /// No description provided for @medrepHelloName.
+  ///
+  /// In ru, this message translates to:
+  /// **'Привет, {name}!'**
+  String medrepHelloName(String name);
+
+  /// No description provided for @medrepAttrShared.
+  ///
+  /// In ru, this message translates to:
+  /// **'общая атрибуция'**
+  String get medrepAttrShared;
+
+  /// No description provided for @medrepAttrPrimary.
+  ///
+  /// In ru, this message translates to:
+  /// **'первичная атрибуция'**
+  String get medrepAttrPrimary;
+
+  /// No description provided for @medrepPeriodAll.
+  ///
+  /// In ru, this message translates to:
+  /// **'Всё время'**
+  String get medrepPeriodAll;
+
+  /// No description provided for @medrepPeriod30.
+  ///
+  /// In ru, this message translates to:
+  /// **'30 дней'**
+  String get medrepPeriod30;
+
+  /// No description provided for @medrepPeriod7.
+  ///
+  /// In ru, this message translates to:
+  /// **'7 дней'**
+  String get medrepPeriod7;
+
+  /// No description provided for @medrepUnitPharm.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{фармацевт} few{фармацевта} many{фармацевтов} other{фармацевта}}'**
+  String medrepUnitPharm(int n);
+
+  /// No description provided for @medrepUnitChecks.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{чек} few{чека} many{чеков} other{чека}}'**
+  String medrepUnitChecks(int n);
+
+  /// No description provided for @medrepUnitPacks.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{упаковка} few{упаковки} many{упаковок} other{упаковки}}'**
+  String medrepUnitPacks(int n);
+
+  /// No description provided for @medrepUnitQuestsDone.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{квест выполнен} few{квеста выполнено} many{квестов выполнено} other{квеста выполнено}}'**
+  String medrepUnitQuestsDone(int n);
+
+  /// No description provided for @medrepUnitQuests.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{квест} few{квеста} many{квестов} other{квеста}}'**
+  String medrepUnitQuests(int n);
+
+  /// No description provided for @medrepUnitPharmacies.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{аптека} few{аптеки} many{аптек} other{аптеки}}'**
+  String medrepUnitPharmacies(int n);
+
+  /// No description provided for @medrepUnitPharmacists.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{провизор} few{провизора} many{провизоров} other{провизора}}'**
+  String medrepUnitPharmacists(int n);
+
+  /// No description provided for @medrepUnitChecksAllTime.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{чек за всё время} few{чека за всё время} many{чеков за всё время} other{чека за всё время}}'**
+  String medrepUnitChecksAllTime(int n);
+
+  /// No description provided for @medrepCountChecks.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{{n} чек} few{{n} чека} many{{n} чеков} other{{n} чека}}'**
+  String medrepCountChecks(int n);
+
+  /// No description provided for @medrepCountPacks.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{{n} упаковка} few{{n} упаковки} many{{n} упаковок} other{{n} упаковки}}'**
+  String medrepCountPacks(int n);
+
+  /// No description provided for @medrepCountQuests.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{{n} квест} few{{n} квеста} many{{n} квестов} other{{n} квеста}}'**
+  String medrepCountQuests(int n);
+
+  /// No description provided for @medrepCountMedreps.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{{n} медпред} few{{n} медпреда} many{{n} медпредов} other{{n} медпреда}}'**
+  String medrepCountMedreps(int n);
+
+  /// No description provided for @medrepCountPharmacists.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{{n} провизор} few{{n} провизора} many{{n} провизоров} other{{n} провизора}}'**
+  String medrepCountPharmacists(int n);
+
+  /// No description provided for @medrepCountChains.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{{n} сеть} few{{n} сети} many{{n} сетей} other{{n} сети}}'**
+  String medrepCountChains(int n);
+
+  /// No description provided for @medrepPharmaciesInPortfolio.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{{n} аптека в портфеле} few{{n} аптеки в портфеле} many{{n} аптек в портфеле} other{{n} аптеки в портфеле}}'**
+  String medrepPharmaciesInPortfolio(int n);
+
+  /// No description provided for @medrepRatingByChecks.
+  ///
+  /// In ru, this message translates to:
+  /// **'Рейтинг по чекам'**
+  String get medrepRatingByChecks;
+
+  /// No description provided for @medrepRatingAll.
+  ///
+  /// In ru, this message translates to:
+  /// **'Весь рейтинг'**
+  String get medrepRatingAll;
+
+  /// No description provided for @medrepPlace.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n} место'**
+  String medrepPlace(int n);
+
+  /// No description provided for @medrepOutOf.
+  ///
+  /// In ru, this message translates to:
+  /// **'из {n}'**
+  String medrepOutOf(int n);
+
+  /// No description provided for @medrepGapTo.
+  ///
+  /// In ru, this message translates to:
+  /// **'До {place} места — ещё'**
+  String medrepGapTo(int place);
+
+  /// No description provided for @medrepLeader.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вы лидер рейтинга'**
+  String get medrepLeader;
+
+  /// No description provided for @medrepMostActive.
+  ///
+  /// In ru, this message translates to:
+  /// **'Самые активные'**
+  String get medrepMostActive;
+
+  /// No description provided for @medrepAllN.
+  ///
+  /// In ru, this message translates to:
+  /// **'Все {n}'**
+  String medrepAllN(int n);
+
+  /// No description provided for @medrepInviteTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пригласить провизора'**
+  String get medrepInviteTitle;
+
+  /// No description provided for @medrepInviteText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправьте ссылку — после регистрации провизор попадёт в ваш портфель'**
+  String get medrepInviteText;
+
+  /// No description provided for @medrepCopyLink.
+  ///
+  /// In ru, this message translates to:
+  /// **'Скопировать ссылку'**
+  String get medrepCopyLink;
+
+  /// No description provided for @medrepPendingSub.
+  ///
+  /// In ru, this message translates to:
+  /// **'Провизоры, которые перешли по ссылке'**
+  String get medrepPendingSub;
+
+  /// No description provided for @medrepCompaniesSub.
+  ///
+  /// In ru, this message translates to:
+  /// **'Аптечные сети в портфеле'**
+  String get medrepCompaniesSub;
+
+  /// No description provided for @medrepDoctorsSub.
+  ///
+  /// In ru, this message translates to:
+  /// **'Прогресс по квесту на бланки'**
+  String get medrepDoctorsSub;
+
+  /// No description provided for @medrepEmptyTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Портфель пока пуст'**
+  String get medrepEmptyTitle;
+
+  /// No description provided for @medrepEmptyText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пригласите провизоров по ссылке — их чеки и статистика появятся здесь'**
+  String get medrepEmptyText;
+
+  /// No description provided for @medrepStep1Title.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправьте ссылку'**
+  String get medrepStep1Title;
+
+  /// No description provided for @medrepStep1Text.
+  ///
+  /// In ru, this message translates to:
+  /// **'В Telegram или по SMS'**
+  String get medrepStep1Text;
+
+  /// No description provided for @medrepStep2Title.
+  ///
+  /// In ru, this message translates to:
+  /// **'Провизор регистрируется'**
+  String get medrepStep2Title;
+
+  /// No description provided for @medrepStep2Text.
+  ///
+  /// In ru, this message translates to:
+  /// **'Он сразу попадает в ваш портфель'**
+  String get medrepStep2Text;
+
+  /// No description provided for @medrepStep3Title.
+  ///
+  /// In ru, this message translates to:
+  /// **'Следите за чеками'**
+  String get medrepStep3Title;
+
+  /// No description provided for @medrepStep3Text.
+  ///
+  /// In ru, this message translates to:
+  /// **'Статистика появится здесь'**
+  String get medrepStep3Text;
+
+  /// No description provided for @medrepUpdatedNow.
+  ///
+  /// In ru, this message translates to:
+  /// **'Обновлено сейчас'**
+  String get medrepUpdatedNow;
+
+  /// No description provided for @medrepSearchHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Имя, аптека или город'**
+  String get medrepSearchHint;
+
+  /// No description provided for @medrepFilterAll.
+  ///
+  /// In ru, this message translates to:
+  /// **'Все'**
+  String get medrepFilterAll;
+
+  /// No description provided for @medrepFilterActive.
+  ///
+  /// In ru, this message translates to:
+  /// **'Активные'**
+  String get medrepFilterActive;
+
+  /// No description provided for @medrepFilterPassive.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пассивные'**
+  String get medrepFilterPassive;
+
+  /// No description provided for @medrepFilterFinished.
+  ///
+  /// In ru, this message translates to:
+  /// **'Завершённые'**
+  String get medrepFilterFinished;
+
+  /// No description provided for @medrepFilterApproved.
+  ///
+  /// In ru, this message translates to:
+  /// **'Одобрены'**
+  String get medrepFilterApproved;
+
+  /// No description provided for @medrepFilterRejected.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отклонены'**
+  String get medrepFilterRejected;
+
+  /// No description provided for @medrepClear.
+  ///
+  /// In ru, this message translates to:
+  /// **'Очистить'**
+  String get medrepClear;
+
+  /// No description provided for @medrepNotFoundTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Никого не нашли'**
+  String get medrepNotFoundTitle;
+
+  /// No description provided for @medrepNotFoundText.
+  ///
+  /// In ru, this message translates to:
+  /// **'По запросу «{query}» провизоров нет. Проверьте написание или поищите по названию аптеки'**
+  String medrepNotFoundText(String query);
+
+  /// No description provided for @medrepNotFoundShort.
+  ///
+  /// In ru, this message translates to:
+  /// **'По запросу «{query}» ничего нет. Проверьте написание'**
+  String medrepNotFoundShort(String query);
+
+  /// No description provided for @medrepResetSearch.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сбросить поиск'**
+  String get medrepResetSearch;
+
+  /// No description provided for @medrepChecksAllTime.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чеков за всё время'**
+  String get medrepChecksAllTime;
+
+  /// No description provided for @medrepLastActivity.
+  ///
+  /// In ru, this message translates to:
+  /// **'активность'**
+  String get medrepLastActivity;
+
+  /// No description provided for @medrepAllChecks.
+  ///
+  /// In ru, this message translates to:
+  /// **'Все чеки'**
+  String get medrepAllChecks;
+
+  /// No description provided for @medrepCheckNo.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек №{id}'**
+  String medrepCheckNo(int id);
+
+  /// No description provided for @medrepPacksShort.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n} уп.'**
+  String medrepPacksShort(int n);
+
+  /// No description provided for @medrepPacksUnit.
+  ///
+  /// In ru, this message translates to:
+  /// **'уп.'**
+  String get medrepPacksUnit;
+
+  /// No description provided for @medrepLast7Days.
+  ///
+  /// In ru, this message translates to:
+  /// **'Последние 7 дней'**
+  String get medrepLast7Days;
+
+  /// No description provided for @medrepMonthYear.
+  ///
+  /// In ru, this message translates to:
+  /// **'{month, select, m1{Январь} m2{Февраль} m3{Март} m4{Апрель} m5{Май} m6{Июнь} m7{Июль} m8{Август} m9{Сентябрь} m10{Октябрь} m11{Ноябрь} m12{Декабрь} other{}} {year}'**
+  String medrepMonthYear(String month, String year);
+
+  /// No description provided for @medrepTabChecks.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чеки'**
+  String get medrepTabChecks;
+
+  /// No description provided for @medrepTabPharm.
+  ///
+  /// In ru, this message translates to:
+  /// **'Фармацевты'**
+  String get medrepTabPharm;
+
+  /// No description provided for @medrepTabQuests.
+  ///
+  /// In ru, this message translates to:
+  /// **'Квесты'**
+  String get medrepTabQuests;
+
+  /// No description provided for @medrepYouName.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вы · {name}'**
+  String medrepYouName(String name);
+
+  /// No description provided for @medrepYouShort.
+  ///
+  /// In ru, this message translates to:
+  /// **'ВЫ'**
+  String get medrepYouShort;
+
+  /// No description provided for @medrepGapText.
+  ///
+  /// In ru, this message translates to:
+  /// **'До {place} места — ещё {value}'**
+  String medrepGapText(int place, String value);
+
+  /// No description provided for @medrepNotRankedTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вас пока нет в рейтинге'**
+  String get medrepNotRankedTitle;
+
+  /// No description provided for @medrepNotRankedText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Место считается по чекам ваших провизоров. Пригласите первого — и вы появитесь в списке'**
+  String get medrepNotRankedText;
+
+  /// No description provided for @medrepRatingEmpty.
+  ///
+  /// In ru, this message translates to:
+  /// **'Рейтинг пока пуст'**
+  String get medrepRatingEmpty;
+
+  /// No description provided for @medrepQuestsSub.
+  ///
+  /// In ru, this message translates to:
+  /// **'Прогресс ваших провизоров'**
+  String get medrepQuestsSub;
+
+  /// No description provided for @medrepQuestRunning.
+  ///
+  /// In ru, this message translates to:
+  /// **'Идёт'**
+  String get medrepQuestRunning;
+
+  /// No description provided for @medrepQuestRunningUntil.
+  ///
+  /// In ru, this message translates to:
+  /// **'Идёт · до {date}'**
+  String medrepQuestRunningUntil(String date);
+
+  /// No description provided for @medrepQuestFinished.
+  ///
+  /// In ru, this message translates to:
+  /// **'Завершён'**
+  String get medrepQuestFinished;
+
+  /// No description provided for @medrepQuestFinishedOn.
+  ///
+  /// In ru, this message translates to:
+  /// **'Завершён {date}'**
+  String medrepQuestFinishedOn(String date);
+
+  /// No description provided for @medrepOfN.
+  ///
+  /// In ru, this message translates to:
+  /// **'{a} из {b}'**
+  String medrepOfN(int a, int b);
+
+  /// No description provided for @medrepParticipating.
+  ///
+  /// In ru, this message translates to:
+  /// **'провизоров участвуют'**
+  String get medrepParticipating;
+
+  /// No description provided for @medrepSoldOf.
+  ///
+  /// In ru, this message translates to:
+  /// **'продано из {n}'**
+  String medrepSoldOf(int n);
+
+  /// No description provided for @medrepOfPacks.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{из {n} упаковки} few{из {n} упаковок} many{из {n} упаковок} other{из {n} упаковок}}'**
+  String medrepOfPacks(int n);
+
+  /// No description provided for @medrepGoalPercent.
+  ///
+  /// In ru, this message translates to:
+  /// **'{p}% цели'**
+  String medrepGoalPercent(int p);
+
+  /// No description provided for @medrepPacksLeft.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{осталось {n} упаковка} few{осталось {n} упаковки} many{осталось {n} упаковок} other{осталось {n} упаковки}}'**
+  String medrepPacksLeft(int n);
+
+  /// No description provided for @medrepGoalDone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Цель выполнена'**
+  String get medrepGoalDone;
+
+  /// No description provided for @medrepStatParticipating.
+  ///
+  /// In ru, this message translates to:
+  /// **'участвуют'**
+  String get medrepStatParticipating;
+
+  /// No description provided for @medrepStatCompleted.
+  ///
+  /// In ru, this message translates to:
+  /// **'выполнили'**
+  String get medrepStatCompleted;
+
+  /// No description provided for @medrepStatIdle.
+  ///
+  /// In ru, this message translates to:
+  /// **'не начали'**
+  String get medrepStatIdle;
+
+  /// No description provided for @medrepPharmacistsSection.
+  ///
+  /// In ru, this message translates to:
+  /// **'Провизоры'**
+  String get medrepPharmacistsSection;
+
+  /// No description provided for @medrepDoneOf.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выполнил · {a} из {b}'**
+  String medrepDoneOf(int a, int b);
+
+  /// No description provided for @medrepMoreRows.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{Ещё {n} провизор · {packs} уп.} few{Ещё {n} провизора · {packs} уп.} many{Ещё {n} провизоров · {packs} уп.} other{Ещё {n} провизора · {packs} уп.}}'**
+  String medrepMoreRows(int n, int packs);
+
+  /// No description provided for @medrepShow.
+  ///
+  /// In ru, this message translates to:
+  /// **'Показать'**
+  String get medrepShow;
+
+  /// No description provided for @medrepHide.
+  ///
+  /// In ru, this message translates to:
+  /// **'Свернуть'**
+  String get medrepHide;
+
+  /// No description provided for @medrepPendingText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Перешли по вашей ссылке и ждут, когда вы добавите их в портфель'**
+  String get medrepPendingText;
+
+  /// No description provided for @medrepFollowedLink.
+  ///
+  /// In ru, this message translates to:
+  /// **'Перешёл по ссылке · {ago}'**
+  String medrepFollowedLink(String ago);
+
+  /// No description provided for @medrepAgoNow.
+  ///
+  /// In ru, this message translates to:
+  /// **'только что'**
+  String get medrepAgoNow;
+
+  /// No description provided for @medrepAgoMinutes.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n} мин назад'**
+  String medrepAgoMinutes(int n);
+
+  /// No description provided for @medrepAgoHours.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n} ч назад'**
+  String medrepAgoHours(int n);
+
+  /// No description provided for @medrepAgoYesterday.
+  ///
+  /// In ru, this message translates to:
+  /// **'вчера'**
+  String get medrepAgoYesterday;
+
+  /// No description provided for @medrepAgoDays.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{{n} день назад} few{{n} дня назад} many{{n} дней назад} other{{n} дня назад}}'**
+  String medrepAgoDays(int n);
+
+  /// No description provided for @medrepChainsTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Аптечные сети'**
+  String get medrepChainsTitle;
+
+  /// No description provided for @medrepChainSearchHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Название сети'**
+  String get medrepChainSearchHint;
+
+  /// No description provided for @medrepChainMeta.
+  ///
+  /// In ru, this message translates to:
+  /// **'{city} · {a} апт. · {p} пров.'**
+  String medrepChainMeta(String city, int a, int p);
+
+  /// No description provided for @medrepChainKind.
+  ///
+  /// In ru, this message translates to:
+  /// **'аптечная сеть'**
+  String get medrepChainKind;
+
+  /// No description provided for @medrepPharmaciesSection.
+  ///
+  /// In ru, this message translates to:
+  /// **'Аптеки'**
+  String get medrepPharmaciesSection;
+
+  /// No description provided for @medrepMakers.
+  ///
+  /// In ru, this message translates to:
+  /// **'Компании-производители'**
+  String get medrepMakers;
+
+  /// No description provided for @medrepRewardTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Поощрить: {name}'**
+  String medrepRewardTitle(String name);
+
+  /// No description provided for @medrepRewardRating.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оценка'**
+  String get medrepRewardRating;
+
+  /// No description provided for @medrepRewardMessage.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сообщение'**
+  String get medrepRewardMessage;
+
+  /// No description provided for @medrepOptional.
+  ///
+  /// In ru, this message translates to:
+  /// **'· необязательно'**
+  String get medrepOptional;
+
+  /// No description provided for @medrepRewardHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Например: спасибо за отличные продажи!'**
+  String get medrepRewardHint;
+
+  /// No description provided for @medrepRewardNotice.
+  ///
+  /// In ru, this message translates to:
+  /// **'Провизор получит уведомление с вашим сообщением'**
+  String get medrepRewardNotice;
+
+  /// No description provided for @medrepRewardSend.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправить оценку {n}'**
+  String medrepRewardSend(int n);
+
+  /// No description provided for @medrepRewardStars.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оценка {n} из 5'**
+  String medrepRewardStars(int n);
+
+  /// No description provided for @authVersion.
+  ///
+  /// In ru, this message translates to:
+  /// **'версия {version}'**
+  String authVersion(String version);
+
+  /// No description provided for @authLoading.
+  ///
+  /// In ru, this message translates to:
+  /// **'Загрузка'**
+  String get authLoading;
+
+  /// No description provided for @authWelcomeTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Добро пожаловать в PharmIQ'**
+  String get authWelcomeTitle;
+
+  /// No description provided for @authWelcomeSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Обучение, квесты и награды для фармацевтов и врачей — в одном приложении'**
+  String get authWelcomeSubtitle;
+
+  /// No description provided for @authAppLanguage.
+  ///
+  /// In ru, this message translates to:
+  /// **'Язык приложения'**
+  String get authAppLanguage;
+
+  /// No description provided for @authStart.
+  ///
+  /// In ru, this message translates to:
+  /// **'Начать'**
+  String get authStart;
+
+  /// No description provided for @authHaveAccount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Уже есть аккаунт?'**
+  String get authHaveAccount;
+
+  /// No description provided for @authLanguageLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Язык: {language}'**
+  String authLanguageLabel(String language);
+
+  /// No description provided for @authLoginSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Обучение и награды для фармацевтов и врачей'**
+  String get authLoginSubtitle;
+
+  /// No description provided for @authSmsHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправим код в SMS'**
+  String get authSmsHint;
+
+  /// No description provided for @authPhoneNotRegistered.
+  ///
+  /// In ru, this message translates to:
+  /// **'Этот номер не зарегистрирован. Создайте аккаунт — это займёт минуту'**
+  String get authPhoneNotRegistered;
+
+  /// No description provided for @authOtherNumber.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ввести другой номер'**
+  String get authOtherNumber;
+
+  /// No description provided for @authCodeSentTo.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправили на {phone}'**
+  String authCodeSentTo(String phone);
+
+  /// No description provided for @authChange.
+  ///
+  /// In ru, this message translates to:
+  /// **'Изменить'**
+  String get authChange;
+
+  /// No description provided for @authCodeGroup.
+  ///
+  /// In ru, this message translates to:
+  /// **'Код из 6 цифр'**
+  String get authCodeGroup;
+
+  /// No description provided for @authCodeAuto.
+  ///
+  /// In ru, this message translates to:
+  /// **'Войдём автоматически, как только введёте код'**
+  String get authCodeAuto;
+
+  /// No description provided for @authResendIn.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправить снова через {time}'**
+  String authResendIn(String time);
+
+  /// No description provided for @authRoleSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'У вас несколько ролей — выберите, под какой войти'**
+  String get authRoleSubtitle;
+
+  /// No description provided for @authRoleSubDoctor.
+  ///
+  /// In ru, this message translates to:
+  /// **'Рецепты, квесты, обучение и кошелёк'**
+  String get authRoleSubDoctor;
+
+  /// No description provided for @authRoleHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сменить роль можно в любой момент в профиле'**
+  String get authRoleHint;
+
+  /// No description provided for @authRegWhoTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Кто вы?'**
+  String get authRegWhoTitle;
+
+  /// No description provided for @authRegWhoSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Покажем квесты и курсы для вашей профессии'**
+  String get authRegWhoSubtitle;
+
+  /// No description provided for @authRegPharmacistSub.
+  ///
+  /// In ru, this message translates to:
+  /// **'Провизор, работник аптеки'**
+  String get authRegPharmacistSub;
+
+  /// No description provided for @authRegDoctorSub.
+  ///
+  /// In ru, this message translates to:
+  /// **'Специалист здравоохранения'**
+  String get authRegDoctorSub;
+
+  /// No description provided for @authContinue.
+  ///
+  /// In ru, this message translates to:
+  /// **'Продолжить'**
+  String get authContinue;
+
+  /// No description provided for @authBack.
+  ///
+  /// In ru, this message translates to:
+  /// **'Назад'**
+  String get authBack;
+
+  /// No description provided for @authChooseField.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выберите {label}'**
+  String authChooseField(String label);
+
+  /// No description provided for @authMultiHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Можно выбрать несколько · выбрано {n}'**
+  String authMultiHint(int n);
+
+  /// No description provided for @authMultiHintEmpty.
+  ///
+  /// In ru, this message translates to:
+  /// **'Можно выбрать несколько'**
+  String get authMultiHintEmpty;
+
+  /// No description provided for @authConsent.
+  ///
+  /// In ru, this message translates to:
+  /// **'Согласен на обработку персональных данных — '**
+  String get authConsent;
+
+  /// No description provided for @authFillRequired.
+  ///
+  /// In ru, this message translates to:
+  /// **'Заполните поля со звёздочкой и дайте согласие'**
+  String get authFillRequired;
+
+  /// No description provided for @authRegWelcome.
+  ///
+  /// In ru, this message translates to:
+  /// **'Добро пожаловать в PharmIQ, {name}!'**
+  String authRegWelcome(String name);
+
+  /// No description provided for @authGoHome.
+  ///
+  /// In ru, this message translates to:
+  /// **'На главную'**
+  String get authGoHome;
+
+  /// No description provided for @authCityTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Город'**
+  String get authCityTitle;
+
+  /// No description provided for @authCitySearch.
+  ///
+  /// In ru, this message translates to:
+  /// **'Найти город'**
+  String get authCitySearch;
+
+  /// No description provided for @authSearch.
+  ///
+  /// In ru, this message translates to:
+  /// **'Поиск'**
+  String get authSearch;
+
+  /// No description provided for @authNothingFound.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ничего не найдено'**
+  String get authNothingFound;
+
+  /// No description provided for @authMapTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Аптека на карте'**
+  String get authMapTitle;
+
+  /// No description provided for @authMapStubTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Карта скоро появится'**
+  String get authMapStubTitle;
+
+  /// No description provided for @authMapStubBody.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пока впишите название аптеки в поле «Аптека / место работы» — отметить её на карте можно будет в следующем обновлении'**
+  String get authMapStubBody;
+
+  /// No description provided for @authUpdateTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нужно обновить приложение'**
+  String get authUpdateTitle;
+
+  /// No description provided for @authUpdateBody.
+  ///
+  /// In ru, this message translates to:
+  /// **'Эта версия больше не поддерживается. Обновите PharmIQ, чтобы продолжить — баланс и прогресс сохранятся'**
+  String get authUpdateBody;
+
+  /// No description provided for @authUpdateButton.
+  ///
+  /// In ru, this message translates to:
+  /// **'Обновить приложение'**
+  String get authUpdateButton;
+
+  /// No description provided for @authUpdateVersions.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ваша версия {current} · нужна {required} или новее'**
+  String authUpdateVersions(String current, String required);
+
+  /// No description provided for @authUpdateRequired.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нужна версия {required} или новее'**
+  String authUpdateRequired(String required);
+
+  /// No description provided for @authPushTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не пропускайте начисления'**
+  String get authPushTitle;
+
+  /// No description provided for @authPushBody.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сообщим, когда чек проверят, IQC придут на баланс или появится новый квест'**
+  String get authPushBody;
+
+  /// No description provided for @authPushNow.
+  ///
+  /// In ru, this message translates to:
+  /// **'сейчас'**
+  String get authPushNow;
+
+  /// No description provided for @authPushSample1Title.
+  ///
+  /// In ru, this message translates to:
+  /// **'Начислено +144 IQC'**
+  String get authPushSample1Title;
+
+  /// No description provided for @authPushSample1Body.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек №23156 · Цинкорот №50'**
+  String get authPushSample1Body;
+
+  /// No description provided for @authPushSample2Time.
+  ///
+  /// In ru, this message translates to:
+  /// **'2 ч назад'**
+  String get authPushSample2Time;
+
+  /// No description provided for @authPushSample2Title.
+  ///
+  /// In ru, this message translates to:
+  /// **'Новый квест'**
+  String get authPushSample2Title;
+
+  /// No description provided for @authPushSample2Body.
+  ///
+  /// In ru, this message translates to:
+  /// **'Доритрицин N10 · ваучер Korzinka'**
+  String get authPushSample2Body;
+
+  /// No description provided for @authPushEnable.
+  ///
+  /// In ru, this message translates to:
+  /// **'Включить уведомления'**
+  String get authPushEnable;
+
+  /// No description provided for @authPushLater.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не сейчас'**
+  String get authPushLater;
+
+  /// No description provided for @checksSentCount.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{{n} чек отправлен} few{{n} чека отправлено} many{{n} чеков отправлено} other{{n} чека отправлено}}'**
+  String checksSentCount(int n);
+
+  /// No description provided for @checksSectionRetake.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нужно переснять'**
+  String get checksSectionRetake;
+
+  /// No description provided for @checksSectionHistory.
+  ///
+  /// In ru, this message translates to:
+  /// **'История'**
+  String get checksSectionHistory;
+
+  /// No description provided for @checksRetake.
+  ///
+  /// In ru, this message translates to:
+  /// **'Переснять'**
+  String get checksRetake;
+
+  /// No description provided for @checksRetakeA11y.
+  ///
+  /// In ru, this message translates to:
+  /// **'Переснять чек №{id}'**
+  String checksRetakeA11y(int id);
+
+  /// No description provided for @checksRetakeTipBold.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чтобы чек приняли с первого раза:'**
+  String get checksRetakeTipBold;
+
+  /// No description provided for @checksRetakeTip.
+  ///
+  /// In ru, this message translates to:
+  /// **'весь чек в кадре, ровно, без бликов и при хорошем свете.'**
+  String get checksRetakeTip;
+
+  /// No description provided for @checksNumberDate.
+  ///
+  /// In ru, this message translates to:
+  /// **'№{id} · {date}'**
+  String checksNumberDate(int id, String date);
+
+  /// No description provided for @checksDatePhotos.
+  ///
+  /// In ru, this message translates to:
+  /// **'{date} · {n} фото'**
+  String checksDatePhotos(String date, int n);
+
+  /// No description provided for @checksPhotoCount.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n} фото'**
+  String checksPhotoCount(int n);
+
+  /// No description provided for @checksWaitValue.
+  ///
+  /// In ru, this message translates to:
+  /// **'~24 ч'**
+  String get checksWaitValue;
+
+  /// No description provided for @checksWaitCaption.
+  ///
+  /// In ru, this message translates to:
+  /// **'обычно'**
+  String get checksWaitCaption;
+
+  /// No description provided for @checksShowAll.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{Показать все {n} чек} few{Показать все {n} чека} many{Показать все {n} чеков} other{Показать все {n} чека}}'**
+  String checksShowAll(int n);
+
+  /// No description provided for @checksSendCheck.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправить чек'**
+  String get checksSendCheck;
+
+  /// No description provided for @checksMonth.
+  ///
+  /// In ru, this message translates to:
+  /// **'{m, select, m1{Январь} m2{Февраль} m3{Март} m4{Апрель} m5{Май} m6{Июнь} m7{Июль} m8{Август} m9{Сентябрь} m10{Октябрь} m11{Ноябрь} m12{Декабрь} other{}}'**
+  String checksMonth(String m);
+
+  /// No description provided for @checksUploadingRow.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправляем чек…'**
+  String get checksUploadingRow;
+
+  /// No description provided for @checksUploadQueued.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ждёт отправки'**
+  String get checksUploadQueued;
+
+  /// No description provided for @checksUploadAuto.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправим автоматически, когда появится связь'**
+  String get checksUploadAuto;
+
+  /// No description provided for @checksEmptyTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Здесь появятся ваши чеки'**
+  String get checksEmptyTitle;
+
+  /// No description provided for @checksEmptyText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сфотографируйте чек из аптеки — ИИ распознает препараты, и вы получите IQC'**
+  String get checksEmptyText;
+
+  /// No description provided for @checksHowToTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Как сфотографировать'**
+  String get checksHowToTitle;
+
+  /// No description provided for @checksHow1Title.
+  ///
+  /// In ru, this message translates to:
+  /// **'Весь чек в кадре'**
+  String get checksHow1Title;
+
+  /// No description provided for @checksHow1Text.
+  ///
+  /// In ru, this message translates to:
+  /// **'Все четыре угла видны'**
+  String get checksHow1Text;
+
+  /// No description provided for @checksHow2Title.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ровно, без складок'**
+  String get checksHow2Title;
+
+  /// No description provided for @checksHow2Text.
+  ///
+  /// In ru, this message translates to:
+  /// **'Положите чек на стол'**
+  String get checksHow2Text;
+
+  /// No description provided for @checksHow3Title.
+  ///
+  /// In ru, this message translates to:
+  /// **'Хороший свет'**
+  String get checksHow3Title;
+
+  /// No description provided for @checksHow3Text.
+  ///
+  /// In ru, this message translates to:
+  /// **'Без бликов и тени от телефона'**
+  String get checksHow3Text;
+
+  /// No description provided for @checksSendFirst.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправить первый чек'**
+  String get checksSendFirst;
+
+  /// No description provided for @checksPickSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'ИИ распознает препараты по фото'**
+  String get checksPickSubtitle;
+
+  /// No description provided for @checksPhotosOf.
+  ///
+  /// In ru, this message translates to:
+  /// **'Фото: {n} из {max}'**
+  String checksPhotosOf(int n, int max);
+
+  /// No description provided for @checksClose.
+  ///
+  /// In ru, this message translates to:
+  /// **'Закрыть'**
+  String get checksClose;
+
+  /// No description provided for @checksTipWhole.
+  ///
+  /// In ru, this message translates to:
+  /// **'Весь чек'**
+  String get checksTipWhole;
+
+  /// No description provided for @checksTipFlat.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ровно'**
+  String get checksTipFlat;
+
+  /// No description provided for @checksTipGlare.
+  ///
+  /// In ru, this message translates to:
+  /// **'Без бликов'**
+  String get checksTipGlare;
+
+  /// No description provided for @checksTakePhotoCta.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сфотографировать чек'**
+  String get checksTakePhotoCta;
+
+  /// No description provided for @checksPickGallery.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выбрать из галереи'**
+  String get checksPickGallery;
+
+  /// No description provided for @checksRemovePhoto.
+  ///
+  /// In ru, this message translates to:
+  /// **'Удалить фото'**
+  String get checksRemovePhoto;
+
+  /// No description provided for @checksAddMore.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ещё фото'**
+  String get checksAddMore;
+
+  /// No description provided for @checksAddMoreA11y.
+  ///
+  /// In ru, this message translates to:
+  /// **'Добавить ещё фото'**
+  String get checksAddMoreA11y;
+
+  /// No description provided for @checksPhotoWaiting.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ждёт'**
+  String get checksPhotoWaiting;
+
+  /// No description provided for @checksPhotosHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Проверьте: номер чека, дата и препараты хорошо видны'**
+  String get checksPhotosHint;
+
+  /// No description provided for @checksSending.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправляем…'**
+  String get checksSending;
+
+  /// No description provided for @checksSentTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек отправлен'**
+  String get checksSentTitle;
+
+  /// No description provided for @checksSentText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Проверка обычно занимает до 24 часов. Сообщим, когда начислим IQC'**
+  String get checksSentText;
+
+  /// No description provided for @checksDone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Готово'**
+  String get checksDone;
+
+  /// No description provided for @checksSendAnother.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправить ещё чек'**
+  String get checksSendAnother;
+
+  /// No description provided for @checksSendFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не удалось сохранить фото. Попробуйте ещё раз'**
+  String get checksSendFailed;
+
+  /// No description provided for @checksCamTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Разрешите доступ к камере'**
+  String get checksCamTitle;
+
+  /// No description provided for @checksCamText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Камера нужна, чтобы фотографировать чеки и рецепты'**
+  String get checksCamText;
+
+  /// No description provided for @checksCamPoint1.
+  ///
+  /// In ru, this message translates to:
+  /// **'Снимаем только когда вы нажмёте кнопку'**
+  String get checksCamPoint1;
+
+  /// No description provided for @checksCamPoint2.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не смотрим и не сохраняем другие фото'**
+  String get checksCamPoint2;
+
+  /// No description provided for @checksCamPoint3.
+  ///
+  /// In ru, this message translates to:
+  /// **'Доступ можно отключить в настройках телефона'**
+  String get checksCamPoint3;
+
+  /// No description provided for @checksCamAllow.
+  ///
+  /// In ru, this message translates to:
+  /// **'Разрешить доступ'**
+  String get checksCamAllow;
+
+  /// No description provided for @checksCamLater.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не сейчас'**
+  String get checksCamLater;
+
+  /// No description provided for @checksCamDeniedTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет доступа к камере'**
+  String get checksCamDeniedTitle;
+
+  /// No description provided for @checksCamDeniedText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Без камеры не получится сфотографировать чек. Включите доступ в настройках телефона — это займёт 10 секунд'**
+  String get checksCamDeniedText;
+
+  /// No description provided for @checksCamDeniedStep1.
+  ///
+  /// In ru, this message translates to:
+  /// **'Откройте «Настройки» → PharmIQ'**
+  String get checksCamDeniedStep1;
+
+  /// No description provided for @checksCamDeniedStep2.
+  ///
+  /// In ru, this message translates to:
+  /// **'Включите переключатель «Камера»'**
+  String get checksCamDeniedStep2;
+
+  /// No description provided for @checksCamDeniedStep3.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вернитесь в приложение'**
+  String get checksCamDeniedStep3;
+
+  /// No description provided for @checksCamOpenSettings.
+  ///
+  /// In ru, this message translates to:
+  /// **'Открыть настройки'**
+  String get checksCamOpenSettings;
+
+  /// No description provided for @checksCamPickGallery.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выбрать фото из галереи'**
+  String get checksCamPickGallery;
+
+  /// No description provided for @checksCamSettingsManual.
+  ///
+  /// In ru, this message translates to:
+  /// **'Откройте настройки телефона → Приложения → PharmIQ → Разрешения'**
+  String get checksCamSettingsManual;
+
+  /// No description provided for @checksHeroPendingTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек на проверке'**
+  String get checksHeroPendingTitle;
+
+  /// No description provided for @checksHeroPendingText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Специалист проверяет чек. Обычно это занимает до 24 часов'**
+  String get checksHeroPendingText;
+
+  /// No description provided for @checksHeroApprovedTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек одобрен'**
+  String get checksHeroApprovedTitle;
+
+  /// No description provided for @checksHeroApprovedText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Всё в порядке. IQC поступят на баланс в ближайшее время'**
+  String get checksHeroApprovedText;
+
+  /// No description provided for @checksHeroCreditedTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'IQC начислены'**
+  String get checksHeroCreditedTitle;
+
+  /// No description provided for @checksHeroCreditedText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Баллы зачислены на ваш баланс'**
+  String get checksHeroCreditedText;
+
+  /// No description provided for @checksHeroRejectedTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек отклонён'**
+  String get checksHeroRejectedTitle;
+
+  /// No description provided for @checksHeroRejectedText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сделайте чёткое фото — баллы ещё можно получить'**
+  String get checksHeroRejectedText;
+
+  /// No description provided for @checksStepSent.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправлен'**
+  String get checksStepSent;
+
+  /// No description provided for @checksStepReview.
+  ///
+  /// In ru, this message translates to:
+  /// **'Проверка'**
+  String get checksStepReview;
+
+  /// No description provided for @checksStepApproved.
+  ///
+  /// In ru, this message translates to:
+  /// **'Одобрен'**
+  String get checksStepApproved;
+
+  /// No description provided for @checksStepCredited.
+  ///
+  /// In ru, this message translates to:
+  /// **'Начислено'**
+  String get checksStepCredited;
+
+  /// No description provided for @checksPhotosTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Фото чека'**
+  String get checksPhotosTitle;
+
+  /// No description provided for @checksOpenPhoto.
+  ///
+  /// In ru, this message translates to:
+  /// **'Открыть фото {n}'**
+  String checksOpenPhoto(int n);
+
+  /// No description provided for @checksAiPending.
+  ///
+  /// In ru, this message translates to:
+  /// **'Список препаратов появится после проверки'**
+  String get checksAiPending;
+
+  /// No description provided for @checksAccrualTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Начисление'**
+  String get checksAccrualTitle;
+
+  /// No description provided for @checksAccrualPendingTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Начислим после одобрения'**
+  String get checksAccrualPendingTitle;
+
+  /// No description provided for @checksAccrualPendingText.
+  ///
+  /// In ru, this message translates to:
+  /// **'После одобрения чека'**
+  String get checksAccrualPendingText;
+
+  /// No description provided for @checksAccrualApprovedTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ожидает начисления'**
+  String get checksAccrualApprovedTitle;
+
+  /// No description provided for @checksAccrualSoon.
+  ///
+  /// In ru, this message translates to:
+  /// **'Скоро'**
+  String get checksAccrualSoon;
+
+  /// No description provided for @checksAccrualCreditedTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Зачислено на баланс'**
+  String get checksAccrualCreditedTitle;
+
+  /// No description provided for @checksQuestDone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Квест выполнен ✓'**
+  String get checksQuestDone;
+
+  /// No description provided for @checksSupport.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вопрос по чеку? Напишите нам'**
+  String get checksSupport;
+
+  /// No description provided for @checksRetakeCheck.
+  ///
+  /// In ru, this message translates to:
+  /// **'Переснять чек'**
+  String get checksRetakeCheck;
+
+  /// No description provided for @checksViewerPhotoOf.
+  ///
+  /// In ru, this message translates to:
+  /// **'Фото {i} из {n}'**
+  String checksViewerPhotoOf(int i, int n);
+
+  /// No description provided for @checksViewerSave.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сохранить фото'**
+  String get checksViewerSave;
+
+  /// No description provided for @checksViewerZoomHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Разведите пальцами, чтобы приблизить'**
+  String get checksViewerZoomHint;
+
+  /// No description provided for @profileSectionContact.
+  ///
+  /// In ru, this message translates to:
+  /// **'Связь'**
+  String get profileSectionContact;
+
+  /// No description provided for @profilePersonalDataRow.
+  ///
+  /// In ru, this message translates to:
+  /// **'Личные данные'**
+  String get profilePersonalDataRow;
+
+  /// No description provided for @profileTgNotLinked.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не привязан'**
+  String get profileTgNotLinked;
+
+  /// No description provided for @profileTgLink.
+  ///
+  /// In ru, this message translates to:
+  /// **'Привязать'**
+  String get profileTgLink;
+
+  /// No description provided for @profileTgLinkedToast.
+  ///
+  /// In ru, this message translates to:
+  /// **'Telegram привязан'**
+  String get profileTgLinkedToast;
+
+  /// No description provided for @profileTgNotYet.
+  ///
+  /// In ru, this message translates to:
+  /// **'Telegram пока не привязан — завершите привязку в боте'**
+  String get profileTgNotYet;
+
+  /// No description provided for @profileAppearanceTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оформление'**
+  String get profileAppearanceTitle;
+
+  /// No description provided for @profileNotifOn.
+  ///
+  /// In ru, this message translates to:
+  /// **'Включены'**
+  String get profileNotifOn;
+
+  /// No description provided for @profileNotifOff.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выключены'**
+  String get profileNotifOff;
+
+  /// No description provided for @profileDeleteAccount.
+  ///
+  /// In ru, this message translates to:
+  /// **'Удалить аккаунт'**
+  String get profileDeleteAccount;
+
+  /// No description provided for @profileVersion.
+  ///
+  /// In ru, this message translates to:
+  /// **'PharmIQ · версия {version}'**
+  String profileVersion(String version);
+
+  /// No description provided for @profileEditAria.
+  ///
+  /// In ru, this message translates to:
+  /// **'Редактировать профиль'**
+  String get profileEditAria;
+
+  /// No description provided for @profileNewUser.
+  ///
+  /// In ru, this message translates to:
+  /// **'Новый пользователь'**
+  String get profileNewUser;
+
+  /// No description provided for @profilePharmacy.
+  ///
+  /// In ru, this message translates to:
+  /// **'Аптека'**
+  String get profilePharmacy;
+
+  /// No description provided for @profileClinic.
+  ///
+  /// In ru, this message translates to:
+  /// **'Клиника'**
+  String get profileClinic;
+
+  /// No description provided for @profileCompany.
+  ///
+  /// In ru, this message translates to:
+  /// **'Компания'**
+  String get profileCompany;
+
+  /// No description provided for @profileNoPharmacy.
+  ///
+  /// In ru, this message translates to:
+  /// **'Аптека не указана'**
+  String get profileNoPharmacy;
+
+  /// No description provided for @profileNoClinic.
+  ///
+  /// In ru, this message translates to:
+  /// **'Клиника не указана'**
+  String get profileNoClinic;
+
+  /// No description provided for @profileNoCompany.
+  ///
+  /// In ru, this message translates to:
+  /// **'Компания не указана'**
+  String get profileNoCompany;
+
+  /// No description provided for @profileNotSpecified.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не указана'**
+  String get profileNotSpecified;
+
+  /// No description provided for @profileNameNotSet.
+  ///
+  /// In ru, this message translates to:
+  /// **'Имя не указано'**
+  String get profileNameNotSet;
+
+  /// No description provided for @profileActivateTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Активируйте профиль'**
+  String get profileActivateTitle;
+
+  /// No description provided for @profileActivateProgress.
+  ///
+  /// In ru, this message translates to:
+  /// **'{done} из {total}'**
+  String profileActivateProgress(int done, int total);
+
+  /// No description provided for @profileActivateBody.
+  ///
+  /// In ru, this message translates to:
+  /// **'После активации откроются квесты и начисление IQC'**
+  String get profileActivateBody;
+
+  /// No description provided for @profileStepPhone.
+  ///
+  /// In ru, this message translates to:
+  /// **'Телефон подтверждён'**
+  String get profileStepPhone;
+
+  /// No description provided for @profileStepPharmacy.
+  ///
+  /// In ru, this message translates to:
+  /// **'Укажите аптеку'**
+  String get profileStepPharmacy;
+
+  /// No description provided for @profileStepClinic.
+  ///
+  /// In ru, this message translates to:
+  /// **'Укажите клинику'**
+  String get profileStepClinic;
+
+  /// No description provided for @profileStepProfile.
+  ///
+  /// In ru, this message translates to:
+  /// **'Заполните профиль'**
+  String get profileStepProfile;
+
+  /// No description provided for @profileStepWorkHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нужна для квестов вашего региона'**
+  String get profileStepWorkHint;
+
+  /// No description provided for @profileStepProfileHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Имя и место работы'**
+  String get profileStepProfileHint;
+
+  /// No description provided for @profileStepSpecify.
+  ///
+  /// In ru, this message translates to:
+  /// **'Указать'**
+  String get profileStepSpecify;
+
+  /// No description provided for @profileStepTelegram.
+  ///
+  /// In ru, this message translates to:
+  /// **'Привяжите Telegram'**
+  String get profileStepTelegram;
+
+  /// No description provided for @profileStepTelegramHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Будем присылать уведомления'**
+  String get profileStepTelegramHint;
+
+  /// No description provided for @profileStepAdmin.
+  ///
+  /// In ru, this message translates to:
+  /// **'Активация администратором'**
+  String get profileStepAdmin;
+
+  /// No description provided for @profileStepAdminHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Обычно в течение дня после заполнения'**
+  String get profileStepAdminHint;
+
+  /// No description provided for @profileActivateHelp.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вопросы по активации? Напишите нам'**
+  String get profileActivateHelp;
+
+  /// No description provided for @profileRoleSheetTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сменить роль'**
+  String get profileRoleSheetTitle;
+
+  /// No description provided for @profileRoleSheetSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Роли, подтверждённые для вашего аккаунта'**
+  String get profileRoleSheetSubtitle;
+
+  /// No description provided for @profileRoleCurrent.
+  ///
+  /// In ru, this message translates to:
+  /// **'Текущая'**
+  String get profileRoleCurrent;
+
+  /// No description provided for @profileRoleDescPharmacist.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чеки, квесты, обучение и кошелёк'**
+  String get profileRoleDescPharmacist;
+
+  /// No description provided for @profileRoleDescDoctor.
+  ///
+  /// In ru, this message translates to:
+  /// **'Рецепты, квесты, обучение и кошелёк'**
+  String get profileRoleDescDoctor;
+
+  /// No description provided for @profileRoleDescMedrep.
+  ///
+  /// In ru, this message translates to:
+  /// **'Портфель провизоров и рейтинг'**
+  String get profileRoleDescMedrep;
+
+  /// No description provided for @profileRoleDescBrand.
+  ///
+  /// In ru, this message translates to:
+  /// **'Квесты бренда, продукты и продажи'**
+  String get profileRoleDescBrand;
+
+  /// No description provided for @profileRoleNote.
+  ///
+  /// In ru, this message translates to:
+  /// **'Приложение откроется с разделами для выбранной роли. Баланс IQC и ваучеры сохранятся'**
+  String get profileRoleNote;
+
+  /// No description provided for @profileRoleSwitch.
+  ///
+  /// In ru, this message translates to:
+  /// **'Переключиться на «{role}»'**
+  String profileRoleSwitch(String role);
+
+  /// No description provided for @profileClose.
+  ///
+  /// In ru, this message translates to:
+  /// **'Закрыть'**
+  String get profileClose;
+
+  /// No description provided for @profileFieldName.
+  ///
+  /// In ru, this message translates to:
+  /// **'ФИО'**
+  String get profileFieldName;
+
+  /// No description provided for @profilePhoneLockedHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Номер нужен для входа — меняется с подтверждением по SMS'**
+  String get profilePhoneLockedHint;
+
+  /// No description provided for @profileFieldCity.
+  ///
+  /// In ru, this message translates to:
+  /// **'Город'**
+  String get profileFieldCity;
+
+  /// No description provided for @profileCityHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выберите город'**
+  String get profileCityHint;
+
+  /// No description provided for @profileWorkplaceHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Название или номер'**
+  String get profileWorkplaceHint;
+
+  /// No description provided for @profileMapButton.
+  ///
+  /// In ru, this message translates to:
+  /// **'Уточнить аптеку на карте'**
+  String get profileMapButton;
+
+  /// No description provided for @profileMapSoon.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выбор аптеки на карте скоро появится'**
+  String get profileMapSoon;
+
+  /// No description provided for @profileSave.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сохранить изменения'**
+  String get profileSave;
+
+  /// No description provided for @profileFieldRequired.
+  ///
+  /// In ru, this message translates to:
+  /// **'Заполните это поле'**
+  String get profileFieldRequired;
+
+  /// No description provided for @profileEditSent.
+  ///
+  /// In ru, this message translates to:
+  /// **'Заявка отправлена в поддержку'**
+  String get profileEditSent;
+
+  /// No description provided for @profileEditSentHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Обновим данные после проверки'**
+  String get profileEditSentHint;
+
+  /// No description provided for @profileEditRequest.
+  ///
+  /// In ru, this message translates to:
+  /// **'Прошу обновить данные профиля:'**
+  String get profileEditRequest;
+
+  /// No description provided for @profileEditNoChanges.
+  ///
+  /// In ru, this message translates to:
+  /// **'Изменений нет'**
+  String get profileEditNoChanges;
+
+  /// No description provided for @profilePrivacyShort.
+  ///
+  /// In ru, this message translates to:
+  /// **'Конфиденциальность'**
+  String get profilePrivacyShort;
+
+  /// No description provided for @profilePrivacyHeadline.
+  ///
+  /// In ru, this message translates to:
+  /// **'Как мы обращаемся с вашими данными'**
+  String get profilePrivacyHeadline;
+
+  /// No description provided for @profilePrivacyCollectTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Какие данные мы собираем'**
+  String get profilePrivacyCollectTitle;
+
+  /// No description provided for @profilePrivacyCollectBody.
+  ///
+  /// In ru, this message translates to:
+  /// **'Имя, номер телефона, город и аптеку или клинику. Фото чеков и рецептов, которые вы отправляете. Результаты курсов и тестов.'**
+  String get profilePrivacyCollectBody;
+
+  /// No description provided for @profilePrivacyWhyTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Зачем они нужны'**
+  String get profilePrivacyWhyTitle;
+
+  /// No description provided for @profilePrivacyWhyBody.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чтобы начислять IQC за чеки и рецепты, засчитывать квесты, выдавать ваучеры и показывать вашу статистику.'**
+  String get profilePrivacyWhyBody;
+
+  /// No description provided for @profilePrivacyWhoTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Кто их видит'**
+  String get profilePrivacyWhoTitle;
+
+  /// No description provided for @profilePrivacyWhoBody.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ваш медпредставитель видит число ваших чеков и квестов. Данные пациентов из рецептов скрыты — видны только инициалы.'**
+  String get profilePrivacyWhoBody;
+
+  /// No description provided for @profilePrivacyStoreTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Как мы их храним'**
+  String get profilePrivacyStoreTitle;
+
+  /// No description provided for @profilePrivacyStoreBody.
+  ///
+  /// In ru, this message translates to:
+  /// **'Данные передаются по защищённому соединению и хранятся на серверах компании.'**
+  String get profilePrivacyStoreBody;
+
+  /// No description provided for @profilePrivacyDeleteTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Как удалить данные'**
+  String get profilePrivacyDeleteTitle;
+
+  /// No description provided for @profilePrivacyDeleteBody.
+  ///
+  /// In ru, this message translates to:
+  /// **'В профиле → «Удалить аккаунт». Данные удаляются вместе с балансом и ваучерами.'**
+  String get profilePrivacyDeleteBody;
+
+  /// No description provided for @profilePrivacyFullLink.
+  ///
+  /// In ru, this message translates to:
+  /// **'Полный текст политики'**
+  String get profilePrivacyFullLink;
+
+  /// No description provided for @profilePrivacyContents.
+  ///
+  /// In ru, this message translates to:
+  /// **'Содержание'**
+  String get profilePrivacyContents;
+
+  /// No description provided for @profilePrivacyReadTime.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{{n} минута чтения} few{{n} минуты чтения} many{{n} минут чтения} other{{n} минуты чтения}}'**
+  String profilePrivacyReadTime(int n);
+
+  /// No description provided for @profilePrivacyRuOnly.
+  ///
+  /// In ru, this message translates to:
+  /// **'Документ доступен только на русском языке'**
+  String get profilePrivacyRuOnly;
+
+  /// No description provided for @profileDeleteLose.
+  ///
+  /// In ru, this message translates to:
+  /// **'Это действие нельзя отменить. Вы потеряете:'**
+  String get profileDeleteLose;
+
+  /// No description provided for @profileDeleteLoseIqc.
+  ///
+  /// In ru, this message translates to:
+  /// **'{amount} IQC на балансе'**
+  String profileDeleteLoseIqc(String amount);
+
+  /// No description provided for @profileDeleteLoseIqcHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'сгорят без возможности обмена'**
+  String get profileDeleteLoseIqcHint;
+
+  /// No description provided for @profileDeleteLoseVouchers.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{{n} активный ваучер} few{{n} активных ваучера} many{{n} активных ваучеров} other{{n} активного ваучера}}'**
+  String profileDeleteLoseVouchers(int n);
+
+  /// No description provided for @profileDeleteLoseVouchersHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'перестанут работать'**
+  String get profileDeleteLoseVouchersHint;
+
+  /// No description provided for @profileDeleteLoseProgress.
+  ///
+  /// In ru, this message translates to:
+  /// **'Прогресс в квестах и курсах'**
+  String get profileDeleteLoseProgress;
+
+  /// No description provided for @profileDeleteLoseProgressHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'будет удалён'**
+  String get profileDeleteLoseProgressHint;
+
+  /// No description provided for @profileDeleteTypePrompt.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чтобы подтвердить, введите'**
+  String get profileDeleteTypePrompt;
+
+  /// No description provided for @profileDeleteWord.
+  ///
+  /// In ru, this message translates to:
+  /// **'УДАЛИТЬ'**
+  String get profileDeleteWord;
+
+  /// No description provided for @profileDeleteForever.
+  ///
+  /// In ru, this message translates to:
+  /// **'Удалить навсегда'**
+  String get profileDeleteForever;
+
+  /// No description provided for @profileDeleteKeep.
+  ///
+  /// In ru, this message translates to:
+  /// **'Оставить аккаунт'**
+  String get profileDeleteKeep;
+
+  /// No description provided for @profileDeleting.
+  ///
+  /// In ru, this message translates to:
+  /// **'Удаляем…'**
+  String get profileDeleting;
+
+  /// No description provided for @profileDeleteFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не удалось удалить аккаунт. Попробуйте ещё раз'**
+  String get profileDeleteFailed;
+
+  /// No description provided for @profileDeletedTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Аккаунт удалён'**
+  String get profileDeletedTitle;
+
+  /// No description provided for @profileDeletedBody.
+  ///
+  /// In ru, this message translates to:
+  /// **'Мы удалили ваш профиль, баланс IQC, ваучеры и историю. Спасибо, что были с нами'**
+  String get profileDeletedBody;
+
+  /// No description provided for @profileDeletedCardTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Передумали?'**
+  String get profileDeletedCardTitle;
+
+  /// No description provided for @profileDeletedCardBody.
+  ///
+  /// In ru, this message translates to:
+  /// **'Можно зарегистрироваться заново с тем же номером — но прежний баланс не вернуть'**
+  String get profileDeletedCardBody;
+
+  /// No description provided for @profileDeletedNew.
+  ///
+  /// In ru, this message translates to:
+  /// **'Создать новый аккаунт'**
+  String get profileDeletedNew;
+
+  /// No description provided for @profileErrorGeneric.
+  ///
+  /// In ru, this message translates to:
+  /// **'Что-то пошло не так. Попробуйте ещё раз'**
+  String get profileErrorGeneric;
+
+  /// No description provided for @notifNewCount.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{{n} новое} few{{n} новых} many{{n} новых} other{{n} новых}}'**
+  String notifNewCount(int n);
+
+  /// No description provided for @notifAllRead.
+  ///
+  /// In ru, this message translates to:
+  /// **'Всё прочитано'**
+  String get notifAllRead;
+
+  /// No description provided for @notifReadAll.
+  ///
+  /// In ru, this message translates to:
+  /// **'Прочитать все'**
+  String get notifReadAll;
+
+  /// No description provided for @notifFilterAll.
+  ///
+  /// In ru, this message translates to:
+  /// **'Все'**
+  String get notifFilterAll;
+
+  /// No description provided for @notifFilterChecks.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чеки'**
+  String get notifFilterChecks;
+
+  /// No description provided for @notifFilterRecipes.
+  ///
+  /// In ru, this message translates to:
+  /// **'Бланки'**
+  String get notifFilterRecipes;
+
+  /// No description provided for @notifFilterQuests.
+  ///
+  /// In ru, this message translates to:
+  /// **'Квесты'**
+  String get notifFilterQuests;
+
+  /// No description provided for @notifFilterLearning.
+  ///
+  /// In ru, this message translates to:
+  /// **'Обучение'**
+  String get notifFilterLearning;
+
+  /// No description provided for @notifCategoryEmpty.
+  ///
+  /// In ru, this message translates to:
+  /// **'В этой категории пока ничего нет'**
+  String get notifCategoryEmpty;
+
+  /// No description provided for @notifNewAria.
+  ///
+  /// In ru, this message translates to:
+  /// **'Новое'**
+  String get notifNewAria;
+
+  /// No description provided for @notifMarkedRead.
+  ///
+  /// In ru, this message translates to:
+  /// **'Прочитано'**
+  String get notifMarkedRead;
+
+  /// No description provided for @notifEmptySubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пока ничего нового'**
+  String get notifEmptySubtitle;
+
+  /// No description provided for @notifEmptyQuietTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Здесь пока тихо'**
+  String get notifEmptyQuietTitle;
+
+  /// No description provided for @notifEmptyQuietText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сообщим, когда проверим чек, начислим IQC или выдадим ваучер'**
+  String get notifEmptyQuietText;
+
+  /// No description provided for @notifConfigure.
+  ///
+  /// In ru, this message translates to:
+  /// **'Настроить уведомления'**
+  String get notifConfigure;
+
+  /// No description provided for @notifSettingsSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Что присылать на телефон'**
+  String get notifSettingsSubtitle;
+
+  /// No description provided for @notifSettingsChecksHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Одобрение, отказ, начисление IQC'**
+  String get notifSettingsChecksHint;
+
+  /// No description provided for @notifSettingsQuestsHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Новые квесты, выполнение, ваучеры'**
+  String get notifSettingsQuestsHint;
+
+  /// No description provided for @notifSettingsLearningHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Новые курсы и напоминания'**
+  String get notifSettingsLearningHint;
+
+  /// No description provided for @notifSettingsMarketingHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Новости рынка и спецпредложения'**
+  String get notifSettingsMarketingHint;
+
+  /// No description provided for @notifSettingsFootnote.
+  ///
+  /// In ru, this message translates to:
+  /// **'Важные сообщения об аккаунте и безопасности приходят всегда'**
+  String get notifSettingsFootnote;
+
+  /// No description provided for @notifSaveFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не удалось сохранить настройки'**
+  String get notifSaveFailed;
+
+  /// No description provided for @supportHeaderTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Поддержка PharmIQ'**
+  String get supportHeaderTitle;
+
+  /// No description provided for @supportHeaderSubtitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Обычно отвечаем в течение часа'**
+  String get supportHeaderSubtitle;
+
+  /// No description provided for @supportBackAria.
+  ///
+  /// In ru, this message translates to:
+  /// **'Назад в профиль'**
+  String get supportBackAria;
+
+  /// No description provided for @supportToday.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сегодня'**
+  String get supportToday;
+
+  /// No description provided for @supportYesterday.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вчера'**
+  String get supportYesterday;
+
+  /// No description provided for @supportGreeting.
+  ///
+  /// In ru, this message translates to:
+  /// **'Здравствуйте! Чем можем помочь?'**
+  String get supportGreeting;
+
+  /// No description provided for @supportFaqTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Частые вопросы'**
+  String get supportFaqTitle;
+
+  /// No description provided for @supportFaq1.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не начислили IQC за чек'**
+  String get supportFaq1;
+
+  /// No description provided for @supportFaq2.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек отклонён — почему?'**
+  String get supportFaq2;
+
+  /// No description provided for @supportFaq3.
+  ///
+  /// In ru, this message translates to:
+  /// **'Как получить ваучер'**
+  String get supportFaq3;
+
+  /// No description provided for @supportFaq4.
+  ///
+  /// In ru, this message translates to:
+  /// **'Проблема с курсом или тестом'**
+  String get supportFaq4;
+
+  /// No description provided for @supportMessageHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сообщение'**
+  String get supportMessageHint;
+
+  /// No description provided for @supportAttachAria.
+  ///
+  /// In ru, this message translates to:
+  /// **'Прикрепить фото или чек'**
+  String get supportAttachAria;
+
+  /// No description provided for @supportSendAria.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправить'**
+  String get supportSendAria;
+
+  /// No description provided for @supportTypingAria.
+  ///
+  /// In ru, this message translates to:
+  /// **'Поддержка печатает'**
+  String get supportTypingAria;
+
+  /// No description provided for @supportAttachCheckTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Прикрепить чек'**
+  String get supportAttachCheckTitle;
+
+  /// No description provided for @supportAttachRecipeTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Прикрепить бланк'**
+  String get supportAttachRecipeTitle;
+
+  /// No description provided for @supportAttachEmpty.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пока нечего прикрепить'**
+  String get supportAttachEmpty;
+
+  /// No description provided for @supportAttachRemove.
+  ///
+  /// In ru, this message translates to:
+  /// **'Убрать вложение'**
+  String get supportAttachRemove;
+
+  /// No description provided for @supportAttachUnavailable.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вложения доступны для чеков и бланков'**
+  String get supportAttachUnavailable;
+
+  /// No description provided for @supportSendFailed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не удалось отправить сообщение'**
+  String get supportSendFailed;
+
+  /// No description provided for @walletFaceValue.
+  ///
+  /// In ru, this message translates to:
+  /// **'Номинал'**
+  String get walletFaceValue;
+
+  /// No description provided for @profileBack.
+  ///
+  /// In ru, this message translates to:
+  /// **'Назад'**
+  String get profileBack;
+
+  /// No description provided for @homeNewCourseVideo.
+  ///
+  /// In ru, this message translates to:
+  /// **'Видео ~{n} мин'**
+  String homeNewCourseVideo(int n);
+
+  /// No description provided for @homeNewCourseQuiz.
+  ///
+  /// In ru, this message translates to:
+  /// **'тест'**
+  String get homeNewCourseQuiz;
+
+  /// No description provided for @authHintFullName.
+  ///
+  /// In ru, this message translates to:
+  /// **'Фамилия Имя Отчество'**
+  String get authHintFullName;
+
+  /// No description provided for @authHintPharmacy.
+  ///
+  /// In ru, this message translates to:
+  /// **'Например, Аптека №12'**
+  String get authHintPharmacy;
+
+  /// No description provided for @authHintClinic.
+  ///
+  /// In ru, this message translates to:
+  /// **'Название медицинского учреждения'**
+  String get authHintClinic;
+
+  /// No description provided for @authMapCardTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отметить аптеку на карте'**
+  String get authMapCardTitle;
+
+  /// No description provided for @authMapCardSub.
+  ///
+  /// In ru, this message translates to:
+  /// **'Нужно для квестов вашего района'**
+  String get authMapCardSub;
+
+  /// No description provided for @authMapCardButton.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отметить'**
+  String get authMapCardButton;
+
+  /// No description provided for @rxStateCreditedTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'IQC начислены'**
+  String get rxStateCreditedTitle;
+
+  /// No description provided for @rxStateCreditedText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Баллы зачислены на ваш баланс'**
+  String get rxStateCreditedText;
+
+  /// No description provided for @rxAccrualCreditedTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Зачислено на баланс'**
+  String get rxAccrualCreditedTitle;
+
+  /// No description provided for @rxCreditedCaption.
+  ///
+  /// In ru, this message translates to:
+  /// **'начислено'**
+  String get rxCreditedCaption;
+
+  /// No description provided for @rxListCountEarned.
+  ///
+  /// In ru, this message translates to:
+  /// **'{count} · получено {n} IQC'**
+  String rxListCountEarned(String count, int n);
+
+  /// No description provided for @questsRewardPoints.
+  ///
+  /// In ru, this message translates to:
+  /// **'Баллы на баланс'**
+  String get questsRewardPoints;
+
+  /// No description provided for @walletMonthsIn.
+  ///
+  /// In ru, this message translates to:
+  /// **'январе,феврале,марте,апреле,мае,июне,июле,августе,сентябре,октябре,ноябре,декабре'**
+  String get walletMonthsIn;
+
+  /// No description provided for @walletEarnedIn.
+  ///
+  /// In ru, this message translates to:
+  /// **'Начислено в {month}'**
+  String walletEarnedIn(String month);
+
+  /// No description provided for @walletSpentIn.
+  ///
+  /// In ru, this message translates to:
+  /// **'Потрачено в {month}'**
+  String walletSpentIn(String month);
+
+  /// No description provided for @profileRoleShortMedrep.
+  ///
+  /// In ru, this message translates to:
+  /// **'Медпред'**
+  String get profileRoleShortMedrep;
+
+  /// No description provided for @notifActionQr.
+  ///
+  /// In ru, this message translates to:
+  /// **'Показать QR'**
+  String get notifActionQr;
+
+  /// No description provided for @notifActionRetake.
+  ///
+  /// In ru, this message translates to:
+  /// **'Переснять'**
+  String get notifActionRetake;
+
+  /// No description provided for @homeNewCourseQuizQuestions.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{тест {n} вопрос} few{тест {n} вопроса} many{тест {n} вопросов} other{тест {n} вопроса}}'**
+  String homeNewCourseQuizQuestions(int n);
+
+  /// No description provided for @profilePrivacyDraft.
+  ///
+  /// In ru, this message translates to:
+  /// **'Черновик. Окончательный текст утвердит юрист'**
+  String get profilePrivacyDraft;
+
+  /// No description provided for @notifSettingsChecksOnly.
+  ///
+  /// In ru, this message translates to:
+  /// **'Статусы чеков'**
+  String get notifSettingsChecksOnly;
+
+  /// No description provided for @notifSettingsRecipesOnly.
+  ///
+  /// In ru, this message translates to:
+  /// **'Статусы бланков'**
+  String get notifSettingsRecipesOnly;
+
+  /// No description provided for @tourWelcomeTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Добро пожаловать в PharmIQ Academy!'**
+  String get tourWelcomeTitle;
+
+  /// No description provided for @tourWelcomeText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Покажем, где что находится и как зарабатывать IQC. Это займёт меньше минуты.'**
+  String get tourWelcomeText;
+
+  /// No description provided for @tourWelcomeTextDoc.
+  ///
+  /// In ru, this message translates to:
+  /// **'Покажем, где что находится и как получать IQC за бланки. Это займёт меньше минуты.'**
+  String get tourWelcomeTextDoc;
+
+  /// No description provided for @tourStart.
+  ///
+  /// In ru, this message translates to:
+  /// **'Начать'**
+  String get tourStart;
+
+  /// No description provided for @tourSkipAll.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пропустить обучение'**
+  String get tourSkipAll;
+
+  /// No description provided for @tourStepOf.
+  ///
+  /// In ru, this message translates to:
+  /// **'Шаг {n} из {total}'**
+  String tourStepOf(int n, int total);
+
+  /// No description provided for @tourSkip.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пропустить'**
+  String get tourSkip;
+
+  /// No description provided for @tourNext.
+  ///
+  /// In ru, this message translates to:
+  /// **'Далее'**
+  String get tourNext;
+
+  /// No description provided for @tourDoneStep.
+  ///
+  /// In ru, this message translates to:
+  /// **'Готово'**
+  String get tourDoneStep;
+
+  /// No description provided for @tourBack.
+  ///
+  /// In ru, this message translates to:
+  /// **'Назад'**
+  String get tourBack;
+
+  /// No description provided for @tourBalanceTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Баланс IQC'**
+  String get tourBalanceTitle;
+
+  /// No description provided for @tourBalanceText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Здесь ваши IQC — баллы за одобренные чеки, квесты и опросы. Кнопка «Кошелёк» откроет историю и обмен на ваучеры.'**
+  String get tourBalanceText;
+
+  /// No description provided for @tourBalanceTextDoc.
+  ///
+  /// In ru, this message translates to:
+  /// **'Здесь ваши IQC — баллы за одобренные бланки, квесты и опросы. Кнопка «Кошелёк» откроет историю и обмен на ваучеры.'**
+  String get tourBalanceTextDoc;
+
+  /// No description provided for @tourSendTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправьте чек'**
+  String get tourSendTitle;
+
+  /// No description provided for @tourSendText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сфотографируйте чек — ИИ распознает препараты. После проверки на баланс придут IQC.'**
+  String get tourSendText;
+
+  /// No description provided for @tourSendTitleDoc.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправьте бланк'**
+  String get tourSendTitleDoc;
+
+  /// No description provided for @tourSendTextDoc.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сфотографируйте бланк — ИИ распознает препараты. После проверки на баланс придут IQC.'**
+  String get tourSendTextDoc;
+
+  /// No description provided for @tourQuestsTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Активные квесты'**
+  String get tourQuestsTitle;
+
+  /// No description provided for @tourQuestsText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Задания от производителей: продайте нужное количество упаковок и получите бонус. Прогресс виден на карточке.'**
+  String get tourQuestsText;
+
+  /// No description provided for @tourQuestsTextDoc.
+  ///
+  /// In ru, this message translates to:
+  /// **'Задания от производителей: выпишите нужное количество бланков и получите бонус. Прогресс виден на карточке.'**
+  String get tourQuestsTextDoc;
+
+  /// No description provided for @tourChecksTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ваши чеки'**
+  String get tourChecksTitle;
+
+  /// No description provided for @tourChecksText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Все отправленные чеки и их статусы: на проверке, одобрен, начислено или нужно переснять.'**
+  String get tourChecksText;
+
+  /// No description provided for @tourChecksTitleDoc.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ваши бланки'**
+  String get tourChecksTitleDoc;
+
+  /// No description provided for @tourChecksTextDoc.
+  ///
+  /// In ru, this message translates to:
+  /// **'Все отправленные бланки и их статусы: на проверке, одобрен, начислено или нужно переснять.'**
+  String get tourChecksTextDoc;
+
+  /// No description provided for @tourLearnTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Обучение'**
+  String get tourLearnTitle;
+
+  /// No description provided for @tourLearnText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Курсы и тесты от экспертов фармрынка. За пройденные курсы начисляются баллы.'**
+  String get tourLearnText;
+
+  /// No description provided for @tourProfileTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Профиль'**
+  String get tourProfileTitle;
+
+  /// No description provided for @tourProfileText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Личные данные, аптека, тема и язык. Здесь же можно пройти это обучение заново.'**
+  String get tourProfileText;
+
+  /// No description provided for @tourProfileTextDoc.
+  ///
+  /// In ru, this message translates to:
+  /// **'Личные данные, место работы, тема и язык. Здесь же можно пройти это обучение заново.'**
+  String get tourProfileTextDoc;
+
+  /// No description provided for @tourDoneTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Всё готово!'**
+  String get tourDoneTitle;
+
+  /// No description provided for @tourDoneText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправьте первый чек или начните курс, чтобы получить первые IQC.'**
+  String get tourDoneText;
+
+  /// No description provided for @tourDoneTextDoc.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправьте первый бланк или начните курс, чтобы получить первые IQC.'**
+  String get tourDoneTextDoc;
+
+  /// No description provided for @tourDoneNote.
+  ///
+  /// In ru, this message translates to:
+  /// **'Повторить обучение можно в Профиле.'**
+  String get tourDoneNote;
+
+  /// No description provided for @tourFinish.
+  ///
+  /// In ru, this message translates to:
+  /// **'Начать работу'**
+  String get tourFinish;
+
+  /// No description provided for @profileTourAgain.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пройти обучение заново'**
+  String get profileTourAgain;
 }
 
 class _AppLocalizationsDelegate

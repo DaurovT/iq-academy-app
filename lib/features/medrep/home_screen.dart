@@ -1,18 +1,18 @@
-import '../../core/app_modules.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../core/app_modules.dart';
 import '../../core/auth/auth_controller.dart';
+import '../../core/design/design.dart';
 import '../../core/l10n/l10n.dart';
 import '../../core/models/medrep.dart';
-import '../../core/theme/app_colors.dart';
-import '../shared/widgets/pharm_top_bar.dart';
-import '../shared/widgets/screen_decor.dart';
+import '../../widgets/pq_states.dart';
+import '../shared/providers.dart';
+import 'medrep_widgets.dart';
 import 'providers.dart';
 
-/// Обзор медпреда «Портфель». Дизайн перенесён из макета Figma
-/// (тёмная 144:5 и светлая 144:126 темы).
+/// Главная медпреда «Портфель» (макеты MedHome / MedEmpty, обе темы).
 class MedrepHome extends ConsumerStatefulWidget {
   const MedrepHome({super.key});
 
@@ -25,699 +25,502 @@ class _MedrepHomeState extends ConsumerState<MedrepHome> {
 
   static const _fallbackLink = 'https://t.me/PharmQuestBot?start=ref_';
 
+  Future<void> _refresh() async {
+    ref.invalidate(medrepMetricsProvider);
+    ref.invalidate(medrepReflinkProvider);
+    ref.invalidate(portfolioProvider);
+    ref.invalidate(leaderboardProvider('checks'));
+    ref.invalidate(companiesProvider);
+    ref.invalidate(unreadCountProvider);
+    await ref.read(portfolioProvider.future).catchError((_) => <PortfolioPharmacist>[]);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final p = PharmPalette.of(context);
-    final name = ref
-            .watch(authControllerProvider)
-            .asData
-            ?.value
-            .account
-            ?.fullName ??
-        '';
-    final metrics = ref.watch(medrepMetricsProvider(_period));
-    final link = ref.watch(medrepReflinkProvider).asData?.value ?? _fallbackLink;
-    final mode = metrics.asData?.value.mode;
-    final attribution = mode == AttributionMode.primary
-        ? context.l10n.medrepHomeAttributionPrimary
-        : context.l10n.medrepHomeAttributionTotal;
-
-    return Scaffold(
-      backgroundColor: p.bg,
-      body: Column(
-        children: [
-          const PharmTopBar(),
-          Expanded(
-            child: RefreshIndicator(
-              onRefresh: () async {
-                ref.invalidate(medrepMetricsProvider);
-                ref.invalidate(medrepReflinkProvider);
-              },
-              child: SingleChildScrollView(
+    final l = context.l10n;
+    final portfolio = ref.watch(portfolioProvider);
+    final unread = ref.watch(unreadCountProvider).asData?.value ?? 0;
+    return PqScreen(
+      safeBottom: false,
+      child: Column(children: [
+        PqTabHeader(
+          onBell: () => context.go('/app/notifications'),
+          bellLabel: l.notifTitle,
+          unread: unread > 0,
+        ),
+        Expanded(
+          child: PqRefresh(
+            onRefresh: _refresh,
+            child: PqAsync<List<PortfolioPharmacist>>(
+              value: portfolio,
+              loading: PqLoadingKind.home,
+              onRetry: () => ref.invalidate(portfolioProvider),
+              data: (items) => SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
-                child: Stack(
-                  children: [
-                    Positioned.fill(child: ScreenDecor(medrepHomeDecor)),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          _Greeting(
-                              palette: p, name: name, attribution: attribution),
-                          const SizedBox(height: 20),
-                          _PeriodTabs(
-                            palette: p,
-                            value: _period,
-                            onChanged: (v) => setState(() => _period = v),
-                          ),
-                          const SizedBox(height: 20),
-                          metrics.when(
-                            loading: () => const _StatsSkeleton(),
-                            error: (e, _) => _ErrorCard(
-                              palette: p,
-                              message: e.toString(),
-                              onRetry: () =>
-                                  ref.invalidate(medrepMetricsProvider),
-                            ),
-                            data: (m) => _StatsGrid(palette: p, metrics: m),
-                          ),
-                          const SizedBox(height: 20),
-                          _ReferralCard(palette: p, link: link),
-                          const SizedBox(height: 20),
-                          if (ref.moduleVisible('medrep_portfolio')) ...[
-                            _MenuRow(
-                              palette: p,
-                              icon: Icons.people_alt_outlined,
-                              label: context.l10n.medrepHomeMenuPharmacists,
-                              onTap: () => context.go('/app/portfolio'),
-                            ),
-                            const SizedBox(height: 12),
-                          ],
-                          if (ref.moduleVisible('medrep_doctors')) ...[
-                            _MenuRow(
-                              palette: p,
-                              icon: Icons.medical_services_outlined,
-                              label: context.l10n.navDoctors,
-                              onTap: () => context.go('/app/doctors'),
-                            ),
-                            const SizedBox(height: 12),
-                          ],
-                          if (ref.moduleVisible('medrep_referrals')) ...[
-                            _MenuRow(
-                              palette: p,
-                              icon: Icons.person_add_alt_1_outlined,
-                              label: context.l10n.medrepHomeMenuPending,
-                              onTap: () => context.go('/app/referrals'),
-                            ),
-                            const SizedBox(height: 12),
-                          ],
-                          if (ref.moduleVisible('medrep_companies')) ...[
-                            _MenuRow(
-                              palette: p,
-                              icon: Icons.business_outlined,
-                              label: context.l10n.medrepHomeMenuCompanies,
-                              onTap: () => context.go('/app/companies'),
-                            ),
-                            const SizedBox(height: 12),
-                          ],
-                          if (ref.moduleVisible('leaderboard')) ...[
-                            _MenuRow(
-                              palette: p,
-                              icon: Icons.emoji_events_outlined,
-                              label: context.l10n.medrepHomeMenuLeaderboard,
-                              onTap: () => context.go('/app/leaderboard'),
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                padding: const EdgeInsets.fromLTRB(16, 4, 16, kPqNavClearance),
+                child: items.isEmpty ? _empty(context) : _content(context, items),
               ),
             ),
           ),
-        ],
-      ),
-    );
-  }
-}
-
-// ── Приветствие ─────────────────────────────────────────────────────────
-
-class _Greeting extends StatelessWidget {
-  const _Greeting({
-    required this.palette,
-    required this.name,
-    required this.attribution,
-  });
-
-  final PharmPalette palette;
-  final String name;
-  final String attribution;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          name.isEmpty
-              ? context.l10n.medrepHomeGreetingNoName
-              : context.l10n.medrepHomeGreeting(name),
-          style: TextStyle(
-            fontSize: 32,
-            height: 1.1,
-            fontWeight: FontWeight.w700,
-            color: palette.textPrimary,
-          ),
         ),
-        const SizedBox(height: 6),
-        Text(
-          context.l10n.medrepHomeAttribution(attribution),
-          style: TextStyle(fontSize: 15, color: palette.textMuted),
-        ),
-      ],
+      ]),
     );
   }
-}
 
-// ── Сегментированный фильтр периода ──────────────────────────────────────
+  String get _name =>
+      ref.watch(authControllerProvider).asData?.value.account?.fullName ?? '';
 
-class _PeriodTabs extends StatelessWidget {
-  const _PeriodTabs({
-    required this.palette,
-    required this.value,
-    required this.onChanged,
-  });
+  String? get _company {
+    final board = ref.watch(leaderboardProvider('checks')).asData?.value;
+    final companies = ref.watch(companiesProvider).asData?.value;
+    final c = board?.company ??
+        (companies == null || companies.isEmpty ? null : companies.first.name);
+    return c == null || c.isEmpty ? null : c;
+  }
 
-  final PharmPalette palette;
-  final String value;
-  final ValueChanged<String> onChanged;
+  String get _link =>
+      ref.watch(medrepReflinkProvider).asData?.value ?? _fallbackLink;
 
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final items = [
-      ('all', context.l10n.medrepHomePeriodAll),
-      ('30', context.l10n.medrepHomePeriod30d),
-      ('7', context.l10n.medrepHomePeriod7d),
-    ];
-    return Row(
-      children: [
-        for (final (key, label) in items) ...[
-          _Pill(
-            label: label,
-            selected: value == key,
-            palette: palette,
-            isDark: isDark,
-            onTap: () => onChanged(key),
-          ),
-          const SizedBox(width: 8),
-        ],
-      ],
+  Widget _title(BuildContext context, {String? attribution}) {
+    final l = context.l10n;
+    final name = _name;
+    final company = _company;
+    final parts = [if (company != null) company, if (attribution != null) attribution];
+    return PqPageTitle(
+      name.isEmpty ? l.medrepHomeGreetingNoName : l.medrepHelloName(name),
+      subtitle: parts.isEmpty ? null : parts.join(' · '),
     );
   }
-}
 
-class _Pill extends StatelessWidget {
-  const _Pill({
-    required this.label,
-    required this.selected,
-    required this.palette,
-    required this.isDark,
-    required this.onTap,
-  });
+  // ── MedEmpty ───────────────────────────────────────────────────────────
 
-  final String label;
-  final bool selected;
-  final PharmPalette palette;
-  final bool isDark;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final bg = selected
-        ? palette.accent
-        : (isDark ? const Color(0xFF22232B) : Colors.white);
-    final fg = selected
-        ? Colors.white
-        : palette.textMuted;
-    final border = selected
-        ? Colors.transparent
-        : (isDark ? const Color(0xFF2D2E38) : palette.cardBorder);
-    return Material(
-      color: bg,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(999),
-        side: BorderSide(color: border),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 9),
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: fg,
+  Widget _empty(BuildContext context) {
+    final pq = context.pq;
+    final l = context.l10n;
+    final link = _link;
+    Widget step(PqIcons icon, String title, String text) => Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Row(children: [
+            PqIconTile(icon, size: 40, iconSize: 20),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(title, style: PqText.text(15, FontWeight.w600, c: pq.text)),
+                const SizedBox(height: 2),
+                Text(text, style: PqText.text(14, FontWeight.w400, c: pq.textMuted)),
+              ]),
             ),
-          ),
+          ]),
+        );
+    return PqStagger(gap: 20, children: [
+      _title(context),
+      MedEmptyBlock(
+        padding: const EdgeInsets.fromLTRB(8, 12, 8, 0),
+        gap: 10,
+        messageMaxWidth: 310,
+        tile: MedPopTile(
+          icon: PqIcons.users,
+          background: pq.accentSoft,
+          foreground: pq.accentText,
         ),
+        title: l.medrepEmptyTitle,
+        message: l.medrepEmptyText,
       ),
-    );
+      PqListCard(children: [
+        step(PqIcons.share, l.medrepStep1Title, l.medrepStep1Text),
+        step(PqIcons.userPlus, l.medrepStep2Title, l.medrepStep2Text),
+        step(PqIcons.barChart, l.medrepStep3Title, l.medrepStep3Text),
+      ]),
+      Column(children: [
+        PqButton(
+          label: l.medrepInviteTitle,
+          icon: PqIcons.share,
+          onPressed: () => medCopyLink(context, link),
+        ),
+        const SizedBox(height: 8),
+        MedOutlineButton(
+          label: l.medrepCopyLink,
+          icon: PqIcons.copy,
+          height: 52,
+          fontSize: 16,
+          transparent: true,
+          expand: true,
+          onTap: () => medCopyLink(context, link),
+        ),
+      ]),
+    ]);
+  }
+
+  // ── MedHome ────────────────────────────────────────────────────────────
+
+  Widget _content(BuildContext context, List<PortfolioPharmacist> items) {
+    final l = context.l10n;
+    final metrics = ref.watch(medrepMetricsProvider(_period));
+    final mode = metrics.asData?.value.mode;
+    final attribution = mode == null
+        ? null
+        : mode == AttributionMode.primary
+            ? l.medrepAttrPrimary
+            : l.medrepAttrShared;
+    final showRating = ref.moduleVisible('leaderboard');
+    final board = showRating
+        ? ref.watch(leaderboardProvider('checks')).asData?.value
+        : null;
+    final showPortfolio = ref.moduleVisible('medrep_portfolio');
+    final top = [...items]..sort((a, b) => b.checks.compareTo(a.checks));
+
+    return PqStagger(gap: 24, children: [
+      _title(context, attribution: attribution),
+      Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        PqSegmented<String>(
+          values: const ['all', '30', '7'],
+          selected: _period,
+          labelOf: (v) => switch (v) {
+            '30' => l.medrepPeriod30,
+            '7' => l.medrepPeriod7,
+            _ => l.medrepPeriodAll,
+          },
+          onChanged: (v) => setState(() => _period = v),
+        ),
+        const SizedBox(height: 12),
+        _StatsGrid(
+          metrics: metrics,
+          onRetry: () => ref.invalidate(medrepMetricsProvider(_period)),
+        ),
+      ]),
+      if (board != null && board.myRank > 0 && board.items.isNotEmpty)
+        _RatingCard(board: board),
+      if (showPortfolio && top.isNotEmpty)
+        Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          PqSectionHeader(
+            l.medrepMostActive,
+            actionLabel: l.medrepAllN(items.length),
+            onAction: () => context.go('/app/portfolio'),
+          ),
+          const SizedBox(height: 8),
+          PqListCard(children: [
+            for (var i = 0; i < top.length && i < 3; i++)
+              MedPersonRow(
+                rank: i + 1,
+                name: top[i].name,
+                avatarSeed: top[i].telegramId,
+                subtitle: [top[i].shop, top[i].city]
+                    .where((s) => s.isNotEmpty)
+                    .join(' · '),
+                value: '${top[i].checks}',
+                unit: l.medrepUnitChecks(top[i].checks),
+                onTap: () => context.push('/app/portfolio/${top[i].telegramId}'),
+              ),
+          ]),
+        ]),
+      _InviteCard(link: _link),
+      _Menu(),
+    ]);
   }
 }
 
-// ── Сетка метрик 2×2 ─────────────────────────────────────────────────────
-
-const _tileBlue = Color(0xFF3B82F6);
-const _tileGreen = Color(0xFF10B981);
-const _tileTeal = Color(0xFF14B8A6);
-const _tileAmber = Color(0xFFF59E0B);
+// ── Показатели 2×2 ───────────────────────────────────────────────────────
 
 class _StatsGrid extends StatelessWidget {
-  const _StatsGrid({required this.palette, required this.metrics});
+  const _StatsGrid({required this.metrics, required this.onRetry});
 
-  final PharmPalette palette;
-  final MedrepMetrics metrics;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: StatTile(
-                palette: palette,
-                value: '${metrics.pharmCount}',
-                label: context.l10n.medrepHomeStatPharmacists,
-                icon: Icons.people_alt_outlined,
-                color: _tileBlue,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: StatTile(
-                palette: palette,
-                value: '${metrics.checksCount}',
-                label: context.l10n.medrepHomeStatChecks,
-                icon: Icons.receipt_long_outlined,
-                color: _tileGreen,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: StatTile(
-                palette: palette,
-                value: '${metrics.approvedPacksSum}',
-                label: context.l10n.medrepHomeStatPacks,
-                icon: Icons.inventory_2_outlined,
-                color: _tileTeal,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: StatTile(
-                palette: palette,
-                value: '${metrics.questsDone}',
-                label: context.l10n.medrepHomeStatQuests,
-                icon: Icons.adjust_outlined,
-                color: _tileAmber,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-/// Цветная плитка метрики (используется на обзоре и в детали фармацевта).
-class StatTile extends StatelessWidget {
-  const StatTile({
-    super.key,
-    required this.palette,
-    required this.value,
-    required this.label,
-    required this.icon,
-    required this.color,
-  });
-
-  final PharmPalette palette;
-  final String value;
-  final String label;
-  final IconData icon;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Container(
-      height: 90,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: isDark ? null : palette.card,
-        gradient: isDark
-            ? LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color.alphaBlend(color.withValues(alpha: 0.30), palette.card),
-                  palette.card,
-                ],
-              )
-            : null,
-        borderRadius: BorderRadius.circular(16),
-        border: isDark ? null : Border.all(color: palette.cardBorder),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Text(
-                  value,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 26,
-                    height: 1.0,
-                    fontWeight: FontWeight.w800,
-                    color: palette.textPrimary,
-                  ),
-                ),
-              ),
-              Container(
-                width: 32,
-                height: 32,
-                decoration: BoxDecoration(
-                  color: color.withValues(alpha: isDark ? 0.22 : 0.12),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Icon(icon, size: 18, color: color),
-              ),
-            ],
-          ),
-          const Spacer(),
-          Text(
-            label,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontSize: 13, color: palette.textMuted),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _StatsSkeleton extends StatelessWidget {
-  const _StatsSkeleton();
-
-  @override
-  Widget build(BuildContext context) {
-    final p = PharmPalette.of(context);
-    Widget box() => Expanded(
-          child: Container(
-            height: 90,
-            decoration: BoxDecoration(
-              color: p.card,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: p.cardBorder),
-            ),
-          ),
-        );
-    return Column(
-      children: [
-        Row(children: [box(), const SizedBox(width: 12), box()]),
-        const SizedBox(height: 12),
-        Row(children: [box(), const SizedBox(width: 12), box()]),
-      ],
-    );
-  }
-}
-
-// ── Реферальная карточка ─────────────────────────────────────────────────
-
-class _ReferralCard extends StatelessWidget {
-  const _ReferralCard({required this.palette, required this.link});
-
-  final PharmPalette palette;
-  final String link;
-
-  Future<void> _copy(BuildContext context) async {
-    await Clipboard.setData(ClipboardData(text: link));
-    if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(context.l10n.medrepHomeLinkCopied)),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: palette.card,
-        borderRadius: BorderRadius.circular(20),
-        border: isDark ? null : Border.all(color: palette.cardBorder),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            context.l10n.medrepHomeReferralTitle,
-            style: TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.w700,
-              color: palette.textPrimary,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            context.l10n.medrepHomeReferralHint,
-            style: TextStyle(fontSize: 13, height: 1.35, color: palette.textMuted),
-          ),
-          const SizedBox(height: 16),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
-            decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF15161C) : const Color(0xFFF5F6FA),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: palette.cardBorder),
-            ),
-            child: Text(
-              link,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 13, color: palette.textPrimary),
-            ),
-          ),
-          const SizedBox(height: 14),
-          Row(
-            children: [
-              Expanded(
-                child: _OutlineButton(
-                  palette: palette,
-                  icon: Icons.copy_outlined,
-                  label: context.l10n.medrepHomeCopy,
-                  onTap: () => _copy(context),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _FilledButton(
-                  color: palette.accent,
-                  icon: Icons.share_outlined,
-                  label: context.l10n.medrepHomeShare,
-                  onTap: () => _copy(context),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _OutlineButton extends StatelessWidget {
-  const _OutlineButton({
-    required this.palette,
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
-
-  final PharmPalette palette;
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: palette.accent),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        child: SizedBox(
-          height: 44,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, size: 18, color: palette.accent),
-              const SizedBox(width: 8),
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: palette.accent,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _FilledButton extends StatelessWidget {
-  const _FilledButton({
-    required this.color,
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
-
-  final Color color;
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: color,
-      borderRadius: BorderRadius.circular(12),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        child: SizedBox(
-          height: 44,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, size: 18, color: Colors.white),
-              const SizedBox(width: 8),
-              Text(
-                label,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ── Пункт меню ───────────────────────────────────────────────────────────
-
-class _MenuRow extends StatelessWidget {
-  const _MenuRow({
-    required this.palette,
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
-
-  final PharmPalette palette;
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Material(
-      color: palette.card,
-      borderRadius: BorderRadius.circular(16),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            border: isDark ? null : Border.all(color: palette.cardBorder),
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: palette.accent.withValues(alpha: isDark ? 0.18 : 0.10),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(icon, size: 20, color: palette.accent),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: palette.textPrimary,
-                  ),
-                ),
-              ),
-              Icon(Icons.chevron_right, size: 20, color: palette.textMuted),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ── Ошибка ───────────────────────────────────────────────────────────────
-
-class _ErrorCard extends StatelessWidget {
-  const _ErrorCard({
-    required this.palette,
-    required this.message,
-    required this.onRetry,
-  });
-
-  final PharmPalette palette;
-  final String message;
+  final AsyncValue<MedrepMetrics> metrics;
   final VoidCallback onRetry;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: palette.card,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: palette.cardBorder),
-      ),
-      child: Column(
-        children: [
-          Text(message,
-              textAlign: TextAlign.center,
-              style: TextStyle(color: palette.textMuted)),
+    final pq = context.pq;
+    final l = context.l10n;
+    final m = metrics.asData?.value;
+    if (m == null && metrics.hasError) {
+      return PqCard(
+        child: Column(children: [
+          Text(context.l10n.stateServerErrorTitle,
+              textAlign: TextAlign.center, style: PqText.text(14, FontWeight.w400, c: pq.textMuted)),
           const SizedBox(height: 12),
-          FilledButton.tonal(
-              onPressed: onRetry, child: Text(context.l10n.medrepHomeRetry)),
-        ],
-      ),
+          PqButton(
+            label: l.medrepHomeRetry,
+            kind: PqButtonKind.secondary,
+            height: 44,
+            onPressed: onRetry,
+          ),
+        ]),
+      );
+    }
+    final purple = pq.isDark
+        ? (bg: const Color(0x2E7C3AED), fg: const Color(0xFFC4B5FD))
+        : (bg: const Color(0xFFEDE9FE), fg: const Color(0xFF6D28D9));
+    final accent = pq.tone(PqTone.accent);
+    final success = pq.tone(PqTone.success);
+    final warning = pq.tone(PqTone.warning);
+    Widget card(int i, PqIcons icon, ({Color bg, Color fg}) t, int? value,
+            String Function(int) label) =>
+        Expanded(
+          child: PqAnimate(
+            delay: Duration(milliseconds: 100 + 60 * i),
+            child: _StatCard(
+              icon: icon,
+              tone: t,
+              value: value,
+              label: label(value ?? 0),
+            ),
+          ),
+        );
+    return Column(children: [
+      Row(children: [
+        card(0, PqIcons.users, accent, m?.pharmCount, l.medrepUnitPharm),
+        const SizedBox(width: 12),
+        card(1, PqIcons.receipt, success, m?.checksCount, l.medrepUnitChecks),
+      ]),
+      const SizedBox(height: 12),
+      Row(children: [
+        card(2, PqIcons.package, purple, m?.approvedPacksSum, l.medrepUnitPacks),
+        const SizedBox(width: 12),
+        card(3, PqIcons.target, warning, m?.questsDone, l.medrepUnitQuestsDone),
+      ]),
+    ]);
+  }
+}
+
+class _StatCard extends StatelessWidget {
+  const _StatCard({
+    required this.icon,
+    required this.tone,
+    required this.value,
+    required this.label,
+  });
+
+  final PqIcons icon;
+  final ({Color bg, Color fg}) tone;
+  final int? value;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final pq = context.pq;
+    return PqCard(
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        PqIconTile(icon,
+            size: 36, iconSize: 18, background: tone.bg, foreground: tone.fg),
+        const SizedBox(height: 10),
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 200),
+          child: value == null
+              ? const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 4),
+                  child: PqSkeleton(width: 56, height: 25),
+                )
+              : Text('$value',
+                  key: ValueKey(value),
+                  style: PqText.stat(c: pq.text)),
+        ),
+        const SizedBox(height: 2),
+        Text(label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: PqText.text(14, FontWeight.w400, c: pq.textMuted)),
+      ]),
     );
+  }
+}
+
+// ── Рейтинг по чекам ─────────────────────────────────────────────────────
+
+class _RatingCard extends StatelessWidget {
+  const _RatingCard({required this.board});
+
+  final Leaderboard board;
+
+  @override
+  Widget build(BuildContext context) {
+    final pq = context.pq;
+    final l = context.l10n;
+    final muted = medHeroMuted(pq);
+    final rank = board.myRank;
+    final items = board.items;
+    final me = items.where((r) => r.isMe == true).firstOrNull ??
+        (rank <= items.length ? items[rank - 1] : null);
+    final above = rank >= 2 && rank - 2 < items.length ? items[rank - 2] : null;
+    final progress = above == null || above.value <= 0
+        ? 1.0
+        : ((me?.value ?? 0) / above.value).clamp(0.0, 1.0);
+    final gap = above == null ? 0 : (above.value - (me?.value ?? 0)).clamp(0, 1 << 31);
+
+    return MedHeroCard(
+      padding: const EdgeInsets.all(18),
+      radius: 22,
+      onTap: () => context.go('/app/leaderboard'),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        Row(children: [
+          Expanded(
+            child: Text(l.medrepRatingByChecks.toUpperCase(),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: PqText.overline(c: muted)),
+          ),
+          const SizedBox(width: 12),
+          Text(l.medrepRatingAll, style: PqText.link(c: Colors.white)),
+          const SizedBox(width: 4),
+          const PqIcon(PqIcons.chevronRight, size: 14, color: Colors.white),
+        ]),
+        const SizedBox(height: 12),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          textBaseline: TextBaseline.alphabetic,
+          children: [
+            Flexible(
+              child: Text(l.medrepPlace(rank),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: PqText.heading(40, FontWeight.w800, height: 1, c: Colors.white)),
+            ),
+            const SizedBox(width: 8),
+            Text(l.medrepOutOf(items.length), style: PqText.subtitle(c: muted)),
+          ],
+        ),
+        const SizedBox(height: 12),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(4),
+          child: Container(
+            height: 8,
+            color: const Color(0x2EFFFFFF),
+            alignment: Alignment.centerLeft,
+            child: FractionallySizedBox(
+              widthFactor: progress,
+              heightFactor: 1,
+              child: PqAnimate(
+                fx: PqFx.fillX,
+                duration: const Duration(milliseconds: 900),
+                delay: const Duration(milliseconds: 400),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text.rich(
+          above == null
+              ? TextSpan(text: l.medrepLeader)
+              : TextSpan(children: [
+                  TextSpan(text: '${l.medrepGapTo(rank - 1)} '),
+                  TextSpan(
+                    text: l.medrepCountChecks(gap),
+                    style: const TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.w700),
+                  ),
+                ]),
+          style: PqText.text(14, FontWeight.w400, c: muted),
+        ),
+      ]),
+    );
+  }
+}
+
+// ── Пригласить провизора ─────────────────────────────────────────────────
+
+class _InviteCard extends StatelessWidget {
+  const _InviteCard({required this.link});
+
+  final String link;
+
+  @override
+  Widget build(BuildContext context) {
+    final pq = context.pq;
+    final l = context.l10n;
+    final shown = link.replaceFirst(RegExp(r'^https?://'), '');
+    return PqCard(
+      padding: const EdgeInsets.all(18),
+      radius: 22,
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          const PqIconTile(PqIcons.userPlus, size: 40, iconSize: 20),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(l.medrepInviteTitle, style: PqText.title(c: pq.text)),
+              const SizedBox(height: 2),
+              Text(l.medrepInviteText, style: PqText.body(c: pq.textMuted)),
+            ]),
+          ),
+        ]),
+        const SizedBox(height: 14),
+        Container(
+          height: 48,
+          padding: const EdgeInsets.symmetric(horizontal: 14),
+          alignment: Alignment.centerLeft,
+          decoration: BoxDecoration(
+            color: pq.surfaceAlt,
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: Text(shown,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              softWrap: false,
+              style: PqText.text(14, FontWeight.w400, c: pq.textSecondary)),
+        ),
+        const SizedBox(height: 14),
+        Row(children: [
+          Expanded(
+            child: MedOutlineButton(
+              label: l.medrepHomeCopy,
+              icon: PqIcons.copy,
+              height: 48,
+              radius: 14,
+              transparent: true,
+              expand: true,
+              onTap: () => medCopyLink(context, link),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: MedAccentButton(
+              label: l.medrepHomeShare,
+              icon: PqIcons.share,
+              iconGap: 8,
+              onTap: () => medCopyLink(context, link),
+            ),
+          ),
+        ]),
+      ]),
+    );
+  }
+}
+
+// ── Меню ─────────────────────────────────────────────────────────────────
+
+class _Menu extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = context.l10n;
+    final rows = <Widget>[
+      if (ref.moduleVisible('medrep_referrals'))
+        MedMenuRow(
+          icon: PqIcons.userPlus,
+          title: l.medrepHomeMenuPending,
+          subtitle: l.medrepPendingSub,
+          onTap: () => context.push('/app/referrals'),
+        ),
+      if (ref.moduleVisible('medrep_companies'))
+        MedMenuRow(
+          icon: PqIcons.building,
+          title: l.medrepHomeMenuCompanies,
+          subtitle: l.medrepCompaniesSub,
+          onTap: () => context.push('/app/companies'),
+        ),
+      if (ref.moduleVisible('medrep_doctors'))
+        MedMenuRow(
+          icon: PqIcons.stethoscope,
+          title: l.navDoctors,
+          subtitle: l.medrepDoctorsSub,
+          onTap: () => context.push('/app/doctors'),
+        ),
+    ];
+    if (rows.isEmpty) return const SizedBox.shrink();
+    return PqListCard(children: rows);
   }
 }

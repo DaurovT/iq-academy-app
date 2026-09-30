@@ -1,25 +1,26 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
-import '../../core/img.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../core/design/design.dart';
 import '../../core/l10n/l10n.dart';
 import '../../core/models/learn.dart';
-import '../shared/widgets/pharm_top_bar.dart';
-import '../shared/widgets/screen_decor.dart';
+import '../../widgets/pq_states.dart';
+import '../shared/providers.dart';
+import 'learn/learn_widgets.dart';
 import 'providers.dart';
 
-String _lessonsWord(AppLocalizations l10n, int n) {
-  if (n % 10 == 1 && n % 100 != 11) return l10n.learnLessonOne;
-  if ([2, 3, 4].contains(n % 10) && !(n % 100 >= 12 && n % 100 <= 14)) {
-    return l10n.learnLessonFew;
-  }
-  return l10n.learnLessonMany;
-}
+enum _Tab { fresh, progress, done }
 
-enum _Tab { all, mine, done }
+bool _inTab(Course c, _Tab t) => switch (t) {
+  _Tab.fresh => c.progress <= 0,
+  _Tab.progress => c.progress > 0 && c.progress < 1,
+  _Tab.done => c.progress >= 1,
+};
 
-/// Обучение (список курсов). Перенесено один в один из макета Figma
-/// «pharmiq-learning-courses».
+/// Обучение — список курсов (макеты Learn, LearnEmpty, LearnNoResults).
 class LearnScreen extends ConsumerStatefulWidget {
   const LearnScreen({super.key});
 
@@ -28,439 +29,552 @@ class LearnScreen extends ConsumerStatefulWidget {
 }
 
 class _LearnScreenState extends ConsumerState<LearnScreen> {
-  _Tab _tab = _Tab.all;
-  final _searchCtrl = TextEditingController();
-  String _query = '';
+  /// null — вкладка ещё не выбрана: берём первую непустую.
+  _Tab? _tab;
+  bool _searching = false;
+  final _search = TextEditingController();
+  final _focus = FocusNode();
 
   @override
   void dispose() {
-    _searchCtrl.dispose();
+    _search.dispose();
+    _focus.dispose();
     super.dispose();
   }
 
+  Future<void> _refresh() async {
+    ref.invalidate(courseDetailProvider);
+    ref.invalidate(coursesProvider);
+    await ref.read(coursesProvider.future);
+  }
+
+  void _openSearch() {
+    setState(() => _searching = true);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _focus.requestFocus());
+  }
+
+  void _closeSearch() {
+    _focus.unfocus();
+    _search.clear();
+    setState(() => _searching = false);
+  }
+
+  String _tabLabel(_Tab t) {
+    final l = context.l10n;
+    return switch (t) {
+      _Tab.fresh => l.learnSegNew,
+      _Tab.progress => l.learnSegProgress,
+      _Tab.done => l.learnSegDone,
+    };
+  }
+
+  bool _matches(Course c, String q) {
+    if (q.isEmpty) return true;
+    bool has(String? s) => s != null && s.toLowerCase().contains(q);
+    return has(c.title) || has(c.ownerBrand) || has(c.category);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final c = _L.of(context);
-    final all = ref.watch(coursesProvider).asData?.value ?? const <Course>[];
+    final pq = context.pq;
+    final l = context.l10n;
+    final unread = ref.watch(unreadCountProvider).asData?.value ?? 0;
+    final courses = ref.watch(coursesProvider);
+    final bottom = math.max(
+      kPqNavClearance,
+      MediaQuery.paddingOf(context).bottom + 36,
+    );
 
-    final byTab = switch (_tab) {
-      _Tab.all => all,
-      _Tab.mine => all.where((e) => e.progress > 0 && e.progress < 1),
-      _Tab.done => all.where((e) => e.progress >= 1),
-    };
-    final q = _query.trim().toLowerCase();
-    final list =
-        byTab.where((e) => q.isEmpty || e.title.toLowerCase().contains(q)).toList();
-
-    return Scaffold(
-      backgroundColor: c.page,
-      body: Stack(children: [Positioned.fill(child: ScreenDecor(learnDecor)), Column(
+    return PqScreen(
+      safeBottom: false,
+      child: Column(
         children: [
-          const PharmTopBar(),
+          PqTabHeader(
+            onBell: () => context.push('/app/notifications'),
+            bellLabel: l.notifTitle,
+            unread: unread > 0,
+          ),
           Expanded(
-            child: RefreshIndicator(
-              onRefresh: () async => ref.invalidate(coursesProvider),
-              child: ListView(
-                padding: const EdgeInsets.only(top: 20, bottom: 24),
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
-                    child: Text(context.l10n.learnTitle,
-                        style: TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.w700,
-                            color: c.text)),
+            child: PqAsync<List<Course>>(
+              value: courses,
+              onRetry: () => ref.invalidate(coursesProvider),
+              padding: EdgeInsets.fromLTRB(16, 4, 16, bottom),
+              loadingBuilder:
+                  (_) => SingleChildScrollView(
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: EdgeInsets.fromLTRB(16, 4, 16, bottom),
+                    child: PqSkeletonList(title: l.learnTitle, rows: 4),
                   ),
-                  const SizedBox(height: 12),
-                  // search
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Container(
-                      height: 44,
-                      decoration: BoxDecoration(
-                          color: c.card,
-                          borderRadius: BorderRadius.circular(22)),
-                      child: Row(
-                        children: [
-                          const SizedBox(width: 14),
-                          Icon(Icons.search, size: 20, color: c.muted),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: TextField(
-                              controller: _searchCtrl,
-                              onChanged: (v) => setState(() => _query = v),
-                              style: TextStyle(fontSize: 13, color: c.text),
-                              decoration: InputDecoration(
-                                isCollapsed: true,
-                                filled: false,
-                                border: InputBorder.none,
-                                hintText: context.l10n.learnSearchHint,
-                                hintStyle:
-                                    TextStyle(fontSize: 13, color: c.muted),
-                              ),
-                            ),
-                          ),
-                          if (_query.isNotEmpty)
-                            InkWell(
-                              onTap: () {
-                                _searchCtrl.clear();
-                                setState(() => _query = '');
-                              },
-                              child: Icon(Icons.close, size: 18, color: c.muted),
-                            ),
-                          const SizedBox(width: 14),
-                        ],
-                      ),
-                    ),
+              data:
+                  (all) => PqRefresh(
+                    onRefresh: _refresh,
+                    child: _list(context, pq, all, bottom),
                   ),
-                  const SizedBox(height: 16),
-                  // tabs
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      children: [
-                        for (final (t, label) in [
-                          (_Tab.all, context.l10n.learnTabAll),
-                          (_Tab.mine, context.l10n.learnTabMine),
-                          (_Tab.done, context.l10n.learnTabDone),
-                        ]) ...[
-                          _Chip(
-                            c: c,
-                            label: label,
-                            selected: _tab == t,
-                            onTap: () => setState(() => _tab = t),
-                          ),
-                          const SizedBox(width: 8),
-                        ],
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  if (list.isEmpty)
-                    _EmptySearch(
-                      c: c,
-                      query: _query,
-                      onReset: () {
-                        _searchCtrl.clear();
-                        setState(() {
-                          _query = '';
-                          _tab = _Tab.all;
-                        });
-                      },
-                    )
-                  else
-                    for (final course in list)
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                        child: _CourseCard(
-                          c: c,
-                          course: course,
-                          onTap: () => context.push('/app/learn/${course.id}'),
-                        ),
-                      ),
-                ],
-              ),
             ),
           ),
         ],
-      )]),
-    );
-  }
-}
-
-class _Chip extends StatelessWidget {
-  const _Chip({
-    required this.c,
-    required this.label,
-    required this.selected,
-    required this.onTap,
-  });
-  final _L c;
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(999),
-      child: Container(
-        height: 32,
-        alignment: Alignment.center,
-        padding: const EdgeInsets.symmetric(horizontal: 14),
-        decoration: BoxDecoration(
-          color: selected ? const Color(0xFF1D4068) : c.card,
-          borderRadius: BorderRadius.circular(999),
-          border: selected ? null : Border.all(color: c.border),
-        ),
-        child: Text(label,
-            style: TextStyle(
-                fontSize: 13,
-                fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
-                color: selected ? const Color(0xFFE4E2ED) : c.muted)),
       ),
     );
   }
-}
 
-class _CourseCard extends StatelessWidget {
-  const _CourseCard({required this.c, required this.course, required this.onTap});
-  final _L c;
-  final Course course;
-  final VoidCallback onTap;
+  Widget _list(
+    BuildContext context,
+    PqColors pq,
+    List<Course> all,
+    double bottom,
+  ) {
+    final l = context.l10n;
+    final q = _searching ? _search.text.trim().toLowerCase() : '';
+    final tab =
+        _tab ??
+        _Tab.values.firstWhere(
+          (t) => all.any((c) => _inTab(c, t)),
+          orElse: () => _Tab.fresh,
+        );
+    final list = all.where((c) => _inTab(c, tab) && _matches(c, q)).toList();
 
-  @override
-  Widget build(BuildContext context) {
-    final brand = course.ownerBrand ?? course.category;
-    final complete = course.progress >= 1;
-    return Material(
-      color: c.card,
-      borderRadius: BorderRadius.circular(16),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // banner
-            SizedBox(
-              height: 160,
-              width: double.infinity,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  const DecoratedBox(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                        colors: [Color(0xFFE8621A), Color(0xFFF59F30)],
-                      ),
-                    ),
-                    child: SizedBox.expand(),
-                  ),
-                  if (course.coverUrl != null && course.coverUrl!.isNotEmpty)
-                    Image.network(
-                      imgThumb(course.coverUrl, w: 560)!,
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => const SizedBox.shrink(),
-                    ),
-                  // скрим для читаемости белого заголовка поверх обложки
-                  const DecoratedBox(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [Colors.transparent, Color(0x99000000)],
-                        stops: [0.45, 1.0],
-                      ),
-                    ),
-                    child: SizedBox.expand(),
-                  ),
-                  if (brand != null)
-                    Positioned(
-                      top: 12,
-                      right: 12,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 6),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(999)),
-                        child: Text(brand.toUpperCase(),
-                            style: const TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.w700,
-                                color: Color(0xFF0D1117))),
-                      ),
-                    ),
-                  Positioned(
-                    left: 16,
-                    bottom: 16,
-                    right: 16,
-                    child: Text(course.title.toUpperCase(),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w800,
-                            color: Colors.white)),
-                  ),
-                ],
-              ),
-            ),
-            // content
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(course.title,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                                color: c.text)),
-                      ),
-                      if (course.isNew == true) ...[
-                        const SizedBox(width: 8),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 6),
-                          decoration: BoxDecoration(
-                              color: const Color(0xFFF59F30),
-                              borderRadius: BorderRadius.circular(999)),
-                          child: Text(context.l10n.learnNewBadge,
-                              style: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w700,
-                                  color: Color(0xFF0D1117))),
-                        ),
-                      ],
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  Text(course.description,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          fontSize: 13, height: 1.5, color: c.muted)),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      Icon(Icons.play_circle_outline, size: 14, color: c.muted),
-                      const SizedBox(width: 6),
-                      Text(
-                          '${course.lessonCount} '
-                          '${_lessonsWord(context.l10n, course.lessonCount)}',
-                          style: TextStyle(fontSize: 12, color: c.muted)),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  // прогресс/статус — единообразно с веб-приложением
-                  _CourseProgress(c: c, progress: course.progress),
-                  const SizedBox(height: 12),
-                  Container(
-                    height: 44,
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        color: complete
-                            ? const Color(0xFF16A34A)
-                            : const Color(0xFF1D4068),
-                        borderRadius: BorderRadius.circular(12)),
-                    child: Text(
-                      complete
-                          ? context.l10n.learnRepeatCourse
-                          : course.progress > 0
-                              ? context.l10n.learnContinueLearning
-                              : context.l10n.learnStartCourse,
-                      style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFFE4E2ED)),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+    // Пустые состояния — с каскадом экранов входа (маркер pq-auth в макетах).
+    final maxIndex = list.isNotEmpty ? 6 : 4;
+
+    final items = <Widget>[
+      AnimatedSwitcher(
+        duration: const Duration(milliseconds: 200),
+        switchInCurve: PqMotion.ease,
+        child:
+            _searching
+                ? _SearchHeader(
+                  key: const ValueKey('search'),
+                  controller: _search,
+                  focus: _focus,
+                  onChanged: () => setState(() {}),
+                  onCancel: _closeSearch,
+                )
+                : _Header(key: const ValueKey('title'), onSearch: _openSearch),
       ),
-    );
-  }
-}
+      PqSegmented<_Tab>(
+        values: _Tab.values,
+        selected: tab,
+        labelOf: _tabLabel,
+        onChanged: (t) => setState(() => _tab = t),
+      ),
+    ];
 
-class _CourseProgress extends StatelessWidget {
-  const _CourseProgress({required this.c, required this.progress});
-  final _L c;
-  final double progress;
-
-  @override
-  Widget build(BuildContext context) {
-    final complete = progress >= 1;
-    final pct = (progress * 100).round();
-    const green = Color(0xFF16A34A);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(999),
-          child: LinearProgressIndicator(
-            value: progress.clamp(0, 1),
-            minHeight: 6,
-            backgroundColor: c.border,
-            valueColor: AlwaysStoppedAnimation(
-                complete ? green : const Color(0xFF1D4068)),
+    if (all.isEmpty) {
+      items.add(
+        LearnStateBlock(
+          icon: PqIcons.graduationCap,
+          title: l.learnEmptyTitle,
+          message: l.learnEmptyText,
+          action: LearnOutlineButton(
+            label: l.learnEnableNotifications,
+            icon: PqIcons.bell,
+            onPressed: () => context.push('/app/settings/notifications'),
           ),
         ),
-        const SizedBox(height: 6),
-        complete
-            ? Row(children: [
-                const Icon(Icons.check_circle, size: 15, color: green),
-                const SizedBox(width: 4),
-                Text(context.l10n.learnCompleted,
-                    style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: green)),
-              ])
-            : Text('$pct%', style: TextStyle(fontSize: 12, color: c.muted)),
+      );
+    } else if (list.isEmpty && q.isNotEmpty) {
+      final other = _Tab.values.where(
+        (t) => t != tab && all.any((c) => _inTab(c, t) && _matches(c, q)),
+      );
+      final query = _search.text.trim();
+      items.add(
+        LearnStateBlock(
+          icon: PqIcons.search,
+          title: l.learnNoResultsTitle,
+          message:
+              other.isEmpty
+                  ? l.learnNoResultsAll(query)
+                  : l.learnNoResultsInTab(query, _tabLabel(tab)),
+          action:
+              other.isEmpty
+                  ? null
+                  : LearnOutlineButton(
+                    label: l.learnSearchEverywhere,
+                    icon: PqIcons.search,
+                    onPressed: () => setState(() => _tab = other.first),
+                  ),
+        ),
+      );
+    } else if (list.isEmpty) {
+      items.add(
+        LearnStateBlock(
+          icon: PqIcons.graduationCap,
+          title: l.learnTabEmptyTitle,
+          message: switch (tab) {
+            _Tab.fresh => l.learnTabEmptyNew,
+            _Tab.progress => l.learnTabEmptyProgress,
+            _Tab.done => l.learnTabEmptyDone,
+          },
+        ),
+      );
+    } else {
+      for (final c in list) {
+        items.add(
+          _CourseCard(
+            key: ValueKey(c.id),
+            course: c,
+            onTap: () => context.push('/app/learn/${c.id}'),
+          ),
+        );
+      }
+    }
+
+    final gap = _searching ? 20.0 : 24.0;
+    return ListView.builder(
+      physics: const AlwaysScrollableScrollPhysics(),
+      padding: EdgeInsets.fromLTRB(16, 4, 16, bottom),
+      itemCount: items.length,
+      itemBuilder:
+          (_, i) => Padding(
+            padding: EdgeInsets.only(top: i == 0 ? 0 : gap),
+            child: PqAnimate(
+              key: items[i].key,
+              delay: PqMotion.staggerDelay(i, maxIndex: maxIndex),
+              child: items[i],
+            ),
+          ),
+    );
+  }
+}
+
+/// Заголовок экрана + круглая кнопка поиска 44 с рамкой.
+class _Header extends StatelessWidget {
+  const _Header({super.key, required this.onSearch});
+
+  final VoidCallback onSearch;
+
+  @override
+  Widget build(BuildContext context) {
+    final pq = context.pq;
+    final l = context.l10n;
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(child: PqPageTitle(l.learnTitle, subtitle: l.learnSubtitle)),
+        const SizedBox(width: 12),
+        PqPressable(
+          onTap: onSearch,
+          semanticLabel: l.learnSearchA11y,
+          scale: .94,
+          child: Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: pq.surface,
+              shape: BoxShape.circle,
+              border: Border.all(color: pq.border),
+            ),
+            alignment: Alignment.center,
+            child: PqIcon(PqIcons.search, size: 20, color: pq.text),
+          ),
+        ),
       ],
     );
   }
 }
 
-class _EmptySearch extends StatelessWidget {
-  const _EmptySearch(
-      {required this.c, required this.query, required this.onReset});
-  final _L c;
-  final String query;
-  final VoidCallback onReset;
+/// Режим поиска (макет LearnNoResults): h1 + поле 48/16 + «Отмена».
+class _SearchHeader extends StatefulWidget {
+  const _SearchHeader({
+    super.key,
+    required this.controller,
+    required this.focus,
+    required this.onChanged,
+    required this.onCancel,
+  });
+
+  final TextEditingController controller;
+  final FocusNode focus;
+  final VoidCallback onChanged;
+  final VoidCallback onCancel;
+
+  @override
+  State<_SearchHeader> createState() => _SearchHeaderState();
+}
+
+class _SearchHeaderState extends State<_SearchHeader> {
+  @override
+  void initState() {
+    super.initState();
+    widget.focus.addListener(_rebuild);
+  }
+
+  @override
+  void dispose() {
+    widget.focus.removeListener(_rebuild);
+    super.dispose();
+  }
+
+  void _rebuild() => setState(() {});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 60, 16, 16),
-      child: Column(
-        children: [
-          Container(
-            width: 72,
-            height: 72,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                color: c.card, borderRadius: BorderRadius.circular(36)),
-            child: Icon(Icons.search, size: 32, color: c.muted),
-          ),
-          const SizedBox(height: 16),
-          Text(context.l10n.learnNotFoundTitle,
-              style: TextStyle(
-                  fontSize: 17, fontWeight: FontWeight.w700, color: c.text)),
-          const SizedBox(height: 8),
-          Text(
-            query.isEmpty
-                ? context.l10n.learnTryChangeFilters
-                : context.l10n.learnNothingForQuery(query),
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 13, color: c.muted),
-          ),
-          const SizedBox(height: 20),
-          OutlinedButton(
-            style: OutlinedButton.styleFrom(
-              foregroundColor: c.text,
-              side: BorderSide(color: c.border),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(999)),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+    final pq = context.pq;
+    final l = context.l10n;
+    final focused = widget.focus.hasFocus;
+    final hasText = widget.controller.text.isNotEmpty;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(l.learnTitle, style: PqText.display(c: pq.text)),
+        const SizedBox(height: 20),
+        Row(
+          children: [
+            Expanded(
+              child: Semantics(
+                textField: true,
+                label: l.learnSearchA11y,
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 150),
+                  height: 48,
+                  padding: EdgeInsets.fromLTRB(
+                    focused ? 13 : 14,
+                    0,
+                    focused ? 5 : 6,
+                    0,
+                  ),
+                  decoration: BoxDecoration(
+                    color: pq.surface,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: focused ? pq.accent : pq.border,
+                      width: focused ? 2 : 1,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      PqIcon(PqIcons.search, size: 20, color: pq.textMuted),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: TextField(
+                          controller: widget.controller,
+                          focusNode: widget.focus,
+                          onChanged: (_) => widget.onChanged(),
+                          textInputAction: TextInputAction.search,
+                          cursorColor: pq.accent,
+                          cursorWidth: 2,
+                          cursorHeight: 20,
+                          style: PqText.field(c: pq.text),
+                          decoration: InputDecoration(
+                            isDense: true,
+                            filled: false,
+                            border: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            contentPadding: EdgeInsets.zero,
+                            hintText: l.learnSearchPlaceholder,
+                            hintStyle: PqText.field(c: pq.textMuted),
+                          ),
+                        ),
+                      ),
+                      if (hasText)
+                        PqPressable(
+                          onTap: () {
+                            widget.controller.clear();
+                            widget.onChanged();
+                          },
+                          semanticLabel: l.learnSearchClear,
+                          scale: .94,
+                          child: Container(
+                            width: 36,
+                            height: 36,
+                            decoration: BoxDecoration(
+                              color: pq.surfaceAlt,
+                              shape: BoxShape.circle,
+                            ),
+                            alignment: Alignment.center,
+                            child: PqIcon(
+                              PqIcons.x,
+                              size: 16,
+                              color: pq.textMuted,
+                            ),
+                          ),
+                        )
+                      else
+                        const SizedBox(width: 8),
+                    ],
+                  ),
+                ),
+              ),
             ),
-            onPressed: onReset,
-            child: Text(context.l10n.learnResetFilters),
+            const SizedBox(width: 12),
+            PqPressable(
+              onTap: widget.onCancel,
+              semanticLabel: l.commonCancel,
+              child: Container(
+                height: 44,
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                alignment: Alignment.center,
+                child: Text(
+                  l.commonCancel,
+                  style: PqText.text(15, FontWeight.w600, c: pq.accent),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+/// Карточка курса (макет Learn): обложка 150, название + награда, описание,
+/// три плитки (видео · тест · награда), прогресс и кнопка-действие.
+/// Плитки и награда берутся из детали курса (в списке их нет).
+class _CourseCard extends ConsumerWidget {
+  const _CourseCard({super.key, required this.course, required this.onTap});
+
+  final Course course;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final pq = context.pq;
+    final l = context.l10n;
+    final detail = ref.watch(courseDetailProvider(course.id));
+    final lessons = detail.asData?.value.lessons;
+    final stats = lessons == null ? null : learnStats(lessons);
+    final done = course.progress >= 1;
+    final started = course.progress > 0;
+    final pct = (course.progress.clamp(0, 1) * 100).round();
+
+    Widget? tag;
+    if (done) {
+      tag = PqStatusBadge(l.learnCompleted, tone: PqTone.success);
+    } else if (stats != null && stats.reward > 0) {
+      tag = PqRewardTag.iqc(l.learnIqc(stats.reward));
+    }
+
+    final tiles = <Widget>[];
+    if (stats != null && lessons != null) {
+      if (stats.videos > 0) {
+        tiles.add(
+          _Tile(
+            icon: PqIcons.video,
+            iconColor: pq.accentText,
+            label:
+                stats.videos == 1
+                    ? l.learnRowVideo
+                    : l.learnTileVideo(stats.videos),
+            value: stats.minutes > 0 ? l.learnMinutesShort(stats.minutes) : '—',
+          ),
+        );
+      }
+      if (stats.quizzes > 0) {
+        final quizzes = lessons.where((x) => x.kind == 'quiz');
+        tiles.add(
+          _Tile(
+            icon: PqIcons.checkSquare,
+            iconColor: pq.accentText,
+            label:
+                stats.quizzes == 1
+                    ? l.learnRowQuiz
+                    : l.learnTileQuiz(stats.quizzes),
+            value:
+                quizzes.every((x) => x.completed)
+                    ? l.learnCompleted
+                    : quizzes.any((x) => x.locked != true)
+                    ? l.learnQuizStatusOpen
+                    : l.learnQuizStatusLocked,
+          ),
+        );
+      }
+      if (stats.reward > 0) {
+        tiles.add(
+          _Tile(
+            icon: PqIcons.star,
+            iconColor: learnRewardFg(pq),
+            label: l.learnTileReward,
+            value: l.learnIqc(stats.reward),
+          ),
+        );
+      }
+    }
+
+    final (ctaIcon, ctaLabel) =
+        done
+            ? (PqIcons.rotateCcw, l.learnCtaRepeat)
+            : started
+            ? (PqIcons.play, l.learnCtaContinue)
+            : (PqIcons.play, l.learnCtaStart);
+
+    return PqCard(
+      onTap: onTap,
+      padding: EdgeInsets.zero,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          LearnBanner(
+            title: course.title,
+            brand: course.ownerBrand ?? course.category,
+            coverUrl: course.coverUrl,
+            height: 150,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(19)),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        course.title,
+                        style: PqText.title(c: pq.text),
+                      ),
+                    ),
+                    if (tag != null) ...[const SizedBox(width: 12), tag],
+                  ],
+                ),
+                if (course.description.trim().isNotEmpty) ...[
+                  const SizedBox(height: 14),
+                  Text(
+                    course.description,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    style: PqText.body(c: pq.textSecondary),
+                  ),
+                ],
+                if (detail.isLoading && stats == null) ...[
+                  const SizedBox(height: 14),
+                  const Row(
+                    children: [
+                      Expanded(child: PqSkeleton(height: 78, radius: 16)),
+                      SizedBox(width: 8),
+                      Expanded(child: PqSkeleton(height: 78, radius: 16)),
+                      SizedBox(width: 8),
+                      Expanded(child: PqSkeleton(height: 78, radius: 16)),
+                    ],
+                  ),
+                ] else if (tiles.isNotEmpty) ...[
+                  const SizedBox(height: 14),
+                  IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        for (var i = 0; i < tiles.length; i++) ...[
+                          if (i > 0) const SizedBox(width: 8),
+                          Expanded(child: tiles[i]),
+                        ],
+                      ],
+                    ),
+                  ),
+                ],
+                if (started && !done) ...[
+                  const SizedBox(height: 14),
+                  Text(
+                    l.learnProgressLabel(pct),
+                    style: PqText.caption(c: pq.textMuted, w: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 8),
+                  PqProgressBar(value: course.progress, height: 6),
+                ],
+                const SizedBox(height: 14),
+                _CardCta(icon: ctaIcon, label: ctaLabel),
+              ],
+            ),
           ),
         ],
       ),
@@ -468,37 +582,92 @@ class _EmptySearch extends StatelessWidget {
   }
 }
 
-class _L {
-  const _L({
-    required this.page,
-    required this.card,
-    required this.border,
-    required this.text,
-    required this.muted,
+class _Tile extends StatelessWidget {
+  const _Tile({
+    required this.icon,
+    required this.iconColor,
+    required this.label,
+    required this.value,
   });
 
-  final Color page;
-  final Color card;
-  final Color border;
-  final Color text;
-  final Color muted;
+  final PqIcons icon;
+  final Color iconColor;
+  final String label;
+  final String value;
 
-  static _L of(BuildContext context) =>
-      Theme.of(context).brightness == Brightness.dark ? _dark : _light;
+  @override
+  Widget build(BuildContext context) {
+    final pq = context.pq;
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: pq.surfaceAlt,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Иконка — inline-svg в строке 16×1.4: блок 23 px, svg прижат к верху.
+          SizedBox(
+            height: 23,
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: PqIcon(icon, size: 18, color: iconColor),
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: PqText.caption(c: pq.textMuted),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            value,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: PqText.text(14, FontWeight.w700, c: pq.text),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
-  static const _dark = _L(
-    page: Color(0xFF0D1117),
-    card: Color(0xFF131A28),
-    border: Color(0xFF2A3040),
-    text: Color(0xFFE4E2ED),
-    muted: Color(0xFF8F909A),
-  );
+/// Кнопка внутри карточки (вся карточка — ссылка): 52/16, без тени.
+class _CardCta extends StatelessWidget {
+  const _CardCta({required this.icon, required this.label});
 
-  static const _light = _L(
-    page: Color(0xFFF5F6FA),
-    card: Colors.white,
-    border: Color(0xFFEBEDF0),
-    text: Color(0xFF1A1D26),
-    muted: Color(0xFF6B7280),
-  );
+  final PqIcons icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final pq = context.pq;
+    final pressed = PqPressedScope.of(context);
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      height: 52,
+      decoration: BoxDecoration(
+        color: pressed ? pq.accentPressed : pq.accent,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          PqIcon(icon, size: 18, color: pq.onAccent),
+          const SizedBox(width: 8),
+          Flexible(
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: PqText.button(c: pq.onAccent),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

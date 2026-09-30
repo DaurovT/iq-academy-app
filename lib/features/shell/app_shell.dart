@@ -1,12 +1,13 @@
 import '../../core/app_modules.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/auth/auth_controller.dart';
 import '../../core/l10n/l10n.dart';
-import '../../core/theme/app_colors.dart';
+import '../../core/design/design.dart';
 import '../../core/uploads/upload_queue.dart';
+import '../tour/tour_controller.dart';
+import '../tour/tour_overlay.dart';
 import 'nav_config.dart';
 
 /// Оболочка приложения: контент + нижняя навигация под активную роль.
@@ -43,57 +44,55 @@ class AppShell extends ConsumerWidget {
 
     final l10n = context.l10n;
     // скрытые в админке разделы не показываем в меню (пока грузится — показываем всё)
-    final modules = ref.watch(appModulesProvider).asData?.value ?? AppModules.empty;
+    final modules =
+        ref.watch(appModulesProvider).asData?.value ?? AppModules.empty;
     final tabs = [
-      ...navConfig(l10n)[role]!
-          .where((i) => i.tab && (i.module == null || modules.isVisible(i.module!, role))),
+      ...navConfig(l10n)[role]!.where(
+        (i) =>
+            i.tab && (i.module == null || modules.isVisible(i.module!, role)),
+      ),
       NavItem(
         path: '/app/profile',
         label: l10n.navProfile,
         icon: Icons.person_outline,
         iconAsset: 'assets/nav/profile.svg',
+        pqIcon: PqIcons.user,
       ),
     ];
     final location = GoRouterState.of(context).uri.path;
     final selected = _selectedIndex(tabs, location);
-    final p = PharmPalette.of(context);
 
-    return Scaffold(
-      body: child,
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: selected,
-        onDestinationSelected: (i) => context.go(tabs[i].path),
-        destinations: [
-          for (final t in tabs)
-            NavigationDestination(
-              icon: t.iconAsset != null
-                  ? _NavSvg(asset: t.iconAsset!, color: p.navInactive)
-                  : Icon(t.icon),
-              selectedIcon: t.iconAsset != null
-                  ? _NavSvg(asset: t.iconAsset!, color: p.navActiveIcon)
-                  : null,
-              label: t.label,
-            ),
-        ],
-      ),
-    );
-  }
-}
+    // Вкладки — цели обучающего тура.
+    TourTarget? tourTargetOf(String path) => switch (path) {
+      '/app/checks' || '/app/recipes' => TourTarget.tabChecks,
+      '/app/learn' => TourTarget.tabLearn,
+      '/app/profile' => TourTarget.tabProfile,
+      _ => null,
+    };
 
-/// SVG-значок навбара из макета, перекрашенный под состояние вкладки.
-class _NavSvg extends StatelessWidget {
-  const _NavSvg({required this.asset, required this.color});
-
-  final String asset;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return SvgPicture.asset(
-      asset,
-      width: 24,
-      height: 24,
-      colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+    return Stack(
+      children: [
+        Scaffold(
+          body: child,
+          extendBody: true,
+          bottomNavigationBar: PqBottomNav(
+            selected: selected,
+            onSelect: (i) => context.go(tabs[i].path),
+            items: [
+              for (final t in tabs)
+                PqNavItem(icon: t.pqIcon ?? PqIcons.grid, label: t.label),
+            ],
+            wrapItem: (i, item) {
+              final target = tourTargetOf(tabs[i].path);
+              return target == null
+                  ? item
+                  : TourAnchor(target: target, radius: 16, child: item);
+            },
+          ),
+        ),
+        // Обучающий тур — поверх экрана и нижнего меню.
+        const Positioned.fill(child: TourOverlay()),
+      ],
     );
   }
 }

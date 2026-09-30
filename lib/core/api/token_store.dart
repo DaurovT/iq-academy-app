@@ -40,6 +40,12 @@ class TokenStore {
   Future<String?> readModules() => _storage.read(key: _kModules);
   Future<void> writeModules(String json) => _write(_kModules, json);
 
+  /// Обучающий тур пройден (ключ — по аккаунту). Не чистится при выходе:
+  /// повторный вход тем же аккаунтом тур не показывает.
+  Future<bool> readTourDone(String account) async =>
+      (await _storage.read(key: 'tourDone_$account')) == '1';
+  Future<void> writeTourDone(String account) => _write('tourDone_$account', '1');
+
   /// Чистит только сессию (токен + роль); настройки (тема) остаются.
   Future<void> clear() async {
     await _storage.delete(key: _kToken);

@@ -1,70 +1,59 @@
 import 'package:flutter/material.dart';
-import '../widgets/pharm_academy_logo.dart';
 
-/// Заглавный экран (splash) — показывается, пока проверяется сессия.
-/// Перенесён из макета Figma «pharmiq-splash».
+import '../../../core/design/design.dart';
+import '../../../core/l10n/l10n.dart';
+import '../login/auth_ui.dart';
+import '../onboarding/app_version.dart';
+
+/// Заставка (макет Splash) — показывается, пока проверяется сессия:
+/// логотип с pqLogo .9s, внизу — полоса загрузки pqLoad и версия.
 class SplashScreen extends StatelessWidget {
-  const SplashScreen({super.key});
+  const SplashScreen({super.key, this.version = kAppVersion});
+
+  /// Версия под полосой загрузки (пусто — строка остаётся, но без текста,
+  /// чтобы полоса стояла на месте, как в макете).
+  final String version;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF050A14),
-      body: Stack(
+    final pq = context.pq;
+    final l10n = context.l10n;
+    return AuthScreen(
+      safeBottom: false,
+      child: Stack(
         children: [
-          // «полярные» свечения
-          Positioned(
-            top: -120,
-            right: -140,
-            child: _Blob(color: const Color(0xFF6D28D9).withValues(alpha: 0.45), size: 460),
-          ),
-          Positioned(
-            top: 300,
-            left: -120,
-            child: _Blob(color: const Color(0xFF1D4ED8).withValues(alpha: 0.35), size: 420),
-          ),
-          Positioned(
-            bottom: -60,
-            left: -80,
-            child: _Blob(color: const Color(0xFF7C3AED).withValues(alpha: 0.3), size: 320),
-          ),
-          // центр — только логотип (Figma 36:5: без карточки и слогана)
           const Center(
-            child: PharmAcademyLogo(height: 64),
-          ),
-          // версия
-          Positioned(
-            bottom: 24,
-            right: 24,
-            child: Text(
-              'v1.0.0',
-              style: TextStyle(
-                fontSize: 10,
-                color: Colors.white.withValues(alpha: 0.2),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24),
+              child: PqAnimate(
+                fx: PqFx.logo,
+                child: FittedBox(fit: BoxFit.scaleDown, child: AuthBrand(large: true)),
               ),
             ),
           ),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 64,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Semantics(
+                  label: l10n.authLoading,
+                  child: PqLoadBar(
+                    color: pq.accent,
+                    trackColor: pq.isDark ? pq.border : const Color(0xFFE5E7EB),
+                  ),
+                ),
+                const SizedBox(height: 14),
+                Text(
+                  version.isEmpty ? '' : l10n.authVersion(version),
+                  style: PqText.caption(c: pq.textMuted),
+                ),
+              ],
+            ),
+          ),
         ],
-      ),
-    );
-  }
-}
-
-class _Blob extends StatelessWidget {
-  const _Blob({required this.color, required this.size});
-  final Color color;
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: RadialGradient(
-          colors: [color, color.withValues(alpha: 0)],
-        ),
       ),
     );
   }

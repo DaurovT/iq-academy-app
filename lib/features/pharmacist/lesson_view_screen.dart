@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../core/api/providers.dart';
+import '../../core/design/design.dart';
 import '../../core/l10n/l10n.dart';
 import '../../core/models/learn.dart';
-import '../../widgets/async_view.dart';
+import '../../widgets/pq_states.dart';
 import '../../widgets/video_frame.dart';
-import '../shared/widgets/screen_decor.dart';
+import 'learn/learn_widgets.dart';
 import 'providers.dart';
 
-/// Просмотр урока. Перенесён один в один из макета Figma
-/// «pharmiq-learning-lesson».
+/// Просмотр урока (макет Lesson): плеер, «Урок N из M», вкладки
+/// «Текст урока / Материалы», закреплённая кнопка перехода к тесту.
 class LessonViewScreen extends ConsumerStatefulWidget {
-  const LessonViewScreen(
-      {super.key, required this.courseId, required this.lessonId});
+  const LessonViewScreen({
+    super.key,
+    required this.courseId,
+    required this.lessonId,
+  });
 
   final int courseId;
   final int lessonId;
@@ -23,16 +28,13 @@ class LessonViewScreen extends ConsumerStatefulWidget {
 }
 
 class _LessonViewScreenState extends ConsumerState<LessonViewScreen> {
-  int _tab = 0; // 0 = Текст урока, 1 = Материалы
+  int _tab = 0; // 0 — текст урока, 1 — материалы
   bool _loading = false;
   String? _videoUrl; // непусто → плеер запущен
 
-  void _startVideo(String url) => setState(() => _videoUrl = url);
-
   Future<void> _complete(CourseDetail course) async {
     setState(() => _loading = true);
-    final messenger = ScaffoldMessenger.of(context);
-    final l10n = context.l10n;
+    final l = context.l10n;
     try {
       final res = await ref
           .read(apiProvider)
@@ -40,236 +42,239 @@ class _LessonViewScreenState extends ConsumerState<LessonViewScreen> {
           .completeLesson(widget.courseId, widget.lessonId);
       ref.invalidate(courseDetailProvider(widget.courseId));
       ref.invalidate(walletProvider);
-      messenger.showSnackBar(
-          SnackBar(content: Text(l10n.lessonCompletedReward(res.rewardIqc))));
-      if (mounted) _goNext(course);
+      if (!mounted) return;
+      if (res.rewardIqc > 0) {
+        showPqToast(
+          context,
+          l.lessonCompletedReward(res.rewardIqc),
+          icon: PqIcons.coins,
+        );
+      }
+      _goNext(course);
     } catch (e) {
-      messenger.showSnackBar(SnackBar(content: Text(e.toString())));
+      if (mounted) {
+        showPqToast(context, learnErrorText(context, e), tone: PqTone.danger);
+      }
     } finally {
       if (mounted) setState(() => _loading = false);
     }
   }
 
-  void _goNext(CourseDetail course) {
-    // Следующий ПО ПОРЯДКУ непройденный шаг после текущего (видео или квиз) — не прыгаем через
-    // промежуточные видео к первому квизу. Предыдущий шаг только что завершён → следующий открыт.
+  /// Следующий ПО ПОРЯДКУ непройденный шаг после текущего (видео или тест) —
+  /// не прыгаем через промежуточные видео к первому тесту.
+  Lesson? _nextOf(CourseDetail course) {
     final ls = course.lessons;
     final cur = ls.indexWhere((l) => l.id == widget.lessonId);
-    Lesson? next;
     for (var i = cur + 1; i < ls.length; i++) {
-      if (!ls[i].completed) {
-        next = ls[i];
-        break;
-      }
+      if (!ls[i].completed) return ls[i];
     }
+    return null;
+  }
+
+  void _goNext(CourseDetail course) {
+    final next = _nextOf(course);
     if (next == null) {
-      context.pop(); // весь курс пройден
+      learnBack(context, '/app/learn/${widget.courseId}'); // курс пройден
       return;
     }
-    final path = next.kind == 'quiz' ? 'quiz' : 'lesson';
-    context.pushReplacement('/app/learn/${widget.courseId}/$path/${next.id}');
+    context.pushReplacement(learnStepPath(widget.courseId, next));
   }
 
   @override
   Widget build(BuildContext context) {
-    final c = _LV.of(context);
+    final l = context.l10n;
     final course = ref.watch(courseDetailProvider(widget.courseId));
-
-    return Scaffold(
-      backgroundColor: c.page,
-      body: Stack(children: [Positioned.fill(child: ScreenDecor(lessonDecor)), SafeArea(
-        bottom: false,
-        child: AsyncView(
-          value: course,
-          onRetry: () => ref.invalidate(courseDetailProvider(widget.courseId)),
-          data: (course) {
-            Lesson? lesson;
-            for (final l in course.lessons) {
-              if (l.id == widget.lessonId) {
-                lesson = l;
-                break;
-              }
-            }
-            if (lesson == null) {
-              return EmptyState(text: context.l10n.lessonNotFound);
-            }
-            return _body(context, c, course, lesson);
-          },
-        ),
-      )]),
+    return PqScreen(
+      safeBottom: false,
+      child: Column(
+        children: [
+          PqTopBar(
+            title: course.asData?.value.title ?? '',
+            backLabel: l.learnBack,
+            onBack: () => learnBack(context, '/app/learn/${widget.courseId}'),
+          ),
+          Expanded(
+            child: PqAsync<CourseDetail>(
+              value: course,
+              loading: PqLoadingKind.spinner,
+              onRetry:
+                  () => ref.invalidate(courseDetailProvider(widget.courseId)),
+              data: (course) {
+                final lesson =
+                    course.lessons
+                        .where((l) => l.id == widget.lessonId)
+                        .firstOrNull;
+                if (lesson == null) {
+                  return PqEmptyState(
+                    icon: PqIcons.video,
+                    title: l.lessonNotFound,
+                  );
+                }
+                return _body(context, course, lesson);
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _body(
-      BuildContext context, _LV c, CourseDetail course, Lesson lesson) {
-    return Column(
-      children: [
-        // top-app-bar
-        SizedBox(
-          height: 56,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 16),
-                  child: InkWell(
-                    onTap: () => context.canPop()
-                        ? context.pop()
-                        : context.go('/app/learn'),
-                    borderRadius: BorderRadius.circular(20),
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                          color: c.iconBg,
-                          borderRadius: BorderRadius.circular(20)),
-                      child: Icon(Icons.arrow_back, size: 20, color: c.text),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 64),
-                child: Text(lesson.title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                        color: c.text)),
-              ),
-            ],
+  Widget _body(BuildContext context, CourseDetail course, Lesson lesson) {
+    final pq = context.pq;
+    final l = context.l10n;
+    final videos = course.lessons.where((x) => x.kind != 'quiz').toList();
+    final pos = videos.indexWhere((x) => x.id == lesson.id);
+    final url = lesson.videoUrl;
+    final hasVideo = url != null && url.isNotEmpty;
+    final next = _nextOf(course);
+
+    final sections = <Widget>[
+      _Player(
+        lesson: lesson,
+        duration: learnLessonDuration(context, lesson),
+        playingUrl: _videoUrl,
+        onPlay: hasVideo ? () => setState(() => _videoUrl = url) : null,
+      ),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (pos >= 0) ...[
+            Text(
+              l.learnLessonOf(pos + 1, videos.length).toUpperCase(),
+              style: PqText.overline(c: pq.textMuted),
+            ),
+            const SizedBox(height: 6),
+          ],
+          Text(
+            lesson.title,
+            style: PqText.heading(
+              22,
+              FontWeight.w700,
+              height: 1.15,
+              ls: -.3,
+              c: pq.text,
+            ),
+          ),
+        ],
+      ),
+      PqSegmented<int>(
+        values: const [0, 1],
+        selected: _tab,
+        labelOf:
+            (i) => i == 0 ? l.learnLessonTabText : l.learnLessonTabMaterials,
+        onChanged: (i) => setState(() => _tab = i),
+      ),
+      AnimatedSwitcher(
+        duration: const Duration(milliseconds: 200),
+        switchInCurve: PqMotion.ease,
+        layoutBuilder:
+            (cur, prev) => Stack(
+              alignment: Alignment.topLeft,
+              children: [...prev, if (cur != null) cur],
+            ),
+        child: Text(
+          _tab == 0
+              ? (course.description.trim().isEmpty
+                  ? l.lessonNoMaterials
+                  : course.description)
+              : l.lessonNoMaterials,
+          key: ValueKey(_tab),
+          style: PqText.text(
+            16,
+            FontWeight.w400,
+            height: 1.55,
+            c: pq.textSecondary,
           ),
         ),
-        Expanded(
-          child: ListView(
-            padding: const EdgeInsets.only(top: 12, bottom: 16),
-            children: [
-              // видео-плеер
+      ),
+    ];
+
+    // Кнопка: урок пройден → к следующему шагу; видео запущено (или его нет)
+    // → «Завершить урок»; иначе — неактивное «Начать тест» с подсказкой.
+    final Widget button;
+    String? hint;
+    if (lesson.completed) {
+      final quizNext = next?.kind == 'quiz';
+      button = PqButton(
+        label:
+            next == null
+                ? l.learnBackToCourse
+                : quizNext
+                ? l.learnStartTest
+                : l.learnNextLesson,
+        icon:
+            next == null
+                ? PqIcons.bookOpen
+                : quizNext
+                ? PqIcons.checkSquare
+                : PqIcons.play,
+        onPressed: () => _goNext(course),
+      );
+    } else if (_videoUrl != null || !hasVideo) {
+      hint = l.learnLessonHintFinish;
+      button = PqButton(
+        label: l.learnFinishLesson,
+        icon: PqIcons.check,
+        loading: _loading,
+        loadingLabel: l.learnFinishingLesson,
+        onPressed: () => _complete(course),
+      );
+    } else {
+      hint = l.learnLessonHintLocked;
+      button = PqButton(
+        label: l.learnStartTest,
+        icon: PqIcons.lock,
+        onPressed: null,
+      );
+    }
+
+    return Stack(
+      children: [
+        ListView(
+          padding: EdgeInsets.fromLTRB(
+            16,
+            0,
+            16,
+            learnFooterClearance(context) + 40,
+          ),
+          children: [
+            for (var i = 0; i < sections.length; i++)
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  child: SizedBox(
-                    height: 200,
-                    width: double.infinity,
-                    child: _videoUrl != null
-                        ? VideoFrame(url: _videoUrl!)
-                        : ColoredBox(
-                            color: const Color(0xFF0B0F1A),
-                            child: Center(
-                              child: InkWell(
-                                onTap: (lesson.videoUrl == null ||
-                                        lesson.videoUrl!.isEmpty)
-                                    ? null
-                                    : () => _startVideo(lesson.videoUrl!),
-                                borderRadius: BorderRadius.circular(28),
-                                child: Container(
-                                  width: 56,
-                                  height: 56,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                      color: const Color(0x14FFFFFF),
-                                      borderRadius: BorderRadius.circular(28)),
-                                  child: Icon(
-                                      (lesson.videoUrl == null ||
-                                              lesson.videoUrl!.isEmpty)
-                                          ? Icons.videocam_off_outlined
-                                          : Icons.play_arrow,
-                                      size: 28,
-                                      color: Colors.white),
-                                ),
-                              ),
+                padding: EdgeInsets.only(top: i == 0 ? 0 : 20),
+                child: PqAnimate(
+                  delay: PqMotion.staggerDelay(i),
+                  child: sections[i],
+                ),
+              ),
+          ],
+        ),
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: 0,
+          child: LearnFooter(
+            children: [
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 200),
+                child:
+                    hint == null
+                        ? const SizedBox.shrink()
+                        : Padding(
+                          key: ValueKey(hint),
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: Text(
+                            hint,
+                            textAlign: TextAlign.center,
+                            style: PqText.text(
+                              14,
+                              FontWeight.w400,
+                              c: pq.textMuted,
                             ),
                           ),
-                  ),
-                ),
+                        ),
               ),
-              const SizedBox(height: 12),
-              // tabs
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  children: [
-                    _Tab(
-                        c: c,
-                        label: context.l10n.lessonTabText,
-                        selected: _tab == 0,
-                        onTap: () => setState(() => _tab = 0)),
-                    const SizedBox(width: 8),
-                    _Tab(
-                        c: c,
-                        label: context.l10n.lessonTabMaterials,
-                        selected: _tab == 1,
-                        onTap: () => setState(() => _tab = 1)),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 12),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: _tab == 0
-                    ? Text(course.description,
-                        style: TextStyle(
-                            fontSize: 14, height: 1.5, color: c.muted))
-                    : Text(context.l10n.lessonNoMaterials,
-                        style: TextStyle(fontSize: 14, color: c.muted)),
-              ),
+              button,
             ],
-          ),
-        ),
-        // footer
-        SafeArea(
-          top: false,
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: SizedBox(
-              height: 52,
-              width: double.infinity,
-              child: FilledButton(
-                style: FilledButton.styleFrom(
-                  backgroundColor: lesson.completed
-                      ? const Color(0xFF1D4068)
-                      : c.card,
-                  foregroundColor:
-                      lesson.completed ? Colors.white : c.muted,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16)),
-                ),
-                onPressed: _loading
-                    ? null
-                    : lesson.completed
-                        ? () => _goNext(course)
-                        : () => _complete(course),
-                child: _loading
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2))
-                    : Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                              lesson.completed
-                                  ? Icons.quiz_outlined
-                                  : Icons.lock_outline,
-                              size: 20),
-                          const SizedBox(width: 8),
-                          Text(
-                            lesson.completed
-                                ? context.l10n.lessonStartQuiz
-                                : context.l10n.lessonComplete,
-                            style: const TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.w700),
-                          ),
-                        ],
-                      ),
-              ),
-            ),
           ),
         ),
       ],
@@ -277,77 +282,129 @@ class _LessonViewScreenState extends ConsumerState<LessonViewScreen> {
   }
 }
 
-class _Tab extends StatelessWidget {
-  const _Tab({
-    required this.c,
-    required this.label,
-    required this.selected,
-    required this.onTap,
+/// Плеер (макет Lesson): тёмная карточка 20, заставка 210 с радиальным
+/// свечением, кнопка 64 с пульсацией pqPulse, длительность, полоса 4.
+/// Цвета плеера одинаковы в обеих темах.
+class _Player extends StatelessWidget {
+  const _Player({
+    required this.lesson,
+    required this.duration,
+    required this.playingUrl,
+    required this.onPlay,
   });
-  final _LV c;
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
+
+  final Lesson lesson;
+  final String? duration;
+  final String? playingUrl;
+  final VoidCallback? onPlay;
+
+  static const _bg = Color(0xFF07080C);
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(999),
-      child: Container(
-        height: 34,
-        alignment: Alignment.center,
-        padding: const EdgeInsets.symmetric(horizontal: 14),
-        decoration: BoxDecoration(
-          color: selected ? const Color(0xFF1D4068) : c.page,
-          borderRadius: BorderRadius.circular(999),
-          border: selected ? null : Border.all(color: c.border),
+    final l = context.l10n;
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: ColoredBox(
+        color: _bg,
+        child: Column(
+          children: [
+            SizedBox(
+              height: 210,
+              width: double.infinity,
+              child:
+                  playingUrl != null
+                      ? VideoFrame(url: playingUrl!)
+                      : DecoratedBox(
+                        decoration: const BoxDecoration(
+                          gradient: RadialGradient(
+                            center: Alignment(0, -.1),
+                            radius: .74,
+                            colors: [Color(0xFF2A2350), _bg],
+                          ),
+                        ),
+                        child: Stack(
+                          children: [
+                            Center(
+                              child:
+                                  onPlay == null
+                                      ? Semantics(
+                                        label: l.learnVideoUnavailable,
+                                        child: _playFace(PqIcons.video, .35),
+                                      )
+                                      : PqPulseRing.pulse(
+                                        borderRadius: BorderRadius.circular(32),
+                                        color: const Color(0xFF6B9EF5),
+                                        delay: const Duration(
+                                          milliseconds: 600,
+                                        ),
+                                        child: PqPressable(
+                                          onTap: onPlay,
+                                          semanticLabel: l.learnWatchVideo,
+                                          scale: .94,
+                                          child: _playFace(PqIcons.play, 1),
+                                        ),
+                                      ),
+                            ),
+                            if (duration != null)
+                              Positioned(
+                                left: 12,
+                                bottom: 12,
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 3,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0x99000000),
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: Text(
+                                    duration!,
+                                    style: PqText.caption(
+                                      c: Colors.white,
+                                      w: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+            ),
+            Container(
+              height: 4,
+              color: const Color(0xFF2E2F3A),
+              alignment: Alignment.centerLeft,
+              child:
+                  lesson.completed
+                      ? const PqAnimate(
+                        fx: PqFx.fillX,
+                        child: SizedBox(
+                          width: double.infinity,
+                          height: 4,
+                          child: ColoredBox(color: Color(0xFF6B9EF5)),
+                        ),
+                      )
+                      : null,
+            ),
+          ],
         ),
-        child: Text(label,
-            style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: selected ? const Color(0xFFE4E2ED) : c.muted)),
       ),
     );
   }
-}
 
-class _LV {
-  const _LV({
-    required this.page,
-    required this.card,
-    required this.border,
-    required this.iconBg,
-    required this.text,
-    required this.muted,
-  });
-
-  final Color page;
-  final Color card;
-  final Color border;
-  final Color iconBg;
-  final Color text;
-  final Color muted;
-
-  static _LV of(BuildContext context) =>
-      Theme.of(context).brightness == Brightness.dark ? _dark : _light;
-
-  static const _dark = _LV(
-    page: Color(0xFF0D1117),
-    card: Color(0xFF131A28),
-    border: Color(0xFF1E2535),
-    iconBg: Color(0x14FFFFFF),
-    text: Color(0xFFE4E2ED),
-    muted: Color(0xFF9CA3AF),
-  );
-
-  static const _light = _LV(
-    page: Color(0xFFF5F6FA),
-    card: Colors.white,
-    border: Color(0xFFEBEDF0),
-    iconBg: Color(0xFFEEF2FF),
-    text: Color(0xFF1A1D26),
-    muted: Color(0xFF6B7280),
+  Widget _playFace(PqIcons icon, double opacity) => Opacity(
+    opacity: opacity,
+    child: Container(
+      width: 64,
+      height: 64,
+      decoration: const BoxDecoration(
+        color: Color(0x2EFFFFFF),
+        shape: BoxShape.circle,
+      ),
+      alignment: Alignment.center,
+      child: PqIcon(icon, size: 26, color: Colors.white),
+    ),
   );
 }

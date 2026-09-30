@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/auth/auth_controller.dart';
+import '../../../core/design/design.dart';
 import '../../../core/models/common.dart';
 import '../../pharmacist/home_screen.dart';
 import '../../doctor/home_screen.dart';
@@ -8,7 +9,6 @@ import '../../medrep/home_screen.dart';
 import '../../brand/dashboard_screen.dart';
 
 /// Главный экран: выбирает контент под активную роль.
-/// Пока реализован фармацевт; остальные роли — заглушка (следующие фазы).
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
@@ -20,7 +20,12 @@ class HomeScreen extends ConsumerWidget {
       Role.doctor => const DoctorHome(),
       Role.medrep => const MedrepHome(),
       Role.productOwner => const BrandDashboardScreen(),
-      null => const Scaffold(body: Center(child: CircularProgressIndicator())),
+      null => PqScreen(
+          child: Center(
+            child: PqSpinner(
+                color: context.pq.accent, trackColor: context.pq.borderStrong),
+          ),
+        ),
     };
   }
 }

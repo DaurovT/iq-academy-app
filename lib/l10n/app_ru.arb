@@ -211,10 +211,10 @@
   "sapperPrizeMany": "призов",
   "sapperLegendMine": "Мои",
   "sapperLegendTheirs": "Чужие",
-  "sapperLegendEmpty": "Пустые",
+  "sapperLegendEmpty": "Пусто",
   "sapperLegendVoucher": "Ваучер",
   "sapperLegendSelected": "Выбрано",
-  "sapperLegendOccupied": "Занято",
+  "sapperLegendOccupied": "Заняты другими",
   "sapperLegendFree": "Свободно",
   "sapperWinners": "Получили призы",
   "newsTitle": "Новости",
@@ -334,7 +334,7 @@
   "profileTgConnected": "Подключён",
   "profileTgLinked": "Привязан",
   "profileSupport": "Поддержка",
-  "profileSupportSubtitle": "Мы всегда на связи",
+  "profileSupportSubtitle": "Отвечаем в Telegram и по телефону",
   "profileLogout": "Выйти из аккаунта",
   "profileDeleteTitle": "Удалить аккаунт и данные",
   "profileDeleteIrreversible": "Действие необратимо",
@@ -1327,5 +1327,2150 @@
   "sapperRule5": "Баллы списываются при занятии клетки, отменить это нельзя. Одну клетку занимает один участник; приём закрывается за 1 минуту до итогов.",
   "sapperRule6": "Призы размещаются в клетках до начала акции и после старта не меняются. В назначенное время все клетки открываются одновременно, приз из клетки автоматически получает участник, который её занял. Итоги видны всем.",
   "sapperRule7": "Призы — подарочные ваучеры партнёров и бонусные баллы; на деньги они не обмениваются. Призы из незанятых клеток повторно не распределяются.",
-  "sapperRule8": "Если акция отменена, все потраченные баллы возвращаются. Участвовать могут пользователи старше 18 лет, участие добровольное."
+  "sapperRule8": "Если акция отменена, все потраченные баллы возвращаются. Участвовать могут пользователи старше 18 лет, участие добровольное.",
+  "stateServerErrorTitle": "Что-то пошло не так",
+  "stateServerErrorText": "Мы уже знаем о проблеме и чиним её. Попробуйте ещё раз через минуту",
+  "stateWriteSupport": "Написать в поддержку",
+  "stateErrorCode": "Код ошибки: {code}",
+  "@stateErrorCode": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "stateOfflineTitle": "Нет подключения к интернету",
+  "stateOfflineText": "Проверьте Wi‑Fi или мобильный интернет. Экран обновится сам, как только связь появится",
+  "stateOfflineBanner": "Нет соединения · данные от {time}",
+  "@stateOfflineBanner": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "stateOfflineBannerShort": "Нет соединения",
+  "stateOfflineSendHint": "Отправка станет доступна, когда появится интернет",
+  "stateRefreshing": "Обновляем…",
+  "miniAppsNewGamesTitle": "Новые мини-приложения",
+  "miniAppsNewGamesText": "Уже в разработке — сообщим, когда появятся",
+  "sapperBackTo": "Назад: {label}",
+  "@sapperBackTo": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "sapperPrizesCount": "{n, plural, one{{n} приз} few{{n} приза} many{{n} призов} other{{n} приза}}",
+  "@sapperPrizesCount": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "sapperMyCellsCount": "Ваших клеток: {n}",
+  "@sapperMyCellsCount": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "sapperResultsIn": "Итоги через {time}",
+  "@sapperResultsIn": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "sapperCellPriceTitle": "Цена клетки",
+  "sapperMyCellsTitle": "Ваших клеток",
+  "sapperOccupiedTitle": "Занято клеток",
+  "sapperOccupiedOf": "{occupied} из {total}",
+  "@sapperOccupiedOf": {
+    "placeholders": {
+      "occupied": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "sapperOfTotal": "из {total}",
+  "@sapperOfTotal": {
+    "placeholders": {
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "sapperHiddenLabel": "На поле спрятано",
+  "sapperHowTitle": "Как участвовать",
+  "sapperStep1Title": "Выберите клетки",
+  "sapperStep1Text": "Каждая стоит {price} IQC. Можно занять сразу несколько",
+  "@sapperStep1Text": {
+    "placeholders": {
+      "price": {
+        "type": "int"
+      }
+    }
+  },
+  "sapperStep2Title": "Дождитесь подведения итогов",
+  "sapperStep2Text": "Раз в неделю поле открывается для всех",
+  "sapperStep3Title": "Получите приз",
+  "sapperStep3Text": "IQC зачислим на баланс, ваучер появится в кошельке",
+  "sapperSelectHint": "Нажмите на свободные клетки, чтобы выбрать",
+  "sapperSelectedHint": "Выбрано: {n} · спишем {price} IQC",
+  "@sapperSelectedHint": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "price": {
+        "type": "int"
+      }
+    }
+  },
+  "sapperTakeCta": "{n, plural, one{Занять {n} клетку} few{Занять {n} клетки} many{Занять {n} клеток} other{Занять {n} клетки}} · {price} IQC",
+  "@sapperTakeCta": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "price": {
+        "type": "int"
+      }
+    }
+  },
+  "sapperTakenToast": "{n, plural, one{+{n} клетку} few{+{n} клетки} many{+{n} клеток} other{+{n} клетки}} — ждём итогов",
+  "@sapperTakenToast": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "sapperReserveManyTitle": "{n, plural, one{Занять {n} клетку?} few{Занять {n} клетки?} many{Занять {n} клеток?} other{Занять {n} клетки?}}",
+  "@sapperReserveManyTitle": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "sapperCellFree": "Свободная клетка",
+  "sapperCellTheirs": "Занята другим участником",
+  "sapperCellMine": "Ваша клетка",
+  "sapperCellSelected": "Выбрана, нажмите чтобы снять",
+  "sapperCellEmpty": "Пусто",
+  "sapperCellPrize": "Приз: {label}",
+  "@sapperCellPrize": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "sapperGridLabel": "Поле {cols} на {rows}",
+  "@sapperGridLabel": {
+    "placeholders": {
+      "cols": {
+        "type": "int"
+      },
+      "rows": {
+        "type": "int"
+      }
+    }
+  },
+  "sapperGridRevealed": "Открытое поле",
+  "sapperWonTitle": "Вы получили {prize}",
+  "@sapperWonTitle": {
+    "placeholders": {
+      "prize": {
+        "type": "String"
+      }
+    }
+  },
+  "sapperWonText": "Уже на балансе · призовых клеток: {wins} из {total}",
+  "@sapperWonText": {
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "sapperNotParticipated": "Вы не участвовали в этой акции",
+  "sapperRevealedOn": "Итоги подведены · {date}",
+  "@sapperRevealedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "sapperWinnerYou": "вы",
+  "sapperWinnerCell": "Клетка №{n}",
+  "@sapperWinnerCell": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "sapperPlayNew": "Участвовать в новой акции",
+  "sapperViewResults": "Посмотреть итоги",
+  "questsSubtitle": "Продавайте и получайте награды",
+  "questsSubtitleDoctor": "Выписывайте рецепты и получайте награды",
+  "questsSearchLabel": "Поиск квестов",
+  "questsTabDone": "Завершённые",
+  "questsSortHint": "Сначала — ближе всего к награде",
+  "questsAlmostDone": "Почти готово",
+  "questsCompleted": "Выполнено",
+  "questsOfGoalSales": "{goal, plural, one{из {goal} продажи} few{из {goal} продаж} many{из {goal} продаж} other{из {goal} продаж}}",
+  "@questsOfGoalSales": {
+    "placeholders": {
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "questsOfGoalRecipes": "{goal, plural, one{из {goal} рецепта} few{из {goal} рецептов} many{из {goal} рецептов} other{из {goal} рецептов}}",
+  "@questsOfGoalRecipes": {
+    "placeholders": {
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "questsLeftShort": "Ещё {n}",
+  "@questsLeftShort": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "questsMore": "Подробнее",
+  "questsHowTitle": "Как работают квесты",
+  "questsStepSellTitle": "Продайте",
+  "questsStepSellSub": "препарат",
+  "questsStepPrescribeTitle": "Выпишите",
+  "questsStepPrescribeSub": "рецепт",
+  "questsStepSendTitle": "Отправьте",
+  "questsStepSendCheckSub": "фото чека",
+  "questsStepSendRecipeSub": "фото рецепта",
+  "questsStepGetTitle": "Получите",
+  "questsStepGetSub": "награду",
+  "questsDoneFooter": "Здесь хранятся выполненные и завершённые квесты — с датой и полученной наградой",
+  "questsDoneOn": "Выполнен · {date}",
+  "@questsDoneOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "questsEndedOn": "Завершён · {date}",
+  "@questsEndedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "questsEmptyDoneTitle": "Пока нет завершённых квестов",
+  "questsMonthName": "{m, select, m1{Январь} m2{Февраль} m3{Март} m4{Апрель} m5{Май} m6{Июнь} m7{Июль} m8{Август} m9{Сентябрь} m10{Октябрь} m11{Ноябрь} m12{Декабрь} other{}}",
+  "@questsMonthName": {
+    "placeholders": {
+      "m": {
+        "type": "String"
+      }
+    }
+  },
+  "questsSalesLeftPrefix": "Осталось продать",
+  "questsRecipesLeftPrefix": "Осталось выписать",
+  "questsPacks": "{n, plural, one{{n} упаковку} few{{n} упаковки} many{{n} упаковок} other{{n} упаковки}}",
+  "@questsPacks": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "questsRecipesCount": "{n, plural, one{{n} рецепт} few{{n} рецепта} many{{n} рецептов} other{{n} рецепта}}",
+  "@questsRecipesCount": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "questsGoalReached": "Цель достигнута — награда будет начислена после проверки",
+  "questsRewardLabel": "Награда",
+  "questsVoucherTitle": "Ваучер {shop}",
+  "@questsVoucherTitle": {
+    "placeholders": {
+      "shop": {
+        "type": "String"
+      }
+    }
+  },
+  "questsRewardManual": "Выдаётся вручную после проверки",
+  "questsRewardIqcSub": "Баллы придут на баланс после проверки",
+  "questsRewardReceived": "Награда получена",
+  "questsStepSellDrug": "Продайте {drug}",
+  "@questsStepSellDrug": {
+    "placeholders": {
+      "drug": {
+        "type": "String"
+      }
+    }
+  },
+  "questsStepPrescribeDrug": "Выпишите {drug}",
+  "@questsStepPrescribeDrug": {
+    "placeholders": {
+      "drug": {
+        "type": "String"
+      }
+    }
+  },
+  "questsNeedSell": "Нужно продать {packs}",
+  "@questsNeedSell": {
+    "placeholders": {
+      "packs": {
+        "type": "String"
+      }
+    }
+  },
+  "questsNeedPrescribe": "Нужно выписать {recipes}",
+  "@questsNeedPrescribe": {
+    "placeholders": {
+      "recipes": {
+        "type": "String"
+      }
+    }
+  },
+  "questsStepPhotoCheck": "Сфотографируйте чек",
+  "questsStepPhotoCheckSub": "ИИ проверит упаковку автоматически",
+  "questsStepPhotoRecipe": "Сфотографируйте рецепт",
+  "questsStepPhotoRecipeSub": "ИИ проверит рецепт автоматически",
+  "questsStepGetVoucher": "Получите ваучер",
+  "questsStepGetIqc": "Получите {n} IQC",
+  "@questsStepGetIqc": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "questsConditionsTitle": "Условия",
+  "questsSalesLimit": "Лимит продаж",
+  "questsRecipesLimit": "Лимит рецептов",
+  "questsNoLimit": "Без ограничений",
+  "questsPacksShort": "{n} уп.",
+  "@questsPacksShort": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "questsCountedTitle": "Засчитанные чеки",
+  "questsCountedRecipesTitle": "Засчитанные рецепты",
+  "questsCountedEmpty": "Пока ни одного чека",
+  "questsCountedEmptyRecipes": "Пока ни одного рецепта",
+  "questsCountedEmptySub": "Чеки по квесту появятся здесь после проверки",
+  "questsCountedEmptySubRecipes": "Рецепты по квесту появятся здесь после проверки",
+  "questsCountedSales": "{n, plural, one{Засчитана {n} продажа} few{Засчитано {n} продажи} many{Засчитано {n} продаж} other{Засчитано {n} продажи}}",
+  "@questsCountedSales": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "questsCountedRecipes": "{n, plural, one{Засчитан {n} рецепт} few{Засчитано {n} рецепта} many{Засчитано {n} рецептов} other{Засчитано {n} рецепта}}",
+  "@questsCountedRecipes": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "questsAllChecks": "Все чеки",
+  "questsAllRecipes": "Все рецепты",
+  "questsSendCheck": "Отправить чек по квесту",
+  "questsSendRecipe": "Отправить рецепт по квесту",
+  "questsSearchPlaceholder": "Название или препарат",
+  "questsSearchClear": "Очистить",
+  "questsFound": "{n, plural, one{Найден {n} квест} few{Найдено {n} квеста} many{Найдено {n} квестов} other{Найдено {n} квеста}}",
+  "@questsFound": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "questsPopular": "Часто ищут",
+  "questsNothingFound": "Ничего не найдено",
+  "questsNothingFoundSub": "Проверьте название препарата или попробуйте другой запрос",
+  "questsReceived": "получено",
+  "questsPending": "ожидает",
+  "walletAccruedAllTime": "начислено за всё время",
+  "walletAwaitingStat": "{n, plural, one{ваучер ждёт выдачи} few{ваучера ждут выдачи} many{ваучеров ждут выдачи} other{ваучера ждут выдачи}}",
+  "@walletAwaitingStat": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "walletArchive": "Архив",
+  "walletArchiveTitle": "Архив ваучеров",
+  "walletTapCardHint": "Нажмите на карту — покажем QR-код",
+  "walletAllArchivedTitle": "Все ваучеры в архиве",
+  "walletAllArchivedText": "Новые появятся после выполнения квестов",
+  "walletGiftCard": "Подарочная карта",
+  "walletGiftCardBoth": "ПОДАРОЧНАЯ КАРТА · SOVG'A KARTASI",
+  "walletGiftCardKorzinka": "Подарочная карта Korzinka",
+  "walletReceived": "Получен",
+  "walletCode": "Код",
+  "walletShowQr": "Показать",
+  "walletStatusLabel": "Статус",
+  "walletWhere": "Где",
+  "walletStatusArchived": "В архиве",
+  "walletAwaitingTitle": "Ждут выдачи",
+  "walletQuestDoneOn": "Квест выполнен · {date}",
+  "@walletQuestDoneOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "walletPcs": "{n} шт.",
+  "@walletPcs": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "walletVouchersCaption": "{n, plural, one{ваучер} few{ваучера} many{ваучеров} other{ваучера}}",
+  "@walletVouchersCaption": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "walletManualHint": "Ваучеры выдаются вручную после проверки — обычно в течение нескольких дней",
+  "walletShowAll": "Показать все {n}",
+  "@walletShowAll": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "walletExchangeTitle": "Обменять IQC",
+  "walletShopTitle": "Обмен IQC",
+  "walletProgressOf": "{have} из {need} IQC",
+  "@walletProgressOf": {
+    "placeholders": {
+      "have": {
+        "type": "String"
+      },
+      "need": {
+        "type": "String"
+      }
+    }
+  },
+  "walletMore": "Ещё {n}",
+  "@walletMore": {
+    "placeholders": {
+      "n": {
+        "type": "String"
+      }
+    }
+  },
+  "walletSaveUp": "Копите IQC, чтобы обменять",
+  "walletExchangeFor": "Обменять за {amount} IQC",
+  "@walletExchangeFor": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "walletOpenVoucher": "Открыть ваучер {sum}",
+  "@walletOpenVoucher": {
+    "placeholders": {
+      "sum": {
+        "type": "String"
+      }
+    }
+  },
+  "walletClose": "Закрыть",
+  "walletVoucherDialog": "Ваучер Korzinka",
+  "walletArchiveUsed": "В архив — ваучер использован",
+  "walletArchivedToast": "Ваучер ••{code} в архиве",
+  "@walletArchivedToast": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "walletUndo": "Отменить",
+  "walletBack": "Назад",
+  "walletBackToWallet": "Назад в кошелёк",
+  "walletArchiveSummary": "{n, plural, one{{n} ваучер} few{{n} ваучера} many{{n} ваучеров} other{{n} ваучера}} · {sum}",
+  "@walletArchiveSummary": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "sum": {
+        "type": "String"
+      }
+    }
+  },
+  "walletRestore": "Вернуть",
+  "walletRestoreA11y": "Вернуть ваучер ••{code}",
+  "@walletRestoreA11y": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "walletRestoreHint": "Нажмите «Вернуть», если убрали ваучер по ошибке — он снова появится в кошельке",
+  "walletArchiveEmptyTitle": "Архив пуст",
+  "walletArchiveEmptyText": "Использовали ваучер? Уберите его сюда — в кошельке останутся только действующие",
+  "walletReceivedMeta": "Получен {date} · код ••{code}",
+  "@walletReceivedMeta": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "walletHistoryAll": "Все",
+  "walletHistoryEarned": "Начисления",
+  "walletHistorySpent": "Списания",
+  "walletEarnedMonth": "Начислено в этом месяце",
+  "walletSpentMonth": "Потрачено в этом месяце",
+  "walletMonths": "Январь,Февраль,Март,Апрель,Май,Июнь,Июль,Август,Сентябрь,Октябрь,Ноябрь,Декабрь",
+  "walletAccrued": "начислено",
+  "walletDebited": "списано",
+  "walletTxnCheck": "Чек",
+  "walletTxnRecipe": "Рецепт",
+  "walletTxnSurvey": "Опрос",
+  "walletTxnQuest": "Квест выполнен",
+  "walletTxnCourse": "Курс пройден",
+  "walletTxnRedeem": "Обмен на ваучер",
+  "walletTxnReversal": "Возврат",
+  "walletTxnAdjust": "Корректировка",
+  "walletTxnOther": "Начисление",
+  "walletQueueQuests": "{n, plural, one{{n} квест} few{{n} квеста} many{{n} квестов} other{{n} квеста}}",
+  "@walletQueueQuests": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "walletQueueVouchers": "{n, plural, one{{n} ваучер ждёт выдачи} few{{n} ваучера ждут выдачи} many{{n} ваучеров ждут выдачи} other{{n} ваучера ждут выдачи}}",
+  "@walletQueueVouchers": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "walletStepDone": "Квест выполнен",
+  "walletStepReview": "Проверка",
+  "walletStepIssue": "Выдача",
+  "walletQueueHint": "Ваучеры выдаются вручную после проверки — обычно в течение нескольких дней. Пришлём уведомление, когда ваучер появится в кошельке",
+  "walletQueueEmptyTitle": "Очередь пуста",
+  "walletQueueEmptyText": "Выполните квест с наградой-ваучером — он появится здесь до выдачи",
+  "walletYourBalance": "Ваш баланс",
+  "walletEnoughFor": "{n, plural, =0{Пока не хватает на ваучер} one{Хватает на {n} ваучер} few{Хватает на {n} ваучера} many{Хватает на {n} ваучеров} other{Хватает на {n} ваучера}}",
+  "@walletEnoughFor": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "walletShopNote": "Ваучер появится в кошельке после подтверждения обмена",
+  "walletConfirmTitle": "Обменять {amount} IQC?",
+  "@walletConfirmTitle": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "walletConfirmText": "Получите подарочную карту Korzinka на {sum}",
+  "@walletConfirmText": {
+    "placeholders": {
+      "sum": {
+        "type": "String"
+      }
+    }
+  },
+  "walletWillDebit": "Спишем",
+  "walletWillRemain": "Останется",
+  "walletWhereTo": "Куда придёт",
+  "walletToWallet": "В кошелёк",
+  "walletExchange": "Обменять",
+  "walletExchangeFailed": "Не удалось обменять IQC",
+  "walletShare": "Поделиться ваучером",
+  "walletCopyCode": "Скопировать код",
+  "walletQrLabel": "QR-код ваучера",
+  "walletShowQrCashier": "Покажите QR-код кассиру или продиктуйте код",
+  "walletStores": "Магазины Korzinka",
+  "walletToArchive": "В архив",
+  "walletToArchiveHint": "Использовали ваучер? Уберите его в архив — он останется в истории",
+  "walletRestoreFromArchive": "Вернуть из архива",
+  "learnSubtitle": "Проходите курсы — получайте IQC",
+  "learnSearchA11y": "Поиск курсов",
+  "learnSearchPlaceholder": "Название курса или бренда",
+  "learnSearchClear": "Очистить",
+  "learnSegNew": "Новые",
+  "learnSegProgress": "В процессе",
+  "learnSegDone": "Пройденные",
+  "learnTileVideo": "{n, plural, one{{n} видеоурок} few{{n} видеоурока} many{{n} видеоуроков} other{{n} видеоурока}}",
+  "@learnTileVideo": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "learnTileQuiz": "{n, plural, one{{n} тест} few{{n} теста} many{{n} тестов} other{{n} теста}}",
+  "@learnTileQuiz": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "learnTileReward": "Награда",
+  "learnMinutesShort": "~{n} мин",
+  "@learnMinutesShort": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "learnQuizStatusLocked": "Закрыт",
+  "learnQuizStatusOpen": "Доступен",
+  "learnIqc": "+{n} IQC",
+  "@learnIqc": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "learnCtaStart": "Начать курс",
+  "learnCtaContinue": "Продолжить",
+  "learnCtaRepeat": "Пройти повторно",
+  "learnProgressLabel": "Пройдено {pct}%",
+  "@learnProgressLabel": {
+    "placeholders": {
+      "pct": {
+        "type": "int"
+      }
+    }
+  },
+  "learnEmptyTitle": "Пока нет курсов",
+  "learnEmptyText": "Курсы для вашей аптеки ещё не добавлены. Как только появится новый курс, пришлём уведомление",
+  "learnEnableNotifications": "Включить уведомления",
+  "learnNoResultsTitle": "Ничего не нашлось",
+  "learnNoResultsInTab": "По запросу «{query}» во вкладке «{tab}» курсов нет. Проверьте написание или поищите во всех курсах",
+  "@learnNoResultsInTab": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      },
+      "tab": {
+        "type": "String"
+      }
+    }
+  },
+  "learnNoResultsAll": "По запросу «{query}» курсов нет. Проверьте написание или попробуйте другое название",
+  "@learnNoResultsAll": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "learnSearchEverywhere": "Искать во всех курсах",
+  "learnTabEmptyTitle": "Здесь пока пусто",
+  "learnTabEmptyNew": "Все курсы уже начаты — продолжайте обучение во вкладке «В процессе»",
+  "learnTabEmptyProgress": "Начните любой курс из вкладки «Новые» — он появится здесь",
+  "learnTabEmptyDone": "Пройденные курсы появятся здесь после успешного теста",
+  "learnBack": "Назад",
+  "learnCourseTitle": "Курс",
+  "learnMetaVideos": "{n, plural, one{{n} видеоурок} few{{n} видеоурока} many{{n} видеоуроков} other{{n} видеоурока}}",
+  "@learnMetaVideos": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "learnMetaMinutes": "~{n, plural, one{{n} минута} few{{n} минуты} many{{n} минут} other{{n} минуты}}",
+  "@learnMetaMinutes": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "learnProgram": "Программа курса",
+  "learnRowVideo": "Видеоурок",
+  "learnRowQuiz": "Тест",
+  "learnRowQuizLocked": "Откроется после видео",
+  "learnRowRewardPending": "Начислим после теста",
+  "learnRowRewardDone": "Начислено",
+  "learnLessonOf": "Урок {i} из {n}",
+  "@learnLessonOf": {
+    "placeholders": {
+      "i": {
+        "type": "int"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "learnLessonTabText": "Текст урока",
+  "learnLessonTabMaterials": "Материалы",
+  "learnWatchVideo": "Смотреть видео",
+  "learnVideoUnavailable": "Видео недоступно",
+  "learnLessonHintLocked": "Досмотрите видео — затем откроется тест",
+  "learnLessonHintFinish": "Посмотрели видео? Завершите урок, чтобы перейти дальше",
+  "learnStartTest": "Начать тест",
+  "learnNextLesson": "Следующий урок",
+  "learnFinishLesson": "Завершить урок",
+  "learnFinishingLesson": "Сохраняем…",
+  "learnBackToCourse": "К курсу",
+  "learnTestTopBar": "Тест · {name}",
+  "@learnTestTopBar": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "learnQuestionOf": "Вопрос {i} из {n}",
+  "@learnQuestionOf": {
+    "placeholders": {
+      "i": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "learnNext": "Далее",
+  "learnFinishTest": "Завершить тест",
+  "learnSubmitting": "Проверяем…",
+  "learnCoursePassed": "Курс пройден!",
+  "learnTestPassed": "Тест пройден!",
+  "learnPassedText": "Отличная работа. Баллы уже на вашем балансе.",
+  "learnPassedTextNoReward": "Отличная работа!",
+  "learnScoreOf": "{score} из {total}",
+  "@learnScoreOf": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "learnCorrectAnswers": "правильных ответов",
+  "learnOpenWallet": "Открыть кошелёк",
+  "learnToOtherCourses": "К другим курсам",
+  "learnContinueCourse": "Продолжить курс",
+  "learnFailedTitle": "Почти получилось",
+  "learnFailedText": "Недостаточно правильных ответов. Пересмотрите урок — и попробуйте ещё раз, баллы ждут вас.",
+  "learnRewardStillAvailable": "+{n} IQC всё ещё доступны",
+  "@learnRewardStillAvailable": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "learnCanRetry": "Можно пройти тест повторно",
+  "learnRewatchLesson": "Пересмотреть урок",
+  "learnRetryTest": "Пройти тест снова",
+  "rxHomeGreeting": "Привет, {name}!",
+  "@rxHomeGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rxHomeSubtitle": "Отправляйте бланки и получайте награды",
+  "rxHomeBellLabel": "Уведомления",
+  "rxHomeBellUnread": "Уведомления, есть новые",
+  "rxHomeStatQuests": "{n, plural, one{активный квест} few{активных квеста} many{активных квестов} other{активного квеста}}",
+  "@rxHomeStatQuests": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "rxHomeStatApproved": "одобрено бланков",
+  "rxHomeStatPending": "на проверке",
+  "rxHomeRecent": "Последние бланки",
+  "rxHomeAllRecipes": "Все бланки",
+  "rxQuestProgress": "{done} из {goal, plural, one{{goal} бланка} other{{goal} бланков}}",
+  "@rxQuestProgress": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "rxQuestLeft": "Ещё {n}",
+  "@rxQuestLeft": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "rxQuestDone": "Выполнено {pct}%",
+  "@rxQuestDone": {
+    "placeholders": {
+      "pct": {
+        "type": "int"
+      }
+    }
+  },
+  "rxRewardIqc": "+{n} IQC",
+  "@rxRewardIqc": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "rxRewardVoucher": "Ваучер",
+  "rxWaitValue": "~24 ч",
+  "rxWaitCaption": "ожидание",
+  "rxSoon": "Скоро",
+  "rxSoonCaption": "начисление",
+  "rxRetake": "Переснять",
+  "rxRetakeRecipe": "Переснять бланк",
+  "rxMeta": "{date} · {n} фото",
+  "@rxMeta": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "rxListCount": "{n, plural, one{{n} бланк} few{{n} бланка} many{{n} бланков} other{{n} бланка}}",
+  "@rxListCount": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "rxTabPending": "На проверке",
+  "rxTabDone": "Завершённые",
+  "rxFilterEmpty": "В этом разделе пока нет бланков",
+  "rxPendingHint": "Проверим до 24 часов",
+  "rxRejectedDefault": "Бланк не прошёл проверку",
+  "rxEmptyTitle": "Здесь появятся ваши бланки",
+  "rxEmptyText": "Сфотографируйте выписанный бланк — ИИ распознает препараты, а после проверки вы получите IQC",
+  "rxHowTo": "Как сфотографировать",
+  "rxTipWholeTitle": "Бланк целиком",
+  "rxTipWholeText": "Все края листа в кадре",
+  "rxTipStampTitle": "Печать и подпись",
+  "rxTipStampText": "Без них бланк не примут",
+  "rxTipLightTitle": "Хороший свет",
+  "rxTipLightText": "Без бликов и тени от телефона",
+  "rxSendFirst": "Отправить первый бланк",
+  "rxStatePendingTitle": "Бланк на проверке",
+  "rxStatePendingText": "Специалист проверяет бланк. Обычно это занимает до 24 часов",
+  "rxStateApprovedTitle": "Бланк одобрен",
+  "rxStateApprovedText": "Всё в порядке. IQC поступят на баланс в ближайшее время",
+  "rxStateRejectedTitle": "Бланк отклонён",
+  "rxStateRejectedHint": "Сфотографируйте бланк целиком при хорошем свете — баллы ещё можно получить",
+  "rxStepSent": "Отправлен",
+  "rxStepReview": "Проверка",
+  "rxStepApproved": "Одобрен",
+  "rxStepCredited": "Начислено",
+  "rxStepRejected": "Отклонён",
+  "rxPhotos": "Фото бланка",
+  "rxOpenPhoto": "Открыть фото бланка {n}",
+  "@rxOpenPhoto": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "rxAiLater": "Список препаратов появится после проверки",
+  "rxAccrual": "Начисление",
+  "rxAccrualPendingTitle": "Начислим после одобрения",
+  "rxAccrualPendingText": "После одобрения бланка",
+  "rxAccrualApprovedTitle": "Ожидает начисления",
+  "rxQuests": "Зачёт в квесты",
+  "rxQuestsPending": "Появится после одобрения бланка",
+  "rxQuestsNone": "Пока не зачтён ни в один квест",
+  "rxData": "Данные бланка",
+  "rxShowText": "Показать распознанный текст",
+  "rxSupport": "Вопрос по бланку? Напишите нам",
+  "rxCameraClose": "Закрыть",
+  "rxCameraLabel": "Бланк",
+  "rxCameraTip": "Печать и подпись должны быть видны",
+  "rxCameraHold": "Держите телефон ровно над бланком",
+  "rxCameraShoot": "Сделать снимок",
+  "rxCameraDenied": "Нет доступа к камере. Разрешите его в настройках",
+  "rxOcrTitle": "Распознанный текст",
+  "rxOcrSubtitle": "Так ИИ прочитал фото бланка",
+  "rxOcrNote": "ФИО пациента скрыто. Текст распознан автоматически — возможны ошибки",
+  "rxOcrEmpty": "Текст ещё не распознан",
+  "rxOcrEmptyText": "Он появится здесь после обработки фото",
+  "rxCopy": "Копировать",
+  "rxCopied": "Текст скопирован",
+  "rxReportError": "Ошибка в тексте",
+  "rxBack": "Назад",
+  "homeBellUnread": "Уведомления, есть новые",
+  "homeStatActiveQuests": "{n, plural, one{активный квест} few{активных квеста} many{активных квестов} other{активного квеста}}",
+  "@homeStatActiveQuests": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "homeStatApproved": "одобрено чеков",
+  "homeStatPending": "на проверке",
+  "homeQuestSales": "{goal, plural, one{{done} из {goal} продажи} other{{done} из {goal} продаж}}",
+  "@homeQuestSales": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "goal": {
+        "type": "int"
+      }
+    }
+  },
+  "homeQuestLeft": "Ещё {n}",
+  "@homeQuestLeft": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "homeQuestDone": "Выполнено",
+  "homeRewardIqc": "+{n} IQC",
+  "@homeRewardIqc": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "homeCheckMeta": "№{id} · {date}",
+  "@homeCheckMeta": {
+    "placeholders": {
+      "id": {
+        "type": "int"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "homeCheckWait": "~24 ч",
+  "homeCheckWaitCaption": "ожидание",
+  "homeCheckRetake": "Переснять",
+  "homeMiniAppsSub": "Сапёр и другие акции",
+  "homeNewTitle": "Добро пожаловать!",
+  "homeNewSubtitle": "Три шага — и вы в программе",
+  "homeNewStepsLabel": "Первые шаги",
+  "homeNewStepsCount": "{done} из {total}",
+  "@homeNewStepsCount": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "homeNewHeadline": "Отправьте первый чек и получите IQC",
+  "homeNewStepRegister": "Регистрация",
+  "homeNewStepDone": "Готово",
+  "homeNewStepCheck": "Отправьте первый чек",
+  "homeNewStepCheckSub": "Сфотографируйте чек из аптеки",
+  "homeNewStepCourse": "Пройдите первый курс",
+  "homeNewStepCourseReward": "+{iqc} IQC за «{title}»",
+  "@homeNewStepCourseReward": {
+    "placeholders": {
+      "iqc": {
+        "type": "int"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "homeNewStepCourseSub": "Курс «{title}»",
+  "@homeNewStepCourseSub": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "homeNewStepCourseAny": "Курсы — в разделе «Обучение»",
+  "homeNewSendFirst": "Отправить первый чек",
+  "homeNewCourseSection": "Начните с курса",
+  "homeNewAllCourses": "Все курсы",
+  "homeNewCourseLessons": "{n, plural, one{{n} урок} few{{n} урока} many{{n} уроков} other{{n} урока}}",
+  "@homeNewCourseLessons": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "homeNewCourseMinutes": "~{n} мин",
+  "@homeNewCourseMinutes": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "homeNewQuestSection": "Квест для старта",
+  "homeNewQuestGoal": "{n, plural, one{Продайте {n} упаковку} few{Продайте {n} упаковки} many{Продайте {n} упаковок} other{Продайте {n} упаковки}}",
+  "@homeNewQuestGoal": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "homeNewQuestIqc": "IQC на баланс",
+  "homeNewQuestVoucher": "ваучер за выполнение",
+  "homeNewHint": "Баланс, ваучеры и мини-приложения появятся после первых IQC",
+  "newsBack": "Назад",
+  "newsBackToList": "Назад к новостям",
+  "newsReadTime": "{n} мин чтения",
+  "@newsReadTime": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "newsEmptyText": "Здесь появятся новости программы и полезные материалы",
+  "surveyYourAnswer": "Ваш ответ",
+  "surveySubmitReward": "Ответить и получить {n} IQC",
+  "@surveySubmitReward": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "surveyWriteHint": "Напишите ответ, чтобы отправить",
+  "surveyRatingLabel": "Оценка",
+  "surveyRatingOf": "{n} из {max}",
+  "@surveyRatingOf": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "surveyRatingWords": "Плохо,Так себе,Нормально,Хорошо,Отлично",
+  "surveyReward": "+{n} IQC",
+  "@surveyReward": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "surveyOnBalance": "уже на вашем балансе",
+  "surveySendFailed": "Не удалось отправить ответ. Попробуйте ещё раз",
+  "medrepHelloName": "Привет, {name}!",
+  "@medrepHelloName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "medrepAttrShared": "общая атрибуция",
+  "medrepAttrPrimary": "первичная атрибуция",
+  "medrepPeriodAll": "Всё время",
+  "medrepPeriod30": "30 дней",
+  "medrepPeriod7": "7 дней",
+  "medrepUnitPharm": "{n, plural, one{фармацевт} few{фармацевта} many{фармацевтов} other{фармацевта}}",
+  "@medrepUnitPharm": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepUnitChecks": "{n, plural, one{чек} few{чека} many{чеков} other{чека}}",
+  "@medrepUnitChecks": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepUnitPacks": "{n, plural, one{упаковка} few{упаковки} many{упаковок} other{упаковки}}",
+  "@medrepUnitPacks": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepUnitQuestsDone": "{n, plural, one{квест выполнен} few{квеста выполнено} many{квестов выполнено} other{квеста выполнено}}",
+  "@medrepUnitQuestsDone": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepUnitQuests": "{n, plural, one{квест} few{квеста} many{квестов} other{квеста}}",
+  "@medrepUnitQuests": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepUnitPharmacies": "{n, plural, one{аптека} few{аптеки} many{аптек} other{аптеки}}",
+  "@medrepUnitPharmacies": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepUnitPharmacists": "{n, plural, one{провизор} few{провизора} many{провизоров} other{провизора}}",
+  "@medrepUnitPharmacists": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepUnitChecksAllTime": "{n, plural, one{чек за всё время} few{чека за всё время} many{чеков за всё время} other{чека за всё время}}",
+  "@medrepUnitChecksAllTime": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepCountChecks": "{n, plural, one{{n} чек} few{{n} чека} many{{n} чеков} other{{n} чека}}",
+  "@medrepCountChecks": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepCountPacks": "{n, plural, one{{n} упаковка} few{{n} упаковки} many{{n} упаковок} other{{n} упаковки}}",
+  "@medrepCountPacks": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepCountQuests": "{n, plural, one{{n} квест} few{{n} квеста} many{{n} квестов} other{{n} квеста}}",
+  "@medrepCountQuests": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepCountMedreps": "{n, plural, one{{n} медпред} few{{n} медпреда} many{{n} медпредов} other{{n} медпреда}}",
+  "@medrepCountMedreps": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepCountPharmacists": "{n, plural, one{{n} провизор} few{{n} провизора} many{{n} провизоров} other{{n} провизора}}",
+  "@medrepCountPharmacists": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepCountChains": "{n, plural, one{{n} сеть} few{{n} сети} many{{n} сетей} other{{n} сети}}",
+  "@medrepCountChains": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepPharmaciesInPortfolio": "{n, plural, one{{n} аптека в портфеле} few{{n} аптеки в портфеле} many{{n} аптек в портфеле} other{{n} аптеки в портфеле}}",
+  "@medrepPharmaciesInPortfolio": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepRatingByChecks": "Рейтинг по чекам",
+  "medrepRatingAll": "Весь рейтинг",
+  "medrepPlace": "{n} место",
+  "@medrepPlace": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepOutOf": "из {n}",
+  "@medrepOutOf": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepGapTo": "До {place} места — ещё",
+  "@medrepGapTo": {
+    "placeholders": {
+      "place": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepLeader": "Вы лидер рейтинга",
+  "medrepMostActive": "Самые активные",
+  "medrepAllN": "Все {n}",
+  "@medrepAllN": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepInviteTitle": "Пригласить провизора",
+  "medrepInviteText": "Отправьте ссылку — после регистрации провизор попадёт в ваш портфель",
+  "medrepCopyLink": "Скопировать ссылку",
+  "medrepPendingSub": "Провизоры, которые перешли по ссылке",
+  "medrepCompaniesSub": "Аптечные сети в портфеле",
+  "medrepDoctorsSub": "Прогресс по квесту на бланки",
+  "medrepEmptyTitle": "Портфель пока пуст",
+  "medrepEmptyText": "Пригласите провизоров по ссылке — их чеки и статистика появятся здесь",
+  "medrepStep1Title": "Отправьте ссылку",
+  "medrepStep1Text": "В Telegram или по SMS",
+  "medrepStep2Title": "Провизор регистрируется",
+  "medrepStep2Text": "Он сразу попадает в ваш портфель",
+  "medrepStep3Title": "Следите за чеками",
+  "medrepStep3Text": "Статистика появится здесь",
+  "medrepUpdatedNow": "Обновлено сейчас",
+  "medrepSearchHint": "Имя, аптека или город",
+  "medrepFilterAll": "Все",
+  "medrepFilterActive": "Активные",
+  "medrepFilterPassive": "Пассивные",
+  "medrepFilterFinished": "Завершённые",
+  "medrepFilterApproved": "Одобрены",
+  "medrepFilterRejected": "Отклонены",
+  "medrepClear": "Очистить",
+  "medrepNotFoundTitle": "Никого не нашли",
+  "medrepNotFoundText": "По запросу «{query}» провизоров нет. Проверьте написание или поищите по названию аптеки",
+  "@medrepNotFoundText": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "medrepNotFoundShort": "По запросу «{query}» ничего нет. Проверьте написание",
+  "@medrepNotFoundShort": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "medrepResetSearch": "Сбросить поиск",
+  "medrepChecksAllTime": "Чеков за всё время",
+  "medrepLastActivity": "активность",
+  "medrepAllChecks": "Все чеки",
+  "medrepCheckNo": "Чек №{id}",
+  "@medrepCheckNo": {
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepPacksShort": "{n} уп.",
+  "@medrepPacksShort": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepPacksUnit": "уп.",
+  "medrepLast7Days": "Последние 7 дней",
+  "medrepMonthYear": "{month, select, m1{Январь} m2{Февраль} m3{Март} m4{Апрель} m5{Май} m6{Июнь} m7{Июль} m8{Август} m9{Сентябрь} m10{Октябрь} m11{Ноябрь} m12{Декабрь} other{}} {year}",
+  "@medrepMonthYear": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      },
+      "year": {
+        "type": "String"
+      }
+    }
+  },
+  "medrepTabChecks": "Чеки",
+  "medrepTabPharm": "Фармацевты",
+  "medrepTabQuests": "Квесты",
+  "medrepYouName": "Вы · {name}",
+  "@medrepYouName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "medrepYouShort": "ВЫ",
+  "medrepGapText": "До {place} места — ещё {value}",
+  "@medrepGapText": {
+    "placeholders": {
+      "place": {
+        "type": "int"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "medrepNotRankedTitle": "Вас пока нет в рейтинге",
+  "medrepNotRankedText": "Место считается по чекам ваших провизоров. Пригласите первого — и вы появитесь в списке",
+  "medrepRatingEmpty": "Рейтинг пока пуст",
+  "medrepQuestsSub": "Прогресс ваших провизоров",
+  "medrepQuestRunning": "Идёт",
+  "medrepQuestRunningUntil": "Идёт · до {date}",
+  "@medrepQuestRunningUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "medrepQuestFinished": "Завершён",
+  "medrepQuestFinishedOn": "Завершён {date}",
+  "@medrepQuestFinishedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "medrepOfN": "{a} из {b}",
+  "@medrepOfN": {
+    "placeholders": {
+      "a": {
+        "type": "int"
+      },
+      "b": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepParticipating": "провизоров участвуют",
+  "medrepSoldOf": "продано из {n}",
+  "@medrepSoldOf": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepOfPacks": "{n, plural, one{из {n} упаковки} few{из {n} упаковок} many{из {n} упаковок} other{из {n} упаковок}}",
+  "@medrepOfPacks": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepGoalPercent": "{p}% цели",
+  "@medrepGoalPercent": {
+    "placeholders": {
+      "p": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepPacksLeft": "{n, plural, one{осталось {n} упаковка} few{осталось {n} упаковки} many{осталось {n} упаковок} other{осталось {n} упаковки}}",
+  "@medrepPacksLeft": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepGoalDone": "Цель выполнена",
+  "medrepStatParticipating": "участвуют",
+  "medrepStatCompleted": "выполнили",
+  "medrepStatIdle": "не начали",
+  "medrepPharmacistsSection": "Провизоры",
+  "medrepDoneOf": "Выполнил · {a} из {b}",
+  "@medrepDoneOf": {
+    "placeholders": {
+      "a": {
+        "type": "int"
+      },
+      "b": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepMoreRows": "{n, plural, one{Ещё {n} провизор · {packs} уп.} few{Ещё {n} провизора · {packs} уп.} many{Ещё {n} провизоров · {packs} уп.} other{Ещё {n} провизора · {packs} уп.}}",
+  "@medrepMoreRows": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "packs": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepShow": "Показать",
+  "medrepHide": "Свернуть",
+  "medrepPendingText": "Перешли по вашей ссылке и ждут, когда вы добавите их в портфель",
+  "medrepFollowedLink": "Перешёл по ссылке · {ago}",
+  "@medrepFollowedLink": {
+    "placeholders": {
+      "ago": {
+        "type": "String"
+      }
+    }
+  },
+  "medrepAgoNow": "только что",
+  "medrepAgoMinutes": "{n} мин назад",
+  "@medrepAgoMinutes": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepAgoHours": "{n} ч назад",
+  "@medrepAgoHours": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepAgoYesterday": "вчера",
+  "medrepAgoDays": "{n, plural, one{{n} день назад} few{{n} дня назад} many{{n} дней назад} other{{n} дня назад}}",
+  "@medrepAgoDays": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepChainsTitle": "Аптечные сети",
+  "medrepChainSearchHint": "Название сети",
+  "medrepChainMeta": "{city} · {a} апт. · {p} пров.",
+  "@medrepChainMeta": {
+    "placeholders": {
+      "city": {
+        "type": "String"
+      },
+      "a": {
+        "type": "int"
+      },
+      "p": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepChainKind": "аптечная сеть",
+  "medrepPharmaciesSection": "Аптеки",
+  "medrepMakers": "Компании-производители",
+  "medrepRewardTitle": "Поощрить: {name}",
+  "@medrepRewardTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "medrepRewardRating": "Оценка",
+  "medrepRewardMessage": "Сообщение",
+  "medrepOptional": "· необязательно",
+  "medrepRewardHint": "Например: спасибо за отличные продажи!",
+  "medrepRewardNotice": "Провизор получит уведомление с вашим сообщением",
+  "medrepRewardSend": "Отправить оценку {n}",
+  "@medrepRewardSend": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepRewardStars": "Оценка {n} из 5",
+  "@medrepRewardStars": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "authVersion": "версия {version}",
+  "@authVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "authLoading": "Загрузка",
+  "authWelcomeTitle": "Добро пожаловать в PharmIQ",
+  "authWelcomeSubtitle": "Обучение, квесты и награды для фармацевтов и врачей — в одном приложении",
+  "authAppLanguage": "Язык приложения",
+  "authStart": "Начать",
+  "authHaveAccount": "Уже есть аккаунт?",
+  "authLanguageLabel": "Язык: {language}",
+  "@authLanguageLabel": {
+    "placeholders": {
+      "language": {
+        "type": "String"
+      }
+    }
+  },
+  "authLoginSubtitle": "Обучение и награды для фармацевтов и врачей",
+  "authSmsHint": "Отправим код в SMS",
+  "authPhoneNotRegistered": "Этот номер не зарегистрирован. Создайте аккаунт — это займёт минуту",
+  "authOtherNumber": "Ввести другой номер",
+  "authCodeSentTo": "Отправили на {phone}",
+  "@authCodeSentTo": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "authChange": "Изменить",
+  "authCodeGroup": "Код из 6 цифр",
+  "authCodeAuto": "Войдём автоматически, как только введёте код",
+  "authResendIn": "Отправить снова через {time}",
+  "@authResendIn": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "authRoleSubtitle": "У вас несколько ролей — выберите, под какой войти",
+  "authRoleSubDoctor": "Рецепты, квесты, обучение и кошелёк",
+  "authRoleHint": "Сменить роль можно в любой момент в профиле",
+  "authRegWhoTitle": "Кто вы?",
+  "authRegWhoSubtitle": "Покажем квесты и курсы для вашей профессии",
+  "authRegPharmacistSub": "Провизор, работник аптеки",
+  "authRegDoctorSub": "Специалист здравоохранения",
+  "authContinue": "Продолжить",
+  "authBack": "Назад",
+  "authChooseField": "Выберите {label}",
+  "@authChooseField": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "authMultiHint": "Можно выбрать несколько · выбрано {n}",
+  "@authMultiHint": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "authMultiHintEmpty": "Можно выбрать несколько",
+  "authConsent": "Согласен на обработку персональных данных — ",
+  "authFillRequired": "Заполните поля со звёздочкой и дайте согласие",
+  "authRegWelcome": "Добро пожаловать в PharmIQ, {name}!",
+  "@authRegWelcome": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "authGoHome": "На главную",
+  "authCityTitle": "Город",
+  "authCitySearch": "Найти город",
+  "authSearch": "Поиск",
+  "authNothingFound": "Ничего не найдено",
+  "authMapTitle": "Аптека на карте",
+  "authMapStubTitle": "Карта скоро появится",
+  "authMapStubBody": "Пока впишите название аптеки в поле «Аптека / место работы» — отметить её на карте можно будет в следующем обновлении",
+  "authUpdateTitle": "Нужно обновить приложение",
+  "authUpdateBody": "Эта версия больше не поддерживается. Обновите PharmIQ, чтобы продолжить — баланс и прогресс сохранятся",
+  "authUpdateButton": "Обновить приложение",
+  "authUpdateVersions": "Ваша версия {current} · нужна {required} или новее",
+  "@authUpdateVersions": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      },
+      "required": {
+        "type": "String"
+      }
+    }
+  },
+  "authUpdateRequired": "Нужна версия {required} или новее",
+  "@authUpdateRequired": {
+    "placeholders": {
+      "required": {
+        "type": "String"
+      }
+    }
+  },
+  "authPushTitle": "Не пропускайте начисления",
+  "authPushBody": "Сообщим, когда чек проверят, IQC придут на баланс или появится новый квест",
+  "authPushNow": "сейчас",
+  "authPushSample1Title": "Начислено +144 IQC",
+  "authPushSample1Body": "Чек №23156 · Цинкорот №50",
+  "authPushSample2Time": "2 ч назад",
+  "authPushSample2Title": "Новый квест",
+  "authPushSample2Body": "Доритрицин N10 · ваучер Korzinka",
+  "authPushEnable": "Включить уведомления",
+  "authPushLater": "Не сейчас",
+  "checksSentCount": "{n, plural, one{{n} чек отправлен} few{{n} чека отправлено} many{{n} чеков отправлено} other{{n} чека отправлено}}",
+  "@checksSentCount": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "checksSectionRetake": "Нужно переснять",
+  "checksSectionHistory": "История",
+  "checksRetake": "Переснять",
+  "checksRetakeA11y": "Переснять чек №{id}",
+  "@checksRetakeA11y": {
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  },
+  "checksRetakeTipBold": "Чтобы чек приняли с первого раза:",
+  "checksRetakeTip": "весь чек в кадре, ровно, без бликов и при хорошем свете.",
+  "checksNumberDate": "№{id} · {date}",
+  "@checksNumberDate": {
+    "placeholders": {
+      "id": {
+        "type": "int"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "checksDatePhotos": "{date} · {n} фото",
+  "@checksDatePhotos": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "checksPhotoCount": "{n} фото",
+  "@checksPhotoCount": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "checksWaitValue": "~24 ч",
+  "checksWaitCaption": "обычно",
+  "checksShowAll": "{n, plural, one{Показать все {n} чек} few{Показать все {n} чека} many{Показать все {n} чеков} other{Показать все {n} чека}}",
+  "@checksShowAll": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "checksSendCheck": "Отправить чек",
+  "checksMonth": "{m, select, m1{Январь} m2{Февраль} m3{Март} m4{Апрель} m5{Май} m6{Июнь} m7{Июль} m8{Август} m9{Сентябрь} m10{Октябрь} m11{Ноябрь} m12{Декабрь} other{}}",
+  "@checksMonth": {
+    "placeholders": {
+      "m": {
+        "type": "String"
+      }
+    }
+  },
+  "checksUploadingRow": "Отправляем чек…",
+  "checksUploadQueued": "Ждёт отправки",
+  "checksUploadAuto": "Отправим автоматически, когда появится связь",
+  "checksEmptyTitle": "Здесь появятся ваши чеки",
+  "checksEmptyText": "Сфотографируйте чек из аптеки — ИИ распознает препараты, и вы получите IQC",
+  "checksHowToTitle": "Как сфотографировать",
+  "checksHow1Title": "Весь чек в кадре",
+  "checksHow1Text": "Все четыре угла видны",
+  "checksHow2Title": "Ровно, без складок",
+  "checksHow2Text": "Положите чек на стол",
+  "checksHow3Title": "Хороший свет",
+  "checksHow3Text": "Без бликов и тени от телефона",
+  "checksSendFirst": "Отправить первый чек",
+  "checksPickSubtitle": "ИИ распознает препараты по фото",
+  "checksPhotosOf": "Фото: {n} из {max}",
+  "@checksPhotosOf": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "checksClose": "Закрыть",
+  "checksTipWhole": "Весь чек",
+  "checksTipFlat": "Ровно",
+  "checksTipGlare": "Без бликов",
+  "checksTakePhotoCta": "Сфотографировать чек",
+  "checksPickGallery": "Выбрать из галереи",
+  "checksRemovePhoto": "Удалить фото",
+  "checksAddMore": "Ещё фото",
+  "checksAddMoreA11y": "Добавить ещё фото",
+  "checksPhotoWaiting": "Ждёт",
+  "checksPhotosHint": "Проверьте: номер чека, дата и препараты хорошо видны",
+  "checksSending": "Отправляем…",
+  "checksSentTitle": "Чек отправлен",
+  "checksSentText": "Проверка обычно занимает до 24 часов. Сообщим, когда начислим IQC",
+  "checksDone": "Готово",
+  "checksSendAnother": "Отправить ещё чек",
+  "checksSendFailed": "Не удалось сохранить фото. Попробуйте ещё раз",
+  "checksCamTitle": "Разрешите доступ к камере",
+  "checksCamText": "Камера нужна, чтобы фотографировать чеки и рецепты",
+  "checksCamPoint1": "Снимаем только когда вы нажмёте кнопку",
+  "checksCamPoint2": "Не смотрим и не сохраняем другие фото",
+  "checksCamPoint3": "Доступ можно отключить в настройках телефона",
+  "checksCamAllow": "Разрешить доступ",
+  "checksCamLater": "Не сейчас",
+  "checksCamDeniedTitle": "Нет доступа к камере",
+  "checksCamDeniedText": "Без камеры не получится сфотографировать чек. Включите доступ в настройках телефона — это займёт 10 секунд",
+  "checksCamDeniedStep1": "Откройте «Настройки» → PharmIQ",
+  "checksCamDeniedStep2": "Включите переключатель «Камера»",
+  "checksCamDeniedStep3": "Вернитесь в приложение",
+  "checksCamOpenSettings": "Открыть настройки",
+  "checksCamPickGallery": "Выбрать фото из галереи",
+  "checksCamSettingsManual": "Откройте настройки телефона → Приложения → PharmIQ → Разрешения",
+  "checksHeroPendingTitle": "Чек на проверке",
+  "checksHeroPendingText": "Специалист проверяет чек. Обычно это занимает до 24 часов",
+  "checksHeroApprovedTitle": "Чек одобрен",
+  "checksHeroApprovedText": "Всё в порядке. IQC поступят на баланс в ближайшее время",
+  "checksHeroCreditedTitle": "IQC начислены",
+  "checksHeroCreditedText": "Баллы зачислены на ваш баланс",
+  "checksHeroRejectedTitle": "Чек отклонён",
+  "checksHeroRejectedText": "Сделайте чёткое фото — баллы ещё можно получить",
+  "checksStepSent": "Отправлен",
+  "checksStepReview": "Проверка",
+  "checksStepApproved": "Одобрен",
+  "checksStepCredited": "Начислено",
+  "checksPhotosTitle": "Фото чека",
+  "checksOpenPhoto": "Открыть фото {n}",
+  "@checksOpenPhoto": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "checksAiPending": "Список препаратов появится после проверки",
+  "checksAccrualTitle": "Начисление",
+  "checksAccrualPendingTitle": "Начислим после одобрения",
+  "checksAccrualPendingText": "После одобрения чека",
+  "checksAccrualApprovedTitle": "Ожидает начисления",
+  "checksAccrualSoon": "Скоро",
+  "checksAccrualCreditedTitle": "Зачислено на баланс",
+  "checksQuestDone": "Квест выполнен ✓",
+  "checksSupport": "Вопрос по чеку? Напишите нам",
+  "checksRetakeCheck": "Переснять чек",
+  "checksViewerPhotoOf": "Фото {i} из {n}",
+  "@checksViewerPhotoOf": {
+    "placeholders": {
+      "i": {
+        "type": "int"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "checksViewerSave": "Сохранить фото",
+  "checksViewerZoomHint": "Разведите пальцами, чтобы приблизить",
+  "profileSectionContact": "Связь",
+  "profilePersonalDataRow": "Личные данные",
+  "profileTgNotLinked": "Не привязан",
+  "profileTgLink": "Привязать",
+  "profileTgLinkedToast": "Telegram привязан",
+  "profileTgNotYet": "Telegram пока не привязан — завершите привязку в боте",
+  "profileAppearanceTitle": "Оформление",
+  "profileNotifOn": "Включены",
+  "profileNotifOff": "Выключены",
+  "profileDeleteAccount": "Удалить аккаунт",
+  "profileVersion": "PharmIQ · версия {version}",
+  "@profileVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "profileEditAria": "Редактировать профиль",
+  "profileNewUser": "Новый пользователь",
+  "profilePharmacy": "Аптека",
+  "profileClinic": "Клиника",
+  "profileCompany": "Компания",
+  "profileNoPharmacy": "Аптека не указана",
+  "profileNoClinic": "Клиника не указана",
+  "profileNoCompany": "Компания не указана",
+  "profileNotSpecified": "Не указана",
+  "profileNameNotSet": "Имя не указано",
+  "profileActivateTitle": "Активируйте профиль",
+  "profileActivateProgress": "{done} из {total}",
+  "@profileActivateProgress": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "profileActivateBody": "После активации откроются квесты и начисление IQC",
+  "profileStepPhone": "Телефон подтверждён",
+  "profileStepPharmacy": "Укажите аптеку",
+  "profileStepClinic": "Укажите клинику",
+  "profileStepProfile": "Заполните профиль",
+  "profileStepWorkHint": "Нужна для квестов вашего региона",
+  "profileStepProfileHint": "Имя и место работы",
+  "profileStepSpecify": "Указать",
+  "profileStepTelegram": "Привяжите Telegram",
+  "profileStepTelegramHint": "Будем присылать уведомления",
+  "profileStepAdmin": "Активация администратором",
+  "profileStepAdminHint": "Обычно в течение дня после заполнения",
+  "profileActivateHelp": "Вопросы по активации? Напишите нам",
+  "profileRoleSheetTitle": "Сменить роль",
+  "profileRoleSheetSubtitle": "Роли, подтверждённые для вашего аккаунта",
+  "profileRoleCurrent": "Текущая",
+  "profileRoleDescPharmacist": "Чеки, квесты, обучение и кошелёк",
+  "profileRoleDescDoctor": "Рецепты, квесты, обучение и кошелёк",
+  "profileRoleDescMedrep": "Портфель провизоров и рейтинг",
+  "profileRoleDescBrand": "Квесты бренда, продукты и продажи",
+  "profileRoleNote": "Приложение откроется с разделами для выбранной роли. Баланс IQC и ваучеры сохранятся",
+  "profileRoleSwitch": "Переключиться на «{role}»",
+  "@profileRoleSwitch": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      }
+    }
+  },
+  "profileClose": "Закрыть",
+  "profileFieldName": "ФИО",
+  "profilePhoneLockedHint": "Номер нужен для входа — меняется с подтверждением по SMS",
+  "profileFieldCity": "Город",
+  "profileCityHint": "Выберите город",
+  "profileWorkplaceHint": "Название или номер",
+  "profileMapButton": "Уточнить аптеку на карте",
+  "profileMapSoon": "Выбор аптеки на карте скоро появится",
+  "profileSave": "Сохранить изменения",
+  "profileFieldRequired": "Заполните это поле",
+  "profileEditSent": "Заявка отправлена в поддержку",
+  "profileEditSentHint": "Обновим данные после проверки",
+  "profileEditRequest": "Прошу обновить данные профиля:",
+  "profileEditNoChanges": "Изменений нет",
+  "profilePrivacyShort": "Конфиденциальность",
+  "profilePrivacyHeadline": "Как мы обращаемся с вашими данными",
+  "profilePrivacyCollectTitle": "Какие данные мы собираем",
+  "profilePrivacyCollectBody": "Имя, номер телефона, город и аптеку или клинику. Фото чеков и рецептов, которые вы отправляете. Результаты курсов и тестов.",
+  "profilePrivacyWhyTitle": "Зачем они нужны",
+  "profilePrivacyWhyBody": "Чтобы начислять IQC за чеки и рецепты, засчитывать квесты, выдавать ваучеры и показывать вашу статистику.",
+  "profilePrivacyWhoTitle": "Кто их видит",
+  "profilePrivacyWhoBody": "Ваш медпредставитель видит число ваших чеков и квестов. Данные пациентов из рецептов скрыты — видны только инициалы.",
+  "profilePrivacyStoreTitle": "Как мы их храним",
+  "profilePrivacyStoreBody": "Данные передаются по защищённому соединению и хранятся на серверах компании.",
+  "profilePrivacyDeleteTitle": "Как удалить данные",
+  "profilePrivacyDeleteBody": "В профиле → «Удалить аккаунт». Данные удаляются вместе с балансом и ваучерами.",
+  "profilePrivacyFullLink": "Полный текст политики",
+  "profilePrivacyContents": "Содержание",
+  "profilePrivacyReadTime": "{n, plural, one{{n} минута чтения} few{{n} минуты чтения} many{{n} минут чтения} other{{n} минуты чтения}}",
+  "@profilePrivacyReadTime": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "profilePrivacyRuOnly": "Документ доступен только на русском языке",
+  "profileDeleteLose": "Это действие нельзя отменить. Вы потеряете:",
+  "profileDeleteLoseIqc": "{amount} IQC на балансе",
+  "@profileDeleteLoseIqc": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "profileDeleteLoseIqcHint": "сгорят без возможности обмена",
+  "profileDeleteLoseVouchers": "{n, plural, one{{n} активный ваучер} few{{n} активных ваучера} many{{n} активных ваучеров} other{{n} активного ваучера}}",
+  "@profileDeleteLoseVouchers": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "profileDeleteLoseVouchersHint": "перестанут работать",
+  "profileDeleteLoseProgress": "Прогресс в квестах и курсах",
+  "profileDeleteLoseProgressHint": "будет удалён",
+  "profileDeleteTypePrompt": "Чтобы подтвердить, введите",
+  "profileDeleteWord": "УДАЛИТЬ",
+  "profileDeleteForever": "Удалить навсегда",
+  "profileDeleteKeep": "Оставить аккаунт",
+  "profileDeleting": "Удаляем…",
+  "profileDeleteFailed": "Не удалось удалить аккаунт. Попробуйте ещё раз",
+  "profileDeletedTitle": "Аккаунт удалён",
+  "profileDeletedBody": "Мы удалили ваш профиль, баланс IQC, ваучеры и историю. Спасибо, что были с нами",
+  "profileDeletedCardTitle": "Передумали?",
+  "profileDeletedCardBody": "Можно зарегистрироваться заново с тем же номером — но прежний баланс не вернуть",
+  "profileDeletedNew": "Создать новый аккаунт",
+  "profileErrorGeneric": "Что-то пошло не так. Попробуйте ещё раз",
+  "notifNewCount": "{n, plural, one{{n} новое} few{{n} новых} many{{n} новых} other{{n} новых}}",
+  "@notifNewCount": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "notifAllRead": "Всё прочитано",
+  "notifReadAll": "Прочитать все",
+  "notifFilterAll": "Все",
+  "notifFilterChecks": "Чеки",
+  "notifFilterRecipes": "Бланки",
+  "notifFilterQuests": "Квесты",
+  "notifFilterLearning": "Обучение",
+  "notifCategoryEmpty": "В этой категории пока ничего нет",
+  "notifNewAria": "Новое",
+  "notifMarkedRead": "Прочитано",
+  "notifEmptySubtitle": "Пока ничего нового",
+  "notifEmptyQuietTitle": "Здесь пока тихо",
+  "notifEmptyQuietText": "Сообщим, когда проверим чек, начислим IQC или выдадим ваучер",
+  "notifConfigure": "Настроить уведомления",
+  "notifSettingsSubtitle": "Что присылать на телефон",
+  "notifSettingsChecksHint": "Одобрение, отказ, начисление IQC",
+  "notifSettingsQuestsHint": "Новые квесты, выполнение, ваучеры",
+  "notifSettingsLearningHint": "Новые курсы и напоминания",
+  "notifSettingsMarketingHint": "Новости рынка и спецпредложения",
+  "notifSettingsFootnote": "Важные сообщения об аккаунте и безопасности приходят всегда",
+  "notifSaveFailed": "Не удалось сохранить настройки",
+  "supportHeaderTitle": "Поддержка PharmIQ",
+  "supportHeaderSubtitle": "Обычно отвечаем в течение часа",
+  "supportBackAria": "Назад в профиль",
+  "supportToday": "Сегодня",
+  "supportYesterday": "Вчера",
+  "supportGreeting": "Здравствуйте! Чем можем помочь?",
+  "supportFaqTitle": "Частые вопросы",
+  "supportFaq1": "Не начислили IQC за чек",
+  "supportFaq2": "Чек отклонён — почему?",
+  "supportFaq3": "Как получить ваучер",
+  "supportFaq4": "Проблема с курсом или тестом",
+  "supportMessageHint": "Сообщение",
+  "supportAttachAria": "Прикрепить фото или чек",
+  "supportSendAria": "Отправить",
+  "supportTypingAria": "Поддержка печатает",
+  "supportAttachCheckTitle": "Прикрепить чек",
+  "supportAttachRecipeTitle": "Прикрепить бланк",
+  "supportAttachEmpty": "Пока нечего прикрепить",
+  "supportAttachRemove": "Убрать вложение",
+  "supportAttachUnavailable": "Вложения доступны для чеков и бланков",
+  "supportSendFailed": "Не удалось отправить сообщение",
+  "walletFaceValue": "Номинал",
+  "profileBack": "Назад",
+  "homeNewCourseVideo": "Видео ~{n} мин",
+  "@homeNewCourseVideo": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "homeNewCourseQuiz": "тест",
+  "authHintFullName": "Фамилия Имя Отчество",
+  "authHintPharmacy": "Например, Аптека №12",
+  "authHintClinic": "Название медицинского учреждения",
+  "authMapCardTitle": "Отметить аптеку на карте",
+  "authMapCardSub": "Нужно для квестов вашего района",
+  "authMapCardButton": "Отметить",
+  "rxStateCreditedTitle": "IQC начислены",
+  "rxStateCreditedText": "Баллы зачислены на ваш баланс",
+  "rxAccrualCreditedTitle": "Зачислено на баланс",
+  "rxCreditedCaption": "начислено",
+  "rxListCountEarned": "{count} · получено {n} IQC",
+  "@rxListCountEarned": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "questsRewardPoints": "Баллы на баланс",
+  "walletMonthsIn": "январе,феврале,марте,апреле,мае,июне,июле,августе,сентябре,октябре,ноябре,декабре",
+  "walletEarnedIn": "Начислено в {month}",
+  "@walletEarnedIn": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "walletSpentIn": "Потрачено в {month}",
+  "@walletSpentIn": {
+    "placeholders": {
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "profileRoleShortMedrep": "Медпред",
+  "notifActionQr": "Показать QR",
+  "notifActionRetake": "Переснять",
+  "homeNewCourseQuizQuestions": "{n, plural, one{тест {n} вопрос} few{тест {n} вопроса} many{тест {n} вопросов} other{тест {n} вопроса}}",
+  "@homeNewCourseQuizQuestions": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "profilePrivacyDraft": "Черновик. Окончательный текст утвердит юрист",
+  "notifSettingsChecksOnly": "Статусы чеков",
+  "notifSettingsRecipesOnly": "Статусы бланков",
+  "tourWelcomeTitle": "Добро пожаловать в PharmIQ Academy!",
+  "tourWelcomeText": "Покажем, где что находится и как зарабатывать IQC. Это займёт меньше минуты.",
+  "tourWelcomeTextDoc": "Покажем, где что находится и как получать IQC за бланки. Это займёт меньше минуты.",
+  "tourStart": "Начать",
+  "tourSkipAll": "Пропустить обучение",
+  "tourStepOf": "Шаг {n} из {total}",
+  "@tourStepOf": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "tourSkip": "Пропустить",
+  "tourNext": "Далее",
+  "tourDoneStep": "Готово",
+  "tourBack": "Назад",
+  "tourBalanceTitle": "Баланс IQC",
+  "tourBalanceText": "Здесь ваши IQC — баллы за одобренные чеки, квесты и опросы. Кнопка «Кошелёк» откроет историю и обмен на ваучеры.",
+  "tourBalanceTextDoc": "Здесь ваши IQC — баллы за одобренные бланки, квесты и опросы. Кнопка «Кошелёк» откроет историю и обмен на ваучеры.",
+  "tourSendTitle": "Отправьте чек",
+  "tourSendText": "Сфотографируйте чек — ИИ распознает препараты. После проверки на баланс придут IQC.",
+  "tourSendTitleDoc": "Отправьте бланк",
+  "tourSendTextDoc": "Сфотографируйте бланк — ИИ распознает препараты. После проверки на баланс придут IQC.",
+  "tourQuestsTitle": "Активные квесты",
+  "tourQuestsText": "Задания от производителей: продайте нужное количество упаковок и получите бонус. Прогресс виден на карточке.",
+  "tourQuestsTextDoc": "Задания от производителей: выпишите нужное количество бланков и получите бонус. Прогресс виден на карточке.",
+  "tourChecksTitle": "Ваши чеки",
+  "tourChecksText": "Все отправленные чеки и их статусы: на проверке, одобрен, начислено или нужно переснять.",
+  "tourChecksTitleDoc": "Ваши бланки",
+  "tourChecksTextDoc": "Все отправленные бланки и их статусы: на проверке, одобрен, начислено или нужно переснять.",
+  "tourLearnTitle": "Обучение",
+  "tourLearnText": "Курсы и тесты от экспертов фармрынка. За пройденные курсы начисляются баллы.",
+  "tourProfileTitle": "Профиль",
+  "tourProfileText": "Личные данные, аптека, тема и язык. Здесь же можно пройти это обучение заново.",
+  "tourProfileTextDoc": "Личные данные, место работы, тема и язык. Здесь же можно пройти это обучение заново.",
+  "tourDoneTitle": "Всё готово!",
+  "tourDoneText": "Отправьте первый чек или начните курс, чтобы получить первые IQC.",
+  "tourDoneTextDoc": "Отправьте первый бланк или начните курс, чтобы получить первые IQC.",
+  "tourDoneNote": "Повторить обучение можно в Профиле.",
+  "tourFinish": "Начать работу",
+  "profileTourAgain": "Пройти обучение заново"
 }

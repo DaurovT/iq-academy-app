@@ -1,805 +1,817 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart';
-import '../../widgets/local_photo.dart';
-import '../../core/uploads/upload_queue.dart';
-import '../../core/uploads/pending_upload.dart';
+
+import '../../core/design/design.dart';
 import '../../core/format.dart';
 import '../../core/l10n/l10n.dart';
 import '../../core/models/check.dart';
-import '../../core/theme/app_colors.dart';
-import '../shared/widgets/pharm_top_bar.dart';
-import '../shared/widgets/screen_decor.dart';
+import '../../core/uploads/pending_upload.dart';
+import '../../core/uploads/upload_queue.dart';
+import '../../widgets/local_photo.dart';
+import '../../widgets/pq_states.dart';
+import '../shared/providers.dart';
+import 'checks/check_ui.dart';
+import 'checks/upload_sheet.dart';
 import 'providers.dart';
 
-/// Цвет-статус чека/рецепта. Используется другими экранами (детали чека,
-/// рецепты врача, портфель медпреда).
-Color statusColor(CheckStatus s, ColorScheme scheme) => switch (s) {
-      CheckStatus.approved => Colors.green,
-      CheckStatus.rejected => scheme.error,
-      CheckStatus.aiWrong => Colors.orange,
-      _ => scheme.primary,
-    };
+/// Маршрут, который открывает «Мои чеки» сразу с листом «Новый чек».
+const kChecksUploadPath = '/app/checks/upload';
 
-/// Экран «Мои чеки». Дизайн перенесён из макета Figma «pharmiq-checks-screen».
-class ChecksScreen extends ConsumerWidget {
-  const ChecksScreen({super.key});
+/// Открывает лист отправки нового чека (макеты UploadPick → UploadPhotos →
+/// UploadDone). Используется на экране «Мои чеки» и на главной.
+Future<void> showNewCheckSheet(BuildContext context) =>
+    showCheckUploadSheet(context);
+
+/// Сколько строк истории показывать до «Показать все» (не больше).
+const _historyPreview = 5;
+
+/// Превью истории: последний месяц (как в макете — «Июнь 2026»), до 5 строк.
+List<Check> _historyHead(List<Check> history) {
+  if (history.isEmpty) return history;
+  DateTime? m(Check c) => DateTime.tryParse(c.createdAt)?.toLocal();
+  final first = m(history.first);
+  return history
+      .takeWhile(
+        (c) => m(c)?.year == first?.year && m(c)?.month == first?.month,
+      )
+      .take(_historyPreview)
+      .toList();
+}
+
+/// Экран «Мои чеки» (макеты Checks, ChecksEmpty, Offline, SkelList).
+class ChecksScreen extends ConsumerStatefulWidget {
+  const ChecksScreen({super.key, this.openUpload = false});
+
+  /// Сразу открыть лист «Новый чек» (маршрут [kChecksUploadPath]).
+  final bool openUpload;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final p = PharmPalette.of(context);
-    final checks = ref.watch(checksProvider);
-    final count = checks.asData?.value.length;
+  ConsumerState<ChecksScreen> createState() => _ChecksScreenState();
+}
 
-    return Scaffold(
-      backgroundColor: p.bg,
-      body: Stack(
+class _ChecksScreenState extends ConsumerState<ChecksScreen> {
+  DateTime? _loadedAt;
+  bool _showAll = false;
+
+  @override
+  void initState() {
+    super.initState();
+    ref.listenManual<AsyncValue<List<Check>>>(checksProvider, (_, next) {
+      if (next.hasValue && !next.isLoading && !next.hasError) {
+        _loadedAt = DateTime.now();
+      }
+    }, fireImmediately: true);
+    // Связь вернулась — обновляем список сами.
+    ref.listenManual<AsyncValue<bool>>(checksOnlineProvider, (prev, next) {
+      if (prev?.asData?.value == false && next.asData?.value == true) {
+        ref.invalidate(checksProvider);
+      }
+    });
+    if (widget.openUpload) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        if (!mounted) return;
+        await showNewCheckSheet(context);
+        if (mounted) context.go('/app/checks');
+      });
+    }
+  }
+
+  Future<void> _refresh() async {
+    ref.read(uploadQueueProvider.notifier).retryNow();
+    ref.invalidate(checksProvider);
+    try {
+      await ref.read(checksProvider.future);
+    } catch (_) {}
+  }
+
+  void _send() => showNewCheckSheet(context);
+
+  void _open(Check c) => context.push('/app/checks/${c.id}');
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l10n;
+    final checks = ref.watch(checksProvider);
+    final queue =
+        ref.watch(uploadQueueProvider).asData?.value ?? const <PendingUpload>[];
+    final online = ref.watch(checksOnlineProvider).asData?.value ?? true;
+    final unread = ref.watch(unreadCountProvider).asData?.value ?? 0;
+    final navBottom = MediaQuery.paddingOf(context).bottom;
+    final list = checks.asData?.value;
+    final showFab =
+        online && list != null && (list.isNotEmpty || queue.isNotEmpty);
+    final bottomPad =
+        math.max(kPqNavClearance, navBottom + 36) + (showFab ? 80 : 0);
+
+    return PqScreen(
+      safeBottom: false,
+      child: Stack(
         children: [
-          const Positioned.fill(child: ScreenDecor(checksDecor)),
           Column(
+            children: [
+              PqTabHeader(
+                onBell: () => context.push('/app/notifications'),
+                bellLabel: l.notifTitle,
+                unread: unread > 0,
+              ),
+              if (!online && list != null) PqOfflineBanner(since: _loadedAt),
+              Expanded(
+                child: PqRefresh(
+                  onRefresh: _refresh,
+                  child: PqAsync<List<Check>>(
+                    value: checks,
+                    onRetry: () => ref.invalidate(checksProvider),
+                    loadingBuilder:
+                        (_) => ListView(
+                          padding: kPqPagePadding,
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          children: [
+                            PqSkeletonList(title: l.checksTitle, rows: 6),
+                          ],
+                        ),
+                    data:
+                        (list) => ListView(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          padding: EdgeInsets.fromLTRB(
+                            16,
+                            online ? 4 : 16,
+                            16,
+                            bottomPad,
+                          ),
+                          children: [
+                            PqStagger(
+                              gap: online ? 24 : 20,
+                              children: _content(context, list, queue, online),
+                            ),
+                          ],
+                        ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          if (showFab)
+            Positioned(
+              right: 16,
+              bottom: navBottom + 16,
+              child: _SendFab(onTap: _send),
+            ),
+        ],
+      ),
+    );
+  }
+
+  List<Widget> _content(
+    BuildContext context,
+    List<Check> list,
+    List<PendingUpload> queue,
+    bool online,
+  ) {
+    final pq = context.pq;
+    final l = context.l10n;
+    final empty = list.isEmpty && queue.isEmpty;
+    final rejected = [
+      for (final c in list)
+        if (c.status == CheckStatus.rejected) c,
+    ];
+    final review = [
+      for (final c in list)
+        if (checkStageOf(c.status) == CheckStage.review) c,
+    ];
+    final history = [
+      for (final c in list)
+        if (c.status == CheckStatus.approved) c,
+    ];
+
+    final offlineSend = Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        PqButton(
+          label: l.checksSendCheck,
+          icon: PqIcons.camera,
+          onPressed: null,
+        ),
+        const SizedBox(height: 8),
+        Text(
+          l.stateOfflineSendHint,
+          textAlign: TextAlign.center,
+          style: PqText.body(c: pq.textMuted),
+        ),
+      ],
+    );
+
+    return [
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const PharmTopBar(),
-          // Закреплённая шапка: заголовок, кнопка и счётчик не скроллятся.
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-            child: _Header(
-              palette: p,
-              count: count,
-              onSend: () => _submitFlow(context, ref),
+          Semantics(
+            header: true,
+            child: Text(l.checksTitle, style: PqText.display(c: pq.text)),
+          ),
+          if (!empty) ...[
+            const SizedBox(height: 4),
+            Text(
+              l.checksSentCount(list.length),
+              style: PqText.subtitle(c: pq.textMuted),
+            ),
+          ],
+        ],
+      ),
+      if (!online) offlineSend,
+      if (empty) ...[
+        const _EmptyHero(),
+        const _HowToCard(),
+        if (online)
+          PqButton(
+            label: l.checksSendFirst,
+            icon: PqIcons.camera,
+            iconSize: 22,
+            onPressed: _send,
+          ),
+      ] else ...[
+        if (rejected.isNotEmpty)
+          _Section(
+            title: l.checksSectionRetake,
+            count: rejected.length,
+            tone: PqTone.danger,
+            child: PqListCard(
+              footer: PqHint(
+                boldPrefix: l.checksRetakeTipBold,
+                text: l.checksRetakeTip,
+              ),
+              children: [
+                for (final c in rejected)
+                  _RetakeRow(check: c, onOpen: () => _open(c), onRetake: _send),
+              ],
             ),
           ),
-          // Прокручивается только список чеков.
+        if (review.isNotEmpty || queue.isNotEmpty)
+          _Section(
+            title: l.checksStatusPending,
+            count: review.length + queue.length,
+            tone: PqTone.warning,
+            child: PqListCard(
+              children: [
+                for (var i = 0; i < queue.length; i++)
+                  _QueueRow(
+                    item: queue[i],
+                    active: i == 0 && queue[i].lastError == null,
+                    onRetry:
+                        () => ref.read(uploadQueueProvider.notifier).retryNow(),
+                  ),
+                for (final c in review)
+                  _ReviewRow(check: c, onOpen: () => _open(c)),
+              ],
+            ),
+          ),
+        if (history.isNotEmpty)
+          _Section(
+            title: l.checksSectionHistory,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _HistoryCard(
+                  checks: _showAll ? history : _historyHead(history),
+                  onOpen: _open,
+                ),
+                if (!_showAll &&
+                    history.length > _historyHead(history).length) ...[
+                  const SizedBox(height: 12),
+                  _ShowAll(
+                    // «Показать все 14 чеков» — как в макете, считаем все чеки.
+                    label: l.checksShowAll(list.length),
+                    onTap: () => setState(() => _showAll = true),
+                  ),
+                ],
+              ],
+            ),
+          ),
+      ],
+    ];
+  }
+}
+
+// ── Секции и строки ─────────────────────────────────────────────────────
+
+class _Section extends StatelessWidget {
+  const _Section({
+    required this.title,
+    required this.child,
+    this.count,
+    this.tone,
+  });
+
+  final String title;
+  final int? count;
+  final PqTone? tone;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        PqSectionHeader(title, count: count, countTone: tone ?? PqTone.neutral),
+        const SizedBox(height: 12),
+        child,
+      ],
+    );
+  }
+}
+
+/// Отклонённый чек: причина, номер и дата, кнопка «Переснять».
+class _RetakeRow extends StatelessWidget {
+  const _RetakeRow({
+    required this.check,
+    required this.onOpen,
+    required this.onRetake,
+  });
+
+  final Check check;
+  final VoidCallback onOpen;
+  final VoidCallback onRetake;
+
+  @override
+  Widget build(BuildContext context) {
+    final pq = context.pq;
+    final l = context.l10n;
+    final reason = check.rejectReason?.trim();
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 14),
+      child: Row(
+        children: [
           Expanded(
-            child: RefreshIndicator(
-              onRefresh: () async => ref.invalidate(checksProvider),
-              child: ListView(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+            child: PqPressable(
+              onTap: onOpen,
+              child: Row(
                 children: [
-                  const _PendingBanner(),
-                  checks.when(
-                    loading: () => const Padding(
-                      padding: EdgeInsets.only(top: 48),
-                      child: Center(child: CircularProgressIndicator()),
+                  const PqIconTile(PqIcons.alertTriangle, tone: PqTone.danger),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          reason == null || reason.isEmpty
+                              ? l.checkDetailRejectedFallback
+                              : reason,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: PqText.rowTitle(c: pq.text),
+                        ),
+                        const SizedBox(height: 3),
+                        Text(
+                          l.checksNumberDate(
+                            check.id,
+                            formatShortDateTime(check.createdAt),
+                          ),
+                          style: PqText.caption(c: pq.textMuted),
+                        ),
+                      ],
                     ),
-                    error: (e, _) => _InlineError(
-                      palette: p,
-                      message: e.toString(),
-                      onRetry: () => ref.invalidate(checksProvider),
-                    ),
-                    data: (list) {
-                      if (list.isEmpty) {
-                        return _EmptyCard(
-                            palette: p, text: context.l10n.checksEmpty);
-                      }
-                      return Column(
-                        children: [
-                          for (final c in list) ...[
-                            _CheckCard(palette: p, check: c),
-                            const SizedBox(height: 8),
-                          ],
-                        ],
-                      );
-                    },
                   ),
                 ],
               ),
             ),
           ),
-        ],
+          const SizedBox(width: 12),
+          PqPillButton(
+            label: l.checksRetake,
+            icon: PqIcons.camera,
+            semanticLabel: l.checksRetakeA11y(check.id),
+            onPressed: onRetake,
           ),
         ],
       ),
     );
   }
-
-  Future<void> _submitFlow(BuildContext context, WidgetRef ref) =>
-      showNewCheckSheet(context);
 }
 
-/// Открывает модалку отправки нового чека. Используется на экране «Мои чеки»
-/// и на главной (кнопка «Отправить чек»).
-Future<void> showNewCheckSheet(BuildContext context) {
-  return showModalBottomSheet<void>(
-    context: context,
-    backgroundColor: Colors.transparent,
-    isScrollControlled: true,
-    builder: (_) => const _NewCheckSheet(),
-  );
-}
+/// Чек на проверке: номер, дата · фото, «~24 ч обычно» и шаги прогресса.
+class _ReviewRow extends StatelessWidget {
+  const _ReviewRow({required this.check, required this.onOpen});
 
-// ── Модалка «Новый чек» ─────────────────────────────────────────────────
-
-class _NewCheckSheet extends ConsumerStatefulWidget {
-  const _NewCheckSheet();
-
-  @override
-  ConsumerState<_NewCheckSheet> createState() => _NewCheckSheetState();
-}
-
-class _NewCheckSheetState extends ConsumerState<_NewCheckSheet> {
-  final _picker = ImagePicker();
-  final List<XFile> _photos = [];
-  bool _busy = false;
-
-  Future<void> _addGallery() async {
-    final picked = await _picker.pickMultiImage();
-    if (picked.isNotEmpty) setState(() => _photos.addAll(picked));
-  }
-
-  Future<void> _addCamera() async {
-    final x = await _picker.pickImage(source: ImageSource.camera);
-    if (x != null) setState(() => _photos.add(x));
-  }
-
-  Future<void> _submit() async {
-    if (_photos.isEmpty || _busy) return;
-    setState(() => _busy = true);
-    final nav = Navigator.of(context);
-    final messenger = ScaffoldMessenger.of(context);
-    final l10n = context.l10n;
-    await ref
-        .read(uploadQueueProvider.notifier)
-        .enqueueCheck(_photos);
-    nav.pop();
-    messenger.showSnackBar(
-        SnackBar(content: Text(l10n.checksAddedUploading)));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final sheetBg = isDark ? const Color(0xFF22232B) : Colors.white; // как навбар
-    final text = isDark ? Colors.white : const Color(0xFF1A1D26);
-    final muted = isDark ? const Color(0xFF8F909A) : const Color(0xFF6B7280);
-    final zoneBg = isDark ? const Color(0xFF15161C) : Colors.white;
-    final dashed = isDark ? const Color(0xFF2A3550) : const Color(0xFFD1D5DB);
-    final accent = isDark ? const Color(0xFF6B9EF5) : const Color(0xFF2563EB);
-
-    return Container(
-      decoration: BoxDecoration(
-        color: sheetBg,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      child: SafeArea(
-        top: false,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                      color: const Color(0xFF2A3550),
-                      borderRadius: BorderRadius.circular(2)),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Text(context.l10n.checksNewCheckTitle,
-                  style: TextStyle(
-                      fontSize: 22, fontWeight: FontWeight.w700, color: text)),
-              const SizedBox(height: 16),
-              // зона добавления / превью
-              InkWell(
-                onTap: _addGallery,
-                borderRadius: BorderRadius.circular(16),
-                child: CustomPaint(
-                  painter: _DashedRectPainter(color: dashed, radius: 16),
-                  child: Container(
-                  height: 180,
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: zoneBg,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: _photos.isEmpty
-                      ? Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.add_photo_alternate_outlined,
-                                size: 40, color: accent),
-                            const SizedBox(height: 8),
-                            Text(context.l10n.checksTapToAddPhoto,
-                                style: TextStyle(fontSize: 13, color: muted)),
-                          ],
-                        )
-                      : ListView.separated(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: _photos.length,
-                          separatorBuilder: (_, __) => const SizedBox(width: 8),
-                          itemBuilder: (_, i) => _Thumb(
-                            path: _photos[i].path,
-                            onRemove: () =>
-                                setState(() => _photos.removeAt(i)),
-                          ),
-                        ),
-                ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              // сделать фото
-              SizedBox(
-                height: 44,
-                width: double.infinity,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: isDark ? null : const Color(0xFF2563EB),
-                    gradient: isDark
-                        ? const LinearGradient(
-                            colors: [Color(0xFF1A3566), Color(0xFF2D5A9E)])
-                        : null,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: _addCamera,
-                      borderRadius: BorderRadius.circular(12),
-                      child: Center(
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(Icons.photo_camera_outlined,
-                                size: 18, color: Colors.white),
-                            const SizedBox(width: 8),
-                            Text(context.l10n.checksTakePhoto,
-                                style: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white)),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              // отправить
-              SizedBox(
-                height: 52,
-                width: double.infinity,
-                child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: accent,
-                    backgroundColor: isDark ? Colors.transparent : Colors.white,
-                    side: BorderSide(color: accent),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14)),
-                  ),
-                  onPressed: _photos.isEmpty || _busy ? null : _submit,
-                  child: Text(context.l10n.checksSubmitForReview,
-                      style: const TextStyle(
-                          fontSize: 15, fontWeight: FontWeight.w600)),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _Thumb extends StatelessWidget {
-  const _Thumb({required this.path, required this.onRemove});
-  final String path;
-  final VoidCallback onRemove;
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: localPhoto(path, width: 140, height: double.infinity),
-        ),
-        Positioned(
-          top: 4,
-          right: 4,
-          child: InkWell(
-            onTap: onRemove,
-            child: Container(
-              padding: const EdgeInsets.all(2),
-              decoration: const BoxDecoration(
-                  color: Colors.black54, shape: BoxShape.circle),
-              child: const Icon(Icons.close, size: 16, color: Colors.white),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-// ── Заголовок ───────────────────────────────────────────────────────────
-
-class _Header extends StatelessWidget {
-  const _Header({
-    required this.palette,
-    required this.count,
-    required this.onSend,
-  });
-
-  final PharmPalette palette;
-  final int? count;
-  final VoidCallback onSend;
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                context.l10n.checksTitle,
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.w700,
-                  color: palette.textPrimary,
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
-            _SendButton(palette: palette, isDark: isDark, onTap: onSend),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Text(
-          context.l10n.checksTotalCount(count ?? 0),
-          style: TextStyle(fontSize: 14, color: palette.textMuted),
-        ),
-      ],
-    );
-  }
-}
-
-class _SendButton extends StatelessWidget {
-  const _SendButton({
-    required this.palette,
-    required this.isDark,
-    required this.onTap,
-  });
-
-  final PharmPalette palette;
-  final bool isDark;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final bg = isDark ? const Color(0x14FFFFFF) : palette.accent;
-    final border = isDark ? const Color(0x1FFFFFFF) : Colors.transparent;
-    final fg = isDark ? palette.textPrimary : Colors.white;
-    return Material(
-      color: bg,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-        side: BorderSide(color: border),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        child: Container(
-          height: 40,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          alignment: Alignment.center,
-          child: Text(
-            context.l10n.checksSendPhoto,
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-              color: fg,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ── Карточка чека ───────────────────────────────────────────────────────
-
-class _CheckCard extends StatelessWidget {
-  const _CheckCard({required this.palette, required this.check});
-
-  final PharmPalette palette;
   final Check check;
+  final VoidCallback onOpen;
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final cardBg = isDark ? const Color(0xFF2D2E38) : palette.card;
-    final detail = _detail(context.l10n, check);
-
-    return Material(
-      color: cardBg,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: palette.cardBorder),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: () => context.push('/app/checks/${check.id}'),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+    final pq = context.pq;
+    final l = context.l10n;
+    return PqPressable(
+      onTap: onOpen,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                const PqIconTile(PqIcons.clock, tone: PqTone.warning),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l.checkDetailTitle(check.id),
+                        style: PqText.rowTitle(c: pq.text),
+                      ),
+                      const SizedBox(height: 3),
+                      Text(
+                        l.checksDatePhotos(
+                          formatShortDateTime(check.createdAt),
+                          check.photoCount,
+                        ),
+                        style: PqText.caption(c: pq.textMuted),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      '№${check.id}',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: palette.textPrimary,
-                      ),
+                      l.checksWaitValue,
+                      style: PqText.amount(c: pq.warning),
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      context.l10n.checksCardMeta(
-                          formatDate(check.createdAt), check.photoCount),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 12, color: palette.textMuted),
+                      l.checksWaitCaption,
+                      style: PqText.caption(c: pq.textMuted),
                     ),
-                    if (detail.isNotEmpty) ...[
-                      const SizedBox(height: 2),
-                      Text(
-                        detail,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: 11, color: palette.textMuted),
-                      ),
-                    ],
                   ],
                 ),
-              ),
-              const SizedBox(width: 12),
-              _StatusChip(palette: palette, isDark: isDark, status: check.status),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  String _detail(AppLocalizations l10n, Check c) {
-    if (c.status == CheckStatus.rejected &&
-        (c.rejectReason?.isNotEmpty ?? false)) {
-      return c.rejectReason!;
-    }
-    if (c.drugs.isNotEmpty) {
-      return c.drugs.map((d) => '${d.name} ×${d.packs}').join(', ');
-    }
-    if (c.status == CheckStatus.pending || c.status == CheckStatus.aiDetected) {
-      return l10n.checksAwaitUsually24h;
-    }
-    return '';
-  }
-}
-
-class _StatusChip extends StatelessWidget {
-  const _StatusChip({
-    required this.palette,
-    required this.isDark,
-    required this.status,
-  });
-
-  final PharmPalette palette;
-  final bool isDark;
-  final CheckStatus status;
-
-  @override
-  Widget build(BuildContext context) {
-    final (String label, Color bg, Color fg) = _style(context.l10n);
-    return Container(
-      height: 22,
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(11)),
-      child: Text(
-        label.toUpperCase(),
-        style: TextStyle(
-          fontSize: 10,
-          fontWeight: FontWeight.w600,
-          letterSpacing: 0.3,
-          color: fg,
-        ),
-      ),
-    );
-  }
-
-  (String, Color, Color) _style(AppLocalizations l10n) {
-    switch (status) {
-      case CheckStatus.approved:
-        return isDark
-            ? (l10n.checksStatusApproved, const Color(0xFF173F20),
-                const Color(0xFF79D384))
-            : (l10n.checksStatusApproved, const Color(0xFF10B981),
-                Colors.white);
-      case CheckStatus.rejected:
-      case CheckStatus.aiWrong:
-        return isDark
-            ? (l10n.checksStatusRejected, const Color(0xFF5C1A28),
-                const Color(0xFFFFD9D6))
-            : (l10n.checksStatusRejected, const Color(0xFFEF4444),
-                Colors.white);
-      case CheckStatus.pending:
-      case CheckStatus.aiDetected:
-        return isDark
-            ? (l10n.checksStatusPending, const Color(0xFF4A3000),
-                const Color(0xFFFFD770))
-            : (l10n.checksStatusPending, const Color(0xFFF59E0B),
-                Colors.white);
-    }
-  }
-}
-
-// ── Вспомогательные ─────────────────────────────────────────────────────
-
-/// Очередь загрузки фото. Дизайн перенесён из макета Figma
-/// «pharmiq-checks-uploading-light» (заголовок + строки с превью, прогрессом
-/// и статусом). Данные — из [uploadQueueProvider].
-class _PendingBanner extends ConsumerWidget {
-  const _PendingBanner();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final queue =
-        ref.watch(uploadQueueProvider).asData?.value ?? const <PendingUpload>[];
-    if (queue.isEmpty) return const SizedBox.shrink();
-    final p = PharmPalette.of(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final cardBg = isDark ? const Color(0xFF2D2E38) : Colors.white;
-    final trackBg = isDark ? const Color(0xFF15161C) : const Color(0xFFF2F5F7);
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: cardBg,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: p.cardBorder),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(context.l10n.checksUploadingTitle,
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  color: p.textPrimary)),
-          const SizedBox(height: 12),
-          for (var i = 0; i < queue.length; i++) ...[
-            _QueueRow(
-              palette: p,
-              item: queue[i],
-              trackBg: trackBg,
-              // Первый в очереди грузится сейчас (если нет ошибки), остальные ждут.
-              active: i == 0 && queue[i].lastError == null,
-              onRetry: () =>
-                  ref.read(uploadQueueProvider.notifier).retryNow(),
+              ],
             ),
-            if (i != queue.length - 1) const SizedBox(height: 12),
+            const SizedBox(height: 14),
+            const CheckSteps(stage: CheckStage.review),
           ],
-        ],
+        ),
       ),
     );
   }
 }
 
+/// Чек из очереди загрузки (ещё не дошёл до сервера).
 class _QueueRow extends StatelessWidget {
   const _QueueRow({
-    required this.palette,
     required this.item,
-    required this.trackBg,
     required this.active,
     required this.onRetry,
   });
 
-  final PharmPalette palette;
   final PendingUpload item;
-  final Color trackBg;
   final bool active;
   final VoidCallback onRetry;
 
   @override
   Widget build(BuildContext context) {
-    final path = item.filePaths.isNotEmpty ? item.filePaths.first : null;
-    final name =
-        path == null ? context.l10n.checksPhotoFallback : path.split('/').last;
-    final hasError = item.lastError != null;
-    return SizedBox(
-      height: 48,
+    final pq = context.pq;
+    final l = context.l10n;
+    final failed = item.lastError != null;
+    final path = item.filePaths.isEmpty ? null : item.filePaths.first;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 14),
       child: Row(
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: path != null
-                ? localPhoto(path, width: 48, height: 48)
-                : Container(width: 48, height: 48, color: trackBg),
+            borderRadius: BorderRadius.circular(12),
+            child:
+                path == null
+                    ? const PqIconTile(PqIcons.receipt, tone: PqTone.warning)
+                    : SizedBox.square(
+                      dimension: 44,
+                      child: localPhoto(path, width: 44, height: 44),
+                    ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: palette.textPrimary)),
-                const SizedBox(height: 8),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(3),
-                  child: SizedBox(
-                    height: 6,
-                    child: active
-                        ? LinearProgressIndicator(
-                            backgroundColor: trackBg,
-                            valueColor: const AlwaysStoppedAnimation(
-                                Color(0xFF1A75FF)),
-                          )
-                        : Container(color: trackBg),
-                  ),
+                Text(
+                  failed ? l.checksUploadQueued : l.checksUploadingRow,
+                  style: PqText.rowTitle(c: pq.text),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  failed
+                      ? l.checksUploadAuto
+                      : l.checksPhotoCount(item.filePaths.length),
+                  style: PqText.caption(c: pq.textMuted),
                 ),
               ],
             ),
           ),
           const SizedBox(width: 12),
-          _StatusDot(active: active, hasError: hasError, onRetry: onRetry),
+          if (failed)
+            PqPillButton(
+              label: l.asyncRetry,
+              icon: PqIcons.refresh,
+              background: pq.surfaceAlt,
+              foreground: pq.accentText,
+              onPressed: onRetry,
+            )
+          else if (active)
+            PqSpinner(color: pq.accent, trackColor: pq.borderStrong)
+          else
+            PqIcon(PqIcons.clock, size: 20, color: pq.textMuted),
         ],
       ),
     );
   }
 }
 
-class _StatusDot extends StatelessWidget {
-  const _StatusDot({
-    required this.active,
-    required this.hasError,
-    required this.onRetry,
-  });
+/// «История»: одобренные чеки, сгруппированные по месяцам.
+class _HistoryCard extends StatelessWidget {
+  const _HistoryCard({required this.checks, required this.onOpen});
 
-  final bool active;
-  final bool hasError;
-  final VoidCallback onRetry;
+  final List<Check> checks;
+  final ValueChanged<Check> onOpen;
 
   @override
   Widget build(BuildContext context) {
-    final Color bg;
-    final Widget child;
-    if (hasError) {
-      bg = const Color(0x1A1A75FF);
-      child = const Icon(Icons.refresh, size: 16, color: Color(0xFF1A75FF));
-    } else if (active) {
-      bg = const Color(0x1A1A75FF);
-      child = const SizedBox(
-        width: 14,
-        height: 14,
-        child: CircularProgressIndicator(
-            strokeWidth: 2,
-            valueColor: AlwaysStoppedAnimation(Color(0xFF1A75FF))),
-      );
-    } else {
-      bg = const Color(0x1A4A5568);
-      child = const Icon(Icons.schedule, size: 16, color: Color(0xFF6B7280));
+    final pq = context.pq;
+    final l = context.l10n;
+    final groups = <String, List<Check>>{};
+    for (final c in checks) {
+      final d = DateTime.tryParse(c.createdAt)?.toLocal();
+      final key = d == null ? '' : '${l.checksMonth('m${d.month}')} ${d.year}';
+      (groups[key] ??= []).add(c);
     }
-    final dot = Container(
-      width: 28,
-      height: 28,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(color: bg, shape: BoxShape.circle),
-      child: child,
-    );
-    return hasError ? GestureDetector(onTap: onRetry, child: dot) : dot;
-  }
-}
-
-/// Пунктирная рамка со скруглением (зона добавления фото в модалке «Новый чек»).
-class _DashedRectPainter extends CustomPainter {
-  const _DashedRectPainter({required this.color, required this.radius});
-
-  final Color color;
-  final double radius;
-
-  static const _stroke = 2.0;
-  static const _dash = 6.0;
-  static const _gap = 4.0;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..strokeWidth = _stroke
-      ..style = PaintingStyle.stroke;
-    final rrect = RRect.fromRectAndRadius(
-      const Offset(_stroke / 2, _stroke / 2) &
-          Size(size.width - _stroke, size.height - _stroke),
-      Radius.circular(radius),
-    );
-    final source = Path()..addRRect(rrect);
-    final dashed = Path();
-    for (final metric in source.computeMetrics()) {
-      var dist = 0.0;
-      while (dist < metric.length) {
-        dashed.addPath(metric.extractPath(dist, dist + _dash), Offset.zero);
-        dist += _dash + _gap;
+    final children = <Widget>[];
+    var n = 0;
+    for (final e in groups.entries) {
+      if (e.key.isNotEmpty) {
+        children.add(
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 14, 0, 2),
+            child: Text(
+              e.key.toUpperCase(),
+              style: PqText.overline(c: pq.textMuted),
+            ),
+          ),
+        );
+      }
+      for (final c in e.value) {
+        n++;
+        children.add(
+          Container(
+            decoration: BoxDecoration(
+              border:
+                  n < checks.length
+                      ? Border(bottom: BorderSide(color: pq.divider))
+                      : null,
+            ),
+            child: _HistoryRow(check: c, onTap: () => onOpen(c)),
+          ),
+        );
       }
     }
-    canvas.drawPath(dashed, paint);
+    return PqCard(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: children,
+      ),
+    );
   }
-
-  @override
-  bool shouldRepaint(_DashedRectPainter old) =>
-      old.color != color || old.radius != radius;
 }
 
-class _InlineError extends StatelessWidget {
-  const _InlineError({
-    required this.palette,
-    required this.message,
-    required this.onRetry,
-  });
+class _HistoryRow extends StatelessWidget {
+  const _HistoryRow({required this.check, required this.onTap});
 
-  final PharmPalette palette;
-  final String message;
-  final VoidCallback onRetry;
+  final Check check;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
+    final l = context.l10n;
+    final packs = check.drugs.fold<int>(0, (s, d) => s + d.packs);
+    final names = check.drugs
+        .map((d) => d.name)
+        .where((s) => s.isNotEmpty)
+        .join(', ');
+    final approved = l.checksStatusApproved;
+    return PqListRow(
+      title: names.isEmpty ? l.checkDetailTitle(check.id) : names,
+      subtitle: l.checksNumberDate(
+        check.id,
+        formatShortDateTime(check.createdAt),
+      ),
+      icon: CheckStage.approved.icon,
+      tone: CheckStage.approved.tone,
+      value: packs > 0 ? l.checkDetailPacks(packs) : approved,
+      valueCaption: packs > 0 ? approved.toLowerCase() : null,
+      valueTone: PqTone.success,
+      onTap: onTap,
+    );
+  }
+}
+
+class _ShowAll extends StatelessWidget {
+  const _ShowAll({required this.label, required this.onTap});
+
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final pq = context.pq;
+    return PqPressable(
+      onTap: onTap,
+      semanticLabel: label,
+      child: Container(
+        height: 48,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: pq.border),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Flexible(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: PqText.link(c: pq.accent),
+              ),
+            ),
+            const SizedBox(width: 4),
+            PqIcon(PqIcons.chevronRight, size: 16, color: pq.accent),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── Пустое состояние (макет ChecksEmpty) ────────────────────────────────
+
+class _EmptyHero extends StatelessWidget {
+  const _EmptyHero();
+
+  @override
+  Widget build(BuildContext context) {
+    final pq = context.pq;
+    final l = context.l10n;
     return Padding(
-      padding: const EdgeInsets.only(top: 40),
+      padding: const EdgeInsets.fromLTRB(8, 20, 8, 4),
       child: Column(
         children: [
-          Icon(Icons.error_outline,
-              size: 40, color: Theme.of(context).colorScheme.error),
+          PqBob(
+            child: Container(
+              width: 96,
+              height: 96,
+              decoration: BoxDecoration(
+                color: pq.accentSoft,
+                borderRadius: BorderRadius.circular(24),
+              ),
+              alignment: Alignment.center,
+              child: PqIcon(PqIcons.receipt, size: 44, color: pq.accentText),
+            ),
+          ),
+          const SizedBox(height: 20),
+          Text(
+            l.checksEmptyTitle,
+            textAlign: TextAlign.center,
+            style: PqText.emptyTitle(c: pq.text),
+          ),
           const SizedBox(height: 12),
-          Text(message,
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 300),
+            child: Text(
+              l.checksEmptyText,
               textAlign: TextAlign.center,
-              style: TextStyle(color: palette.textMuted)),
-          const SizedBox(height: 12),
-          FilledButton.tonal(
-              onPressed: onRetry, child: Text(context.l10n.checksRetry)),
+              style: PqText.text(
+                15,
+                FontWeight.w400,
+                height: 1.45,
+                c: pq.textMuted,
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 }
 
-class _EmptyCard extends StatelessWidget {
-  const _EmptyCard({required this.palette, required this.text});
-
-  final PharmPalette palette;
-  final String text;
+class _HowToCard extends StatelessWidget {
+  const _HowToCard();
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF2D2E38) : palette.card,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: palette.cardBorder),
+    final pq = context.pq;
+    final l = context.l10n;
+    final rows = [
+      (PqIcons.scan, l.checksHow1Title, l.checksHow1Text),
+      (PqIcons.swipe, l.checksHow2Title, l.checksHow2Text),
+      (PqIcons.sun, l.checksHow3Title, l.checksHow3Text),
+    ];
+    return PqCard(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 12, 0, 4),
+            child: Text(
+              l.checksHowToTitle.toUpperCase(),
+              style: PqText.overline(c: pq.textMuted),
+            ),
+          ),
+          for (var i = 0; i < rows.length; i++)
+            Container(
+              decoration: BoxDecoration(
+                border:
+                    i < rows.length - 1
+                        ? Border(bottom: BorderSide(color: pq.divider))
+                        : null,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                child: Row(
+                  children: [
+                    PqIconTile(rows[i].$1, size: 40),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            rows[i].$2,
+                            style: PqText.text(15, FontWeight.w600, c: pq.text),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(rows[i].$3, style: PqText.body(c: pq.textMuted)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+        ],
       ),
-      child: Text(
-        text,
-        textAlign: TextAlign.center,
-        style: TextStyle(color: palette.textMuted),
+    );
+  }
+}
+
+// ── Плавающая кнопка «Отправить чек» ────────────────────────────────────
+
+class _SendFab extends StatelessWidget {
+  const _SendFab({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l10n;
+    return PqAnimate(
+      fx: PqFx.pop,
+      duration: const Duration(milliseconds: 450),
+      delay: const Duration(milliseconds: 350),
+      child: PqPressable(
+        onTap: onTap,
+        semanticLabel: l.checksSendCheck,
+        child: Builder(
+          builder: (context) {
+            final pq = context.pq;
+            final pressed = PqPressedScope.of(context);
+            return AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              height: 56,
+              padding: const EdgeInsets.fromLTRB(18, 0, 22, 0),
+              decoration: BoxDecoration(
+                color: pressed ? pq.accentPressed : pq.accent,
+                borderRadius: BorderRadius.circular(28),
+                boxShadow: [
+                  BoxShadow(
+                    color: pq.accentShadow,
+                    offset: const Offset(0, 12),
+                    blurRadius: 24,
+                    spreadRadius: -12,
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  PqIcon(PqIcons.camera, size: 22, color: pq.onAccent),
+                  const SizedBox(width: 10),
+                  Text(l.checksSendCheck, style: PqText.button(c: pq.onAccent)),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

@@ -1,17 +1,18 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:url_launcher/url_launcher.dart';
+
 import '../../core/api/providers.dart';
+import '../../core/design/design.dart';
 import '../../core/l10n/l10n.dart';
 import '../../core/models/learn.dart';
-import '../../widgets/async_view.dart';
-import '../shared/widgets/screen_decor.dart';
+import '../../widgets/pq_states.dart';
+import 'learn/learn_widgets.dart';
+import 'learn/quiz_result_views.dart';
 import 'providers.dart';
 
-/// Тест урока. Перенесён один в один из макета Figma
-/// «pharmiq-learning-testing» + экраны результата (успех/провал).
+/// Тест урока (макет Test) + результаты (TestPassed / TestFailed).
 class QuizScreen extends ConsumerWidget {
   const QuizScreen({super.key, required this.courseId, required this.lessonId});
 
@@ -20,26 +21,47 @@ class QuizScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final quiz = ref.watch(quizProvider((courseId, lessonId)));
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF0D1117) : const Color(0xFFF5F6FA),
-      body: Stack(children: [Positioned.fill(child: ScreenDecor(quizDecor)), SafeArea(
-        bottom: false,
-        child: AsyncView(
-          value: quiz,
-          onRetry: () => ref.invalidate(quizProvider((courseId, lessonId))),
-          data: (q) => _QuizRunner(
-              quiz: q, courseId: courseId, lessonId: lessonId),
+    final key = (courseId, lessonId);
+    final quiz = ref.watch(quizProvider(key));
+    if (quiz.hasValue && !quiz.hasError) {
+      return PqScreen(
+        safeBottom: false,
+        child: _QuizRunner(
+          quiz: quiz.requireValue,
+          courseId: courseId,
+          lessonId: lessonId,
         ),
-      )]),
+      );
+    }
+    final l = context.l10n;
+    return PqScreen(
+      child: Column(
+        children: [
+          PqTopBar(
+            title: l.learnRowQuiz,
+            backLabel: l.learnBack,
+            onBack: () => learnBack(context, '/app/learn/$courseId'),
+          ),
+          Expanded(
+            child: PqAsync<Quiz>(
+              value: quiz,
+              loading: PqLoadingKind.spinner,
+              onRetry: () => ref.invalidate(quizProvider(key)),
+              data: (_) => const SizedBox.shrink(),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
 
 class _QuizRunner extends ConsumerStatefulWidget {
-  const _QuizRunner(
-      {required this.quiz, required this.courseId, required this.lessonId});
+  const _QuizRunner({
+    required this.quiz,
+    required this.courseId,
+    required this.lessonId,
+  });
 
   final Quiz quiz;
   final int courseId;
@@ -51,19 +73,33 @@ class _QuizRunner extends ConsumerStatefulWidget {
 
 class _QuizRunnerState extends ConsumerState<_QuizRunner> {
   final Map<int, dynamic> _answers = {};
+  final Map<int, TextEditingController> _numeric = {};
+  final _scroll = ScrollController();
   int _index = 0;
   bool _submitting = false;
   QuizResult? _result;
 
+  /// Курс на момент отправки — чтобы понять, пройден ли он целиком.
+  CourseDetail? _courseBefore;
+
+  @override
+  void dispose() {
+    for (final c in _numeric.values) {
+      c.dispose();
+    }
+    _scroll.dispose();
+    super.dispose();
+  }
+
   Future<void> _submit() async {
     if (_submitting) return;
     setState(() => _submitting = true);
-    final answers = <QuizAnswer>[];
-    for (final q in widget.quiz.questions) {
-      final a = _answers[q.id];
-      answers.add(QuizAnswer(a ?? _emptyFor(q)));
-    }
-    final messenger = ScaffoldMessenger.of(context);
+    _courseBefore =
+        ref.read(courseDetailProvider(widget.courseId)).asData?.value;
+    final answers = <QuizAnswer>[
+      for (final q in widget.quiz.questions)
+        QuizAnswer(_answers[q.id] ?? _emptyFor(q)),
+    ];
     try {
       final res = await ref
           .read(apiProvider)
@@ -71,19 +107,22 @@ class _QuizRunnerState extends ConsumerState<_QuizRunner> {
           .submitQuiz(widget.courseId, widget.lessonId, answers);
       ref.invalidate(courseDetailProvider(widget.courseId));
       ref.invalidate(walletProvider);
+      if (res.passed) HapticFeedback.mediumImpact();
       if (mounted) setState(() => _result = res);
     } catch (e) {
-      messenger.showSnackBar(SnackBar(content: Text(e.toString())));
+      if (mounted) {
+        showPqToast(context, learnErrorText(context, e), tone: PqTone.danger);
+      }
     } finally {
       if (mounted) setState(() => _submitting = false);
     }
   }
 
   Object _emptyFor(QuizQuestion q) => switch (q.type) {
-        QuizQuestionType.single => -1,
-        QuizQuestionType.numeric => '',
-        _ => <int>[],
-      };
+    QuizQuestionType.single => -1,
+    QuizQuestionType.numeric => '',
+    _ => <int>[],
+  };
 
   bool _answered(QuizQuestion q) {
     final a = _answers[q.id];
@@ -94,645 +133,448 @@ class _QuizRunnerState extends ConsumerState<_QuizRunner> {
     };
   }
 
+  void _go(int index) {
+    FocusScope.of(context).unfocus();
+    setState(() => _index = index);
+    if (_scroll.hasClients) _scroll.jumpTo(0);
+  }
+
+  void _back() {
+    if (_result == null && _index > 0) {
+      _go(_index - 1);
+    } else {
+      learnBack(context, '/app/learn/${widget.courseId}');
+    }
+  }
+
+  void _retry() => setState(() {
+    _result = null;
+    _index = 0;
+    _answers.clear();
+    for (final c in _numeric.values) {
+      c.clear();
+    }
+  });
+
+  /// Следующий непройденный шаг после теста (для «Продолжить курс»).
+  Lesson? _nextStep(CourseDetail? course) {
+    if (course == null) return null;
+    final ls = course.lessons;
+    final cur = ls.indexWhere((l) => l.id == widget.lessonId);
+    for (var i = cur + 1; i < ls.length; i++) {
+      if (!ls[i].completed) return ls[i];
+    }
+    for (var i = 0; i < cur; i++) {
+      if (!ls[i].completed) return ls[i];
+    }
+    return null;
+  }
+
+  /// Видеоурок перед тестом (для «Пересмотреть урок»).
+  Lesson? _lessonBefore(CourseDetail? course) {
+    if (course == null) return null;
+    final ls = course.lessons;
+    final cur = ls.indexWhere((l) => l.id == widget.lessonId);
+    for (var i = cur - 1; i >= 0; i--) {
+      if (ls[i].kind != 'quiz') return ls[i];
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (_result != null) {
-      return _result!.passed
-          ? _SuccessView(
-              result: _result!,
-              title: widget.quiz.title,
-              onHome: () => context.go('/app'),
-            )
-          : _FailView(
-              result: _result!,
-              total: widget.quiz.questions.length,
-              passScore: widget.quiz.passScore,
-              onRetry: () => setState(() {
-                _result = null;
-                _index = 0;
-                _answers.clear();
-              }),
-              onBack: () =>
-                  context.canPop() ? context.pop() : context.go('/app/learn'),
-            );
+    final l = context.l10n;
+    final course =
+        ref.watch(courseDetailProvider(widget.courseId)).asData?.value;
+    final lesson =
+        course?.lessons.where((x) => x.id == widget.lessonId).firstOrNull;
+    final reward = lesson?.rewardIqc ?? 0;
+
+    final result = _result;
+    if (result != null) {
+      final before = _courseBefore ?? course;
+      final courseDone =
+          before != null &&
+          before.lessons.every((x) => x.id == widget.lessonId || x.completed);
+      final next = _nextStep(before);
+      final title = before?.title ?? widget.quiz.title;
+      if (result.passed) {
+        return QuizPassedView(
+          title: title,
+          score: result.score,
+          total: result.total,
+          reward: result.rewardIqc,
+          courseDone: courseDone || next == null,
+          onBack: _back,
+          onWallet: () => context.go('/app/wallet'),
+          onContinue:
+              courseDone || next == null
+                  ? () => context.go('/app/learn')
+                  : () => context.pushReplacement(
+                    learnStepPath(widget.courseId, next),
+                  ),
+        );
+      }
+      final rewatch = _lessonBefore(before);
+      return QuizFailedView(
+        title: title,
+        score: result.score,
+        total: result.total,
+        reward: reward,
+        onBack: _back,
+        onRetry: _retry,
+        onRewatch:
+            rewatch == null
+                ? _back
+                : () => context.pushReplacement(
+                  learnStepPath(widget.courseId, rewatch),
+                ),
+      );
     }
 
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final text = isDark ? const Color(0xFFE4E2ED) : const Color(0xFF1A1D26);
-    final muted = isDark ? const Color(0xFF8B949E) : const Color(0xFF6B7280);
     final n = widget.quiz.questions.length;
+    if (n == 0) {
+      return Column(
+        children: [
+          PqTopBar(
+            title: widget.quiz.title,
+            backLabel: l.learnBack,
+            onBack: _back,
+          ),
+          Expanded(
+            child: PqEmptyState(
+              icon: PqIcons.checkSquare,
+              title: widget.quiz.title,
+            ),
+          ),
+        ],
+      );
+    }
     final q = widget.quiz.questions[_index];
     final isLast = _index == n - 1;
-    final frac = (_index + 1) / n;
+    final topTitle =
+        course == null
+            ? widget.quiz.title
+            : l.learnTestTopBar(learnShortTitle(course.title));
 
-    return Column(
+    return Stack(
       children: [
-        // top-app-bar
-        SizedBox(
-          height: 56,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 16),
-                  child: InkWell(
-                    onTap: () => _index > 0
-                        ? setState(() => _index--)
-                        : context.canPop()
-                            ? context.pop()
-                            : context.go('/app/learn'),
-                    borderRadius: BorderRadius.circular(20),
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                          color: isDark
-                              ? const Color(0x14FFFFFF)
-                              : const Color(0xFFEEF2FF),
-                          borderRadius: BorderRadius.circular(20)),
-                      child: Icon(Icons.arrow_back, size: 20, color: text),
+        Column(
+          children: [
+            PqTopBar(title: topTitle, backLabel: l.learnBack, onBack: _back),
+            Expanded(
+              child: ListView(
+                controller: _scroll,
+                padding: EdgeInsets.fromLTRB(
+                  16,
+                  0,
+                  16,
+                  learnFooterClearance(context),
+                ),
+                children: [
+                  PqAnimate(
+                    child: _ProgressHeader(
+                      index: _index,
+                      total: n,
+                      reward: reward,
                     ),
                   ),
-                ),
+                  const SizedBox(height: 24),
+                  // Смена вопроса: новый ключ — каскад pqUp проигрывается заново.
+                  KeyedSubtree(
+                    key: ValueKey(_index),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        PqAnimate(
+                          delay: PqMotion.staggerDelay(1),
+                          child: _QuestionText(question: q),
+                        ),
+                        const SizedBox(height: 24),
+                        PqAnimate(
+                          delay: PqMotion.staggerDelay(2),
+                          child: _answersFor(q),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              Text(context.l10n.quizTitle,
-                  style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w600,
-                      color: text)),
+            ),
+          ],
+        ),
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: 0,
+          child: LearnFooter(
+            children: [
+              LearnTrailingButton(
+                label: isLast ? l.learnFinishTest : l.learnNext,
+                icon: isLast ? PqIcons.check : PqIcons.chevronRight,
+                loading: _submitting,
+                loadingLabel: l.learnSubmitting,
+                onPressed:
+                    !_answered(q)
+                        ? null
+                        : isLast
+                        ? _submit
+                        : () => _go(_index + 1),
+              ),
             ],
           ),
         ),
-        Expanded(
-          child: ListView(
-            padding: const EdgeInsets.only(top: 16, bottom: 16),
-            children: [
-              // progress
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+      ],
+    );
+  }
+
+  Widget _answersFor(QuizQuestion q) {
+    final l = context.l10n;
+    final pq = context.pq;
+    if (q.type == QuizQuestionType.numeric) {
+      final ctrl = _numeric.putIfAbsent(
+        q.id,
+        () => TextEditingController(text: _answers[q.id] as String? ?? ''),
+      );
+      return PqTextField(
+        controller: ctrl,
+        label: l.quizAnswerLabel,
+        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        textInputAction: TextInputAction.done,
+        suffix:
+            q.numericHint == null
+                ? null
+                : Text(q.numericHint!, style: PqText.field(c: pq.textMuted)),
+        onChanged: (v) => setState(() => _answers[q.id] = v),
+      );
+    }
+
+    final options = q.options ?? const <String>[];
+    final multi = q.type != QuizQuestionType.single;
+    final a = _answers[q.id];
+    final single = a is int ? a : -1;
+    final picked = a is List ? a.cast<int>() : const <int>[];
+    return Semantics(
+      container: true,
+      explicitChildNodes: true,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (var i = 0; i < options.length; i++) ...[
+            if (i > 0) const SizedBox(height: 10),
+            _AnswerOption(
+              letter: i < 26 ? String.fromCharCode(65 + i) : '${i + 1}',
+              label: options[i],
+              multi: multi,
+              selected: multi ? picked.contains(i) : single == i,
+              onTap: () {
+                HapticFeedback.selectionClick();
+                setState(() {
+                  if (multi) {
+                    final list = [...picked];
+                    list.contains(i) ? list.remove(i) : list.add(i);
+                    list.sort();
+                    _answers[q.id] = list;
+                  } else {
+                    _answers[q.id] = i;
+                  }
+                });
+              },
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// «Вопрос 1 из 5 · Награда +30 IQC» и сегменты прогресса (pq-seg).
+class _ProgressHeader extends StatelessWidget {
+  const _ProgressHeader({
+    required this.index,
+    required this.total,
+    required this.reward,
+  });
+
+  final int index;
+  final int total;
+  final int reward;
+
+  @override
+  Widget build(BuildContext context) {
+    final pq = context.pq;
+    final l = context.l10n;
+    // Номер вопроса выделен жирным: вставляем маркер и режем строку по нему.
+    const mark = '\u0001';
+    final parts = l.learnQuestionOf(mark, total).split(mark);
+    final base = PqText.text(14, FontWeight.w400, c: pq.textMuted);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Text.rich(
+                TextSpan(
+                  style: base,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(context.l10n.quizQuestionOf(_index + 1, n),
-                            style: TextStyle(fontSize: 13, color: muted)),
-                        Text('${(frac * 100).round()}%',
-                            style: TextStyle(fontSize: 13, color: muted)),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(3),
-                      child: Container(
-                        height: 6,
-                        color: const Color(0xFF1E2535),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: FractionallySizedBox(
-                            widthFactor: frac,
-                            child: const ColoredBox(color: Color(0xFF1D4068)),
-                          ),
-                        ),
+                    TextSpan(text: parts.first),
+                    TextSpan(
+                      text: '${index + 1}',
+                      style: base.copyWith(
+                        color: pq.text,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
+                    if (parts.length > 1)
+                      TextSpan(text: parts.sublist(1).join()),
                   ],
                 ),
               ),
-              const SizedBox(height: 16),
-              // question card
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                      color: isDark ? const Color(0xFF131A28) : Colors.white,
-                      borderRadius: BorderRadius.circular(16)),
-                  child: Text(q.text,
-                      style: TextStyle(
-                          fontSize: 16,
-                          height: 1.5,
-                          fontWeight: FontWeight.w600,
-                          color: text)),
-                ),
-              ),
-              const SizedBox(height: 16),
-              // options
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: _Options(
-                  question: q,
-                  answer: _answers[q.id],
-                  isDark: isDark,
-                  onChanged: (v) => setState(() => _answers[q.id] = v),
-                ),
+            ),
+            if (reward > 0) ...[
+              Text(l.learnTileReward, style: base),
+              const SizedBox(width: 4),
+              // Метка — inline-элемент строки: её поля (4 сверху/снизу) не
+              // увеличивают высоту строки 14×1.4 — сжимаем бокс 24.8 → 19.6.
+              Align(
+                heightFactor: 19.6 / 24.8,
+                child: PqRewardTag.iqc(l.learnIqc(reward)),
               ),
             ],
-          ),
+          ],
         ),
-        // footer
-        SafeArea(
-          top: false,
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: SizedBox(
-              height: 52,
-              width: double.infinity,
-              child: FilledButton(
-                style: FilledButton.styleFrom(
-                  backgroundColor: const Color(0xFF1D4068),
-                  foregroundColor: Colors.white,
-                  disabledBackgroundColor:
-                      const Color(0xFF1D4068).withValues(alpha: 0.4),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16)),
-                ),
-                onPressed: !_answered(q) || _submitting
-                    ? null
-                    : isLast
-                        ? _submit
-                        : () => setState(() => _index++),
-                child: _submitting
-                    ? const SizedBox(
-                        height: 22,
-                        width: 22,
-                        child: CircularProgressIndicator(strokeWidth: 2))
-                    : Text(
-                        isLast ? context.l10n.quizFinish : context.l10n.quizNext,
-                        style: const TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.w600)),
-              ),
-            ),
-          ),
+        const SizedBox(height: 10),
+        PqSegmentProgress(
+          total: total,
+          filled: index + 1,
+          fillColor: pq.accent,
+          trackColor: pq.isDark ? pq.border : const Color(0xFFE5E7EB),
         ),
       ],
     );
   }
 }
 
-class _Options extends StatelessWidget {
-  const _Options({
-    required this.question,
-    required this.answer,
-    required this.isDark,
-    required this.onChanged,
-  });
+class _QuestionText extends StatelessWidget {
+  const _QuestionText({required this.question});
 
   final QuizQuestion question;
-  final dynamic answer;
-  final bool isDark;
-  final ValueChanged<dynamic> onChanged;
-
-  static const _letters = ['A', 'B', 'C', 'D', 'E', 'F'];
 
   @override
   Widget build(BuildContext context) {
-    final options = question.options ?? const [];
-    final text = isDark ? const Color(0xFFE4E2ED) : const Color(0xFF1A1D26);
-
-    if (question.type == QuizQuestionType.numeric) {
-      return TextField(
-        keyboardType: const TextInputType.numberWithOptions(decimal: true),
-        style: TextStyle(color: text),
-        decoration: InputDecoration(
-          labelText: context.l10n.quizAnswerLabel,
-          suffixText: question.numericHint,
-          border: const OutlineInputBorder(),
-        ),
-        onChanged: onChanged,
-      );
-    }
-
-    final multi = question.type == QuizQuestionType.multi;
-    final selectedSingle = answer is int ? answer as int : -1;
-    final selectedMulti = (answer as List?)?.cast<int>() ?? const <int>[];
-
+    final pq = context.pq;
+    final img = question.imageUrl;
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        for (var i = 0; i < options.length; i++) ...[
-          _OptionTile(
-            letter: i < _letters.length ? _letters[i] : '${i + 1}',
-            label: options[i],
-            selected: multi ? selectedMulti.contains(i) : selectedSingle == i,
-            isDark: isDark,
-            onTap: () {
-              if (multi) {
-                final list = [...selectedMulti];
-                list.contains(i) ? list.remove(i) : list.add(i);
-                list.sort();
-                onChanged(list);
-              } else {
-                onChanged(i);
-              }
-            },
+        Text(
+          question.text,
+          style: PqText.heading(
+            22,
+            FontWeight.w700,
+            height: 1.15,
+            ls: -.3,
+            c: pq.text,
           ),
-          const SizedBox(height: 12),
+        ),
+        if (img != null && img.isNotEmpty) ...[
+          const SizedBox(height: 16),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: Image.network(
+              img,
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+            ),
+          ),
         ],
       ],
     );
   }
 }
 
-class _OptionTile extends StatelessWidget {
-  const _OptionTile({
+/// Вариант ответа (макет Test): ≥60, радиус 16, буква в круге 32; выбран —
+/// рамка 2 акцентом, мягкая заливка и «нажатие» pqPress .3s.
+class _AnswerOption extends StatelessWidget {
+  const _AnswerOption({
     required this.letter,
     required this.label,
     required this.selected,
-    required this.isDark,
+    required this.multi,
     required this.onTap,
   });
 
   final String letter;
   final String label;
   final bool selected;
-  final bool isDark;
+  final bool multi;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final text = isDark ? const Color(0xFFE4E2ED) : const Color(0xFF1A1D26);
-    final base = isDark ? const Color(0xFF0D1520) : Colors.white;
-    final border = isDark ? const Color(0xFF1E2535) : const Color(0xFFEBEDF0);
-    const accent = Color(0xFF1D4068);
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: selected ? accent.withValues(alpha: 0.25) : base,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-              color: selected ? const Color(0xFF6B9EF5) : border,
-              width: selected ? 1.5 : 1),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 24,
-              height: 24,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: selected ? const Color(0xFF6B9EF5) : const Color(0xFF1E2535),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(letter,
-                  style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
-                      color: selected ? Colors.white : text)),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(label,
-                  style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: text)),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// ── Результат: успех ────────────────────────────────────────────────────
-
-class _SuccessView extends StatelessWidget {
-  const _SuccessView(
-      {required this.result, required this.title, required this.onHome});
-
-  final QuizResult result;
-  final String title;
-  final VoidCallback onHome;
-
-  @override
-  Widget build(BuildContext context) {
-    final pct = result.total == 0
-        ? 0
-        : (result.score / result.total * 100).round();
-    return Container(
-      color: const Color(0xFF0A0F1E),
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 24),
-        child: Column(
-          children: [
-            // cap
-            Container(
-              width: 140,
-              height: 140,
-              decoration: BoxDecoration(
-                color: const Color(0xFFF59E0B),
-                borderRadius: BorderRadius.circular(70),
-                boxShadow: const [
-                  BoxShadow(
-                      color: Color(0x54F59E0B),
-                      blurRadius: 36,
-                      offset: Offset(0, 12)),
-                ],
-              ),
-              child: const Icon(Icons.school, size: 64, color: Colors.white),
-            ),
-            const SizedBox(height: 24),
-            Text(context.l10n.quizCongrats,
-                style: const TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.w800,
-                    color: Colors.white)),
-            const SizedBox(height: 8),
-            Text(context.l10n.quizPassed,
-                style: const TextStyle(
-                    fontSize: 16, color: Color(0xFF9CA3AF))),
-            const SizedBox(height: 24),
-            // reward card
-            _Card(
-              child: Column(
-                children: [
-                  Text(context.l10n.quizYouEarned,
-                      style: const TextStyle(
-                          fontSize: 13, color: Color(0xFF9CA3AF))),
-                  const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.alphabetic,
-                    children: [
-                      Text('+ ${result.rewardIqc}',
-                          style: const TextStyle(
-                              fontSize: 44,
-                              fontWeight: FontWeight.w800,
-                              color: Color(0xFFF59E0B))),
-                      const SizedBox(width: 10),
-                      const Text('IQC',
-                          style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xFFF59E0B))),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  const Divider(color: Color(0x1AFFFFFF), height: 1),
-                  const SizedBox(height: 12),
-                  Text(title,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                          fontSize: 13, color: Color(0xFF9CA3AF))),
-                ],
+    final pq = context.pq;
+    final selBg = pq.isDark ? pq.accentSoft : const Color(0xFFEEF2FF);
+    return Semantics(
+      checked: multi ? selected : null,
+      selected: multi ? null : selected,
+      inMutuallyExclusiveGroup: !multi,
+      child: PqPressable(
+        onTap: onTap,
+        child: PqAnimate(
+          fx: PqFx.press,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+          play: selected,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            curve: PqMotion.ease,
+            constraints: const BoxConstraints(minHeight: 60),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: selected ? selBg : pq.surface,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: selected ? pq.accent : pq.border,
+                width: selected ? 2 : 1,
               ),
             ),
-            const SizedBox(height: 16),
-            Row(
+            child: Row(
               children: [
-                Expanded(
-                    child: _Stat(
-                        value: '${result.score}/${result.total}',
-                        label: context.l10n.quizCorrectLabel,
-                        color: Colors.white)),
-                const SizedBox(width: 16),
-                Expanded(
-                    child: _Stat(
-                        value: '$pct%',
-                        label: context.l10n.quizResultLabel,
-                        color: const Color(0xFFF59E0B))),
-              ],
-            ),
-            const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              height: 56,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                      colors: [Color(0xFFF59E0B), Color(0xFFFBBF24)]),
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: onHome,
-                    borderRadius: BorderRadius.circular(14),
-                    child: Center(
-                      child: Text(context.l10n.quizToHome,
-                          style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w800,
-                              color: Colors.white)),
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  width: 32,
+                  height: 32,
+                  decoration: BoxDecoration(
+                    color: selected ? pq.accent : pq.surfaceAlt,
+                    shape: BoxShape.circle,
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    letter,
+                    style: PqText.text(
+                      14,
+                      FontWeight.w700,
+                      c: selected ? pq.onAccent : pq.textSecondary,
                     ),
                   ),
                 ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            InkWell(
-              onTap: () => launchUrl(
-                  Uri.parse('https://pharmiq.uz/certificates'),
-                  mode: LaunchMode.externalApplication),
-              child: Text(context.l10n.quizViewCertificate,
-                  style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFFF59E0B),
-                      decoration: TextDecoration.underline)),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// ── Результат: провал ───────────────────────────────────────────────────
-
-class _FailView extends StatelessWidget {
-  const _FailView({
-    required this.result,
-    required this.total,
-    required this.passScore,
-    required this.onRetry,
-    required this.onBack,
-  });
-
-  final QuizResult result;
-  final int total;
-  final int passScore;
-  final VoidCallback onRetry;
-  final VoidCallback onBack;
-
-  @override
-  Widget build(BuildContext context) {
-    final pct = total == 0 ? 0 : (result.score / total * 100).round();
-    final passPct = total == 0 ? 0 : (passScore / total * 100).round();
-    return Container(
-      color: const Color(0xFF0A0F1E),
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 24),
-        child: Column(
-          children: [
-            Container(
-              width: 72,
-              height: 72,
-              decoration: BoxDecoration(
-                color: const Color(0xFFEF4444),
-                borderRadius: BorderRadius.circular(36),
-                boxShadow: const [
-                  BoxShadow(
-                      color: Color(0x33EF4444),
-                      blurRadius: 24,
-                      offset: Offset(0, 12)),
-                ],
-              ),
-              child: const Icon(Icons.close, size: 36, color: Colors.white),
-            ),
-            const SizedBox(height: 24),
-            Text(context.l10n.quizTryAgainTitle,
-                style: const TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.w800,
-                    color: Colors.white)),
-            const SizedBox(height: 8),
-            Text(context.l10n.quizFailed,
-                style: const TextStyle(
-                    fontSize: 16, color: Color(0xFF9CA3AF))),
-            const SizedBox(height: 24),
-            _Card(
-              child: Column(
-                children: [
-                  Text(context.l10n.quizYourResult,
-                      style: const TextStyle(
-                          fontSize: 13, color: Color(0xFF9CA3AF))),
-                  const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.alphabetic,
-                    children: [
-                      Text('${result.score}/$total',
-                          style: const TextStyle(
-                              fontSize: 44,
-                              fontWeight: FontWeight.w800,
-                              color: Color(0xFFEF4444))),
-                      const SizedBox(width: 10),
-                      Text(context.l10n.quizCorrectLower,
-                          style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xFFEF4444))),
-                    ],
+                const SizedBox(width: 14),
+                Expanded(
+                  child: AnimatedDefaultTextStyle(
+                    duration: const Duration(milliseconds: 200),
+                    // У <button> в макете line-height: normal (в Chrome у Inter 16 это 20 px).
+                    style: PqText.field(
+                      c: pq.text,
+                      w: selected ? FontWeight.w600 : FontWeight.w500,
+                    ).copyWith(height: 1.25, fontFeatures: const []),
+                    child: Text(label),
                   ),
-                  const SizedBox(height: 12),
-                  const Divider(color: Color(0x1AFFFFFF), height: 1),
-                  const SizedBox(height: 12),
-                  Text(context.l10n.quizPassMinimum(passScore, total, passPct),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                          fontSize: 13, color: Color(0xFF9CA3AF))),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                    child: _Stat(
-                        value: '${result.score}/$total',
-                        label: context.l10n.quizCorrectLabel,
-                        color: const Color(0xFFEF4444))),
-                const SizedBox(width: 16),
-                Expanded(
-                    child: _Stat(
-                        value: '$pct%',
-                        label: context.l10n.quizResultLabel,
-                        color: const Color(0xFFEF4444))),
+                ),
               ],
             ),
-            const SizedBox(height: 40),
-            SizedBox(
-              width: double.infinity,
-              height: 56,
-              child: FilledButton(
-                style: FilledButton.styleFrom(
-                  backgroundColor: const Color(0xFFEF4444),
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14)),
-                ),
-                onPressed: onRetry,
-                child: Text(context.l10n.quizRetry,
-                    style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.w800)),
-              ),
-            ),
-            const SizedBox(height: 16),
-            InkWell(
-              onTap: onBack,
-              child: Text(context.l10n.quizBackToLesson,
-                  style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF9CA3AF),
-                      decoration: TextDecoration.underline)),
-            ),
-          ],
+          ),
         ),
-      ),
-    );
-  }
-}
-
-class _Card extends StatelessWidget {
-  const _Card({required this.child});
-  final Widget child;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      constraints: const BoxConstraints(maxWidth: 354),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: const Color(0xFF0B1220),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0x1AFFFFFF)),
-      ),
-      child: child,
-    );
-  }
-}
-
-class _Stat extends StatelessWidget {
-  const _Stat(
-      {required this.value, required this.label, required this.color});
-  final String value;
-  final String label;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      decoration: BoxDecoration(
-        color: const Color(0xFF0B1220),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0x1AFFFFFF)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(value,
-              style: TextStyle(
-                  fontSize: 24, fontWeight: FontWeight.w800, color: color)),
-          const SizedBox(height: 6),
-          Text(label,
-              style: const TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF9CA3AF))),
-        ],
       ),
     );
   }

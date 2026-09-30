@@ -1,152 +1,99 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../core/design/design.dart';
+import '../../core/format.dart';
 import '../../core/img.dart';
 import '../../core/l10n/l10n.dart';
-import '../../core/theme/app_colors.dart';
 import 'news_screen.dart';
 
-/// Блок «Новости» на главной. Перенесён 1:1 из макета Figma
-/// (news-card, ноды 180:9 / 181:23): заголовок секции + карточка последней
-/// новости с превью, датой и ссылкой «Подробнее →».
+/// Блок «Новости» на главной (макет Refined): заголовок секции со ссылкой
+/// «Все новости» + карточка последней новости (превью 76, заголовок, дата).
 class NewsHomeBlock extends ConsumerWidget {
-  const NewsHomeBlock({super.key});
+  const NewsHomeBlock({super.key, this.padding = EdgeInsets.zero});
+
+  /// Отступ вокруг блока — только когда он виден (новости есть).
+  final EdgeInsetsGeometry padding;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final v = ref.watch(newsListProvider);
-    return v.maybeWhen(
-      orElse: () => const SizedBox.shrink(),
-      data: (items) {
-        if (items.isEmpty) return const SizedBox.shrink();
-        final n = items.first;
-        final p = PharmPalette.of(context);
-        final cover = imgThumb(n.coverUrl, w: 200);
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  context.l10n.newsTitle,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                    color: p.textPrimary,
-                  ),
-                ),
-                InkWell(
-                  onTap: () => context.push('/app/news'),
-                  borderRadius: BorderRadius.circular(8),
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    child: Text(
-                      context.l10n.newsAll,
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: p.accent,
-                      ),
-                    ),
-                  ),
-                ),
+    final items = ref.watch(newsListProvider).asData?.value;
+    if (items == null || items.isEmpty) return const SizedBox.shrink();
+    final n = items.first;
+    final pq = context.pq;
+    final l = context.l10n;
+    return Padding(
+      padding: padding,
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+      PqSectionHeader(
+        l.newsTitle,
+        actionLabel: l.newsAll,
+        onAction: () => context.push('/app/news'),
+      ),
+      const SizedBox(height: 12),
+      PqCard(
+        padding: const EdgeInsets.all(12),
+        onTap: () => context.push('/app/news/${n.id}'),
+        child: Row(children: [
+          NewsThumb(url: n.coverUrl, size: 76, radius: 12),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(n.title,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: PqText.heading(16, FontWeight.w600, height: 1.35, c: pq.text)),
+              if (n.publishedAt != null && n.publishedAt!.isNotEmpty) ...[
+                const SizedBox(height: 8),
+                Text(formatDate(n.publishedAt!), style: PqText.caption(c: pq.textMuted)),
               ],
-            ),
-            const SizedBox(height: 16),
-            Material(
-              color: p.newsCardBg,
-              borderRadius: BorderRadius.circular(20),
-              clipBehavior: Clip.antiAlias,
-              child: InkWell(
-                onTap: () => context.push('/app/news/${n.id}'),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: p.softBorder),
-                  ),
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: cover != null
-                            ? Image.network(
-                                cover,
-                                width: 72,
-                                height: 72,
-                                fit: BoxFit.cover,
-                                errorBuilder: (_, __, ___) =>
-                                    _thumbPlaceholder(p),
-                              )
-                            : _thumbPlaceholder(p),
-                      ),
-                      const SizedBox(width: 14),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              n.title,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 14,
-                                height: 1.4,
-                                fontWeight: FontWeight.w600,
-                                color: p.textPrimary,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  _formatNewsDate(n.publishedAt),
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: p.textMuted,
-                                  ),
-                                ),
-                                Text(
-                                  context.l10n.newsMore,
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
-                                    color: p.accent,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        );
-      },
+            ]),
+          ),
+          const SizedBox(width: 14),
+          PqIcon(PqIcons.chevronRight,
+              size: 18, color: pq.isDark ? pq.textMuted : const Color(0xFF9CA3AF)),
+        ]),
+      ),
+    ]),
     );
   }
+}
 
-  Widget _thumbPlaceholder(PharmPalette p) => Container(
-        width: 72,
-        height: 72,
-        color: p.miniIconBg,
-        child: Icon(Icons.article_outlined, color: p.accent, size: 28),
-      );
+/// Превью новости: обложка из API (через thumbnail-прокси) или плитка
+/// с иконкой газеты, если обложки нет.
+class NewsThumb extends StatelessWidget {
+  const NewsThumb({
+    super.key,
+    required this.url,
+    required this.size,
+    required this.radius,
+    this.tone = PqTone.accent,
+  });
 
-  String _formatNewsDate(String? raw) {
-    if (raw == null || raw.isEmpty) return '';
-    final dt = DateTime.tryParse(raw);
-    if (dt == null) return raw;
-    String two(int x) => x.toString().padLeft(2, '0');
-    return '${two(dt.day)}.${two(dt.month)}.${dt.year}';
+  final String? url;
+  final double size;
+  final double radius;
+  final PqTone tone;
+
+  @override
+  Widget build(BuildContext context) {
+    final src = imgThumb(url, w: (size * 3).round());
+    final fallback = PqIconTile(PqIcons.newspaper,
+        tone: tone, size: size, radius: radius, iconSize: 26);
+    if (src == null) return fallback;
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(radius),
+      child: Image.network(
+        src,
+        width: size,
+        height: size,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) => fallback,
+        frameBuilder: (_, child, frame, sync) => sync || frame != null
+            ? child
+            : PqSkeleton(width: size, height: size, radius: radius),
+      ),
+    );
   }
 }

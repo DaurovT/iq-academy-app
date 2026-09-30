@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart';
-import '../../core/uploads/upload_queue.dart';
+
+import '../../core/design/design.dart';
 import '../../core/format.dart';
 import '../../core/l10n/l10n.dart';
 import '../../core/models/check.dart';
-import '../../core/theme/app_colors.dart';
-import '../shared/widgets/pharm_top_bar.dart';
-import '../shared/widgets/screen_decor.dart';
+import '../../core/uploads/upload_queue.dart';
+import '../../widgets/pq_states.dart';
 import 'providers.dart';
-import '../../widgets/dialog_buttons.dart';
+import 'rx_common.dart';
 
-enum _Tab { all, active, done }
+enum _Tab { all, pending, done }
 
-/// Экран «Мои рецепты». Дизайн перенесён из макета Figma
-/// «prescriptions-list» (тёмная 161:406 и светлая 161:1088 темы).
+/// «Мои бланки» (макеты RxList и RxEmpty): заголовок со счётчиком,
+/// «Отправить бланк», сегменты «Все / На проверке / Завершённые» и
+/// карточки бланков. Пока бланков нет — пустое состояние с советами.
 class RecipesScreen extends ConsumerStatefulWidget {
   const RecipesScreen({super.key});
 
@@ -26,532 +26,376 @@ class RecipesScreen extends ConsumerStatefulWidget {
 class _RecipesScreenState extends ConsumerState<RecipesScreen> {
   _Tab _tab = _Tab.all;
 
+  Future<void> _refresh() async {
+    ref.invalidate(recipesProvider);
+    try {
+      await ref.read(recipesProvider.future);
+    } catch (_) {}
+  }
+
   @override
   Widget build(BuildContext context) {
-    final p = PharmPalette.of(context);
+    final l10n = context.l10n;
     final recipes = ref.watch(recipesProvider);
-    final all = recipes.asData?.value ?? const <Recipe>[];
-    final count = recipes.asData?.value.length;
-
-    final list = switch (_tab) {
-      _Tab.all => all,
-      _Tab.active => all.where(_isActive).toList(),
-      _Tab.done => all.where((r) => !_isActive(r)).toList(),
-    };
-
-    return Scaffold(
-      backgroundColor: p.bg,
-      body: Stack(
-        children: [
-          Positioned.fill(child: ScreenDecor(recipesDecor)),
-          Column(
-            children: [
-              const PharmTopBar(),
-              // Закреплённая шапка: заголовок, кнопка и вкладки не скроллятся.
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      context.l10n.recipesTitle,
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w700,
-                        color: p.textPrimary,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      context.l10n.recipesTotal(count ?? 0),
-                      style: TextStyle(fontSize: 14, color: p.textMuted),
-                    ),
-                    const SizedBox(height: 16),
-                    _SubmitButton(
-                      onTap: () => showNewRecipeSheet(context, ref),
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        for (final (t, label) in [
-                          (_Tab.all, context.l10n.recipesTabAll),
-                          (_Tab.active, context.l10n.recipesTabActive),
-                          (_Tab.done, context.l10n.recipesTabDone),
-                        ]) ...[
-                          _TabChip(
-                            palette: p,
-                            label: label,
-                            selected: _tab == t,
-                            onTap: () => setState(() => _tab = t),
-                          ),
-                          const SizedBox(width: 8),
-                        ],
-                      ],
-                    ),
-                  ],
-                ),
+    return PqScreen(
+      safeBottom: false,
+      child: Column(children: [
+        const RxTabHeader(),
+        Expanded(
+          child: PqRefresh(
+            onRefresh: _refresh,
+            child: PqAsync<List<Recipe>>(
+              value: recipes,
+              onRetry: _refresh,
+              loadingBuilder: (_) => Padding(
+                padding: const EdgeInsets.fromLTRB(16, 4, 16, kPqNavClearance),
+                child: PqSkeletonList(title: l10n.recipesTitle),
               ),
-              Expanded(
-                child: RefreshIndicator(
-                  onRefresh: () async => ref.invalidate(recipesProvider),
-                  child: ListView(
-                    padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
-                    children: [
-                      const _PendingBanner(),
-                      recipes.when(
-                        loading: () => const Padding(
-                          padding: EdgeInsets.only(top: 48),
-                          child: Center(child: CircularProgressIndicator()),
-                        ),
-                        error: (e, _) => _InlineError(
-                          palette: p,
-                          message: e.toString(),
-                          onRetry: () => ref.invalidate(recipesProvider),
-                        ),
-                        data: (_) {
-                          if (list.isEmpty) {
-                            return _EmptyCard(
-                                palette: p, text: context.l10n.recipesEmpty);
-                          }
-                          return Column(
-                            children: [
-                              for (final r in list) ...[
-                                _RecipeCard(palette: p, recipe: r),
-                                const SizedBox(height: 12),
-                              ],
-                            ],
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  static bool _isActive(Recipe r) =>
-      r.status != CheckStatus.approved && r.status != CheckStatus.rejected;
-}
-
-// ── Отправка рецепта ────────────────────────────────────────────────────
-
-/// Запускает поток отправки нового рецепта (выбор источника → фото →
-/// данные врача → очередь загрузки). Используется на экране «Мои рецепты»
-/// и на главной (кнопка «Отправить рецепт»).
-Future<void> showNewRecipeSheet(BuildContext context, WidgetRef ref) async {
-  final picker = ImagePicker();
-  final source = await showModalBottomSheet<ImageSource>(
-    context: context,
-    builder: (_) => SafeArea(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ListTile(
-            leading: const Icon(Icons.camera_alt_outlined),
-            title: Text(context.l10n.recipesTakePhoto),
-            onTap: () => Navigator.pop(context, ImageSource.camera),
-          ),
-          ListTile(
-            leading: const Icon(Icons.photo_library_outlined),
-            title: Text(context.l10n.recipesFromGallery),
-            onTap: () => Navigator.pop(context, ImageSource.gallery),
-          ),
-        ],
-      ),
-    ),
-  );
-  if (source == null) return;
-
-  final List<XFile> picked;
-  if (source == ImageSource.gallery) {
-    picked = await picker.pickMultiImage();
-  } else {
-    final x = await picker.pickImage(source: ImageSource.camera);
-    picked = x == null ? [] : [x];
-  }
-  if (picked.isEmpty) return;
-  if (!context.mounted) return;
-
-  // Онбординг врача (все поля опциональны — бэк переиспользует прошлые).
-  final doctor = await _askDoctorInfo(context);
-  if (!context.mounted) return;
-
-  await ref
-      .read(uploadQueueProvider.notifier)
-      .enqueueRecipe(picked, doctor);
-  if (!context.mounted) return;
-  ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(context.l10n.recipesUploading)));
-}
-
-Future<DoctorRecipeInfo?> _askDoctorInfo(BuildContext context) {
-  final name = TextEditingController();
-  final workplace = TextEditingController();
-  final city = TextEditingController();
-  final phone = TextEditingController();
-  return showDialog<DoctorRecipeInfo>(
-    context: context,
-    // ctx — контекст диалога (см. фикс в сапёре): под ShellRoute внешний context
-    // резолвится во вложенный навигатор и кнопки не закрывают диалог.
-    builder: (ctx) => AlertDialog(
-      title: Text(context.l10n.recipesDoctorInfoTitle),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-                controller: name,
-                decoration: InputDecoration(
-                    labelText: context.l10n.recipesDoctorName)),
-            TextField(
-                controller: workplace,
-                decoration: InputDecoration(
-                    labelText: context.l10n.recipesDoctorWorkplace)),
-            TextField(
-                controller: city,
-                decoration: InputDecoration(
-                    labelText: context.l10n.recipesDoctorCity)),
-            TextField(
-                controller: phone,
-                decoration: InputDecoration(
-                    labelText: context.l10n.recipesDoctorPhone),
-                keyboardType: TextInputType.phone),
-          ],
-        ),
-      ),
-      actions: [
-        DialogButtons(
-          cancelLabel: context.l10n.recipesSkip,
-          onCancel: () => Navigator.pop(ctx, const DoctorRecipeInfo()),
-          confirmLabel: context.l10n.recipesSend,
-          onConfirm: () => Navigator.pop(
-            ctx,
-            DoctorRecipeInfo(
-              name: name.text.trim().isEmpty ? null : name.text.trim(),
-              workplace:
-                  workplace.text.trim().isEmpty ? null : workplace.text.trim(),
-              city: city.text.trim().isEmpty ? null : city.text.trim(),
-              phone: phone.text.trim().isEmpty ? null : phone.text.trim(),
+              data: (all) => all.isEmpty
+                  ? const _EmptyView()
+                  : _ListView(
+                      all: all,
+                      tab: _tab,
+                      onTab: (t) => setState(() => _tab = t),
+                    ),
             ),
           ),
         ),
+      ]),
+    );
+  }
+}
+
+// ── Список ──────────────────────────────────────────────────────────────
+
+class _ListView extends ConsumerWidget {
+  const _ListView({required this.all, required this.tab, required this.onTab});
+
+  final List<Recipe> all;
+  final _Tab tab;
+  final ValueChanged<_Tab> onTab;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final credits = ref.watch(recipeCreditsProvider);
+    RxStage stageOf(Recipe r) => r.status.rxStage(credits[r.id]);
+    final list = switch (tab) {
+      _Tab.all => all,
+      _Tab.pending => all.where((r) => stageOf(r) == RxStage.pending).toList(),
+      _Tab.done => all.where((r) => stageOf(r) != RxStage.pending).toList(),
+    };
+    final earned = all.fold<int>(0, (s, r) => s + (credits[r.id] ?? 0));
+    final count = l10n.rxListCount(all.length);
+    return ListView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, kPqNavClearance),
+      children: [
+        PqStagger(gap: 20, children: [
+          PqPageTitle(l10n.recipesTitle,
+              subtitle: earned > 0 ? l10n.rxListCountEarned(count, earned) : count),
+          RxSendButton(label: l10n.docHomeSendRecipe),
+          PqSegmented<_Tab>(
+            values: _Tab.values,
+            selected: tab,
+            labelOf: (t) => switch (t) {
+              _Tab.all => l10n.recipesTabAll,
+              _Tab.pending => l10n.rxTabPending,
+              _Tab.done => l10n.rxTabDone,
+            },
+            onChanged: onTab,
+          ),
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 200),
+            switchInCurve: PqMotion.ease,
+            layoutBuilder: (current, previous) => Stack(
+              alignment: Alignment.topCenter,
+              children: [...previous, if (current != null) current],
+            ),
+            child: Column(
+              key: ValueKey(tab),
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const _UploadBanner(bottom: 12),
+                if (list.isEmpty)
+                  PqEmptyState(
+                    icon: PqIcons.fileRx,
+                    title: l10n.rxFilterEmpty,
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+                  )
+                else
+                  for (var i = 0; i < list.length; i++) ...[
+                    if (i > 0) const SizedBox(height: 12),
+                    _RecipeCard(
+                        recipe: list[i],
+                        stage: stageOf(list[i]),
+                        credited: credits[list[i].id]),
+                  ],
+              ],
+            ),
+          ),
+        ]),
       ],
-    ),
-  );
-}
-
-// ── Кнопка «Отправить рецепт» ───────────────────────────────────────────
-
-class _SubmitButton extends StatelessWidget {
-  const _SubmitButton({required this.onTap});
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: const Color(0xFF6B9EF5),
-      borderRadius: BorderRadius.circular(14),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        child: SizedBox(
-          height: 48,
-          width: double.infinity,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.photo_camera_outlined,
-                  size: 18, color: Colors.white),
-              const SizedBox(width: 8),
-              Text(
-                context.l10n.recipesSubmitButton,
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }
-
-// ── Вкладки ──────────────────────────────────────────────────────────────
-
-class _TabChip extends StatelessWidget {
-  const _TabChip({
-    required this.palette,
-    required this.label,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final PharmPalette palette;
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(999),
-      child: Container(
-        height: 31,
-        alignment: Alignment.center,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        decoration: BoxDecoration(
-          color: selected
-              ? const Color(0xFF6B9EF5)
-              : (isDark ? const Color(0xFF2D2E38) : Colors.white),
-          borderRadius: BorderRadius.circular(999),
-          border: selected ? null : Border.all(color: palette.cardBorder),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 13,
-            fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
-            color: selected ? Colors.white : palette.textMuted,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ── Карточка рецепта ─────────────────────────────────────────────────────
 
 class _RecipeCard extends StatelessWidget {
-  const _RecipeCard({required this.palette, required this.recipe});
+  const _RecipeCard({required this.recipe, required this.stage, this.credited});
 
-  final PharmPalette palette;
   final Recipe recipe;
+  final RxStage stage;
+  final int? credited;
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final cardBg = isDark ? const Color(0xFF2D2E38) : palette.card;
-    final drugs = recipe.drugs.map((d) => '${d.name} · ${d.qty}').join(', ');
-
-    return Material(
-      color: cardBg,
-      borderRadius: BorderRadius.circular(16),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: () => context.push('/app/recipes/${recipe.id}'),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: palette.cardBorder),
+    final pq = context.pq;
+    final l10n = context.l10n;
+    return PqCard(
+      onTap: () => context.push('/app/recipes/${recipe.id}'),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        Row(children: [
+          PqIconTile(PqIcons.fileRx, tone: stage.tone, iconSize: 22),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(l10n.recipeDetailTitle(recipe.id),
+                  style: PqText.heading(16, FontWeight.w700, c: pq.text)),
+              const SizedBox(height: 2),
+              Text(
+                l10n.rxMeta(formatShortDateTime(recipe.createdAt), recipe.photoCount),
+                style: PqText.caption(c: pq.textMuted),
+              ),
+            ]),
           ),
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      '№${recipe.id}',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: palette.textPrimary,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  _StatusChip(status: recipe.status),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  Icon(Icons.calendar_today_outlined,
-                      size: 14, color: palette.textMuted),
-                  const SizedBox(width: 6),
-                  Text(
-                    formatShortDateTime(recipe.createdAt),
-                    style: TextStyle(fontSize: 12, color: palette.textMuted),
-                  ),
-                  const SizedBox(width: 16),
-                  Icon(Icons.photo_camera_outlined,
-                      size: 14, color: palette.textMuted),
-                  const SizedBox(width: 6),
-                  Text(
-                    context.l10n.recipesPhotoCount(recipe.photoCount),
-                    style: TextStyle(fontSize: 12, color: palette.textMuted),
-                  ),
-                ],
-              ),
-              if (drugs.isNotEmpty) ...[
-                const SizedBox(height: 12),
-                Divider(height: 1, thickness: 1, color: palette.cardBorder),
-                const SizedBox(height: 12),
-                Container(
-                  width: double.infinity,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: isDark
-                        ? const Color(0xFF21283A)
-                        : const Color(0xFFF5F7FB),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    drugs,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 12, color: palette.textMuted),
-                  ),
+          const SizedBox(width: 12),
+          RxStatusBadge(stage),
+        ]),
+        const SizedBox(height: 12),
+        switch (stage) {
+          RxStage.approved => _DrugsStrip(
+              recipe: recipe, value: l10n.rxSoon, color: pq.success),
+          RxStage.credited => _DrugsStrip(
+              recipe: recipe,
+              value: l10n.rxRewardIqc(credited ?? 0),
+              color: pq.tone(PqTone.info).fg),
+          RxStage.pending => Row(children: [
+              PqBreath(
+                child: Container(
+                  width: 8,
+                  height: 8,
+                  decoration:
+                      BoxDecoration(color: pq.warning, shape: BoxShape.circle),
                 ),
-              ],
-            ],
-          ),
-        ),
-      ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(l10n.rxPendingHint,
+                    style: rxText14(pq.textMuted)),
+              ),
+            ]),
+          RxStage.rejected => Row(children: [
+              PqIcon(PqIcons.alertTriangle, size: 16, color: pq.danger),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  _reason(recipe.rejectReason) ?? l10n.rxRejectedDefault,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: rxText14(pq.danger),
+                ),
+              ),
+              const SizedBox(width: 12),
+              PqPillButton(
+                label: l10n.rxRetake,
+                icon: PqIcons.camera,
+                onPressed: () => openRecipeCamera(context),
+              ),
+            ]),
+        },
+      ]),
     );
+  }
+
+  static String? _reason(String? r) {
+    final t = r?.trim() ?? '';
+    return t.isEmpty ? null : t;
   }
 }
 
-/// Статус-чип рецепта: сплошная заливка + белый текст (единый вид в обеих
-/// темах, как в макете).
-class _StatusChip extends StatelessWidget {
-  const _StatusChip({required this.status});
+/// Плашка «препараты · Скоро / +N IQC» у одобренного бланка.
+class _DrugsStrip extends StatelessWidget {
+  const _DrugsStrip({required this.recipe, required this.value, required this.color});
 
-  final CheckStatus status;
+  final Recipe recipe;
+  final String value;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
-    final (String label, Color bg) = switch (status) {
-      CheckStatus.approved =>
-        (context.l10n.recipesStatusApproved, const Color(0xFF16A34A)),
-      CheckStatus.rejected ||
-      CheckStatus.aiWrong =>
-        (context.l10n.recipesStatusRejected, const Color(0xFFEF4444)),
-      _ => (context.l10n.recipesStatusPending, const Color(0xFFF59E0B)),
-    };
+    final pq = context.pq;
+    final l10n = context.l10n;
+    final drugs = rxDrugsLine(recipe.drugs);
     return Container(
-      height: 23,
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      alignment: Alignment.center,
-      decoration:
-          BoxDecoration(color: bg, borderRadius: BorderRadius.circular(12)),
-      child: Text(
-        label.toUpperCase(),
-        style: const TextStyle(
-          fontSize: 10,
-          fontWeight: FontWeight.w700,
-          letterSpacing: 0.3,
-          color: Colors.white,
-        ),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        color: pq.surfaceAlt,
+        borderRadius: BorderRadius.circular(12),
       ),
+      child: Row(children: [
+        PqIcon(PqIcons.sparkle, size: 16, color: rxSparkleColor(pq)),
+        const SizedBox(width: 6),
+        Expanded(
+          child: Text(
+            drugs.isEmpty ? l10n.recipeDetailNoDrugs : drugs,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: rxText14(drugs.isEmpty ? pq.textMuted : pq.textSecondary),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Text(value, style: PqText.heading(15, FontWeight.w700, c: color)),
+      ]),
     );
   }
 }
 
-// ── Вспомогательные ──────────────────────────────────────────────────────
+/// Бланки из очереди загрузки (офлайн/ретраи): спиннер + «Повторить».
+class _UploadBanner extends ConsumerWidget {
+  const _UploadBanner({this.bottom = 0});
 
-class _PendingBanner extends ConsumerWidget {
-  const _PendingBanner();
+  final double bottom;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final count = ref.watch(pendingUploadCountProvider);
-    if (count == 0) return const SizedBox.shrink();
-    final p = PharmPalette.of(context);
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: p.accent.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          const SizedBox(
-              height: 16,
-              width: 16,
-              child: CircularProgressIndicator(strokeWidth: 2)),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(context.l10n.recipesUploadingBanner(count),
-                style: TextStyle(color: p.textPrimary)),
-          ),
-          TextButton(
-            onPressed: () => ref.read(uploadQueueProvider.notifier).retryNow(),
-            child: Text(context.l10n.recipesRetry),
-          ),
-        ],
-      ),
+    final pq = context.pq;
+    return AnimatedSize(
+      duration: const Duration(milliseconds: 200),
+      curve: PqMotion.ease,
+      child: count == 0
+          ? const SizedBox(width: double.infinity)
+          : Padding(
+              padding: EdgeInsets.only(bottom: bottom),
+              child: PqCard(
+                padding: const EdgeInsets.fromLTRB(16, 6, 6, 6),
+                child: Row(children: [
+                  PqSpinner(color: pq.accent, trackColor: pq.borderStrong, size: 18),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(context.l10n.recipesUploadingBanner(count),
+                        style: rxText14(pq.text, FontWeight.w600)),
+                  ),
+                  PqButton(
+                    label: context.l10n.recipesRetry,
+                    kind: PqButtonKind.text,
+                    expand: false,
+                    onPressed: () =>
+                        ref.read(uploadQueueProvider.notifier).retryNow(),
+                  ),
+                ]),
+              ),
+            ),
     );
   }
 }
 
-class _InlineError extends StatelessWidget {
-  const _InlineError({
-    required this.palette,
-    required this.message,
-    required this.onRetry,
-  });
+// ── Пусто (RxEmpty) ─────────────────────────────────────────────────────
 
-  final PharmPalette palette;
-  final String message;
-  final VoidCallback onRetry;
+class _EmptyView extends StatelessWidget {
+  const _EmptyView();
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 40),
-      child: Column(
-        children: [
-          Icon(Icons.error_outline,
-              size: 40, color: Theme.of(context).colorScheme.error),
-          const SizedBox(height: 12),
-          Text(message,
-              textAlign: TextAlign.center,
-              style: TextStyle(color: palette.textMuted)),
-          const SizedBox(height: 12),
-          FilledButton.tonal(
-              onPressed: onRetry, child: Text(context.l10n.recipesRetry)),
-        ],
-      ),
+    final pq = context.pq;
+    final l10n = context.l10n;
+    return ListView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, kPqNavClearance),
+      children: [
+        PqStagger(gap: 22, children: [
+          Text(l10n.recipesTitle, style: PqText.display(c: pq.text)),
+          Column(children: [
+            const _UploadBanner(bottom: 22),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+              child: Column(children: [
+                PqAnimate(
+                  fx: PqFx.pop,
+                  child: PqBob(
+                    duration: const Duration(milliseconds: 3200),
+                    delay: const Duration(milliseconds: 600),
+                    child: const PqIconTile(PqIcons.fileRx,
+                        size: 88, radius: 28, iconSize: 40),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text(l10n.rxEmptyTitle,
+                    textAlign: TextAlign.center,
+                    style: PqText.emptyTitle(c: pq.text)),
+                const SizedBox(height: 10),
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 310),
+                  child: Text(
+                    l10n.rxEmptyText,
+                    textAlign: TextAlign.center,
+                    style: PqText.text(15, FontWeight.w400,
+                        height: 1.5, c: pq.textMuted),
+                  ),
+                ),
+              ]),
+            ),
+          ]),
+          const _HowToCard(),
+          RxSendButton(label: l10n.rxSendFirst),
+        ]),
+      ],
     );
   }
 }
 
-class _EmptyCard extends StatelessWidget {
-  const _EmptyCard({required this.palette, required this.text});
-
-  final PharmPalette palette;
-  final String text;
+class _HowToCard extends StatelessWidget {
+  const _HowToCard();
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF2D2E38) : palette.card,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: palette.cardBorder),
-      ),
-      child: Text(
-        text,
-        textAlign: TextAlign.center,
-        style: TextStyle(color: palette.textMuted),
-      ),
+    final pq = context.pq;
+    final l10n = context.l10n;
+    final tips = [
+      (PqIcons.scan, l10n.rxTipWholeTitle, l10n.rxTipWholeText),
+      (PqIcons.stamp, l10n.rxTipStampTitle, l10n.rxTipStampText),
+      (PqIcons.sun, l10n.rxTipLightTitle, l10n.rxTipLightText),
+    ];
+    return PqCard(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 12, bottom: 4),
+          child: Text(l10n.rxHowTo.toUpperCase(),
+              style: PqText.overline(c: pq.textMuted)),
+        ),
+        for (var i = 0; i < tips.length; i++)
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            decoration: BoxDecoration(
+              border: i < tips.length - 1
+                  ? Border(bottom: BorderSide(color: pq.divider))
+                  : null,
+            ),
+            child: Row(children: [
+              PqIconTile(tips[i].$1, size: 40, iconSize: 20),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(tips[i].$2,
+                      style: PqText.text(15, FontWeight.w600, c: pq.text)),
+                  const SizedBox(height: 2),
+                  Text(tips[i].$3, style: rxText14(pq.textMuted)),
+                ]),
+              ),
+            ]),
+          ),
+      ]),
     );
   }
 }

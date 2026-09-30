@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../core/design/design.dart';
 import '../../core/l10n/l10n.dart';
 import '../../core/models/medrep.dart';
-import '../../core/theme/app_colors.dart';
-import '../shared/widgets/pharm_top_bar.dart';
-import '../shared/widgets/screen_decor.dart';
+import '../../widgets/pq_states.dart';
+import '../shared/providers.dart';
+import 'medrep_widgets.dart';
 import 'providers.dart';
 
-/// Экран «Фармацевты» (портфель медпреда). Дизайн перенесён из макета Figma
-/// (тёмная 147:7 и светлая 147:261 темы).
+/// Активным считаем фармацевта, у которого есть хотя бы один чек
+/// (в модели нет отдельного статуса).
+bool isActivePharmacist(PortfolioPharmacist p) => p.checks > 0;
+
+/// Фиолетовый текст «2 квеста» (тёмная/светлая).
+Color medQuestColor(PqColors pq) =>
+    pq.isDark ? const Color(0xFFC4B5FD) : const Color(0xFF6D28D9);
+
+/// Экран «Фармацевты» (макеты MedPharmacists / MedSearchEmpty).
 class PortfolioScreen extends ConsumerStatefulWidget {
   const PortfolioScreen({super.key});
 
@@ -17,89 +26,63 @@ class PortfolioScreen extends ConsumerStatefulWidget {
   ConsumerState<PortfolioScreen> createState() => _PortfolioScreenState();
 }
 
-class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
-  String _query = '';
-  int _tab = 0; // 0 — все, 1 — активные, 2 — пассивные
+enum _Tab { all, active, passive }
 
-  /// Активным считаем фармацевта, у которого есть хотя бы один чек
-  /// (в модели нет отдельного статуса).
-  bool _isActive(PortfolioPharmacist p) => p.checks > 0;
+class _PortfolioScreenState extends ConsumerState<PortfolioScreen> {
+  final _search = TextEditingController();
+  String _query = '';
+  _Tab _tab = _Tab.all;
+
+  @override
+  void dispose() {
+    _search.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final p = PharmPalette.of(context);
+    final l = context.l10n;
     final list = ref.watch(portfolioProvider);
-
-    return Scaffold(
-      backgroundColor: p.bg,
-      body: Stack(
-        children: [
-          Positioned.fill(child: ScreenDecor(medrepPortfolioDecor)),
-          Column(
-            children: [
-              const PharmTopBar(),
-              Expanded(
-                child: list.when(
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
-                  error: (e, _) => _ErrorView(
-                    palette: p,
-                    message: e.toString(),
-                    onRetry: () => ref.invalidate(portfolioProvider),
-                  ),
-                  data: (items) => _Loaded(
-                    palette: p,
-                    items: items,
-                    query: _query,
-                    tab: _tab,
-                    isActive: _isActive,
-                    onQuery: (v) => setState(() => _query = v),
-                    onTab: (v) => setState(() => _tab = v),
-                    onRefresh: () async => ref.invalidate(portfolioProvider),
-                  ),
-                ),
+    final unread = ref.watch(unreadCountProvider).asData?.value ?? 0;
+    return PqScreen(
+      safeBottom: false,
+      child: Column(children: [
+        PqTabHeader(
+          onBell: () => context.go('/app/notifications'),
+          bellLabel: l.notifTitle,
+          unread: unread > 0,
+        ),
+        Expanded(
+          child: PqRefresh(
+            onRefresh: () async {
+              ref.invalidate(portfolioProvider);
+              await ref.read(portfolioProvider.future).catchError((_) => <PortfolioPharmacist>[]);
+            },
+            child: PqAsync<List<PortfolioPharmacist>>(
+              value: list,
+              onRetry: () => ref.invalidate(portfolioProvider),
+              data: (items) => SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.fromLTRB(16, 4, 16, kPqNavClearance),
+                child: _body(context, items),
               ),
-            ],
+            ),
           ),
-        ],
-      ),
+        ),
+      ]),
     );
   }
-}
 
-class _Loaded extends StatelessWidget {
-  const _Loaded({
-    required this.palette,
-    required this.items,
-    required this.query,
-    required this.tab,
-    required this.isActive,
-    required this.onQuery,
-    required this.onTab,
-    required this.onRefresh,
-  });
-
-  final PharmPalette palette;
-  final List<PortfolioPharmacist> items;
-  final String query;
-  final int tab;
-  final bool Function(PortfolioPharmacist) isActive;
-  final ValueChanged<String> onQuery;
-  final ValueChanged<int> onTab;
-  final Future<void> Function() onRefresh;
-
-  @override
-  Widget build(BuildContext context) {
-    final activeCount = items.where(isActive).length;
-    final passiveCount = items.length - activeCount;
-
-    var filtered = items;
-    if (tab == 1) {
-      filtered = filtered.where(isActive).toList();
-    } else if (tab == 2) {
-      filtered = filtered.where((p) => !isActive(p)).toList();
-    }
-    final q = query.trim().toLowerCase();
+  Widget _body(BuildContext context, List<PortfolioPharmacist> items) {
+    final pq = context.pq;
+    final l = context.l10n;
+    final active = items.where(isActivePharmacist).length;
+    final q = _query.trim().toLowerCase();
+    var filtered = switch (_tab) {
+      _Tab.all => items,
+      _Tab.active => items.where(isActivePharmacist).toList(),
+      _Tab.passive => items.where((p) => !isActivePharmacist(p)).toList(),
+    };
     if (q.isNotEmpty) {
       filtered = filtered
           .where((p) =>
@@ -108,465 +91,242 @@ class _Loaded extends StatelessWidget {
               p.city.toLowerCase().contains(q))
           .toList();
     }
+    final searchEmpty = q.isNotEmpty && filtered.isEmpty;
 
-    return RefreshIndicator(
-      onRefresh: onRefresh,
-      child: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
-        children: [
-          _Header(palette: palette, total: items.length),
-          const SizedBox(height: 16),
-          _SearchField(palette: palette, onChanged: onQuery),
-          const SizedBox(height: 16),
-          _Tabs(
-            palette: palette,
-            tab: tab,
-            all: items.length,
-            active: activeCount,
-            passive: passiveCount,
-            onTab: onTab,
-          ),
-          const SizedBox(height: 16),
-          if (filtered.isEmpty)
-            _EmptyCard(palette: palette)
-          else
-            for (var i = 0; i < filtered.length; i++) ...[
-              _PharmacistCard(
-                palette: palette,
-                pharmacist: filtered[i],
-                index: i,
-                active: isActive(filtered[i]),
-              ),
-              const SizedBox(height: 12),
-            ],
+    Widget content;
+    if (items.isEmpty) {
+      content = MedEmptyBlock(
+        tile: MedPopTile(
+          icon: PqIcons.users,
+          background: pq.accentSoft,
+          foreground: pq.accentText,
+        ),
+        title: l.medrepEmptyTitle,
+        message: l.medrepEmptyText,
+      );
+    } else if (searchEmpty) {
+      content = MedEmptyBlock(
+        tile: MedPopTile(
+          icon: PqIcons.search,
+          size: 80,
+          radius: 24,
+          iconSize: 34,
+          background: pq.surface,
+          foreground: pq.accentText,
+          borderColor: pq.border,
+        ),
+        title: l.medrepNotFoundTitle,
+        message: l.medrepNotFoundText(_query.trim()),
+        action: MedOutlineButton(
+          label: l.medrepResetSearch,
+          icon: PqIcons.x,
+          onTap: () {
+            _search.clear();
+            setState(() => _query = '');
+          },
+        ),
+      );
+    } else if (filtered.isEmpty) {
+      content = MedEmptyBlock(
+        tile: MedPopTile(
+          icon: PqIcons.users,
+          size: 80,
+          radius: 24,
+          iconSize: 34,
+          background: pq.surface,
+          foreground: pq.accentText,
+          borderColor: pq.border,
+        ),
+        title: l.portfolioNotFound,
+      );
+    } else {
+      content = Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        for (var i = 0; i < filtered.length; i++) ...[
+          if (i > 0) const SizedBox(height: 10),
+          _PharmacistCard(pharmacist: filtered[i]),
         ],
-      ),
-    );
-  }
-}
+      ]);
+    }
 
-// ── Заголовок ───────────────────────────────────────────────────────────
-
-class _Header extends StatelessWidget {
-  const _Header({required this.palette, required this.total});
-
-  final PharmPalette palette;
-  final int total;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Text(
-                context.l10n.portfolioTitle,
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.w700,
-                  color: palette.textPrimary,
+    return PqStagger(gap: 16, children: [
+      Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+        Expanded(
+          child: PqPageTitle(l.portfolioTitle,
+              subtitle: l.portfolioInPortfolio(items.length)),
+        ),
+        if (!searchEmpty && items.isNotEmpty) ...[
+          const SizedBox(width: 12),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 4),
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
+              PqBreath(
+                child: Container(
+                  width: 8,
+                  height: 8,
+                  decoration:
+                      BoxDecoration(color: pq.success, shape: BoxShape.circle),
                 ),
               ),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: palette.accent.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(999),
-              ),
-              child: Text(
-                context.l10n.portfolioUpdated,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: palette.accent,
-                ),
-              ),
-            ),
-          ],
+              const SizedBox(width: 6),
+              Text(l.medrepUpdatedNow, style: PqText.caption(c: pq.textMuted)),
+            ]),
+          ),
+        ],
+      ]),
+      if (items.isNotEmpty)
+        MedSearchField(
+          controller: _search,
+          hint: l.medrepSearchHint,
+          onChanged: (v) => setState(() => _query = v),
         ),
-        const SizedBox(height: 6),
-        Text(
-          context.l10n.portfolioInPortfolio(total),
-          style: TextStyle(fontSize: 14, color: palette.textMuted),
+      if (items.isNotEmpty && !searchEmpty)
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          clipBehavior: Clip.none,
+          child: Row(children: [
+            _CountChip(
+              label: l.medrepFilterAll,
+              count: items.length,
+              selected: _tab == _Tab.all,
+              onTap: () => setState(() => _tab = _Tab.all),
+            ),
+            const SizedBox(width: 8),
+            _CountChip(
+              label: l.medrepFilterActive,
+              count: active,
+              selected: _tab == _Tab.active,
+              onTap: () => setState(() => _tab = _Tab.active),
+            ),
+            const SizedBox(width: 8),
+            _CountChip(
+              label: l.medrepFilterPassive,
+              count: items.length - active,
+              selected: _tab == _Tab.passive,
+              onTap: () => setState(() => _tab = _Tab.passive),
+            ),
+          ]),
         ),
-      ],
-    );
-  }
-}
-
-// ── Поиск ───────────────────────────────────────────────────────────────
-
-class _SearchField extends StatelessWidget {
-  const _SearchField({required this.palette, required this.onChanged});
-
-  final PharmPalette palette;
-  final ValueChanged<String> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Container(
-      decoration: BoxDecoration(
-        color: palette.card,
-        borderRadius: BorderRadius.circular(14),
-        border: isDark ? null : Border.all(color: palette.cardBorder),
-      ),
-      child: TextField(
-        onChanged: onChanged,
-        style: TextStyle(fontSize: 15, color: palette.textPrimary),
-        decoration: InputDecoration(
-          isDense: true,
-          hintText: context.l10n.portfolioSearchHint,
-          hintStyle: TextStyle(fontSize: 15, color: palette.textMuted),
-          prefixIcon: Icon(Icons.search, size: 20, color: palette.textMuted),
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(vertical: 13),
+      AnimatedSwitcher(
+        duration: const Duration(milliseconds: 200),
+        switchInCurve: PqMotion.ease,
+        child: KeyedSubtree(
+          key: ValueKey('${_tab.name}|$searchEmpty|${filtered.isEmpty}'),
+          child: content,
         ),
       ),
-    );
+    ]);
   }
 }
 
-// ── Табы ────────────────────────────────────────────────────────────────
-
-class _Tabs extends StatelessWidget {
-  const _Tabs({
-    required this.palette,
-    required this.tab,
-    required this.all,
-    required this.active,
-    required this.passive,
-    required this.onTab,
-  });
-
-  final PharmPalette palette;
-  final int tab;
-  final int all;
-  final int active;
-  final int passive;
-  final ValueChanged<int> onTab;
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: [
-        _TabPill(
-            label: context.l10n.portfolioTabAll(all),
-            selected: tab == 0,
-            palette: palette,
-            isDark: isDark,
-            onTap: () => onTab(0)),
-        _TabPill(
-            label: context.l10n.portfolioTabActive(active),
-            selected: tab == 1,
-            palette: palette,
-            isDark: isDark,
-            onTap: () => onTab(1)),
-        _TabPill(
-            label: context.l10n.portfolioTabPassive(passive),
-            selected: tab == 2,
-            palette: palette,
-            isDark: isDark,
-            onTap: () => onTab(2)),
-      ],
-    );
-  }
-}
-
-class _TabPill extends StatelessWidget {
-  const _TabPill({
+/// Чип-фильтр 40 со счётчиком (opacity .7).
+class _CountChip extends StatelessWidget {
+  const _CountChip({
     required this.label,
+    required this.count,
     required this.selected,
-    required this.palette,
-    required this.isDark,
     required this.onTap,
   });
 
   final String label;
+  final int count;
   final bool selected;
-  final PharmPalette palette;
-  final bool isDark;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final bg = selected
-        ? palette.accent
-        : (isDark ? const Color(0xFF22232B) : Colors.white);
-    final fg = selected ? Colors.white : palette.textMuted;
-    final border = selected
-        ? Colors.transparent
-        : (isDark ? const Color(0xFF2D2E38) : palette.cardBorder);
-    return Material(
-      color: bg,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(999),
-        side: BorderSide(color: border),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
+    final pq = context.pq;
+    final fg = selected ? pq.chipActiveText : pq.textSecondary;
+    return Semantics(
+      selected: selected,
+      button: true,
+      child: PqPressable(
         onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: fg,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ── Карточка фармацевта ──────────────────────────────────────────────────
-
-const _avatarColors = [
-  Color(0xFF3B82F6),
-  Color(0xFF7C3AED),
-  Color(0xFF14B8A6),
-  Color(0xFFEC4899),
-  Color(0xFFF59E0B),
-];
-
-String initialsOf(String name) {
-  final parts = name.trim().split(RegExp(r'\s+')).where((s) => s.isNotEmpty);
-  if (parts.isEmpty) return '?';
-  final letters = parts.take(2).map((s) => s.characters.first.toUpperCase());
-  return letters.join();
-}
-
-class _PharmacistCard extends StatelessWidget {
-  const _PharmacistCard({
-    required this.palette,
-    required this.pharmacist,
-    required this.index,
-    required this.active,
-  });
-
-  final PharmPalette palette;
-  final PortfolioPharmacist pharmacist;
-  final int index;
-  final bool active;
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final accent = _avatarColors[index % _avatarColors.length];
-    return Material(
-      color: palette.card,
-      borderRadius: BorderRadius.circular(16),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: () =>
-            context.push('/app/portfolio/${pharmacist.telegramId}'),
-        child: Container(
+        scale: .96,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          curve: PqMotion.ease,
+          height: 40,
+          padding: const EdgeInsets.symmetric(horizontal: 14),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            border: isDark ? null : Border.all(color: palette.cardBorder),
+            color: selected ? pq.chipActiveBg : pq.surface,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: selected ? pq.chipActiveBg : pq.border),
           ),
-          child: IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Container(
-                  width: 4,
-                  decoration: BoxDecoration(
-                    color: active ? accent : palette.textMuted,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  margin: const EdgeInsets.all(12),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  child: _Avatar(color: accent, name: pharmacist.name),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          pharmacist.name,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w700,
-                            color: palette.textPrimary,
-                          ),
-                        ),
-                        const SizedBox(height: 3),
-                        Text(
-                          '${pharmacist.shop} · ${pharmacist.city}',
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style:
-                              TextStyle(fontSize: 12, color: palette.textMuted),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 12, 12, 12),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      _MiniChip(
-                        label: context.l10n
-                            .portfolioChecksChip(pharmacist.checks),
-                        color: const Color(0xFF3B82F6),
-                        isDark: isDark,
-                      ),
-                      const SizedBox(height: 6),
-                      _MiniChip(
-                        label: context.l10n
-                            .portfolioQuestsChip(pharmacist.quests),
-                        color: const Color(0xFF10B981),
-                        isDark: isDark,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+          child: Row(mainAxisSize: MainAxisSize.min, children: [
+            Text(label,
+                style: PqText.text(14, selected ? FontWeight.w700 : FontWeight.w500,
+                    c: fg)),
+            const SizedBox(width: 6),
+            Opacity(
+              opacity: .7,
+              child: Text('$count',
+                  style: PqText.text(14, selected ? FontWeight.w700 : FontWeight.w500,
+                      c: fg)),
             ),
-          ),
+          ]),
         ),
       ),
     );
   }
 }
 
-class _Avatar extends StatelessWidget {
-  const _Avatar({required this.color, required this.name});
+/// Карточка фармацевта: аватар 48 · имя, аптека, статус · чеки и квесты.
+class _PharmacistCard extends StatelessWidget {
+  const _PharmacistCard({required this.pharmacist});
 
-  final Color color;
-  final String name;
+  final PortfolioPharmacist pharmacist;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 44,
-      height: 44,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-      child: Text(
-        initialsOf(name),
-        style: const TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w700,
-          color: Colors.white,
+    final pq = context.pq;
+    final l = context.l10n;
+    final p = pharmacist;
+    final active = isActivePharmacist(p);
+    final statusColor = active ? pq.success : pq.textMuted;
+    final card = PqCard(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      onTap: () => context.push('/app/portfolio/${p.telegramId}'),
+      child: Row(children: [
+        MedAvatar(p.name, size: 48, seed: p.telegramId, colors: active ? null : kMedMutedGradient),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(p.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: PqText.heading(16, FontWeight.w700, c: pq.text)),
+            const SizedBox(height: 2),
+            Text([p.shop, p.city].where((s) => s.isNotEmpty).join(' · '),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: PqText.caption(c: pq.textMuted)),
+            const SizedBox(height: 2),
+            Row(mainAxisSize: MainAxisSize.min, children: [
+              Container(
+                width: 6,
+                height: 6,
+                decoration: BoxDecoration(color: statusColor, shape: BoxShape.circle),
+              ),
+              const SizedBox(width: 4),
+              Text(active ? l.pharmDetailActive : l.pharmDetailPassive,
+                  style: PqText.caption(c: statusColor)),
+            ]),
+          ]),
         ),
-      ),
+        const SizedBox(width: 12),
+        Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+          Text('${p.checks}',
+              style: PqText.heading(20, FontWeight.w800, height: 1.1, c: pq.text)),
+          const SizedBox(height: 2),
+          Text(l.medrepUnitChecks(p.checks), style: PqText.caption(c: pq.textMuted)),
+          const SizedBox(height: 2),
+          Text(l.medrepCountQuests(p.quests),
+              style: PqText.caption(
+                  w: FontWeight.w600,
+                  c: p.quests > 0 ? medQuestColor(pq) : pq.textMuted)),
+        ]),
+      ]),
     );
-  }
-}
-
-class _MiniChip extends StatelessWidget {
-  const _MiniChip({
-    required this.label,
-    required this.color,
-    required this.isDark,
-  });
-
-  final String label;
-  final Color color;
-  final bool isDark;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: isDark ? 0.20 : 0.12),
-        borderRadius: BorderRadius.circular(999),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.w600,
-          color: color,
-        ),
-      ),
-    );
-  }
-}
-
-// ── Прочее ──────────────────────────────────────────────────────────────
-
-class _EmptyCard extends StatelessWidget {
-  const _EmptyCard({required this.palette});
-
-  final PharmPalette palette;
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(32),
-      decoration: BoxDecoration(
-        color: palette.card,
-        borderRadius: BorderRadius.circular(16),
-        border: isDark ? null : Border.all(color: palette.cardBorder),
-      ),
-      child: Text(
-        context.l10n.portfolioNotFound,
-        textAlign: TextAlign.center,
-        style: TextStyle(color: palette.textMuted),
-      ),
-    );
-  }
-}
-
-class _ErrorView extends StatelessWidget {
-  const _ErrorView({
-    required this.palette,
-    required this.message,
-    required this.onRetry,
-  });
-
-  final PharmPalette palette;
-  final String message;
-  final VoidCallback onRetry;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.error_outline,
-                size: 40, color: Theme.of(context).colorScheme.error),
-            const SizedBox(height: 12),
-            Text(message,
-                textAlign: TextAlign.center,
-                style: TextStyle(color: palette.textMuted)),
-            const SizedBox(height: 12),
-            FilledButton.tonal(
-                onPressed: onRetry, child: Text(context.l10n.portfolioRetry)),
-          ],
-        ),
-      ),
-    );
+    return active ? card : Opacity(opacity: .78, child: card);
   }
 }

@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../core/design/design.dart';
 import '../../core/l10n/l10n.dart';
 import '../../core/models/medrep.dart';
-import '../../core/theme/app_colors.dart';
-import '../shared/widgets/pharm_top_bar.dart';
-import '../shared/widgets/screen_decor.dart';
-import 'portfolio_screen.dart' show initialsOf;
+import '../../widgets/pq_states.dart';
+import 'medrep_widgets.dart';
 import 'providers.dart';
 
 /// Экран «Врачи» медпреда. Временное решение, пока нет прямой связки
 /// «медпред → врач»: показывает всех врачей рецептурного проекта компании
 /// медпреда (медпред Бионорики видит только врачей Бионорики), по регионам,
 /// со статусом выполнения рецептурного квеста.
+///
+/// В макетах 1.2 экрана нет — оформлен на компонентах дизайн-системы в языке
+/// экранов медпреда (MedPharmacists / MedQuestDetail).
 class DoctorsScreen extends ConsumerStatefulWidget {
   const DoctorsScreen({super.key});
 
@@ -26,14 +29,10 @@ _Status _statusOf(DoctorRow d) => d.done > 0
     ? _Status.completed
     : (d.collected > 0 ? _Status.inProgress : _Status.idle);
 
-const _green = Color(0xFF10B981);
-const _amber = Color(0xFFF59E0B);
-const _grey = Color(0xFF9CA3AF);
-
-Color _colorOf(_Status s) => switch (s) {
-      _Status.completed => _green,
-      _Status.inProgress => _amber,
-      _Status.idle => _grey,
+PqTone _toneOf(_Status s) => switch (s) {
+      _Status.completed => PqTone.success,
+      _Status.inProgress => PqTone.warning,
+      _Status.idle => PqTone.neutral,
     };
 
 /// 15.0 → «15», 2.5 → «2.5».
@@ -45,108 +44,96 @@ const _backendUnknownRegion = 'Регион не указан';
 
 class _DoctorsScreenState extends ConsumerState<DoctorsScreen> {
   int? _questId; // null — квест по умолчанию (ближайший к завершению)
+  final _search = TextEditingController();
   String _query = '';
   _Status? _filter; // null — все
   final _collapsed = <String>{};
 
+  /// Последние данные — показываем их, пока грузится другой квест.
+  DoctorsOverview? _last;
+
+  @override
+  void dispose() {
+    _search.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final p = PharmPalette.of(context);
-    final data = ref.watch(doctorsProvider(_questId));
+    final l = context.l10n;
+    final provider = doctorsProvider(_questId);
+    final value = ref.watch(provider);
+    final data = value.asData?.value ?? (value.isLoading ? _last : null);
+    if (data != null) _last = data;
 
-    return Scaffold(
-      backgroundColor: p.bg,
-      body: Stack(
-        children: [
-          Positioned.fill(child: ScreenDecor(medrepPortfolioDecor)),
-          Column(
-            children: [
-              const PharmTopBar(),
-              Expanded(
-                child: data.when(
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
-                  error: (e, _) => _Message(
-                    palette: p,
-                    icon: Icons.error_outline,
-                    text: e.toString(),
-                    onRetry: () => ref.invalidate(doctorsProvider(_questId)),
+    return PqScreen(
+      safeBottom: false,
+      child: Column(children: [
+        PqTopBar(
+          title: l.doctorsTitle,
+          backLabel: l.navPortfolio,
+          onBack: () => medBack(context),
+        ),
+        Expanded(
+          child: PqRefresh(
+            onRefresh: () async {
+              ref.invalidate(provider);
+              await ref.read(provider.future).then((_) {}, onError: (_) {});
+            },
+            child: data == null
+                ? PqAsync<DoctorsOverview>(
+                    value: value,
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 40),
+                    onRetry: () => ref.invalidate(provider),
+                    data: (_) => const SizedBox.shrink(),
+                  )
+                : SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, kPqNavClearance),
+                    child: _body(context, data, loading: value.isLoading),
                   ),
-                  data: (o) => RefreshIndicator(
-                    onRefresh: () async =>
-                        ref.invalidate(doctorsProvider(_questId)),
-                    child: _body(context, p, o),
-                  ),
-                ),
-              ),
-            ],
           ),
-        ],
-      ),
+        ),
+      ]),
     );
   }
 
-  Widget _body(BuildContext context, PharmPalette p, DoctorsOverview o) {
-    final l10n = context.l10n;
-    final children = <Widget>[
-      _Header(palette: p, total: o.totals.doctors, company: o.companyName),
-    ];
+  Widget _body(BuildContext context, DoctorsOverview o, {required bool loading}) {
+    final pq = context.pq;
+    final l = context.l10n;
+    final company = o.companyName;
+    final title = PqPageTitle(
+      l.doctorsTitle,
+      subtitle: company == null || company.isEmpty
+          ? l.doctorsHint
+          : '${l.doctorsHint} · $company',
+    );
+
+    Widget emptyBlock(String title, String? message) => MedEmptyBlock(
+          padding: const EdgeInsets.fromLTRB(24, 32, 24, 0),
+          tile: MedPopTile(
+            icon: PqIcons.stethoscope,
+            background: pq.accentSoft,
+            foreground: pq.accentText,
+          ),
+          title: title,
+          message: message,
+        );
 
     if (!o.available) {
-      children.addAll([
-        const SizedBox(height: 24),
-        _Message(
-            palette: p,
-            icon: Icons.medical_services_outlined,
-            text: l10n.doctorsUnavailable),
+      return PqStagger(gap: 16, children: [
+        title,
+        emptyBlock(l.doctorsEmpty, l.doctorsUnavailable),
       ]);
-      return _list(children);
     }
     if (o.totals.doctors == 0) {
-      children.addAll([
-        const SizedBox(height: 24),
-        _Message(
-            palette: p,
-            icon: Icons.person_search_outlined,
-            text: l10n.doctorsEmpty),
-      ]);
-      return _list(children);
+      return PqStagger(gap: 16, children: [title, emptyBlock(l.doctorsEmpty, null)]);
     }
 
     final quest = o.quests.where((q) => q.id == o.questId).firstOrNull;
-
-    // квесты: переключатель, только если активных больше одного
-    if (o.quests.length > 1) {
-      children.addAll([
-        const SizedBox(height: 16),
-        Wrap(spacing: 8, runSpacing: 8, children: [
-          for (final q in o.quests)
-            _Pill(
-              palette: p,
-              label: q.name,
-              selected: q.id == o.questId,
-              onTap: () => setState(() => _questId = q.id),
-            ),
-        ]),
-      ]);
-    }
-    children.addAll([
-      const SizedBox(height: 16),
-      _QuestCard(palette: p, quest: quest),
-      const SizedBox(height: 16),
-      _Summary(
-        palette: p,
-        totals: o.totals,
-        filter: _filter,
-        onFilter: (s) => setState(() => _filter = _filter == s ? null : s),
-      ),
-      const SizedBox(height: 16),
-      _SearchField(palette: p, onChanged: (v) => setState(() => _query = v)),
-      const SizedBox(height: 16),
-    ]);
-
     final q = _query.trim().toLowerCase();
-    var shown = 0;
+
+    final regions = <Widget>[];
     for (final g in o.regions) {
       final items = g.items.where((d) {
         if (_filter != null && _statusOf(d) != _filter) return false;
@@ -157,166 +144,143 @@ class _DoctorsScreenState extends ConsumerState<DoctorsScreen> {
             g.region.toLowerCase().contains(q);
       }).toList();
       if (items.isEmpty) continue;
-      shown += items.length;
-
-      final region = g.region == _backendUnknownRegion
-          ? l10n.doctorsRegionUnknown
-          : g.region;
+      final region =
+          g.region == _backendUnknownRegion ? l.doctorsRegionUnknown : g.region;
       final collapsed = _collapsed.contains(g.region);
-      children.add(_RegionHeader(
-        palette: p,
-        title: region,
-        summary: l10n.doctorsRegionSummary(g.doctors, g.completed),
-        collapsed: collapsed,
-        onTap: () => setState(() => collapsed
-            ? _collapsed.remove(g.region)
-            : _collapsed.add(g.region)),
+      regions.add(Column(
+        key: ValueKey(g.region),
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _RegionHeader(
+            title: region,
+            summary: l.doctorsRegionSummary(g.doctors, g.completed),
+            collapsed: collapsed,
+            onTap: () => setState(() => collapsed
+                ? _collapsed.remove(g.region)
+                : _collapsed.add(g.region)),
+          ),
+          AnimatedSize(
+            duration: const Duration(milliseconds: 250),
+            curve: PqMotion.ease,
+            alignment: Alignment.topCenter,
+            child: collapsed
+                ? const SizedBox(width: double.infinity)
+                : Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: PqListCard(children: [
+                      for (final d in items)
+                        _DoctorRow(doctor: d, hasQuest: quest != null),
+                    ]),
+                  ),
+          ),
+        ],
       ));
-      if (!collapsed) {
-        for (final d in items) {
-          children.addAll([
-            const SizedBox(height: 10),
-            _DoctorCard(palette: p, doctor: d, hasQuest: quest != null),
-          ]);
-        }
-      }
-      children.add(const SizedBox(height: 20));
     }
 
-    if (shown == 0) {
-      children.add(_Message(
-          palette: p, icon: Icons.search_off, text: l10n.doctorsNotFound));
-    }
-    return _list(children);
-  }
-
-  Widget _list(List<Widget> children) => ListView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
-        children: children,
-      );
-}
-
-// ── Заголовок ───────────────────────────────────────────────────────────
-
-class _Header extends StatelessWidget {
-  const _Header(
-      {required this.palette, required this.total, required this.company});
-
-  final PharmPalette palette;
-  final int total;
-  final String? company;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                context.l10n.doctorsTitle,
-                style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.w700,
-                    color: palette.textPrimary),
+    return PqStagger(gap: 16, children: [
+      title,
+      if (o.quests.length > 1)
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          clipBehavior: Clip.none,
+          child: Row(children: [
+            for (final (i, qq) in o.quests.indexed) ...[
+              if (i > 0) const SizedBox(width: 8),
+              PqChip(
+                label: qq.name,
+                selected: qq.id == o.questId,
+                onTap: () => setState(() => _questId = qq.id),
               ),
-            ),
-            if (total > 0)
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: palette.accent.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(999),
+            ],
+          ]),
+        ),
+      AnimatedOpacity(
+        opacity: loading ? .6 : 1,
+        duration: const Duration(milliseconds: 200),
+        child: _QuestCard(quest: quest),
+      ),
+      _Summary(
+        totals: o.totals,
+        filter: _filter,
+        onFilter: (s) => setState(() => _filter = _filter == s ? null : s),
+      ),
+      MedSearchField(
+        controller: _search,
+        hint: l.doctorsSearchHint,
+        onChanged: (v) => setState(() => _query = v),
+      ),
+      if (regions.isEmpty)
+        MedEmptyBlock(
+          padding: const EdgeInsets.fromLTRB(24, 32, 24, 0),
+          tile: MedPopTile(
+            icon: PqIcons.search,
+            size: 80,
+            radius: 24,
+            iconSize: 34,
+            background: pq.surface,
+            foreground: pq.accentText,
+            borderColor: pq.border,
+          ),
+          title: l.doctorsNotFound,
+          action: q.isEmpty && _filter == null
+              ? null
+              : MedOutlineButton(
+                  label: l.medrepResetSearch,
+                  icon: PqIcons.x,
+                  onTap: () {
+                    _search.clear();
+                    setState(() {
+                      _query = '';
+                      _filter = null;
+                    });
+                  },
                 ),
-                child: Text('$total',
-                    style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: palette.accent)),
-              ),
+        )
+      else
+        Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          for (var i = 0; i < regions.length; i++) ...[
+            if (i > 0) const SizedBox(height: 20),
+            regions[i],
           ],
-        ),
-        const SizedBox(height: 6),
-        Text(
-          company == null || company!.isEmpty
-              ? context.l10n.doctorsHint
-              : '${context.l10n.doctorsHint} · $company',
-          style: TextStyle(fontSize: 14, color: palette.textMuted),
-        ),
-      ],
-    );
+        ]),
+    ]);
   }
 }
 
 // ── Квест ───────────────────────────────────────────────────────────────
 
 class _QuestCard extends StatelessWidget {
-  const _QuestCard({required this.palette, required this.quest});
+  const _QuestCard({required this.quest});
 
-  final PharmPalette palette;
   final DoctorQuestInfo? quest;
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final pq = context.pq;
+    final l = context.l10n;
     final q = quest;
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: palette.card,
-        borderRadius: BorderRadius.circular(16),
-        border: isDark ? null : Border.all(color: palette.cardBorder),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: palette.accent.withValues(alpha: 0.14),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(Icons.flag_outlined, color: palette.accent, size: 22),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: q == null
-                ? Text(context.l10n.doctorsNoQuest,
-                    style: TextStyle(fontSize: 14, color: palette.textMuted))
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(q.name,
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              color: palette.textPrimary)),
-                      const SizedBox(height: 4),
-                      Text(
-                        [
-                          if (q.startDate != null && q.endDate != null)
-                            '${_date(q.startDate!)} — ${_date(q.endDate!)}',
-                          context.l10n.doctorsQuestGoal(_n(q.goal)),
-                        ].join(' · '),
-                        style:
-                            TextStyle(fontSize: 12, color: palette.textMuted),
-                      ),
-                    ],
+    return PqCard(
+      child: Row(children: [
+        const PqIconTile(PqIcons.target),
+        const SizedBox(width: 14),
+        Expanded(
+          child: q == null
+              ? Text(l.doctorsNoQuest, style: PqText.text(14, FontWeight.w400, c: pq.textMuted))
+              : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(q.name, style: PqText.rowTitle(c: pq.text)),
+                  const SizedBox(height: 3),
+                  Text(
+                    [
+                      if (q.startDate != null && q.endDate != null)
+                        '${medDayMonth(q.startDate!)} — ${medDayMonth(q.endDate!)}',
+                      l.doctorsQuestGoal(_n(q.goal)),
+                    ].join(' · '),
+                    style: PqText.caption(c: pq.textMuted),
                   ),
-          ),
-        ],
-      ),
+                ]),
+        ),
+      ]),
     );
-  }
-
-  /// '2026-09-08' → '08.09'
-  static String _date(String iso) {
-    final parts = iso.split('-');
-    return parts.length == 3 ? '${parts[2]}.${parts[1]}' : iso;
   }
 }
 
@@ -324,123 +288,85 @@ class _QuestCard extends StatelessWidget {
 
 class _Summary extends StatelessWidget {
   const _Summary({
-    required this.palette,
     required this.totals,
     required this.filter,
     required this.onFilter,
   });
 
-  final PharmPalette palette;
   final DoctorTotals totals;
   final _Status? filter;
   final ValueChanged<_Status> onFilter;
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    Widget tile(_Status s, String label, int value) => Expanded(
-          child: _StatTile(
-            palette: palette,
-            label: label,
-            value: value,
-            color: _colorOf(s),
-            selected: filter == s,
-            onTap: () => onFilter(s),
+    final l = context.l10n;
+    Widget tile(int i, _Status s, String label, int value) => Expanded(
+          child: PqAnimate(
+            delay: Duration(milliseconds: 100 + 60 * i),
+            child: _FilterTile(
+              label: label,
+              value: value,
+              tone: _toneOf(s),
+              selected: filter == s,
+              onTap: () => onFilter(s),
+            ),
           ),
         );
     return Row(children: [
-      tile(_Status.completed, l10n.doctorsCompleted, totals.completed),
+      tile(0, _Status.completed, l.doctorsCompleted, totals.completed),
       const SizedBox(width: 8),
-      tile(_Status.inProgress, l10n.doctorsInProgress, totals.inProgress),
+      tile(1, _Status.inProgress, l.doctorsInProgress, totals.inProgress),
       const SizedBox(width: 8),
-      tile(_Status.idle, l10n.doctorsIdle, totals.idle),
+      tile(2, _Status.idle, l.doctorsIdle, totals.idle),
     ]);
   }
 }
 
-class _StatTile extends StatelessWidget {
-  const _StatTile({
-    required this.palette,
+class _FilterTile extends StatelessWidget {
+  const _FilterTile({
     required this.label,
     required this.value,
-    required this.color,
+    required this.tone,
     required this.selected,
     required this.onTap,
   });
 
-  final PharmPalette palette;
   final String label;
   final int value;
-  final Color color;
+  final PqTone tone;
   final bool selected;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Material(
-      color: selected ? color.withValues(alpha: 0.16) : palette.card,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14),
-        side: BorderSide(
-          color: selected
-              ? color
-              : (isDark ? Colors.transparent : palette.cardBorder),
-        ),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
+    final pq = context.pq;
+    final t = pq.tone(tone);
+    final fg = tone == PqTone.neutral ? pq.text : t.fg;
+    return Semantics(
+      selected: selected,
+      button: true,
+      child: PqPressable(
         onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('$value',
-                  style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w700,
-                      color: color)),
-              const SizedBox(height: 2),
-              Text(label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 12, color: palette.textMuted)),
-            ],
+        scale: .96,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          curve: PqMotion.ease,
+          padding: EdgeInsets.all(selected ? 13 : 14),
+          decoration: BoxDecoration(
+            color: selected ? t.bg : pq.surface,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+                color: selected ? t.fg : pq.border, width: selected ? 2 : 1),
+            boxShadow: pq.cardShadow,
           ),
-        ),
-      ),
-    );
-  }
-}
-
-// ── Поиск ───────────────────────────────────────────────────────────────
-
-class _SearchField extends StatelessWidget {
-  const _SearchField({required this.palette, required this.onChanged});
-
-  final PharmPalette palette;
-  final ValueChanged<String> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Container(
-      decoration: BoxDecoration(
-        color: palette.card,
-        borderRadius: BorderRadius.circular(14),
-        border: isDark ? null : Border.all(color: palette.cardBorder),
-      ),
-      child: TextField(
-        onChanged: onChanged,
-        style: TextStyle(fontSize: 15, color: palette.textPrimary),
-        decoration: InputDecoration(
-          isDense: true,
-          hintText: context.l10n.doctorsSearchHint,
-          hintStyle: TextStyle(fontSize: 15, color: palette.textMuted),
-          prefixIcon: Icon(Icons.search, size: 20, color: palette.textMuted),
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(vertical: 13),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text('$value', style: PqText.heading(22, FontWeight.w800, c: fg)),
+            const SizedBox(height: 2),
+            Text(label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: PqText.caption(c: pq.textMuted)),
+          ]),
         ),
       ),
     );
@@ -451,14 +377,12 @@ class _SearchField extends StatelessWidget {
 
 class _RegionHeader extends StatelessWidget {
   const _RegionHeader({
-    required this.palette,
     required this.title,
     required this.summary,
     required this.collapsed,
     required this.onTap,
   });
 
-  final PharmPalette palette;
   final String title;
   final String summary;
   final bool collapsed;
@@ -466,247 +390,110 @@ class _RegionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    final pq = context.pq;
+    return PqPressable(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(10),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 2),
-        child: Row(
-          children: [
-            Icon(Icons.place_outlined, size: 18, color: palette.accent),
-            const SizedBox(width: 6),
-            Expanded(
-              child: Text(title,
-                  style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w700,
-                      color: palette.textPrimary)),
-            ),
-            Text(summary,
-                style: TextStyle(fontSize: 12, color: palette.textMuted)),
-            const SizedBox(width: 4),
-            Icon(collapsed ? Icons.expand_more : Icons.expand_less,
-                size: 20, color: palette.textMuted),
-          ],
-        ),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 44),
+        child: Row(children: [
+          PqIcon(PqIcons.mapPin, size: 18, color: pq.accent),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: PqText.heading(18, FontWeight.w600, c: pq.text)),
+          ),
+          const SizedBox(width: 8),
+          Text(summary, style: PqText.caption(c: pq.textMuted)),
+          const SizedBox(width: 4),
+          AnimatedRotation(
+            turns: collapsed ? 0 : .5,
+            duration: const Duration(milliseconds: 200),
+            curve: PqMotion.ease,
+            child: PqIcon(PqIcons.chevronDown, size: 18, color: pq.textMuted),
+          ),
+        ]),
       ),
     );
   }
 }
 
-// ── Карточка врача ──────────────────────────────────────────────────────
+// ── Строка врача ────────────────────────────────────────────────────────
 
-class _DoctorCard extends StatelessWidget {
-  const _DoctorCard(
-      {required this.palette, required this.doctor, required this.hasQuest});
+class _DoctorRow extends StatelessWidget {
+  const _DoctorRow({required this.doctor, required this.hasQuest});
 
-  final PharmPalette palette;
   final DoctorRow doctor;
   final bool hasQuest;
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final l10n = context.l10n;
+    final pq = context.pq;
+    final l = context.l10n;
     final d = doctor;
     final status = _statusOf(d);
-    final color = _colorOf(status);
+    final tone = _toneOf(status);
     final label = switch (status) {
-      _Status.completed => l10n.doctorsDoneTimes(d.done),
-      _Status.inProgress => l10n.doctorsInProgress,
-      _Status.idle => l10n.doctorsIdle,
+      _Status.completed => l.doctorsDoneTimes(d.done),
+      _Status.inProgress => l.doctorsInProgress,
+      _Status.idle => l.doctorsIdle,
     };
+    final place = [d.workplace, d.city].where((s) => s.isNotEmpty).join(' · ');
 
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: palette.card,
-        borderRadius: BorderRadius.circular(16),
-        border: isDark ? null : Border.all(color: palette.cardBorder),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 40,
-                height: 40,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    color: color.withValues(alpha: 0.9),
-                    shape: BoxShape.circle),
-                child: Text(initialsOf(d.name),
-                    style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white)),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(d.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w700,
-                            color: palette.textPrimary)),
-                    const SizedBox(height: 2),
-                    Text(
-                      '${d.workplace} · ${d.city}',
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 12, color: palette.textMuted),
-                    ),
-                  ],
-                ),
-              ),
-              if (hasQuest) ...[
-                const SizedBox(width: 8),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: color.withValues(alpha: isDark ? 0.20 : 0.12),
-                    borderRadius: BorderRadius.circular(999),
-                  ),
-                  child: Text(label,
-                      style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                          color: color)),
-                ),
-              ],
-            ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 14),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+        Row(children: [
+          MedAvatar(d.name,
+              colors: status == _Status.idle ? kMedMutedGradient : null),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(d.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: PqText.text(16, FontWeight.w600, c: pq.text)),
+              if (place.isNotEmpty)
+                Text(place,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: PqText.caption(c: pq.textMuted)),
+            ]),
           ),
           if (hasQuest) ...[
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(999),
-                    child: LinearProgressIndicator(
-                      // Выполненный квест — полная полоса: бэкенд обнуляет
-                      // текущий прогресс после выполнения, и без этого
-                      // выполнивший врач выглядел бы как «0 / 15».
-                      value: d.done > 0 ? 1.0 : d.progress.clamp(0.0, 1.0),
-                      minHeight: 6,
-                      backgroundColor: palette.progressTrack,
-                      valueColor: AlwaysStoppedAnimation(color),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Text(
-                    d.done > 0
-                        ? '${_n(d.goal)} / ${_n(d.goal)}'
-                            '${d.collected > 0 ? ' +${_n(d.collected)}' : ''}'
-                        : '${_n(d.collected)} / ${_n(d.goal)}',
-                    style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: palette.textPrimary)),
-              ],
-            ),
+            const SizedBox(width: 8),
+            PqStatusBadge(label, tone: tone),
           ],
-          const SizedBox(height: 8),
-          Text(l10n.doctorsRecipesCount(d.recipes),
-              style: TextStyle(fontSize: 11, color: palette.textMuted)),
-        ],
-      ),
-    );
-  }
-}
-
-// ── Прочее ──────────────────────────────────────────────────────────────
-
-class _Pill extends StatelessWidget {
-  const _Pill({
-    required this.palette,
-    required this.label,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final PharmPalette palette;
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Material(
-      color: selected
-          ? palette.accent
-          : (isDark ? const Color(0xFF22232B) : Colors.white),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(999),
-        side: BorderSide(
-            color: selected
-                ? Colors.transparent
-                : (isDark ? const Color(0xFF2D2E38) : palette.cardBorder)),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-          child: Text(label,
-              style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: selected ? Colors.white : palette.textMuted)),
-        ),
-      ),
-    );
-  }
-}
-
-class _Message extends StatelessWidget {
-  const _Message({
-    required this.palette,
-    required this.icon,
-    required this.text,
-    this.onRetry,
-  });
-
-  final PharmPalette palette;
-  final IconData icon;
-  final String text;
-  final VoidCallback? onRetry;
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Container(
-      width: double.infinity,
-      margin: onRetry == null ? null : const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(28),
-      decoration: BoxDecoration(
-        color: palette.card,
-        borderRadius: BorderRadius.circular(16),
-        border: isDark ? null : Border.all(color: palette.cardBorder),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 36, color: palette.textMuted),
+        ]),
+        if (hasQuest) ...[
           const SizedBox(height: 12),
-          Text(text,
-              textAlign: TextAlign.center,
-              style: TextStyle(color: palette.textMuted)),
-          if (onRetry != null) ...[
-            const SizedBox(height: 12),
-            FilledButton.tonal(
-                onPressed: onRetry, child: Text(context.l10n.portfolioRetry)),
-          ],
+          Row(children: [
+            Expanded(
+              child: PqProgressBar(
+                // Выполненный квест — полная полоса: бэкенд обнуляет текущий
+                // прогресс после выполнения, и без этого выполнивший врач
+                // выглядел бы как «0 / 15».
+                value: d.done > 0 ? 1.0 : d.progress.clamp(0.0, 1.0),
+                height: 6,
+                color: tone == PqTone.neutral ? pq.textMuted : pq.tone(tone).fg,
+                trackColor: pq.surfaceAlt,
+              ),
+            ),
+            const SizedBox(width: 10),
+            Text(
+              d.done > 0
+                  ? '${_n(d.goal)} / ${_n(d.goal)}'
+                      '${d.collected > 0 ? ' +${_n(d.collected)}' : ''}'
+                  : '${_n(d.collected)} / ${_n(d.goal)}',
+              style: PqText.caption(c: pq.text, w: FontWeight.w600),
+            ),
+          ]),
         ],
-      ),
+        const SizedBox(height: 8),
+        Text(l.doctorsRecipesCount(d.recipes),
+            style: PqText.caption(c: pq.textMuted)),
+      ]),
     );
   }
 }

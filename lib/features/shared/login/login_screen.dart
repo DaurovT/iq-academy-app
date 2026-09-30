@@ -1,17 +1,16 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../core/api/providers.dart';
-import '../../../core/auth/auth_controller.dart';
-import '../../../core/l10n/l10n.dart';
-import '../widgets/pharm_academy_logo.dart';
-import 'social_login_buttons.dart';
-import 'telegram_login.dart';
 
-/// Вход по номеру телефона и SMS-коду. Перенесён из макета Figma
-/// «pharmiq-login» / «pharmiq-login-code».
+import '../../../core/api/providers.dart';
+import '../../../core/design/design.dart';
+import '../../../core/l10n/l10n.dart';
+import '../onboarding/welcome_screen.dart';
+import 'auth_ui.dart';
+import 'social_login_buttons.dart';
+
+/// Вход по номеру телефона (макеты Login, LoginKeyboard, LoginError).
+/// Код из SMS — отдельный экран `/login/code` ([SmsCodeScreen]).
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
@@ -19,411 +18,185 @@ class LoginScreen extends ConsumerStatefulWidget {
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-enum _Step { phone, code }
-
 class _LoginScreenState extends ConsumerState<LoginScreen> {
-  final _phoneCtrl = TextEditingController(text: '+998');
-  final _codeCtrl = TextEditingController();
-  final _codeFocus = FocusNode();
-  _Step _step = _Step.phone;
+  final _phoneCtrl = TextEditingController();
+  final _phoneFocus = FocusNode();
   bool _loading = false;
   bool _phoneNotFound = false;
   String? _error;
-  Timer? _resendTimer;
-  int _resendLeft = 0;
-
-  static const _bg = Color(0xFF0A0F1E);
-  static const _field = Color(0xFF131D35);
-  static const _fieldBorder = Color(0xFF253152);
-  static const _blue = Color(0xFF1A75FF);
-  static const _sub = Color(0xFF6B7A99);
+  int _shake = 0;
 
   @override
   void dispose() {
     _phoneCtrl.dispose();
-    _codeCtrl.dispose();
-    _codeFocus.dispose();
-    _resendTimer?.cancel();
+    _phoneFocus.dispose();
     super.dispose();
   }
 
-  String get _phone => _phoneCtrl.text.trim();
+  String get _digits => authPhoneDigits(_phoneCtrl.text);
+  String get _phone => authFullPhone(_digits);
 
-  Future<void> _run(Future<void> Function() action) async {
+  Future<void> _submitPhone() async {
     setState(() {
       _loading = true;
       _error = null;
+      _phoneNotFound = false;
     });
     try {
-      await action();
+      final api = ref.read(apiProvider).auth;
+      final res = await api.checkNumber(_phone);
+      if (!res.exists) {
+        // Номер не зарегистрирован: сообщаем об этом и предлагаем выбор —
+        // ввести номер снова или пройти регистрацию (не редиректим сразу).
+        if (mounted) {
+          _phoneFocus.unfocus();
+          setState(() {
+            _phoneNotFound = true;
+            _shake++;
+          });
+        }
+        return;
+      }
+      await api.sendSms(_phone);
+      if (mounted) {
+        context.push(Uri(path: '/login/code', queryParameters: {'phone': _phone}).toString());
+      }
     } catch (e) {
-      if (mounted) setState(() => _error = e.toString());
+      if (mounted) {
+        setState(() {
+          _error = e.toString();
+          _shake++;
+        });
+      }
     } finally {
       if (mounted) setState(() => _loading = false);
     }
   }
 
-  void _startResend() {
-    _resendTimer?.cancel();
-    setState(() => _resendLeft = 180);
-    _resendTimer = Timer.periodic(const Duration(seconds: 1), (t) {
-      if (!mounted) return;
-      setState(() => _resendLeft--);
-      if (_resendLeft <= 0) t.cancel();
+  void _otherNumber() {
+    setState(() {
+      _phoneNotFound = false;
+      _error = null;
+      _phoneCtrl.clear();
     });
+    _phoneFocus.requestFocus();
   }
-
-  Future<void> _submitPhone() => _run(() async {
-        final api = ref.read(apiProvider).auth;
-        final res = await api.checkNumber(_phone);
-        if (!res.exists) {
-          // Номер не зарегистрирован: сообщаем об этом и предлагаем выбор —
-          // ввести номер снова или пройти регистрацию (не редиректим сразу).
-          if (mounted) setState(() => _phoneNotFound = true);
-          return;
-        }
-        await api.sendSms(_phone);
-        if (mounted) {
-          setState(() => _step = _Step.code);
-          _startResend();
-          _codeFocus.requestFocus();
-        }
-      });
-
-  Future<void> _submitCode() => _run(() async {
-        final api = ref.read(apiProvider).auth;
-        final session = await api.confirmCode(_phone, _codeCtrl.text.trim());
-        await ref.read(authControllerProvider.notifier).completeLogin(session);
-      });
-
-  Future<void> _resend() => _run(() async {
-        await ref.read(apiProvider).auth.sendSms(_phone);
-        _startResend();
-      });
 
   @override
-  Widget build(BuildContext context) => AnnotatedRegion<SystemUiOverlayStyle>(
-        // Фон экрана всегда тёмный — значки статус-бара светлые в любой теме.
-        value: SystemUiOverlayStyle.light,
-        child: _scaffold(context),
-      );
+  Widget build(BuildContext context) {
+    // Первый запуск (язык ещё не выбирали) — сначала приветствие.
+    final seen = ref.watch(welcomeSeenProvider);
+    if (seen.asData?.value == false) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) context.go('/welcome');
+      });
+    }
+    if (!seen.hasValue) return const AuthScreen(child: SizedBox.expand());
 
-  Widget _scaffold(BuildContext context) {
-    return Scaffold(
-      backgroundColor: _bg,
-      body: Stack(
-        children: [
-          Positioned(
-            top: -120,
-            right: -100,
-            child: Container(
-              width: 400,
-              height: 400,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: RadialGradient(colors: [
-                  const Color(0xFF1A75FF).withValues(alpha: 0.35),
-                  const Color(0xFF1A75FF).withValues(alpha: 0),
-                ]),
-              ),
-            ),
-          ),
-          SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(20, 24, 20, 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const PharmAcademyLogo(height: 34),
-                  const SizedBox(height: 40),
-                  Text(context.l10n.loginTagline,
-                      style: const TextStyle(
-                          fontSize: 38,
-                          height: 1.05,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFFFEFEFE))),
-                  const SizedBox(height: 40),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(context.l10n.loginTitle,
-                          style: const TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xFFFEFEFE))),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF1A2040),
-                          borderRadius: BorderRadius.circular(6),
-                          border: Border.all(color: const Color(0xFFFEFEFE)),
+    final l10n = context.l10n;
+    final keyboard = MediaQuery.viewInsetsOf(context).bottom > 0;
+    final complete = _digits.length == kAuthPhoneDigits;
+    final fieldError = _phoneNotFound ? l10n.authPhoneNotRegistered : _error;
+
+    final field = AuthPhoneField(
+      key: const ValueKey('phone'),
+      controller: _phoneCtrl,
+      focusNode: _phoneFocus,
+      label: l10n.loginPhoneLabel,
+      error: fieldError,
+      shakeKey: _shake,
+      enabled: !_loading,
+      onChanged:
+          (_) => setState(() {
+            _phoneNotFound = false;
+            _error = null;
+          }),
+      onSubmitted: (_) {
+        if (complete && !_loading) _submitPhone();
+      },
+    );
+
+    final submit = PqButton(
+      label: l10n.oauthLinkSendCode,
+      loading: _loading,
+      // Пустое поле — кнопка ведёт в поле ввода; неполный номер — неактивна.
+      onPressed:
+          complete
+              ? _submitPhone
+              : _digits.isEmpty
+              ? _phoneFocus.requestFocus
+              : null,
+    );
+
+    final title = Padding(
+      key: const ValueKey('title'),
+      padding: EdgeInsets.only(top: keyboard ? 8 : 0),
+      child: AuthTitleBlock(title: l10n.loginTitle, subtitle: l10n.authSmsHint),
+    );
+
+    // Одинаковые ключи в обеих раскладках: поле телефона не пересоздаётся
+    // (и не теряет фокус), когда клавиатура открывается/закрывается.
+    return AuthScreen(
+      child: AuthFlow(
+        padding: EdgeInsets.fromLTRB(20, 0, 20, keyboard ? 12 : 32),
+        children:
+            keyboard
+                ? [
+                  const AuthHeader(key: ValueKey('header')),
+                  title,
+                  field,
+                  const AuthPush(),
+                  KeyedSubtree(key: const ValueKey('submit'), child: submit),
+                ]
+                : [
+                  const AuthHeader(key: ValueKey('header')),
+                  AuthHero(
+                    key: const ValueKey('hero'),
+                    title: l10n.loginTagline,
+                    subtitle: l10n.authLoginSubtitle,
+                  ),
+                  const AuthPush(),
+                  title,
+                  field,
+                  if (_phoneNotFound)
+                    Column(
+                      key: const ValueKey('notFound'),
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        PqButton(
+                          label: l10n.loginRegister,
+                          onPressed:
+                              () => context.go(
+                                Uri(
+                                  path: '/register',
+                                  queryParameters: {'phone': _phone},
+                                ).toString(),
+                              ),
                         ),
-                        child: const Text('RU',
-                            style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xFFFEFEFE))),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    _step == _Step.phone
-                        ? (_phoneNotFound
-                            ? context.l10n.loginByPhone
-                            : context.l10n.loginChooseMethod)
-                        : context.l10n.loginCodeSent(_phone),
-                    style: const TextStyle(fontSize: 14, color: _sub),
-                  ),
-                  const SizedBox(height: 24),
-                  if (_step == _Step.phone) ..._phoneStep() else ..._codeStep(),
-                  if (_error != null) ...[
-                    const SizedBox(height: 12),
-                    Text(_error!,
-                        style: const TextStyle(
-                            color: Color(0xFFFF6B6B), fontSize: 13)),
+                        const SizedBox(height: 12),
+                        PqButton(
+                          label: l10n.authOtherNumber,
+                          kind: PqButtonKind.text,
+                          height: 52,
+                          onPressed: _otherNumber,
+                        ),
+                      ],
+                    )
+                  else ...[
+                    Column(
+                      key: const ValueKey('actions'),
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [submit, const SizedBox(height: 12), const SocialLoginButtons()],
+                    ),
+                    AuthTextLink(
+                      key: const ValueKey('register'),
+                      text: l10n.loginNoAccount,
+                      link: l10n.loginRegister,
+                      onTap: () => context.go('/register'),
+                    ),
                   ],
                 ],
-              ),
-            ),
-          ),
-        ],
       ),
-    );
-  }
-
-  List<Widget> _phoneStep() {
-    return [
-      Text(context.l10n.loginPhoneLabel,
-          style: const TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-              color: Color(0xFFFEFEFE))),
-      const SizedBox(height: 8),
-      Container(
-        height: 52,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        decoration: BoxDecoration(
-          color: _field,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-              color: _phoneNotFound ? const Color(0xFFF04452) : _fieldBorder),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: _phoneCtrl,
-                keyboardType: TextInputType.phone,
-                style:
-                    const TextStyle(fontSize: 16, color: Color(0xFFFEFEFE)),
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'[0-9+ ]')),
-                ],
-                onChanged: (_) {
-                  if (_phoneNotFound) setState(() => _phoneNotFound = false);
-                },
-                decoration: const InputDecoration(
-                  isCollapsed: true,
-                  filled: false,
-                  border: InputBorder.none,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-      if (_phoneNotFound) ...[
-        const SizedBox(height: 8),
-        Text(context.l10n.loginPhoneNotFound,
-            style: const TextStyle(color: Color(0xFFF04452), fontSize: 13)),
-      ],
-      const SizedBox(height: 16),
-      _primaryButton(
-          label: context.l10n.loginConfirm,
-          onTap: _loading ? null : _submitPhone),
-      if (_phoneNotFound) ...[
-        const SizedBox(height: 12),
-        _secondaryButton(
-          label: context.l10n.loginGoRegister,
-          onTap: () =>
-              context.go('/register?phone=${Uri.encodeComponent(_phone)}'),
-        ),
-      ] else ...[
-        const SizedBox(height: 16),
-        _orDivider(),
-        const SizedBox(height: 16),
-        const TelegramLoginButton(),
-        const SocialLoginButtons(),
-        const SizedBox(height: 16),
-        Center(
-          child: TextButton(
-            onPressed: () => context.go('/register'),
-            child: Text.rich(
-              TextSpan(children: [
-                TextSpan(
-                    text: '${context.l10n.loginNoAccount} ',
-                    style: const TextStyle(color: _sub)),
-                TextSpan(
-                    text: context.l10n.loginRegister,
-                    style: const TextStyle(
-                        color: _blue, fontWeight: FontWeight.w600)),
-              ]),
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 15),
-            ),
-          ),
-        ),
-      ],
-    ];
-  }
-
-  List<Widget> _codeStep() {
-    return [
-      _codeBoxes(),
-      const SizedBox(height: 20),
-      _primaryButton(
-          label: context.l10n.loginEnter, onTap: _loading ? null : _submitCode),
-      const SizedBox(height: 16),
-      Center(
-        child: _resendLeft > 0
-            ? Text(context.l10n.loginResendIn(_resendLeft),
-                style: const TextStyle(fontSize: 13, color: _sub))
-            : TextButton(
-                onPressed: _loading ? null : _resend,
-                child: Text(context.l10n.loginResendAgain,
-                    style: const TextStyle(fontSize: 14, color: _blue)),
-              ),
-      ),
-      Center(
-        child: TextButton(
-          onPressed: () => setState(() {
-            _step = _Step.phone;
-            _error = null;
-            _codeCtrl.clear();
-          }),
-          child: Text(context.l10n.loginChangeNumber,
-              style: const TextStyle(fontSize: 14, color: _sub)),
-        ),
-      ),
-    ];
-  }
-
-  Widget _codeBoxes() {
-    const len = 6;
-    return Stack(
-      children: [
-        Row(
-          children: [
-            for (var i = 0; i < len; i++) ...[
-              Expanded(
-                child: AspectRatio(
-                  aspectRatio: 0.85,
-                  child: Container(
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: _field,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: i == _codeCtrl.text.length
-                            ? _blue
-                            : _fieldBorder,
-                      ),
-                    ),
-                    child: Text(
-                      i < _codeCtrl.text.length ? _codeCtrl.text[i] : '',
-                      style: const TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFFFEFEFE)),
-                    ),
-                  ),
-                ),
-              ),
-              if (i < len - 1) const SizedBox(width: 8),
-            ],
-          ],
-        ),
-        Positioned.fill(
-          child: Opacity(
-            opacity: 0,
-            child: TextField(
-              controller: _codeCtrl,
-              focusNode: _codeFocus,
-              autofocus: true,
-              keyboardType: TextInputType.number,
-              maxLength: len,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              onChanged: (v) {
-                setState(() {});
-                if (v.length == len && !_loading) _submitCode();
-              },
-              decoration: const InputDecoration(counterText: ''),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _primaryButton({required String label, VoidCallback? onTap}) {
-    return SizedBox(
-      height: 52,
-      width: double.infinity,
-      child: FilledButton(
-        style: FilledButton.styleFrom(
-          backgroundColor: _blue,
-          foregroundColor: Colors.white,
-          disabledBackgroundColor: _blue.withValues(alpha: 0.5),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14)),
-        ),
-        onPressed: onTap,
-        child: _loading
-            ? const SizedBox(
-                height: 22,
-                width: 22,
-                child: CircularProgressIndicator(
-                    strokeWidth: 2, color: Colors.white))
-            : Text(label,
-                style: const TextStyle(
-                    fontSize: 16, fontWeight: FontWeight.w600)),
-      ),
-    );
-  }
-
-  Widget _secondaryButton({required String label, VoidCallback? onTap}) {
-    return SizedBox(
-      height: 52,
-      width: double.infinity,
-      child: OutlinedButton(
-        style: OutlinedButton.styleFrom(
-          foregroundColor: const Color(0xFFFEFEFE),
-          backgroundColor: const Color(0xFF0E1428),
-          side: const BorderSide(color: _fieldBorder),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14)),
-        ),
-        onPressed: _loading ? null : onTap,
-        child: Text(label,
-            style: const TextStyle(
-                fontSize: 16, fontWeight: FontWeight.w600)),
-      ),
-    );
-  }
-
-  Widget _orDivider() {
-    return Row(
-      children: [
-        const Expanded(child: Divider(color: Color(0xFF253152))),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Text(context.l10n.loginOr,
-              style: const TextStyle(fontSize: 13, color: Color(0xFF4A5568))),
-        ),
-        const Expanded(child: Divider(color: Color(0xFF253152))),
-      ],
     );
   }
 }

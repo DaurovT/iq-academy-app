@@ -1,55 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../core/l10n/l10n.dart';
-import '../../core/theme/app_colors.dart';
 
-/// CTA-карточка «Мини-приложения» на главной. Перенесена 1:1 из макета Figma
-/// (mini-apps-cta, ноды 180:34 / 181:46): иконка-сетка + подпись + шеврон.
-/// Всегда видна и ведёт в список мини-приложений.
+import '../../core/design/design.dart';
+import '../../core/l10n/l10n.dart';
+
+/// Карточка «Мини-приложения» на главной (макет Refined): плитка 48 с сеткой,
+/// заголовок + подпись, акцентный шеврон. Ведёт в список мини-приложений.
 class MiniAppsHomeBlock extends StatelessWidget {
   const MiniAppsHomeBlock({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final p = PharmPalette.of(context);
-    return Material(
-      color: p.card,
-      borderRadius: BorderRadius.circular(24),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: () => context.push('/app/mini-apps'),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: p.softBorder),
-          ),
-          padding: const EdgeInsets.all(20),
-          child: Row(
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: p.miniIconBg,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Icon(Icons.grid_view_rounded, size: 24, color: p.accent),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  context.l10n.miniAppsTitle,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: p.textPrimary,
-                  ),
-                ),
-              ),
-              Icon(Icons.chevron_right, size: 20, color: p.textMuted),
-            ],
-          ),
+    final pq = context.pq;
+    final l = context.l10n;
+    return PqPressable(
+      onTap: () => context.push('/app/mini-apps'),
+      semanticLabel: l.miniAppsTitle,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: pq.surface,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: pq.border),
         ),
+        child: Row(children: [
+          PqIconTile(
+            PqIcons.grid,
+            size: 48,
+            iconSize: 22,
+            background: pq.isDark ? pq.accentSoft : const Color(0xFFDFE7F4),
+            foreground: pq.accent,
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(l.miniAppsTitle, style: PqText.rowTitle(c: pq.text)),
+              const SizedBox(height: 2),
+              Text(l.homeMiniAppsSub, style: PqText.text(14, FontWeight.w400, c: pq.textMuted)),
+            ]),
+          ),
+          const SizedBox(width: 14),
+          PqIcon(PqIcons.chevronRight, size: 20, color: pq.accent),
+        ]),
       ),
     );
   }

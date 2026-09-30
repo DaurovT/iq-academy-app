@@ -1,15 +1,18 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../core/design/design.dart';
 import '../../core/l10n/l10n.dart';
 import '../../core/models/medrep.dart';
-import '../../core/theme/app_colors.dart';
-import '../shared/widgets/pharm_top_bar.dart';
-import '../shared/widgets/screen_decor.dart';
-import 'portfolio_screen.dart' show initialsOf;
+import '../../widgets/pq_states.dart';
+import '../shared/providers.dart';
+import 'medrep_widgets.dart';
 import 'providers.dart';
 
-/// Экран «Рейтинг» медпреда. Дизайн перенесён из макета Figma
-/// (тёмная 152:5 и светлая 152:108 темы).
+/// Рейтинг медпредов (макеты MedRating / MedNotRanked).
 class LeaderboardScreen extends ConsumerStatefulWidget {
   const LeaderboardScreen({super.key});
 
@@ -20,552 +23,430 @@ class LeaderboardScreen extends ConsumerStatefulWidget {
 class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
   String _metric = 'checks';
 
-  String _unit(String metric) => switch (metric) {
-        'pharm' => context.l10n.leaderboardUnitPharm,
-        'quests' => context.l10n.leaderboardUnitQuests,
-        _ => context.l10n.leaderboardUnitChecks,
-      };
-
   @override
   Widget build(BuildContext context) {
-    final p = PharmPalette.of(context);
-    final board = ref.watch(leaderboardProvider(_metric));
-    final unit = _unit(_metric);
-    final tabs = [
-      ('checks', context.l10n.leaderboardTabChecks),
-      ('pharm', context.l10n.leaderboardTabPharm),
-      ('quests', context.l10n.leaderboardTabQuests),
-    ];
+    final l = context.l10n;
+    final provider = leaderboardProvider(_metric);
+    final board = ref.watch(provider);
+    final unread = ref.watch(unreadCountProvider).asData?.value ?? 0;
 
-    return Scaffold(
-      backgroundColor: p.bg,
-      body: Stack(
-        children: [
-          Positioned.fill(child: ScreenDecor(medrepLeaderboardDecor)),
-          Column(
-            children: [
-              const PharmTopBar(),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      context.l10n.leaderboardTitle,
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w700,
-                        color: p.textPrimary,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    _Tabs(
-                      palette: p,
-                      value: _metric,
-                      tabs: tabs,
-                      onChanged: (v) => setState(() => _metric = v),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: board.when(
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
-                  error: (e, _) => _ErrorView(
-                    palette: p,
-                    message: e.toString(),
-                    onRetry: () =>
-                        ref.invalidate(leaderboardProvider(_metric)),
-                  ),
-                  data: (b) => RefreshIndicator(
-                    onRefresh: () async =>
-                        ref.invalidate(leaderboardProvider(_metric)),
-                    child: ListView(
-                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-                      children: [
-                        _InfoBanner(palette: p, board: b),
-                        const SizedBox(height: 20),
-                        if (b.items.length >= 3)
-                          _Podium(palette: p, top: b.items.take(3).toList(), unit: unit),
-                        const SizedBox(height: 12),
-                        for (final row in b.items.skip(3))
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 8),
-                            child: _RankRow(palette: p, row: row, unit: unit),
-                          ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
+    Widget body;
+    if (board.hasError && !board.hasValue) {
+      body = PqAsync<Leaderboard>(
+        value: board,
+        onRetry: () => ref.invalidate(provider),
+        data: (_) => const SizedBox.shrink(),
+      );
+    } else {
+      body = SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.fromLTRB(16, 4, 16, kPqNavClearance),
+        child: _content(context, board.asData?.value),
+      );
+    }
 
-// ── Табы ────────────────────────────────────────────────────────────────
-
-class _Tabs extends StatelessWidget {
-  const _Tabs({
-    required this.palette,
-    required this.value,
-    required this.tabs,
-    required this.onChanged,
-  });
-
-  final PharmPalette palette;
-  final String value;
-  final List<(String, String)> tabs;
-  final ValueChanged<String> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Row(
-      children: [
-        for (final (key, label) in tabs) ...[
-          Expanded(
-            child: _Pill(
-              label: label,
-              selected: value == key,
-              palette: palette,
-              isDark: isDark,
-              onTap: () => onChanged(key),
-            ),
-          ),
-          if (key != tabs.last.$1) const SizedBox(width: 8),
-        ],
-      ],
-    );
-  }
-}
-
-class _Pill extends StatelessWidget {
-  const _Pill({
-    required this.label,
-    required this.selected,
-    required this.palette,
-    required this.isDark,
-    required this.onTap,
-  });
-
-  final String label;
-  final bool selected;
-  final PharmPalette palette;
-  final bool isDark;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final bg = selected
-        ? palette.accent
-        : (isDark ? const Color(0xFF22232B) : Colors.white);
-    final fg = selected ? Colors.white : palette.textMuted;
-    final border = selected
-        ? Colors.transparent
-        : (isDark ? const Color(0xFF2D2E38) : palette.cardBorder);
-    return Material(
-      color: bg,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(999),
-        side: BorderSide(color: border),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: Text(
-            label,
-            textAlign: TextAlign.center,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: fg,
-            ),
+    return PqScreen(
+      safeBottom: false,
+      child: Column(children: [
+        PqTabHeader(
+          onBell: () => context.go('/app/notifications'),
+          bellLabel: l.notifTitle,
+          unread: unread > 0,
+        ),
+        Expanded(
+          child: PqRefresh(
+            onRefresh: () async {
+              ref.invalidate(provider);
+              await ref.read(provider.future).then((_) {}, onError: (_) {});
+            },
+            child: body,
           ),
         ),
-      ),
+      ]),
     );
   }
-}
 
-// ── Инфо-баннер ─────────────────────────────────────────────────────────
+  String _unit(int n) => switch (_metric) {
+        'pharm' => context.l10n.medrepUnitPharm(n),
+        'quests' => context.l10n.medrepUnitQuests(n),
+        _ => context.l10n.medrepUnitChecks(n),
+      };
 
-class _InfoBanner extends StatelessWidget {
-  const _InfoBanner({required this.palette, required this.board});
+  String _count(int n) => switch (_metric) {
+        'pharm' => context.l10n.medrepCountPharmacists(n),
+        'quests' => context.l10n.medrepCountQuests(n),
+        _ => context.l10n.medrepCountChecks(n),
+      };
 
-  final PharmPalette palette;
-  final Leaderboard board;
+  Widget _content(BuildContext context, Leaderboard? b) {
+    final pq = context.pq;
+    final l = context.l10n;
+    final ranked = b != null && b.myRank > 0 && b.items.isNotEmpty;
+    final subtitle = b == null
+        ? null
+        : [
+            if (b.company != null && b.company!.isNotEmpty) b.company!,
+            l.medrepCountMedreps(b.items.length),
+            if (ranked)
+              b.mode == AttributionMode.primary
+                  ? l.medrepAttrPrimary
+                  : l.medrepAttrShared,
+          ].join(' · ');
 
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final attribution = board.mode == AttributionMode.primary
-        ? context.l10n.leaderboardAttributionPrimary
-        : context.l10n.leaderboardAttributionTotal;
-    final company = board.company ?? context.l10n.leaderboardCompanyFallback;
-    final total = board.items.length;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-      decoration: BoxDecoration(
-        color: palette.card,
-        borderRadius: BorderRadius.circular(12),
-        border: isDark ? null : Border.all(color: palette.cardBorder),
+    final header = [
+      PqPageTitle(l.leaderboardTitle, subtitle: subtitle),
+      PqSegmented<String>(
+        values: const ['checks', 'pharm', 'quests'],
+        selected: _metric,
+        labelOf: (v) => switch (v) {
+          'pharm' => l.medrepTabPharm,
+          'quests' => l.medrepTabQuests,
+          _ => l.medrepTabChecks,
+        },
+        onChanged: (v) => setState(() => _metric = v),
       ),
-      child: Row(
-        children: [
-          Icon(Icons.info_outline, size: 16, color: palette.accent),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text.rich(
-              TextSpan(
-                style: TextStyle(fontSize: 13, color: palette.textMuted),
-                children: [
-                  TextSpan(
-                      text: context.l10n.leaderboardMyRankLabel(company)),
-                  TextSpan(
-                    text: context.l10n.leaderboardMyRank(board.myRank, total),
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      color: palette.accent,
-                    ),
-                  ),
-                  TextSpan(text: ' · $attribution'),
-                ],
-              ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
+    ];
+
+    if (b == null) {
+      return PqStagger(gap: 16, children: [
+        ...header,
+        PqCard(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(children: [
+            for (var i = 0; i < 5; i++) const PqSkeletonRow(),
+          ]),
+        ),
+      ]);
+    }
+
+    if (b.items.isEmpty) {
+      return PqStagger(gap: 16, children: [
+        ...header,
+        MedEmptyBlock(
+          tile: MedPopTile(
+            icon: PqIcons.award,
+            background: pq.accentSoft,
+            foreground: pq.accentText,
           ),
-        ],
+          title: l.medrepRatingEmpty,
+        ),
+      ]);
+    }
+
+    if (!ranked) {
+      return PqStagger(gap: 16, children: [
+        ...header,
+        _NotRankedCard(
+          link: ref.watch(medrepReflinkProvider).asData?.value ??
+              'https://t.me/PharmQuestBot?start=ref_',
+        ),
+        PqListCard(children: [
+          for (var i = 0; i < b.items.length && i < 5; i++)
+            MedPersonRow(
+              rank: b.items[i].rank,
+              rankColor: i == 0 ? pq.warning : null,
+              rankWidth: 24,
+              rankSize: 16,
+              verticalPadding: 10,
+              name: b.items[i].name,
+              avatarColors: i < 3 ? _listGradients[i] : kMedMutedGradient,
+              value: '${b.items[i].value}',
+              unit: _unit(b.items[i].value),
+            ),
+        ]),
+      ]);
+    }
+
+    final rank = b.myRank;
+    final items = b.items;
+    final me = items.where((r) => r.isMe == true).firstOrNull ??
+        (rank <= items.length ? items[rank - 1] : null);
+    final above = rank >= 2 && rank - 2 < items.length ? items[rank - 2] : null;
+    final gap = above == null || me == null
+        ? 0
+        : (above.value - me.value).clamp(0, 1 << 31);
+
+    return PqStagger(gap: 16, children: [
+      ...header,
+      Padding(
+        padding: const EdgeInsets.only(top: 8),
+        child: _Podium(top: items.take(3).toList(), unit: _unit),
       ),
-    );
+      // Под пьедесталом — места с 4-го до «вы + 2» (минимум три строки).
+      if (items.length > 3)
+        Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          for (var i = 3; i < items.length && i < (rank + 2).clamp(6, 1 << 20); i++) ...[
+            if (i > 3) const SizedBox(height: 8),
+            _RankRow(
+              row: items[i],
+              me: identical(items[i], me) || items[i].isMe == true,
+              unit: _unit(items[i].value),
+            ),
+          ],
+        ]),
+      Text(
+        above == null ? l.medrepLeader : l.medrepGapText(rank - 1, _count(gap)),
+        textAlign: TextAlign.center,
+        style: PqText.text(14, FontWeight.w400, c: pq.textMuted),
+      ),
+    ]);
   }
 }
+
+/// Градиенты аватаров пьедестала: 1, 2, 3 место.
+const _podiumGradients = [
+  [Color(0xFFF59E0B), Color(0xFFEF4444)],
+  [Color(0xFF8B5CF6), Color(0xFF3B82F6)],
+  [Color(0xFFEC4899), Color(0xFF8B5CF6)],
+];
+
+/// Градиенты первых трёх строк списка «нет в рейтинге».
+const _listGradients = [
+  [Color(0xFF8B5CF6), Color(0xFF3B82F6)],
+  [Color(0xFFF59E0B), Color(0xFFEF4444)],
+  [Color(0xFFEC4899), Color(0xFF8B5CF6)],
+];
 
 // ── Пьедестал ───────────────────────────────────────────────────────────
 
-const _gold = Color(0xFFF59E0B);
-const _blue = Color(0xFF3B82F6);
-const _pink = Color(0xFFEC4899);
-
 class _Podium extends StatelessWidget {
-  const _Podium({required this.palette, required this.top, required this.unit});
+  const _Podium({required this.top, required this.unit});
 
-  final PharmPalette palette;
   final List<LeaderRow> top;
-  final String unit;
+  final String Function(int) unit;
 
   @override
   Widget build(BuildContext context) {
-    final first = top[0];
-    final second = top[1];
-    final third = top[2];
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
+    // Порядок на экране: 2 · 1 · 3.
+    const order = [1, 0, 2];
+    return Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+      for (final (i, place) in order.indexed) ...[
+        if (i > 0) const SizedBox(width: 10),
         Expanded(
-          child: _Column(
-            palette: palette,
-            row: second,
-            color: _blue,
-            pedestalHeight: 92,
-            unit: unit,
-            crown: false,
-            avatarSize: 48,
-          ),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: _Column(
-            palette: palette,
-            row: first,
-            color: _gold,
-            pedestalHeight: 130,
-            unit: unit,
-            crown: true,
-            avatarSize: 60,
-          ),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: _Column(
-            palette: palette,
-            row: third,
-            color: _pink,
-            pedestalHeight: 72,
-            unit: unit,
-            crown: false,
-            avatarSize: 48,
-          ),
+          child: place < top.length
+              ? _PodiumColumn(row: top[place], place: place, unit: unit)
+              : const SizedBox.shrink(),
         ),
       ],
-    );
+    ]);
   }
 }
 
-class _Column extends StatelessWidget {
-  const _Column({
-    required this.palette,
-    required this.row,
-    required this.color,
-    required this.pedestalHeight,
-    required this.unit,
-    required this.crown,
-    required this.avatarSize,
-  });
+class _PodiumColumn extends StatelessWidget {
+  const _PodiumColumn({required this.row, required this.place, required this.unit});
 
-  final PharmPalette palette;
   final LeaderRow row;
-  final Color color;
-  final double pedestalHeight;
-  final String unit;
-  final bool crown;
-  final double avatarSize;
+  final int place;
+  final String Function(int) unit;
+
+  static const _colors = [Color(0xFFF59E0B), Color(0xFF6B9EF5), Color(0xFFEC4899)];
+  static const _heights = [160.0, 120.0, 96.0];
+  static const _popDelays = [700, 600, 500];
+  static const _growDelays = [400, 300, 200];
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final isFirst = crown;
-    return Column(
-      children: [
-        // корона или ранг
-        SizedBox(
-          height: 28,
-          child: crown
-              ? Icon(Icons.emoji_events, size: 22, color: _gold)
-              : Container(
-                  width: 26,
-                  height: 26,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: palette.card,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: color, width: 1.5),
-                  ),
-                  child: Text(
-                    '${row.rank}',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
-                      color: color,
-                    ),
-                  ),
-                ),
-        ),
-        const SizedBox(height: 6),
-        Container(
-          width: avatarSize,
-          height: avatarSize,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-          child: Text(
-            initialsOf(row.name),
-            style: TextStyle(
-              fontSize: avatarSize * 0.34,
-              fontWeight: FontWeight.w700,
-              color: Colors.white,
-            ),
-          ),
+    final pq = context.pq;
+    final color = _colors[place];
+    final first = place == 0;
+    final size = first ? 56.0 : 48.0;
+    return Column(mainAxisSize: MainAxisSize.min, children: [
+      if (first) ...[
+        const PqBob(
+          duration: Duration(milliseconds: 2400),
+          child: PqIcon(PqIcons.crown, size: 22, color: Color(0xFFF59E0B)),
         ),
         const SizedBox(height: 8),
-        Text(
-          row.name,
+      ],
+      PqAnimate(
+        fx: PqFx.pop,
+        delay: Duration(milliseconds: _popDelays[place]),
+        child: SizedBox(
+          width: size,
+          height: size + 8,
+          child: Stack(clipBehavior: Clip.none, alignment: Alignment.topCenter, children: [
+            MedAvatar(row.name, size: size, colors: _podiumGradients[place]),
+            Positioned(
+              bottom: 0,
+              child: Container(
+                width: 22,
+                height: 22,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: color,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: pq.bg, width: 2),
+                ),
+                child: Text('${row.rank}',
+                    style: PqText.text(12, FontWeight.w800, height: 1, c: Colors.white)),
+              ),
+            ),
+          ]),
+        ),
+      ),
+      // gap 8 + margin-top 6 − 8 px выступа значка места.
+      const SizedBox(height: 6),
+      Text(row.name,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            color: palette.textPrimary,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Container(
+          style: PqText.text(14, FontWeight.w600, c: pq.text)),
+      const SizedBox(height: 8),
+      PqAnimate(
+        fx: PqFx.growY,
+        delay: Duration(milliseconds: _growDelays[place]),
+        child: Container(
           width: double.infinity,
-          height: pedestalHeight,
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          height: _heights[place],
+          padding: const EdgeInsets.only(top: 14),
           decoration: BoxDecoration(
-            gradient: isFirst
-                ? const LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [_gold, Color(0xFFD97706)],
-                  )
-                : null,
-            color: isFirst
-                ? null
-                : color.withValues(alpha: isDark ? 0.24 : 0.14),
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
-          ),
-          // FittedBox: на низком пьедестале (3-е место, 72px) цифра+подпись
-          // не влезали и давали bottom overflow — ужимаем контент по месту.
-          child: Center(
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    '${row.value}',
-                    style: TextStyle(
-                      fontSize: 26,
-                      fontWeight: FontWeight.w800,
-                      color: isFirst ? Colors.white : color,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    unit,
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: isFirst
-                          ? Colors.white.withValues(alpha: 0.9)
-                          : color.withValues(alpha: 0.9),
-                    ),
-                  ),
-                ],
-              ),
+            borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(16), bottom: Radius.circular(6)),
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [color, color.withValues(alpha: .2)],
             ),
           ),
+          child: Column(children: [
+            Text('${row.value}',
+                style: PqText.heading(22, FontWeight.w800, c: Colors.white)),
+            Opacity(
+              opacity: .85,
+              child: Text(unit(row.value), style: PqText.caption(c: Colors.white)),
+            ),
+          ]),
         ),
-      ],
-    );
+      ),
+    ]);
   }
 }
 
-// ── Строка рейтинга ─────────────────────────────────────────────────────
+// ── Строка места (4+) ────────────────────────────────────────────────────
 
 class _RankRow extends StatelessWidget {
-  const _RankRow({required this.palette, required this.row, required this.unit});
+  const _RankRow({required this.row, required this.me, required this.unit});
 
-  final PharmPalette palette;
   final LeaderRow row;
+  final bool me;
   final String unit;
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final me = row.isMe == true;
+    final pq = context.pq;
+    final l = context.l10n;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: me
-            ? palette.accent.withValues(alpha: isDark ? 0.16 : 0.08)
-            : palette.card,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: me ? palette.accent : palette.cardBorder,
-          width: me ? 1.5 : 1,
-        ),
+        color: me ? pq.accentSoft : pq.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: me ? pq.accent : pq.border),
       ),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 24,
-            child: Text(
-              '${row.rank}',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-                color: palette.textMuted,
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          Container(
-            width: 36,
-            height: 36,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: me ? palette.accent : const Color(0xFF7C3AED),
-              shape: BoxShape.circle,
-            ),
-            child: Text(
-              initialsOf(row.name),
-              style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w700,
-                color: Colors.white,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              row.name,
+      child: Row(children: [
+        SizedBox(
+          width: 24,
+          child: Text('${row.rank}',
+              style: PqText.heading(16, FontWeight.w700,
+                  c: me ? pq.accentText : pq.textMuted)),
+        ),
+        const SizedBox(width: 12),
+        MedAvatar(
+          row.name,
+          colors: me ? const [Color(0xFF3B82F6), Color(0xFF06B6D4)] : kMedMutedGradient,
+          label: me ? l.medrepYouShort : null,
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(me ? l.medrepYouName(row.name) : row.name,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                color: palette.textPrimary,
-              ),
+              style: PqText.text(16, me ? FontWeight.w700 : FontWeight.w600,
+                  c: pq.text)),
+        ),
+        const SizedBox(width: 12),
+        Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+          Text('${row.value}', style: PqText.amount(c: pq.text)),
+          Text(unit, style: PqText.caption(c: pq.textMuted)),
+        ]),
+      ]),
+    );
+  }
+}
+
+// ── Нет в рейтинге ──────────────────────────────────────────────────────
+
+class _NotRankedCard extends StatelessWidget {
+  const _NotRankedCard({required this.link});
+
+  final String link;
+
+  @override
+  Widget build(BuildContext context) {
+    final pq = context.pq;
+    final l = context.l10n;
+    return CustomPaint(
+      foregroundPainter: _DashedRRect(color: pq.accent, radius: 20),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: pq.accentSoft,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Container(
+              width: 40,
+              height: 40,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(color: pq.surface, shape: BoxShape.circle),
+              child: PqIcon(PqIcons.award, size: 20, color: pq.accentText),
             ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(l.medrepNotRankedTitle,
+                    style: PqText.heading(17, FontWeight.w700, c: pq.text)),
+                const SizedBox(height: 2),
+                Text(l.medrepNotRankedText,
+                    style: PqText.body(c: pq.textSecondary)),
+              ]),
+            ),
+          ]),
+          const SizedBox(height: 12),
+          PqButton(
+            label: l.medrepInviteTitle,
+            icon: PqIcons.share,
+            onPressed: () => medCopyLink(context, link),
           ),
-          const SizedBox(width: 8),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                '${row.value}',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
-                  color: palette.textPrimary,
-                ),
-              ),
-              Text(
-                unit,
-                style: TextStyle(fontSize: 11, color: palette.textMuted),
-              ),
-            ],
-          ),
-        ],
+        ]),
       ),
     );
   }
 }
 
-class _ErrorView extends StatelessWidget {
-  const _ErrorView({
-    required this.palette,
-    required this.message,
-    required this.onRetry,
-  });
+/// Пунктирная рамка 1 px по скруглённому прямоугольнику (`border: 1px dashed`).
+class _DashedRRect extends CustomPainter {
+  _DashedRRect({required this.color, required this.radius});
 
-  final PharmPalette palette;
-  final String message;
-  final VoidCallback onRetry;
+  final Color color;
+  final double radius;
 
   @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.error_outline,
-                size: 40, color: Theme.of(context).colorScheme.error),
-            const SizedBox(height: 12),
-            Text(message,
-                textAlign: TextAlign.center,
-                style: TextStyle(color: palette.textMuted)),
-            const SizedBox(height: 12),
-            FilledButton.tonal(
-                onPressed: onRetry,
-                child: Text(context.l10n.leaderboardRetry)),
-          ],
-        ),
-      ),
-    );
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1;
+    final path = Path()
+      ..addRRect(RRect.fromRectAndRadius(
+          Offset.zero & size, Radius.circular(radius)).deflate(.5));
+    for (final ui.PathMetric m in path.computeMetrics()) {
+      for (double d = 0; d < m.length; d += 6) {
+        canvas.drawPath(m.extractPath(d, (d + 3).clamp(0, m.length)), paint);
+      }
+    }
   }
+
+  @override
+  bool shouldRepaint(_DashedRRect old) => old.color != color || old.radius != radius;
 }

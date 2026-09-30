@@ -1,671 +1,779 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
-import '../../core/api/providers.dart';
+
+import '../../core/design/design.dart';
 import '../../core/format.dart';
 import '../../core/l10n/l10n.dart';
 import '../../core/models/wallet.dart';
-import '../shared/widgets/pharm_top_bar.dart';
-import '../shared/widgets/screen_decor.dart';
+import '../../widgets/pq_states.dart';
+import '../shared/providers.dart';
 import 'providers.dart';
-import '../../widgets/dialog_buttons.dart';
+import 'wallet/exchange_sheet.dart';
+import 'wallet/voucher_archive.dart';
+import 'wallet/voucher_overlay.dart';
+import 'wallet/wallet_common.dart';
+import 'wallet/wallet_toast.dart';
 
-final _num = NumberFormat.decimalPattern('ru');
-String _uzs(num v) => '${_num.format(v)} UZS';
-
-/// Кошелёк. Дизайн перенесён один в один из макета Figma «wallet-main».
+/// Кошелёк (макет Wallet): баланс, стопка ваучеров Korzinka, очередь выдачи,
+/// обмен IQC. Вкладка нижнего меню.
 class WalletScreen extends ConsumerWidget {
   const WalletScreen({super.key});
 
+  Future<void> _refresh(WidgetRef ref) async {
+    ref.invalidate(walletProvider);
+    ref.invalidate(pendingAccrualsProvider);
+    ref.invalidate(availableVouchersProvider);
+    ref.invalidate(myVouchersProvider);
+    ref.invalidate(walletTxnsProvider);
+    try {
+      await ref.read(walletProvider.future);
+    } catch (_) {
+      // ошибку покажет PqAsync
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final c = _W.of(context);
-    final wallet = ref.watch(walletProvider).asData?.value;
-    final pending = ref.watch(pendingAccrualsProvider).asData?.value ?? const [];
-    final denoms =
-        ref.watch(availableVouchersProvider).asData?.value ?? const [];
-    final mine = ref.watch(myVouchersProvider).asData?.value ?? const [];
-    final iqc = wallet?.balanceIqc ?? 0;
-
-    return Scaffold(
-      backgroundColor: c.page,
-      body: Stack(children: [Positioned.fill(child: ScreenDecor(walletDecor)), Column(
+    final l = context.l10n;
+    final unread = ref.watch(unreadCountProvider).asData?.value ?? 0;
+    return PqScreen(
+      child: Stack(
         children: [
-          const PharmTopBar(),
-          Expanded(
-            child: RefreshIndicator(
-              onRefresh: () async {
-                ref.invalidate(walletProvider);
-                ref.invalidate(pendingAccrualsProvider);
-                ref.invalidate(availableVouchersProvider);
-                ref.invalidate(myVouchersProvider);
-              },
-              child: ListView(
-                padding: const EdgeInsets.only(bottom: 24),
+          Column(
+            children: [
+              PqTabHeader(
+                onBell: () => context.go('/app/notifications'),
+                bellLabel: l.notifTitle,
+                unread: unread > 0,
+              ),
+              Expanded(
+                child: PqRefresh(
+                  onRefresh: () => _refresh(ref),
+                  child: PqAsync<Wallet>(
+                    value: ref.watch(walletProvider),
+                    loading: PqLoadingKind.home,
+                    padding: const EdgeInsets.fromLTRB(
+                      16,
+                      4,
+                      16,
+                      kPqNavClearance,
+                    ),
+                    onRetry: () => ref.invalidate(walletProvider),
+                    data: (w) => _WalletBody(wallet: w),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const WalletToastLayer(),
+        ],
+      ),
+    );
+  }
+}
+
+class _WalletBody extends ConsumerWidget {
+  const _WalletBody({required this.wallet});
+
+  final Wallet wallet;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = context.l10n;
+    final pending =
+        ref.watch(pendingAccrualsProvider).asData?.value ??
+        const <PendingAccrual>[];
+    final denoms =
+        ref.watch(availableVouchersProvider).asData?.value ??
+        const <VoucherDenomination>[];
+    final mine =
+        ref.watch(myVouchersProvider).asData?.value ?? const <IssuedVoucher>[];
+    final archived = ref.watch(voucherArchiveProvider);
+    final txns = ref.watch(walletTxnsProvider).asData?.value;
+    final active = activeVouchers(mine, archived);
+    final hasArchived = archivedVouchers(mine, archived).isNotEmpty;
+    final accrued =
+        txns == null
+            ? null
+            : iqcFromUzs(
+              txns
+                  .where((t) => t.type == WalletTxnType.earn && t.deltaUzs > 0)
+                  .fold<int>(0, (s, t) => s + t.deltaUzs),
+            ).round();
+    final awaiting = pending.fold<int>(0, (s, a) => s + a.count);
+
+    return SingleChildScrollView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, kPqNavClearance),
+      child: PqStagger(
+        gap: 24,
+        children: [
+          Text(l.walletTitle, style: PqText.display(c: context.pq.text)),
+          _BalanceCard(
+            iqc: wallet.balanceIqc,
+            accrued: accrued,
+            awaiting: awaiting,
+          ),
+          _MyVouchers(active: active, hasArchived: hasArchived),
+          if (pending.isNotEmpty) _Awaiting(pending: pending),
+          if (denoms.isNotEmpty)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                WalletSectionHead(l.walletExchangeTitle),
+                for (final d in denoms) ...[
+                  const SizedBox(height: 12),
+                  _ExchangeCard(denom: d, balance: wallet.balanceIqc),
+                ],
+              ],
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+// ── Баланс ─────────────────────────────────────────────────────────────
+
+class _BalanceCard extends StatelessWidget {
+  const _BalanceCard({
+    required this.iqc,
+    required this.accrued,
+    required this.awaiting,
+  });
+
+  final int iqc;
+  final int? accrued;
+  final int awaiting;
+
+  @override
+  Widget build(BuildContext context) {
+    final pq = context.pq;
+    final l = context.l10n;
+    const line = Color(0x33FFFFFF);
+    Widget stat(String value, String label) => Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          value,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: PqText.heading(20, FontWeight.w700, c: Colors.white),
+        ),
+        const SizedBox(height: 2),
+        Text(label, style: PqText.caption(c: pq.walletMuted)),
+      ],
+    );
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: pq.walletGradient,
+        ),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0xB31A3566),
+            offset: Offset(0, 16),
+            blurRadius: 32,
+            spreadRadius: -16,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  l.walletBalanceLabel.toUpperCase(),
+                  style: PqText.overline(c: pq.walletMuted),
+                ),
+              ),
+              PqPressable(
+                onTap: () => context.push('/app/wallet/history'),
+                semanticLabel: l.walletHistoryTitle,
+                scale: .96,
+                child: Container(
+                  height: 32,
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  decoration: BoxDecoration(
+                    color: const Color(0x24FFFFFF),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: const Color(0x3DFFFFFF)),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const PqIcon(
+                        PqIcons.history,
+                        size: 15,
+                        color: Colors.white,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        l.walletHistoryTitle,
+                        style: PqText.link(c: Colors.white),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 18),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    walletNum(iqc),
+                    style: PqText.balance(c: Colors.white),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                'IQC',
+                style: PqText.text(18, FontWeight.w700, c: Colors.white),
+              ),
+            ],
+          ),
+          const SizedBox(height: 18),
+          Container(
+            padding: const EdgeInsets.only(top: 14),
+            decoration: const BoxDecoration(
+              border: Border(top: BorderSide(color: line)),
+            ),
+            child: IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(16, 12, 16, 12),
-                    child: _Title(),
+                  Expanded(
+                    child: stat(
+                      accrued == null ? '—' : '${walletNum(accrued!)} IQC',
+                      l.walletAccruedAllTime,
+                    ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: _BalanceCard(
-                      c: c,
-                      iqc: iqc,
-                      onHistory: () => Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => const _HistoryScreen()),
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.only(left: 16),
+                      decoration: const BoxDecoration(
+                        border: Border(left: BorderSide(color: line)),
+                      ),
+                      child: stat(
+                        walletNum(awaiting),
+                        l.walletAwaitingStat(awaiting),
                       ),
                     ),
                   ),
-
-                  // ── Мои ваучеры (подняты в самый верх) ──
-                  _SectionHeader(c: c, title: context.l10n.walletMyVouchers),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: mine.isEmpty
-                        ? _EmptyCard(c: c, text: context.l10n.walletNoVouchers)
-                        : Column(
-                            children: [
-                              for (final v in mine) ...[
-                                _MyVoucherRow(
-                                  c: c,
-                                  voucher: v,
-                                  onTap: () =>
-                                      context.push('/app/wallet/voucher/${v.id}'),
-                                ),
-                                const SizedBox(height: 8),
-                              ],
-                            ],
-                          ),
-                  ),
-
-                  // ── Ваучеры в очереди ──
-                  if (pending.isNotEmpty) ...[
-                    _SectionHeader(
-                        c: c,
-                        title: context.l10n.walletPendingVouchers,
-                        count: pending.length),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Column(
-                        children: [
-                          for (final a in pending) ...[
-                            _PendingRow(c: c, accrual: a),
-                            const SizedBox(height: 8),
-                          ],
-                        ],
-                      ),
-                    ),
-                  ],
-
-                  // ── Использовать IQC ──
-                  _SectionHeader(c: c, title: context.l10n.walletUseIqc),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      children: [
-                        for (final v in denoms) ...[
-                          _DenomCard(
-                            c: c,
-                            denom: v,
-                            enough: iqc >= v.costIqc,
-                            onRedeem: () => _redeem(context, ref, v),
-                          ),
-                          const SizedBox(height: 12),
-                        ],
-                      ],
-                    ),
-                  ),
-
                 ],
               ),
             ),
           ),
         ],
-      )]),
+      ),
+    );
+  }
+}
+
+// ── Мои ваучеры: стопка карт ───────────────────────────────────────────
+
+class _MyVouchers extends ConsumerWidget {
+  const _MyVouchers({required this.active, required this.hasArchived});
+
+  final List<IssuedVoucher> active;
+  final bool hasArchived;
+
+  void _open(BuildContext context, WidgetRef ref, IssuedVoucher v) {
+    showVoucherOverlay(
+      context,
+      voucher: v,
+      onArchive: () {
+        archiveVoucherWithUndo(ref, v);
+      },
     );
   }
 
-  Future<void> _redeem(
-      BuildContext context, WidgetRef ref, VoucherDenomination v) async {
-    final ok = await showDialog<bool>(
-      context: context,
-      // ctx — контекст диалога (см. фикс в сапёре): под ShellRoute Navigator.pop(context,…)
-      // с внешним контекстом уходил во вложенный навигатор и не закрывал диалог.
-      builder: (ctx) => AlertDialog(
-        title: Text(context.l10n.walletRedeemTitle),
-        content: Text(context.l10n.walletRedeemBody(v.label, v.costIqc)),
-        actions: [
-          DialogButtons(
-            cancelLabel: context.l10n.walletCancel,
-            onCancel: () => Navigator.pop(ctx, false),
-            confirmLabel: context.l10n.walletRedeem,
-            onConfirm: () => Navigator.pop(ctx, true),
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final pq = context.pq;
+    final l = context.l10n;
+    final back =
+        active.isEmpty
+            ? const <IssuedVoucher>[]
+            : active.sublist(0, active.length - 1);
+    final front = active.isEmpty ? null : active.last;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        WalletSectionHead(
+          l.walletMyVouchers,
+          count: active.length,
+          countTone: PqTone.success,
+          actionLabel: l.walletArchive,
+          onAction: () => context.push('/app/wallet/archive'),
+        ),
+        const SizedBox(height: 12),
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 250),
+          switchInCurve: PqMotion.ease,
+          layoutBuilder:
+              (cur, prev) => Stack(
+                alignment: Alignment.topCenter,
+                fit: StackFit.passthrough,
+                children: [...prev, if (cur != null) cur],
+              ),
+          child:
+              front == null
+                  ? DashedBorderBox(
+                    key: const ValueKey('empty'),
+                    color: pq.borderStrong,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 28,
+                    ),
+                    child: Column(
+                      children: [
+                        // inline-svg в строке 16/1.4: 3 px сверху, 4 снизу
+                        Padding(
+                          padding: const EdgeInsets.only(top: 3, bottom: 4),
+                          child: PqIcon(
+                            PqIcons.archive,
+                            size: 26,
+                            color: pq.textMuted,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          hasArchived
+                              ? l.walletAllArchivedTitle
+                              : l.walletNoVouchers,
+                          textAlign: TextAlign.center,
+                          style: PqText.text(16, FontWeight.w600, c: pq.text),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          l.walletAllArchivedText,
+                          textAlign: TextAlign.center,
+                          style: PqText.body(c: pq.textMuted),
+                        ),
+                      ],
+                    ),
+                  )
+                  : Column(
+                    key: ValueKey(active.map((v) => v.id).join(',')),
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      for (var i = 0; i < back.length; i++)
+                        _BackCard(
+                          voucher: back[i],
+                          color: stackBackColor(i, back.length),
+                          onTap: () => _open(context, ref, back[i]),
+                        ),
+                      _FrontCard(
+                        voucher: front,
+                        onTap: () => _open(context, ref, front),
+                      ),
+                    ],
+                  ),
+        ),
+        if (front != null) ...[
+          const SizedBox(height: 12),
+          Text(
+            l.walletTapCardHint,
+            textAlign: TextAlign.center,
+            style: PqText.body(c: pq.textMuted),
           ),
         ],
-      ),
+      ],
     );
-    if (ok != true) return;
-    try {
-      await ref.read(apiProvider).wallet.redeem(v.faceUzs);
-      ref.invalidate(walletProvider);
-      ref.invalidate(myVouchersProvider);
-      ref.invalidate(availableVouchersProvider);
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(context.l10n.walletVoucherIssued)));
-      }
-    } catch (e) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(e.toString())));
-      }
-    }
   }
 }
 
-class _Title extends StatelessWidget {
-  const _Title();
-  @override
-  Widget build(BuildContext context) {
-    final c = _W.of(context);
-    return Text(context.l10n.walletTitle,
-        style: TextStyle(
-            fontSize: 24, fontWeight: FontWeight.w700, color: c.text));
-  }
-}
-
-// ── Балансовая карточка ─────────────────────────────────────────────────
-
-class _BalanceCard extends StatelessWidget {
-  const _BalanceCard({
-    required this.c,
-    required this.iqc,
-    required this.onHistory,
+/// «Корешок» ваучера в стопке: 64 высотой, следующий перекрывает нижние 12.
+class _BackCard extends StatelessWidget {
+  const _BackCard({
+    required this.voucher,
+    required this.color,
+    required this.onTap,
   });
 
-  final _W c;
-  final int iqc;
-  final VoidCallback onHistory;
+  final IssuedVoucher voucher;
+  final Color color;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          colors: c.balanceGradient,
-        ),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(context.l10n.walletBalanceLabel,
-              style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0.5,
-                  color: c.balLabel)),
-          const SizedBox(height: 8),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
-            children: [
-              Text(_num.format(iqc),
-                  style: const TextStyle(
-                      fontSize: 44,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white)),
-              const SizedBox(width: 4),
-              Text('IQC',
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: c.balLabel)),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 12),
+    final l = context.l10n;
+    final sum = formatUzs(voucher.amountUzs);
+    return SizedBox(
+      height: 52,
+      child: OverflowBox(
+        alignment: Alignment.topCenter,
+        minHeight: 64,
+        maxHeight: 64,
+        child: PqPressable(
+          onTap: onTap,
+          semanticLabel: l.walletOpenVoucher(sum),
+          child: Container(
+            height: 64,
+            padding: const EdgeInsets.fromLTRB(18, 0, 18, 12),
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(20),
+              ),
+            ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Flexible(
-                  child: Text(
-                      context.l10n.walletTotalAccrued(_num.format(iqc)),
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 12, color: c.balLabel)),
+                const KorzinkaBrand(fontSize: 14, tight: true),
+                const Spacer(),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    CardOverline(l.walletFaceValue, tight: true),
+                    Text(
+                      sum,
+                      style: PqText.heading(
+                        16,
+                        FontWeight.w700,
+                        height: kOnestNormal,
+                        c: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _FrontCard extends StatelessWidget {
+  const _FrontCard({required this.voucher, required this.onTap});
+
+  final IssuedVoucher voucher;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.l10n;
+    final sum = formatUzs(voucher.amountUzs);
+    return PqPressable(
+      onTap: onTap,
+      semanticLabel: l.walletOpenVoucher(sum),
+      child: Container(
+        padding: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          gradient: kVoucherGradient,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x73000000),
+              offset: Offset(0, -8),
+              blurRadius: 20,
+              spreadRadius: -10,
+            ),
+            BoxShadow(
+              color: Color(0xB3E53935),
+              offset: Offset(0, 18),
+              blurRadius: 32,
+              spreadRadius: -18,
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                const KorzinkaBrand(tight: true),
+                const Spacer(),
+                CardBadge(l.walletVoucherActive, tight: true),
+              ],
+            ),
+            const SizedBox(height: 20),
+            CardOverline(l.walletGiftCard, tight: true),
+            const SizedBox(height: 2),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                sum,
+                style: PqText.heading(
+                  40,
+                  FontWeight.w800,
+                  height: 1.05,
+                  c: Colors.white,
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                Expanded(
+                  child: CardField(
+                    l.walletReceived,
+                    walletShortDate(voucher.issuedAt),
+                    tight: true,
+                  ),
                 ),
                 const SizedBox(width: 8),
-                GestureDetector(
-                  onTap: onHistory,
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: c.balChipBorder),
-                    ),
-                    child: Text(context.l10n.walletHistoryArrow,
-                        style: TextStyle(fontSize: 12, color: c.balLabel)),
+                Expanded(
+                  child: CardField(
+                    l.walletCode,
+                    '••${codeTail(voucher.code)}',
+                    align: CrossAxisAlignment.center,
+                    tight: true,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: CardField(
+                    'QR',
+                    l.walletShowQr,
+                    align: CrossAxisAlignment.end,
+                    tight: true,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── Ждут выдачи ────────────────────────────────────────────────────────
+
+class _Awaiting extends StatelessWidget {
+  const _Awaiting({required this.pending});
+
+  final List<PendingAccrual> pending;
+
+  @override
+  Widget build(BuildContext context) {
+    final pq = context.pq;
+    final l = context.l10n;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        WalletSectionHead(
+          l.walletAwaitingTitle,
+          count: pending.length,
+          countTone: PqTone.warning,
+        ),
+        const SizedBox(height: 12),
+        WalletRowsCard(
+          footer: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 12, 0, 14),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                PqIcon(PqIcons.clock, size: 18, color: pq.warning),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    l.walletManualHint,
+                    style: PqText.body(c: pq.textSecondary),
                   ),
                 ),
               ],
             ),
           ),
-        ],
-      ),
-    );
-  }
-}
-
-// ── Заголовок секции ────────────────────────────────────────────────────
-
-class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({required this.c, required this.title, this.count});
-  final _W c;
-  final String title;
-  final int? count;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(title,
-              style: TextStyle(
-                  fontSize: 16, fontWeight: FontWeight.w600, color: c.text)),
-          if (count != null)
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-              decoration: BoxDecoration(
-                  color: c.countBg, borderRadius: BorderRadius.circular(10)),
-              child: Text('$count',
-                  style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: c.muted)),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-// ── Строка «ваучер в очереди» ───────────────────────────────────────────
-
-class _PendingRow extends StatelessWidget {
-  const _PendingRow({required this.c, required this.accrual});
-  final _W c;
-  final PendingAccrual accrual;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-          color: c.card, borderRadius: BorderRadius.circular(14)),
-      child: Row(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            alignment: Alignment.center,
+          children: [
+            for (final a in pending.take(3))
+              PendingRow(
+                accrual: a,
+                icon: PqIcons.hourglass,
+                amountColor: pq.warning,
+                titleLines: 1,
+              ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        PqPressable(
+          onTap: () => context.push('/app/wallet/queue'),
+          child: Container(
+            height: 50, // <a> 48 + рамка (content-box)
             decoration: BoxDecoration(
-                color: c.clockBg, borderRadius: BorderRadius.circular(20)),
-            child: Icon(Icons.schedule, size: 20, color: c.amber),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: pq.border),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(accrual.questName,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: c.text)),
-                const SizedBox(height: 3),
-                Text(context.l10n.walletQuestDoneAwaiting,
-                    style: TextStyle(fontSize: 12, color: c.muted)),
-                const SizedBox(height: 3),
-                Text(formatDate(accrual.requestedAt),
-                    style: TextStyle(fontSize: 11, color: c.faint)),
+                Text(
+                  l.walletShowAll(pending.length),
+                  style: PqText.link(c: pq.accent),
+                ),
+                const SizedBox(width: 4),
+                PqIcon(PqIcons.chevronRight, size: 16, color: pq.accent),
               ],
             ),
           ),
-          const SizedBox(width: 8),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            decoration: BoxDecoration(
-                color: c.clockBg, borderRadius: BorderRadius.circular(10)),
-            child: Text('×${accrual.count}',
-                style: TextStyle(
-                    fontSize: 13, fontWeight: FontWeight.w700, color: c.amber)),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
 
-// ── Карточка номинала ───────────────────────────────────────────────────
+// ── Обменять IQC ───────────────────────────────────────────────────────
 
-class _DenomCard extends StatelessWidget {
-  const _DenomCard({
-    required this.c,
-    required this.denom,
-    required this.enough,
-    required this.onRedeem,
-  });
+class _ExchangeCard extends ConsumerWidget {
+  const _ExchangeCard({required this.denom, required this.balance});
 
-  final _W c;
   final VoucherDenomination denom;
-  final bool enough;
-  final VoidCallback onRedeem;
+  final int balance;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-          color: c.card, borderRadius: BorderRadius.circular(16)),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final pq = context.pq;
+    final l = context.l10n;
+    final enough = balance >= denom.costIqc;
+    final progress =
+        denom.costIqc <= 0 ? 1.0 : (balance / denom.costIqc).clamp(0.0, 1.0);
+    return PqCard(
+      onTap: () => context.push('/app/wallet/shop'),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Container(
-            width: 40,
-            height: 40,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                color: c.giftPurpleBg, borderRadius: BorderRadius.circular(20)),
-            child: Icon(Icons.card_giftcard, size: 20, color: c.giftPurple),
-          ),
-          const SizedBox(height: 12),
-          Text(denom.label,
-              style: TextStyle(
-                  fontSize: 20, fontWeight: FontWeight.w700, color: c.text)),
-          const SizedBox(height: 2),
-          Text(context.l10n.walletForIqc(denom.costIqc),
-              style: TextStyle(fontSize: 14, color: c.muted)),
-          const SizedBox(height: 12),
-          SizedBox(
-            width: double.infinity,
-            height: 48,
-            child: FilledButton(
-              style: FilledButton.styleFrom(
-                backgroundColor: c.redeemBtn,
-                foregroundColor: Colors.white,
-                disabledBackgroundColor: c.redeemBtn.withValues(alpha: 0.4),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
+          Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: kKorzinkaRed,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                alignment: Alignment.center,
+                child: const PqIcon(
+                  PqIcons.gift,
+                  size: 22,
+                  color: Colors.white,
+                ),
               ),
-              onPressed: enough ? onRedeem : null,
-              child: Text(context.l10n.walletGetVoucher,
-                  style: const TextStyle(
-                      fontSize: 15, fontWeight: FontWeight.w600)),
-            ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      formatUzs(denom.faceUzs),
+                      style: PqText.title(c: pq.text),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      l.walletGiftCardKorzinka,
+                      style: PqText.body(c: pq.textMuted),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 14),
+              Text(
+                '${denom.costIqc} IQC',
+                style: PqText.amount(c: iqcPriceColor(pq)),
+              ),
+            ],
           ),
-          if (!enough) ...[
+          const SizedBox(height: 14),
+          if (enough)
+            PqButton(
+              label: l.walletExchangeFor(walletNum(denom.costIqc)),
+              icon: PqIcons.ticket,
+              height: 48,
+              onPressed:
+                  () => startVoucherExchange(
+                    context,
+                    ref,
+                    denom: denom,
+                    balance: balance,
+                  ),
+            )
+          else ...[
+            Container(
+              height: 8,
+              decoration: BoxDecoration(
+                color: walletTrackColor(pq),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              alignment: Alignment.centerLeft,
+              child: FractionallySizedBox(
+                widthFactor: progress,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: iqcBarColor(pq),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+              ),
+            ),
             const SizedBox(height: 8),
-            Center(
-              child: Text(context.l10n.walletNotEnoughIqc,
-                  style: TextStyle(fontSize: 12, color: c.muted)),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    l.walletProgressOf('$balance', '${denom.costIqc}'),
+                    style: PqText.body(c: pq.textMuted),
+                  ),
+                ),
+                Text(
+                  l.walletMore('${denom.costIqc - balance}'),
+                  style: PqText.body(c: pq.textMuted),
+                ),
+              ],
+            ),
+            const SizedBox(height: 14),
+            Semantics(
+              button: true,
+              enabled: false,
+              child: Container(
+                height: 48,
+                decoration: BoxDecoration(
+                  color: pq.fieldDisabledBg,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: pq.border),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    PqIcon(PqIcons.lock, size: 16, color: pq.textMuted),
+                    const SizedBox(width: 8),
+                    Flexible(
+                      child: Text(
+                        l.walletSaveUp,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: PqText.text(
+                          15,
+                          FontWeight.w700,
+                          c: pq.textMuted,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ],
       ),
     );
   }
-}
-
-// ── Строка «мой ваучер» ─────────────────────────────────────────────────
-
-class _MyVoucherRow extends StatelessWidget {
-  const _MyVoucherRow({required this.c, required this.voucher, required this.onTap});
-  final _W c;
-  final IssuedVoucher voucher;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final used = voucher.status == 'used';
-    return Material(
-      color: c.card,
-      borderRadius: BorderRadius.circular(14),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(14),
-        child: Padding(
-          padding: const EdgeInsets.all(14),
-          child: Row(
-            children: [
-              Container(
-                width: 40,
-                height: 40,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    color: c.giftBlueBg, borderRadius: BorderRadius.circular(20)),
-                child: Icon(Icons.card_giftcard, size: 20, color: c.giftBlue),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(_uzs(voucher.amountUzs),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: c.text)),
-                    const SizedBox(height: 3),
-                    Text(
-                        context.l10n.walletCodeMeta(
-                            voucher.code, formatDateTime(voucher.issuedAt)),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: 12, color: c.muted)),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(
-                  color: used ? c.usedBg : c.activeBg,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: used ? c.usedFg : c.activeFg),
-                ),
-                child: Text(
-                    used
-                        ? context.l10n.walletVoucherUsed
-                        : context.l10n.walletVoucherActive,
-                    style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                        color: used ? c.usedFg : c.activeFg)),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _EmptyCard extends StatelessWidget {
-  const _EmptyCard({required this.c, required this.text});
-  final _W c;
-  final String text;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-          color: c.card, borderRadius: BorderRadius.circular(14)),
-      child: Text(text,
-          textAlign: TextAlign.center, style: TextStyle(color: c.muted)),
-    );
-  }
-}
-
-// ── История операций ────────────────────────────────────────────────────
-
-class _HistoryScreen extends ConsumerWidget {
-  const _HistoryScreen();
-
-  IconData _icon(WalletTxnType t) => switch (t) {
-        WalletTxnType.earn => Icons.add_circle_outline,
-        WalletTxnType.redeem => Icons.remove_circle_outline,
-        WalletTxnType.reversal => Icons.undo,
-        WalletTxnType.adjust => Icons.tune,
-      };
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final txns = ref.watch(walletTxnsProvider);
-    return Scaffold(
-      appBar: AppBar(title: Text(context.l10n.walletHistoryTitle)),
-      body: txns.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text(e.toString())),
-        data: (list) => list.isEmpty
-            ? Center(child: Text(context.l10n.walletNoTransactions))
-            : ListView.separated(
-                padding: const EdgeInsets.all(16),
-                itemCount: list.length,
-                separatorBuilder: (_, __) => const Divider(height: 1),
-                itemBuilder: (_, i) {
-                  final t = list[i];
-                  final positive = t.deltaUzs >= 0;
-                  return ListTile(
-                    leading: Icon(_icon(t.type)),
-                    title: Text(t.note ?? t.refType),
-                    subtitle: Text(formatDateTime(t.createdAt)),
-                    trailing: Text(
-                      '${positive ? '+' : ''}${formatIqc(iqcFromUzs(t.deltaUzs))}',
-                      style: TextStyle(
-                        color: positive ? Colors.green : Colors.red,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  );
-                },
-              ),
-      ),
-    );
-  }
-}
-
-// ── Палитра кошелька (токены макета) ────────────────────────────────────
-
-class _W {
-  const _W({
-    required this.page,
-    required this.card,
-    required this.text,
-    required this.muted,
-    required this.faint,
-    required this.balanceGradient,
-    required this.balLabel,
-    required this.balSub,
-    required this.balChipBorder,
-    required this.countBg,
-    required this.clockBg,
-    required this.amber,
-    required this.giftPurpleBg,
-    required this.giftPurple,
-    required this.giftBlueBg,
-    required this.giftBlue,
-    required this.redeemBtn,
-    required this.activeBg,
-    required this.activeFg,
-    required this.usedBg,
-    required this.usedFg,
-  });
-
-  final Color page;
-  final Color card;
-  final Color text;
-  final Color muted;
-  final Color faint;
-  final List<Color> balanceGradient;
-  final Color balLabel;
-  final Color balSub;
-  final Color balChipBorder;
-  final Color countBg;
-  final Color clockBg;
-  final Color amber;
-  final Color giftPurpleBg;
-  final Color giftPurple;
-  final Color giftBlueBg;
-  final Color giftBlue;
-  final Color redeemBtn;
-  final Color activeBg;
-  final Color activeFg;
-  final Color usedBg;
-  final Color usedFg;
-
-  static _W of(BuildContext context) =>
-      Theme.of(context).brightness == Brightness.dark ? _dark : _light;
-
-  static const _dark = _W(
-    page: Color(0xFF0D1117),
-    card: Color(0xFF151B2A),
-    text: Color(0xFFE4E2ED),
-    muted: Color(0xFF9CA3AF),
-    faint: Color(0xFF49454F),
-    balanceGradient: [Color(0xFF1A3566), Color(0xFF2A4B8A)],
-    balLabel: Color(0xFF8BAFD4),
-    balSub: Color(0xFF6A8CAF),
-    balChipBorder: Color(0xFF2A4B8A),
-    countBg: Color(0xFF1E2A3A),
-    clockBg: Color(0xFF2A2010),
-    amber: Color(0xFFF59E0B),
-    giftPurpleBg: Color(0xFF2D1F5E),
-    giftPurple: Color(0xFFC4B5FD),
-    giftBlueBg: Color(0xFF1F2D3D),
-    giftBlue: Color(0xFF7DD3FC),
-    redeemBtn: Color(0xFF3730A3),
-    activeBg: Color(0xFF14421E),
-    activeFg: Color(0xFF22C55E),
-    usedBg: Color(0xFF23262F),
-    usedFg: Color(0xFF9CA3AF),
-  );
-
-  static const _light = _W(
-    page: Color(0xFFF5F6FA),
-    card: Colors.white,
-    text: Color(0xFF1A1D26),
-    muted: Color(0xFF6B7280),
-    faint: Color(0xFF9CA3AF),
-    balanceGradient: [Color(0xFF2563EB), Color(0xFF7C3AED)],
-    balLabel: Color(0xFFD6E3FF),
-    balSub: Color(0xFFDBEAFE),
-    balChipBorder: Color(0x66FFFFFF),
-    countBg: Color(0xFFEEF2FF),
-    clockBg: Color(0xFFFEF3C7),
-    amber: Color(0xFFD97706),
-    giftPurpleBg: Color(0xFFEDE9FE),
-    giftPurple: Color(0xFF7C3AED),
-    giftBlueBg: Color(0xFFE0F2FE),
-    giftBlue: Color(0xFF0EA5E9),
-    redeemBtn: Color(0xFF3730A3),
-    activeBg: Color(0xFFDCFCE7),
-    activeFg: Color(0xFF16A34A),
-    usedBg: Color(0xFFF3F4F6),
-    usedFg: Color(0xFF6B7280),
-  );
 }
