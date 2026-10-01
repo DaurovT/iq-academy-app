@@ -40,7 +40,6 @@ class PrivacyScreen extends StatelessWidget {
                   header: true,
                   child: Text(l.profilePrivacyHeadline, style: PqText.display(c: pq.text)),
                 ),
-                ProfileWarnBanner(l.profilePrivacyDraft),
                 for (final (icon, title, body) in sections)
                   Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     PqIconTile(icon, size: 40, radius: 12, iconSize: 20),

@@ -466,7 +466,8 @@ class AppLocalizationsRu extends AppLocalizations {
   String get profileSupport => 'Поддержка';
 
   @override
-  String get profileSupportSubtitle => 'Отвечаем в Telegram и по телефону';
+  String get profileSupportSubtitle =>
+      'Отвечаем в Telegram, по телефону и в чате поддержки';
 
   @override
   String get profileLogout => 'Выйти из аккаунта';
@@ -2269,7 +2270,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get questsSubtitle => 'Продавайте и получайте награды';
 
   @override
-  String get questsSubtitleDoctor => 'Выписывайте рецепты и получайте награды';
+  String get questsSubtitleDoctor => 'Выписывайте бланки и получайте награды';
 
   @override
   String get questsSearchLabel => 'Поиск квестов';
@@ -2304,10 +2305,10 @@ class AppLocalizationsRu extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       goal,
       locale: localeName,
-      other: 'из $goal рецептов',
-      many: 'из $goal рецептов',
-      few: 'из $goal рецептов',
-      one: 'из $goal рецепта',
+      other: 'из $goal бланков',
+      many: 'из $goal бланков',
+      few: 'из $goal бланков',
+      one: 'из $goal бланка',
     );
     return '$_temp0';
   }
@@ -2333,7 +2334,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get questsStepPrescribeTitle => 'Выпишите';
 
   @override
-  String get questsStepPrescribeSub => 'рецепт';
+  String get questsStepPrescribeSub => 'бланк';
 
   @override
   String get questsStepSendTitle => 'Отправьте';
@@ -2342,7 +2343,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get questsStepSendCheckSub => 'фото чека';
 
   @override
-  String get questsStepSendRecipeSub => 'фото рецепта';
+  String get questsStepSendRecipeSub => 'фото бланка';
 
   @override
   String get questsStepGetTitle => 'Получите';
@@ -2411,10 +2412,10 @@ class AppLocalizationsRu extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '$n рецепта',
-      many: '$n рецептов',
-      few: '$n рецепта',
-      one: '$n рецепт',
+      other: '$n бланка',
+      many: '$n бланков',
+      few: '$n бланка',
+      one: '$n бланк',
     );
     return '$_temp0';
   }
@@ -2467,10 +2468,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get questsStepPhotoCheckSub => 'ИИ проверит упаковку автоматически';
 
   @override
-  String get questsStepPhotoRecipe => 'Сфотографируйте рецепт';
+  String get questsStepPhotoRecipe => 'Сфотографируйте бланк';
 
   @override
-  String get questsStepPhotoRecipeSub => 'ИИ проверит рецепт автоматически';
+  String get questsStepPhotoRecipeSub => 'ИИ проверит бланк автоматически';
 
   @override
   String get questsStepGetVoucher => 'Получите ваучер';
@@ -2487,7 +2488,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get questsSalesLimit => 'Лимит продаж';
 
   @override
-  String get questsRecipesLimit => 'Лимит рецептов';
+  String get questsRecipesLimit => 'Лимит бланков';
 
   @override
   String get questsNoLimit => 'Без ограничений';
@@ -2501,13 +2502,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get questsCountedTitle => 'Засчитанные чеки';
 
   @override
-  String get questsCountedRecipesTitle => 'Засчитанные рецепты';
+  String get questsCountedRecipesTitle => 'Засчитанные бланки';
 
   @override
   String get questsCountedEmpty => 'Пока ни одного чека';
 
   @override
-  String get questsCountedEmptyRecipes => 'Пока ни одного рецепта';
+  String get questsCountedEmptyRecipes => 'Пока ни одного бланка';
 
   @override
   String get questsCountedEmptySub =>
@@ -2515,7 +2516,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get questsCountedEmptySubRecipes =>
-      'Рецепты по квесту появятся здесь после проверки';
+      'Бланки по квесту появятся здесь после проверки';
 
   @override
   String questsCountedSales(int n) {
@@ -2535,10 +2536,10 @@ class AppLocalizationsRu extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: 'Засчитано $n рецепта',
-      many: 'Засчитано $n рецептов',
-      few: 'Засчитано $n рецепта',
-      one: 'Засчитан $n рецепт',
+      other: 'Засчитано $n бланка',
+      many: 'Засчитано $n бланков',
+      few: 'Засчитано $n бланка',
+      one: 'Засчитан $n бланк',
     );
     return '$_temp0';
   }
@@ -2547,13 +2548,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get questsAllChecks => 'Все чеки';
 
   @override
-  String get questsAllRecipes => 'Все рецепты';
+  String get questsAllRecipes => 'Все бланки';
 
   @override
   String get questsSendCheck => 'Отправить чек по квесту';
 
   @override
-  String get questsSendRecipe => 'Отправить рецепт по квесту';
+  String get questsSendRecipe => 'Отправить бланк по квесту';
 
   @override
   String get questsSearchPlaceholder => 'Название или препарат';
@@ -2801,7 +2802,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get walletTxnCheck => 'Чек';
 
   @override
-  String get walletTxnRecipe => 'Рецепт';
+  String get walletTxnRecipe => 'Бланк';
 
   @override
   String get walletTxnSurvey => 'Опрос';
@@ -4376,7 +4377,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'У вас несколько ролей — выберите, под какой войти';
 
   @override
-  String get authRoleSubDoctor => 'Рецепты, квесты, обучение и кошелёк';
+  String get authRoleSubDoctor => 'Бланки, квесты, обучение и кошелёк';
 
   @override
   String get authRoleHint => 'Сменить роль можно в любой момент в профиле';
@@ -4698,7 +4699,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get checksCamText =>
-      'Камера нужна, чтобы фотографировать чеки и рецепты';
+      'Камера нужна, чтобы фотографировать чеки и бланки';
 
   @override
   String get checksCamPoint1 => 'Снимаем только когда вы нажмёте кнопку';
@@ -4957,7 +4958,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get profileRoleDescPharmacist => 'Чеки, квесты, обучение и кошелёк';
 
   @override
-  String get profileRoleDescDoctor => 'Рецепты, квесты, обучение и кошелёк';
+  String get profileRoleDescDoctor => 'Бланки, квесты, обучение и кошелёк';
 
   @override
   String get profileRoleDescMedrep => 'Портфель провизоров и рейтинг';
@@ -5028,21 +5029,21 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get profilePrivacyCollectBody =>
-      'Имя, номер телефона, город и аптеку или клинику. Фото чеков и рецептов, которые вы отправляете. Результаты курсов и тестов.';
+      'Имя, номер телефона, город и аптеку или клинику. Фото чеков и бланков, которые вы отправляете. Результаты курсов и тестов.';
 
   @override
   String get profilePrivacyWhyTitle => 'Зачем они нужны';
 
   @override
   String get profilePrivacyWhyBody =>
-      'Чтобы начислять IQC за чеки и рецепты, засчитывать квесты, выдавать ваучеры и показывать вашу статистику.';
+      'Чтобы начислять IQC за чеки и бланки, засчитывать квесты, выдавать ваучеры и показывать вашу статистику.';
 
   @override
   String get profilePrivacyWhoTitle => 'Кто их видит';
 
   @override
   String get profilePrivacyWhoBody =>
-      'Ваш медпредставитель видит число ваших чеков и квестов. Данные пациентов из рецептов скрыты — видны только инициалы.';
+      'Ваш медпредставитель видит число ваших чеков и квестов. Данные пациентов из бланков скрыты — видны только инициалы.';
 
   @override
   String get profilePrivacyStoreTitle => 'Как мы их храним';
@@ -5457,11 +5458,11 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get tourQuestsText =>
-      'Задания от производителей: продайте нужное количество упаковок и получите бонус. Прогресс виден на карточке.';
+      'Задания от производителей: продайте нужное количество упаковок и получите награду. Прогресс виден на карточке.';
 
   @override
   String get tourQuestsTextDoc =>
-      'Задания от производителей: выпишите нужное количество бланков и получите бонус. Прогресс виден на карточке.';
+      'Задания от производителей: выпишите нужное количество бланков и получите награду. Прогресс виден на карточке.';
 
   @override
   String get tourChecksTitle => 'Ваши чеки';
@@ -5514,4 +5515,20 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get profileTourAgain => 'Пройти обучение заново';
+
+  @override
+  String get walletConfirmTextPlain => 'Получите подарочную карту Korzinka';
+
+  @override
+  String walletArchiveCount(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n ваучера',
+      many: '$n ваучеров',
+      few: '$n ваучера',
+      one: '$n ваучер',
+    );
+    return '$_temp0';
+  }
 }

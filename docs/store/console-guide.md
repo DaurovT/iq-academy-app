@@ -40,7 +40,7 @@
 5. **Publish**.
 
 ### A5. Страница версии (слева «1.0 Prepare for Submission»)
-- **Screenshots → iPhone 6.9"**: перетащить 3 файла из `assets/appstore/`.
+- **Screenshots → iPhone 6.9"**: перетащить 5 файлов `assets/appstore/01.png … 05.png` (1290×2796) в этом порядке.
 - **Promotional Text, Description, Keywords** — из `listing.md` (раздел «Русский»).
 - **Support URL:** `https://pharmview.uz/privacy` (там все контакты). **Marketing URL:** пусто.
 - **Version:** `1.0.0`. **Copyright:** `2026 PHARMIQ ACADEMY LLC`
@@ -91,7 +91,7 @@
 - **Full description:** из `listing.md` (раздел «Русский», «Описание»).
 - **App icon:** `assets/googleplay/icon-512.png`
 - **Feature graphic:** `assets/googleplay/feature-graphic-1024x500.png`
-- **Phone screenshots:** 3 файла `assets/googleplay/1-*.png … 3-*.png`
+- **Phone screenshots:** 5 файлов `assets/googleplay/01.png … 05.png` (1080×1920) в этом порядке
 - **Save**.
 
 ### B5. Выпуск

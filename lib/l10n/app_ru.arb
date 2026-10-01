@@ -334,7 +334,7 @@
   "profileTgConnected": "Подключён",
   "profileTgLinked": "Привязан",
   "profileSupport": "Поддержка",
-  "profileSupportSubtitle": "Отвечаем в Telegram и по телефону",
+  "profileSupportSubtitle": "Отвечаем в Telegram, по телефону и в чате поддержки",
   "profileLogout": "Выйти из аккаунта",
   "profileDeleteTitle": "Удалить аккаунт и данные",
   "profileDeleteIrreversible": "Действие необратимо",
@@ -1527,7 +1527,7 @@
   "sapperPlayNew": "Участвовать в новой акции",
   "sapperViewResults": "Посмотреть итоги",
   "questsSubtitle": "Продавайте и получайте награды",
-  "questsSubtitleDoctor": "Выписывайте рецепты и получайте награды",
+  "questsSubtitleDoctor": "Выписывайте бланки и получайте награды",
   "questsSearchLabel": "Поиск квестов",
   "questsTabDone": "Завершённые",
   "questsSortHint": "Сначала — ближе всего к награде",
@@ -1541,7 +1541,7 @@
       }
     }
   },
-  "questsOfGoalRecipes": "{goal, plural, one{из {goal} рецепта} few{из {goal} рецептов} many{из {goal} рецептов} other{из {goal} рецептов}}",
+  "questsOfGoalRecipes": "{goal, plural, one{из {goal} бланка} few{из {goal} бланков} many{из {goal} бланков} other{из {goal} бланков}}",
   "@questsOfGoalRecipes": {
     "placeholders": {
       "goal": {
@@ -1562,10 +1562,10 @@
   "questsStepSellTitle": "Продайте",
   "questsStepSellSub": "препарат",
   "questsStepPrescribeTitle": "Выпишите",
-  "questsStepPrescribeSub": "рецепт",
+  "questsStepPrescribeSub": "бланк",
   "questsStepSendTitle": "Отправьте",
   "questsStepSendCheckSub": "фото чека",
-  "questsStepSendRecipeSub": "фото рецепта",
+  "questsStepSendRecipeSub": "фото бланка",
   "questsStepGetTitle": "Получите",
   "questsStepGetSub": "награду",
   "questsDoneFooter": "Здесь хранятся выполненные и завершённые квесты — с датой и полученной наградой",
@@ -1604,7 +1604,7 @@
       }
     }
   },
-  "questsRecipesCount": "{n, plural, one{{n} рецепт} few{{n} рецепта} many{{n} рецептов} other{{n} рецепта}}",
+  "questsRecipesCount": "{n, plural, one{{n} бланк} few{{n} бланка} many{{n} бланков} other{{n} бланка}}",
   "@questsRecipesCount": {
     "placeholders": {
       "n": {
@@ -1659,8 +1659,8 @@
   },
   "questsStepPhotoCheck": "Сфотографируйте чек",
   "questsStepPhotoCheckSub": "ИИ проверит упаковку автоматически",
-  "questsStepPhotoRecipe": "Сфотографируйте рецепт",
-  "questsStepPhotoRecipeSub": "ИИ проверит рецепт автоматически",
+  "questsStepPhotoRecipe": "Сфотографируйте бланк",
+  "questsStepPhotoRecipeSub": "ИИ проверит бланк автоматически",
   "questsStepGetVoucher": "Получите ваучер",
   "questsStepGetIqc": "Получите {n} IQC",
   "@questsStepGetIqc": {
@@ -1672,7 +1672,7 @@
   },
   "questsConditionsTitle": "Условия",
   "questsSalesLimit": "Лимит продаж",
-  "questsRecipesLimit": "Лимит рецептов",
+  "questsRecipesLimit": "Лимит бланков",
   "questsNoLimit": "Без ограничений",
   "questsPacksShort": "{n} уп.",
   "@questsPacksShort": {
@@ -1683,11 +1683,11 @@
     }
   },
   "questsCountedTitle": "Засчитанные чеки",
-  "questsCountedRecipesTitle": "Засчитанные рецепты",
+  "questsCountedRecipesTitle": "Засчитанные бланки",
   "questsCountedEmpty": "Пока ни одного чека",
-  "questsCountedEmptyRecipes": "Пока ни одного рецепта",
+  "questsCountedEmptyRecipes": "Пока ни одного бланка",
   "questsCountedEmptySub": "Чеки по квесту появятся здесь после проверки",
-  "questsCountedEmptySubRecipes": "Рецепты по квесту появятся здесь после проверки",
+  "questsCountedEmptySubRecipes": "Бланки по квесту появятся здесь после проверки",
   "questsCountedSales": "{n, plural, one{Засчитана {n} продажа} few{Засчитано {n} продажи} many{Засчитано {n} продаж} other{Засчитано {n} продажи}}",
   "@questsCountedSales": {
     "placeholders": {
@@ -1696,7 +1696,7 @@
       }
     }
   },
-  "questsCountedRecipes": "{n, plural, one{Засчитан {n} рецепт} few{Засчитано {n} рецепта} many{Засчитано {n} рецептов} other{Засчитано {n} рецепта}}",
+  "questsCountedRecipes": "{n, plural, one{Засчитан {n} бланк} few{Засчитано {n} бланка} many{Засчитано {n} бланков} other{Засчитано {n} бланка}}",
   "@questsCountedRecipes": {
     "placeholders": {
       "n": {
@@ -1705,9 +1705,9 @@
     }
   },
   "questsAllChecks": "Все чеки",
-  "questsAllRecipes": "Все рецепты",
+  "questsAllRecipes": "Все бланки",
   "questsSendCheck": "Отправить чек по квесту",
-  "questsSendRecipe": "Отправить рецепт по квесту",
+  "questsSendRecipe": "Отправить бланк по квесту",
   "questsSearchPlaceholder": "Название или препарат",
   "questsSearchClear": "Очистить",
   "questsFound": "{n, plural, one{Найден {n} квест} few{Найдено {n} квеста} many{Найдено {n} квестов} other{Найдено {n} квеста}}",
@@ -1875,7 +1875,7 @@
   "walletAccrued": "начислено",
   "walletDebited": "списано",
   "walletTxnCheck": "Чек",
-  "walletTxnRecipe": "Рецепт",
+  "walletTxnRecipe": "Бланк",
   "walletTxnSurvey": "Опрос",
   "walletTxnQuest": "Квест выполнен",
   "walletTxnCourse": "Курс пройден",
@@ -2929,7 +2929,7 @@
     }
   },
   "authRoleSubtitle": "У вас несколько ролей — выберите, под какой войти",
-  "authRoleSubDoctor": "Рецепты, квесты, обучение и кошелёк",
+  "authRoleSubDoctor": "Бланки, квесты, обучение и кошелёк",
   "authRoleHint": "Сменить роль можно в любой момент в профиле",
   "authRegWhoTitle": "Кто вы?",
   "authRegWhoSubtitle": "Покажем квесты и курсы для вашей профессии",
@@ -3117,7 +3117,7 @@
   "checksSendAnother": "Отправить ещё чек",
   "checksSendFailed": "Не удалось сохранить фото. Попробуйте ещё раз",
   "checksCamTitle": "Разрешите доступ к камере",
-  "checksCamText": "Камера нужна, чтобы фотографировать чеки и рецепты",
+  "checksCamText": "Камера нужна, чтобы фотографировать чеки и бланки",
   "checksCamPoint1": "Снимаем только когда вы нажмёте кнопку",
   "checksCamPoint2": "Не смотрим и не сохраняем другие фото",
   "checksCamPoint3": "Доступ можно отключить в настройках телефона",
@@ -3232,7 +3232,7 @@
   "profileRoleSheetSubtitle": "Роли, подтверждённые для вашего аккаунта",
   "profileRoleCurrent": "Текущая",
   "profileRoleDescPharmacist": "Чеки, квесты, обучение и кошелёк",
-  "profileRoleDescDoctor": "Рецепты, квесты, обучение и кошелёк",
+  "profileRoleDescDoctor": "Бланки, квесты, обучение и кошелёк",
   "profileRoleDescMedrep": "Портфель провизоров и рейтинг",
   "profileRoleDescBrand": "Квесты бренда, продукты и продажи",
   "profileRoleNote": "Приложение откроется с разделами для выбранной роли. Баланс IQC и ваучеры сохранятся",
@@ -3261,11 +3261,11 @@
   "profilePrivacyShort": "Конфиденциальность",
   "profilePrivacyHeadline": "Как мы обращаемся с вашими данными",
   "profilePrivacyCollectTitle": "Какие данные мы собираем",
-  "profilePrivacyCollectBody": "Имя, номер телефона, город и аптеку или клинику. Фото чеков и рецептов, которые вы отправляете. Результаты курсов и тестов.",
+  "profilePrivacyCollectBody": "Имя, номер телефона, город и аптеку или клинику. Фото чеков и бланков, которые вы отправляете. Результаты курсов и тестов.",
   "profilePrivacyWhyTitle": "Зачем они нужны",
-  "profilePrivacyWhyBody": "Чтобы начислять IQC за чеки и рецепты, засчитывать квесты, выдавать ваучеры и показывать вашу статистику.",
+  "profilePrivacyWhyBody": "Чтобы начислять IQC за чеки и бланки, засчитывать квесты, выдавать ваучеры и показывать вашу статистику.",
   "profilePrivacyWhoTitle": "Кто их видит",
-  "profilePrivacyWhoBody": "Ваш медпредставитель видит число ваших чеков и квестов. Данные пациентов из рецептов скрыты — видны только инициалы.",
+  "profilePrivacyWhoBody": "Ваш медпредставитель видит число ваших чеков и квестов. Данные пациентов из бланков скрыты — видны только инициалы.",
   "profilePrivacyStoreTitle": "Как мы их храним",
   "profilePrivacyStoreBody": "Данные передаются по защищённому соединению и хранятся на серверах компании.",
   "profilePrivacyDeleteTitle": "Как удалить данные",
@@ -3456,8 +3456,8 @@
   "tourSendTitleDoc": "Отправьте бланк",
   "tourSendTextDoc": "Сфотографируйте бланк — ИИ распознает препараты. После проверки на баланс придут IQC.",
   "tourQuestsTitle": "Активные квесты",
-  "tourQuestsText": "Задания от производителей: продайте нужное количество упаковок и получите бонус. Прогресс виден на карточке.",
-  "tourQuestsTextDoc": "Задания от производителей: выпишите нужное количество бланков и получите бонус. Прогресс виден на карточке.",
+  "tourQuestsText": "Задания от производителей: продайте нужное количество упаковок и получите награду. Прогресс виден на карточке.",
+  "tourQuestsTextDoc": "Задания от производителей: выпишите нужное количество бланков и получите награду. Прогресс виден на карточке.",
   "tourChecksTitle": "Ваши чеки",
   "tourChecksText": "Все отправленные чеки и их статусы: на проверке, одобрен, начислено или нужно переснять.",
   "tourChecksTitleDoc": "Ваши бланки",
@@ -3472,5 +3472,14 @@
   "tourDoneTextDoc": "Отправьте первый бланк или начните курс, чтобы получить первые IQC.",
   "tourDoneNote": "Повторить обучение можно в Профиле.",
   "tourFinish": "Начать работу",
-  "profileTourAgain": "Пройти обучение заново"
+  "profileTourAgain": "Пройти обучение заново",
+  "walletConfirmTextPlain": "Получите подарочную карту Korzinka",
+  "walletArchiveCount": "{n, plural, one{{n} ваучер} few{{n} ваучера} many{{n} ваучеров} other{{n} ваучера}}",
+  "@walletArchiveCount": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  }
 }

@@ -513,7 +513,7 @@ class _Conditions extends StatelessWidget {
         recipes ? l.questsRecipesLimit : l.questsSalesLimit,
         q.perUserLimit == null ? l.questsNoLimit : '${q.perUserLimit}',
       ),
-      (PqIcons.users, l.questDetailParticipantsLabel, '${q.participants}'),
+      // Число участников не показываем — решение продукта.
       for (final m in q.mechanics)
         (PqIcons.pill, m.drug, l.questsPacksShort(m.qty)),
     ];

@@ -74,10 +74,9 @@ class _List extends ConsumerWidget {
     final pq = context.pq;
     final l = context.l10n;
     final months = l.walletMonths.split(',');
-    final sum = list.fold<int>(0, (s, v) => s + v.amountUzs);
     final children = <Widget>[
       Text(
-        l.walletArchiveSummary(list.length, formatUzs(sum)),
+        l.walletArchiveCount(list.length),
         style: PqText.subtitle(c: pq.textMuted),
       ),
     ];

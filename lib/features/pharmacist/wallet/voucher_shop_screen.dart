@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/design/design.dart';
-import '../../../core/format.dart';
 import '../../../core/l10n/l10n.dart';
 import '../../../core/models/wallet.dart';
 import '../../../widgets/pq_states.dart';
@@ -118,18 +117,17 @@ class _DenomCard extends ConsumerWidget {
         children: [
           Row(
             children: [
-              _MiniCard(faceUzs: denom.faceUzs),
+              VoucherMiniCard(faceUzs: denom.faceUzs),
               const SizedBox(width: 14),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Номинал — только на самой карточке слева.
                     Text(
-                      formatUzs(denom.faceUzs),
-                      style: PqText.title(c: pq.text),
+                      l.walletGiftCardKorzinka,
+                      style: PqText.rowTitle(c: pq.text),
                     ),
-                    const SizedBox(height: 2),
-                    Text(l.walletGiftCard, style: PqText.body(c: pq.textMuted)),
                     const SizedBox(height: 2),
                     Text(
                       '$cost IQC',
@@ -183,61 +181,4 @@ class _DenomCard extends ConsumerWidget {
       ),
     );
   }
-}
-
-/// Мини-карта 112×72 с логотипом и номиналом.
-class _MiniCard extends StatelessWidget {
-  const _MiniCard({required this.faceUzs});
-
-  final int faceUzs;
-
-  @override
-  Widget build(BuildContext context) => Container(
-    width: 112,
-    height: 72,
-    decoration: BoxDecoration(
-      gradient: kVoucherGradient,
-      borderRadius: BorderRadius.circular(14),
-    ),
-    clipBehavior: Clip.antiAlias,
-    child: Stack(
-      children: [
-        Positioned(
-          right: -20,
-          top: -20,
-          child: Container(
-            width: 70,
-            height: 70,
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: .12),
-              shape: BoxShape.circle,
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const KorzinkaBrand(
-                fontSize: 12,
-                onest: false,
-                tile: 0,
-                iconSize: 14,
-                gap: 6,
-              ),
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  walletNum(faceUzs),
-                  style: PqText.heading(16, FontWeight.w800, c: Colors.white),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    ),
-  );
 }

@@ -29,7 +29,7 @@ void main() {
   pqShotBoth('DocHome', (t, dark) => pqShot(t,
       name: 'DocHome',
       dark: dark,
-      height: 1810,
+      height: 1623,
       screen: const DoctorHome(),
       overrides: doctorOverrides(),
       nav: doctorNav,

@@ -186,7 +186,10 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
         Text(l10n.registerTitle, style: PqText.display(c: pq.text)),
         for (final f in s.fields) ...[
           // Фармацевту — отметка аптеки на карте (перед согласием, как в макете).
-          if (f.type == RegFieldType.consent && widget.role == Role.pharmacist) _mapCard(),
+          if (kMapPickerEnabled &&
+              f.type == RegFieldType.consent &&
+              widget.role == Role.pharmacist)
+            _mapCard(),
           _field(f),
         ],
         if (_error != null) AuthErrorLine(_error!, key: ValueKey(_error)),

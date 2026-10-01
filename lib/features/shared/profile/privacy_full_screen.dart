@@ -16,10 +16,11 @@ class PrivacyFullScreen extends StatefulWidget {
 }
 
 class _PrivacyFullScreenState extends State<PrivacyFullScreen> {
-  late final _keys = [for (final _ in kPrivacyDocSections) GlobalKey()];
+  // С запасом: в русской версии 10 разделов, в узбекской — 8.
+  late final _keys = List.generate(16, (_) => GlobalKey());
 
-  int get _readMinutes {
-    final words = kPrivacyDocSections
+  int _readMinutes(PrivacyDoc doc) {
+    final words = doc.sections
         .expand((s) => s.items)
         .fold<int>(0, (n, t) => n + t.split(RegExp(r'\s+')).length);
     return (words / 180).ceil().clamp(1, 60);
@@ -39,7 +40,10 @@ class _PrivacyFullScreenState extends State<PrivacyFullScreen> {
   Widget build(BuildContext context) {
     final pq = context.pq;
     final l = context.l10n;
-    final ruOnly = Localizations.localeOf(context).languageCode != 'ru';
+    final lang = Localizations.localeOf(context).languageCode;
+    final doc = privacyDocFor(lang);
+    // Политика есть на русском и узбекском; для остальных языков — русская.
+    final ruOnly = !privacyDocTranslated(lang);
     return PqScreen(
       child: Column(children: [
         PqTopBar(
@@ -56,15 +60,19 @@ class _PrivacyFullScreenState extends State<PrivacyFullScreen> {
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Semantics(
                     header: true,
-                    child: Text(kPrivacyDocTitle, style: PqText.display(c: pq.text)),
+                    child: Text(doc.title, style: PqText.display(c: pq.text)),
                   ),
                   const SizedBox(height: 4),
-                  Text(l.profilePrivacyReadTime(_readMinutes),
+                  Text('${doc.edition} · ${l.profilePrivacyReadTime(_readMinutes(doc))}',
                       style: PqText.subtitle(c: pq.textMuted)),
+                  for (final p in doc.intro) ...[
+                    const SizedBox(height: 12),
+                    Text(p,
+                        style: PqText.text(15, FontWeight.w400,
+                            height: 1.65, c: pq.textSecondary)),
+                  ],
                 ]),
-                ProfileWarnBanner(ruOnly
-                    ? '${l.profilePrivacyDraft}. ${l.profilePrivacyRuOnly}'
-                    : l.profilePrivacyDraft),
+                if (ruOnly) ProfileWarnBanner(l.profilePrivacyRuOnly),
                 PqCard(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                   child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
@@ -73,7 +81,7 @@ class _PrivacyFullScreenState extends State<PrivacyFullScreen> {
                       child: Text(l.profilePrivacyContents.toUpperCase(),
                           style: PqText.overline(c: pq.textMuted)),
                     ),
-                    for (var i = 0; i < kPrivacyDocSections.length; i++)
+                    for (var i = 0; i < doc.sections.length; i++)
                       PqPressable(
                         onTap: () => _jump(i),
                         child: ConstrainedBox(
@@ -81,12 +89,12 @@ class _PrivacyFullScreenState extends State<PrivacyFullScreen> {
                           child: Row(children: [
                             SizedBox(
                               width: 20,
-                              child: Text(kPrivacyDocSections[i].number,
+                              child: Text(doc.sections[i].number,
                                   style: PqText.text(15, FontWeight.w400, c: pq.textMuted)),
                             ),
                             const SizedBox(width: 10),
                             Expanded(
-                              child: Text(kPrivacyDocSections[i].title,
+                              child: Text(doc.sections[i].title,
                                   style: PqText.text(15, FontWeight.w400, c: pq.accent)),
                             ),
                           ]),
@@ -95,7 +103,7 @@ class _PrivacyFullScreenState extends State<PrivacyFullScreen> {
                     const SizedBox(height: 8),
                   ]),
                 ),
-                for (var i = 0; i < kPrivacyDocSections.length; i++)
+                for (var i = 0; i < doc.sections.length; i++)
                   Column(
                     key: _keys[i],
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -103,10 +111,10 @@ class _PrivacyFullScreenState extends State<PrivacyFullScreen> {
                       Semantics(
                         header: true,
                         child: Text(
-                            '${kPrivacyDocSections[i].number}. ${kPrivacyDocSections[i].title}',
+                            '${doc.sections[i].number}. ${doc.sections[i].title}',
                             style: PqText.title(c: pq.text)),
                       ),
-                      for (final p in kPrivacyDocSections[i].items) ...[
+                      for (final p in doc.sections[i].items) ...[
                         const SizedBox(height: 8),
                         Text(p,
                             style: PqText.text(15, FontWeight.w400,

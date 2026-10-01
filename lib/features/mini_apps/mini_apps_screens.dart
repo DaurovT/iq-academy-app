@@ -88,10 +88,6 @@ class MiniAppsHubScreen extends ConsumerWidget {
                       for (final a in visible.where((a) => a.available))
                         a.key == 'sapper' ? _SapperHeroCard(app: a) : _AppTile(app: a),
                       for (final a in soon) _SoonCard(title: a.title, subtitle: a.subtitle),
-                      if (soon.isEmpty)
-                        _SoonCard(
-                            title: l10n.miniAppsNewGamesTitle,
-                            subtitle: l10n.miniAppsNewGamesText),
                     ]),
                   ],
                 ),

@@ -899,7 +899,7 @@ abstract class AppLocalizations {
   /// No description provided for @profileSupportSubtitle.
   ///
   /// In ru, this message translates to:
-  /// **'Отвечаем в Telegram и по телефону'**
+  /// **'Отвечаем в Telegram, по телефону и в чате поддержки'**
   String get profileSupportSubtitle;
 
   /// No description provided for @profileLogout.
@@ -4037,7 +4037,7 @@ abstract class AppLocalizations {
   /// No description provided for @questsSubtitleDoctor.
   ///
   /// In ru, this message translates to:
-  /// **'Выписывайте рецепты и получайте награды'**
+  /// **'Выписывайте бланки и получайте награды'**
   String get questsSubtitleDoctor;
 
   /// No description provided for @questsSearchLabel.
@@ -4079,7 +4079,7 @@ abstract class AppLocalizations {
   /// No description provided for @questsOfGoalRecipes.
   ///
   /// In ru, this message translates to:
-  /// **'{goal, plural, one{из {goal} рецепта} few{из {goal} рецептов} many{из {goal} рецептов} other{из {goal} рецептов}}'**
+  /// **'{goal, plural, one{из {goal} бланка} few{из {goal} бланков} many{из {goal} бланков} other{из {goal} бланков}}'**
   String questsOfGoalRecipes(int goal);
 
   /// No description provided for @questsLeftShort.
@@ -4121,7 +4121,7 @@ abstract class AppLocalizations {
   /// No description provided for @questsStepPrescribeSub.
   ///
   /// In ru, this message translates to:
-  /// **'рецепт'**
+  /// **'бланк'**
   String get questsStepPrescribeSub;
 
   /// No description provided for @questsStepSendTitle.
@@ -4139,7 +4139,7 @@ abstract class AppLocalizations {
   /// No description provided for @questsStepSendRecipeSub.
   ///
   /// In ru, this message translates to:
-  /// **'фото рецепта'**
+  /// **'фото бланка'**
   String get questsStepSendRecipeSub;
 
   /// No description provided for @questsStepGetTitle.
@@ -4205,7 +4205,7 @@ abstract class AppLocalizations {
   /// No description provided for @questsRecipesCount.
   ///
   /// In ru, this message translates to:
-  /// **'{n, plural, one{{n} рецепт} few{{n} рецепта} many{{n} рецептов} other{{n} рецепта}}'**
+  /// **'{n, plural, one{{n} бланк} few{{n} бланка} many{{n} бланков} other{{n} бланка}}'**
   String questsRecipesCount(int n);
 
   /// No description provided for @questsGoalReached.
@@ -4283,13 +4283,13 @@ abstract class AppLocalizations {
   /// No description provided for @questsStepPhotoRecipe.
   ///
   /// In ru, this message translates to:
-  /// **'Сфотографируйте рецепт'**
+  /// **'Сфотографируйте бланк'**
   String get questsStepPhotoRecipe;
 
   /// No description provided for @questsStepPhotoRecipeSub.
   ///
   /// In ru, this message translates to:
-  /// **'ИИ проверит рецепт автоматически'**
+  /// **'ИИ проверит бланк автоматически'**
   String get questsStepPhotoRecipeSub;
 
   /// No description provided for @questsStepGetVoucher.
@@ -4319,7 +4319,7 @@ abstract class AppLocalizations {
   /// No description provided for @questsRecipesLimit.
   ///
   /// In ru, this message translates to:
-  /// **'Лимит рецептов'**
+  /// **'Лимит бланков'**
   String get questsRecipesLimit;
 
   /// No description provided for @questsNoLimit.
@@ -4343,7 +4343,7 @@ abstract class AppLocalizations {
   /// No description provided for @questsCountedRecipesTitle.
   ///
   /// In ru, this message translates to:
-  /// **'Засчитанные рецепты'**
+  /// **'Засчитанные бланки'**
   String get questsCountedRecipesTitle;
 
   /// No description provided for @questsCountedEmpty.
@@ -4355,7 +4355,7 @@ abstract class AppLocalizations {
   /// No description provided for @questsCountedEmptyRecipes.
   ///
   /// In ru, this message translates to:
-  /// **'Пока ни одного рецепта'**
+  /// **'Пока ни одного бланка'**
   String get questsCountedEmptyRecipes;
 
   /// No description provided for @questsCountedEmptySub.
@@ -4367,7 +4367,7 @@ abstract class AppLocalizations {
   /// No description provided for @questsCountedEmptySubRecipes.
   ///
   /// In ru, this message translates to:
-  /// **'Рецепты по квесту появятся здесь после проверки'**
+  /// **'Бланки по квесту появятся здесь после проверки'**
   String get questsCountedEmptySubRecipes;
 
   /// No description provided for @questsCountedSales.
@@ -4379,7 +4379,7 @@ abstract class AppLocalizations {
   /// No description provided for @questsCountedRecipes.
   ///
   /// In ru, this message translates to:
-  /// **'{n, plural, one{Засчитан {n} рецепт} few{Засчитано {n} рецепта} many{Засчитано {n} рецептов} other{Засчитано {n} рецепта}}'**
+  /// **'{n, plural, one{Засчитан {n} бланк} few{Засчитано {n} бланка} many{Засчитано {n} бланков} other{Засчитано {n} бланка}}'**
   String questsCountedRecipes(int n);
 
   /// No description provided for @questsAllChecks.
@@ -4391,7 +4391,7 @@ abstract class AppLocalizations {
   /// No description provided for @questsAllRecipes.
   ///
   /// In ru, this message translates to:
-  /// **'Все рецепты'**
+  /// **'Все бланки'**
   String get questsAllRecipes;
 
   /// No description provided for @questsSendCheck.
@@ -4403,7 +4403,7 @@ abstract class AppLocalizations {
   /// No description provided for @questsSendRecipe.
   ///
   /// In ru, this message translates to:
-  /// **'Отправить рецепт по квесту'**
+  /// **'Отправить бланк по квесту'**
   String get questsSendRecipe;
 
   /// No description provided for @questsSearchPlaceholder.
@@ -4769,7 +4769,7 @@ abstract class AppLocalizations {
   /// No description provided for @walletTxnRecipe.
   ///
   /// In ru, this message translates to:
-  /// **'Рецепт'**
+  /// **'Бланк'**
   String get walletTxnRecipe;
 
   /// No description provided for @walletTxnSurvey.
@@ -6947,7 +6947,7 @@ abstract class AppLocalizations {
   /// No description provided for @authRoleSubDoctor.
   ///
   /// In ru, this message translates to:
-  /// **'Рецепты, квесты, обучение и кошелёк'**
+  /// **'Бланки, квесты, обучение и кошелёк'**
   String get authRoleSubDoctor;
 
   /// No description provided for @authRoleHint.
@@ -7457,7 +7457,7 @@ abstract class AppLocalizations {
   /// No description provided for @checksCamText.
   ///
   /// In ru, this message translates to:
-  /// **'Камера нужна, чтобы фотографировать чеки и рецепты'**
+  /// **'Камера нужна, чтобы фотографировать чеки и бланки'**
   String get checksCamText;
 
   /// No description provided for @checksCamPoint1.
@@ -7943,7 +7943,7 @@ abstract class AppLocalizations {
   /// No description provided for @profileRoleDescDoctor.
   ///
   /// In ru, this message translates to:
-  /// **'Рецепты, квесты, обучение и кошелёк'**
+  /// **'Бланки, квесты, обучение и кошелёк'**
   String get profileRoleDescDoctor;
 
   /// No description provided for @profileRoleDescMedrep.
@@ -8075,7 +8075,7 @@ abstract class AppLocalizations {
   /// No description provided for @profilePrivacyCollectBody.
   ///
   /// In ru, this message translates to:
-  /// **'Имя, номер телефона, город и аптеку или клинику. Фото чеков и рецептов, которые вы отправляете. Результаты курсов и тестов.'**
+  /// **'Имя, номер телефона, город и аптеку или клинику. Фото чеков и бланков, которые вы отправляете. Результаты курсов и тестов.'**
   String get profilePrivacyCollectBody;
 
   /// No description provided for @profilePrivacyWhyTitle.
@@ -8087,7 +8087,7 @@ abstract class AppLocalizations {
   /// No description provided for @profilePrivacyWhyBody.
   ///
   /// In ru, this message translates to:
-  /// **'Чтобы начислять IQC за чеки и рецепты, засчитывать квесты, выдавать ваучеры и показывать вашу статистику.'**
+  /// **'Чтобы начислять IQC за чеки и бланки, засчитывать квесты, выдавать ваучеры и показывать вашу статистику.'**
   String get profilePrivacyWhyBody;
 
   /// No description provided for @profilePrivacyWhoTitle.
@@ -8099,7 +8099,7 @@ abstract class AppLocalizations {
   /// No description provided for @profilePrivacyWhoBody.
   ///
   /// In ru, this message translates to:
-  /// **'Ваш медпредставитель видит число ваших чеков и квестов. Данные пациентов из рецептов скрыты — видны только инициалы.'**
+  /// **'Ваш медпредставитель видит число ваших чеков и квестов. Данные пациентов из бланков скрыты — видны только инициалы.'**
   String get profilePrivacyWhoBody;
 
   /// No description provided for @profilePrivacyStoreTitle.
@@ -8789,13 +8789,13 @@ abstract class AppLocalizations {
   /// No description provided for @tourQuestsText.
   ///
   /// In ru, this message translates to:
-  /// **'Задания от производителей: продайте нужное количество упаковок и получите бонус. Прогресс виден на карточке.'**
+  /// **'Задания от производителей: продайте нужное количество упаковок и получите награду. Прогресс виден на карточке.'**
   String get tourQuestsText;
 
   /// No description provided for @tourQuestsTextDoc.
   ///
   /// In ru, this message translates to:
-  /// **'Задания от производителей: выпишите нужное количество бланков и получите бонус. Прогресс виден на карточке.'**
+  /// **'Задания от производителей: выпишите нужное количество бланков и получите награду. Прогресс виден на карточке.'**
   String get tourQuestsTextDoc;
 
   /// No description provided for @tourChecksTitle.
@@ -8887,6 +8887,18 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Пройти обучение заново'**
   String get profileTourAgain;
+
+  /// No description provided for @walletConfirmTextPlain.
+  ///
+  /// In ru, this message translates to:
+  /// **'Получите подарочную карту Korzinka'**
+  String get walletConfirmTextPlain;
+
+  /// No description provided for @walletArchiveCount.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{{n} ваучер} few{{n} ваучера} many{{n} ваучеров} other{{n} ваучера}}'**
+  String walletArchiveCount(int n);
 }
 
 class _AppLocalizationsDelegate

@@ -461,7 +461,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get profileSupportSubtitle =>
-      'Telegram va telefon orqali javob beramiz';
+      'Telegram, telefon va qo\'llab-quvvatlash chati orqali javob beramiz';
 
   @override
   String get profileLogout => 'Hisobdan chiqish';
@@ -2240,7 +2240,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get questsSubtitle => 'Soting va mukofotlar oling';
 
   @override
-  String get questsSubtitleDoctor => 'Retsept yozing va mukofotlar oling';
+  String get questsSubtitleDoctor => 'Blank yozing va mukofotlar oling';
 
   @override
   String get questsSearchLabel => 'Kvestlarni qidirish';
@@ -2272,7 +2272,7 @@ class AppLocalizationsUz extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       goal,
       locale: localeName,
-      other: '$goal ta retseptdan',
+      other: '$goal ta blankdan',
     );
     return '$_temp0';
   }
@@ -2298,7 +2298,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get questsStepPrescribeTitle => 'Yozing';
 
   @override
-  String get questsStepPrescribeSub => 'retseptni';
+  String get questsStepPrescribeSub => 'blankni';
 
   @override
   String get questsStepSendTitle => 'Yuboring';
@@ -2307,7 +2307,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get questsStepSendCheckSub => 'chek suratini';
 
   @override
-  String get questsStepSendRecipeSub => 'retsept suratini';
+  String get questsStepSendRecipeSub => 'blank suratini';
 
   @override
   String get questsStepGetTitle => 'Oling';
@@ -2373,7 +2373,7 @@ class AppLocalizationsUz extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '$n ta retsept',
+      other: '$n ta blank',
     );
     return '$_temp0';
   }
@@ -2426,10 +2426,10 @@ class AppLocalizationsUz extends AppLocalizations {
   String get questsStepPhotoCheckSub => 'SI qadoqni avtomatik tekshiradi';
 
   @override
-  String get questsStepPhotoRecipe => 'Retseptni suratga oling';
+  String get questsStepPhotoRecipe => 'Blankni suratga oling';
 
   @override
-  String get questsStepPhotoRecipeSub => 'SI retseptni avtomatik tekshiradi';
+  String get questsStepPhotoRecipeSub => 'SI blankni avtomatik tekshiradi';
 
   @override
   String get questsStepGetVoucher => 'Vaucher oling';
@@ -2446,7 +2446,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get questsSalesLimit => 'Sotuv limiti';
 
   @override
-  String get questsRecipesLimit => 'Retseptlar limiti';
+  String get questsRecipesLimit => 'Blanklar limiti';
 
   @override
   String get questsNoLimit => 'Cheklovsiz';
@@ -2460,13 +2460,13 @@ class AppLocalizationsUz extends AppLocalizations {
   String get questsCountedTitle => 'Hisobga olingan cheklar';
 
   @override
-  String get questsCountedRecipesTitle => 'Hisobga olingan retseptlar';
+  String get questsCountedRecipesTitle => 'Hisobga olingan blanklar';
 
   @override
   String get questsCountedEmpty => 'Hozircha birorta chek yo‘q';
 
   @override
-  String get questsCountedEmptyRecipes => 'Hozircha birorta retsept yo‘q';
+  String get questsCountedEmptyRecipes => 'Hozircha birorta blank yo‘q';
 
   @override
   String get questsCountedEmptySub =>
@@ -2474,7 +2474,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get questsCountedEmptySubRecipes =>
-      'Kvest bo‘yicha retseptlar tekshiruvdan so‘ng shu yerda paydo bo‘ladi';
+      'Kvest bo‘yicha blanklar tekshiruvdan so‘ng shu yerda paydo bo‘ladi';
 
   @override
   String questsCountedSales(int n) {
@@ -2491,7 +2491,7 @@ class AppLocalizationsUz extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '$n ta retsept hisobga olindi',
+      other: '$n ta blank hisobga olindi',
     );
     return '$_temp0';
   }
@@ -2500,13 +2500,13 @@ class AppLocalizationsUz extends AppLocalizations {
   String get questsAllChecks => 'Barcha cheklar';
 
   @override
-  String get questsAllRecipes => 'Barcha retseptlar';
+  String get questsAllRecipes => 'Barcha blanklar';
 
   @override
   String get questsSendCheck => 'Kvest bo‘yicha chek yuborish';
 
   @override
-  String get questsSendRecipe => 'Kvest bo‘yicha retsept yuborish';
+  String get questsSendRecipe => 'Kvest bo‘yicha blank yuborish';
 
   @override
   String get questsSearchPlaceholder => 'Nomi yoki dori vositasi';
@@ -2746,7 +2746,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get walletTxnCheck => 'Chek';
 
   @override
-  String get walletTxnRecipe => 'Retsept';
+  String get walletTxnRecipe => 'Blank';
 
   @override
   String get walletTxnSurvey => 'So\'rovnoma';
@@ -4213,7 +4213,7 @@ class AppLocalizationsUz extends AppLocalizations {
       'Sizda bir nechta rol bor — qaysi biri bilan kirishni tanlang';
 
   @override
-  String get authRoleSubDoctor => 'Retseptlar, kvestlar, ta\'lim va hamyon';
+  String get authRoleSubDoctor => 'Blanklar, kvestlar, ta\'lim va hamyon';
 
   @override
   String get authRoleHint =>
@@ -4535,7 +4535,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get checksCamText =>
-      'Kamera chek va retseptlarni suratga olish uchun kerak';
+      'Kamera chek va blanklarni suratga olish uchun kerak';
 
   @override
   String get checksCamPoint1 =>
@@ -4801,7 +4801,7 @@ class AppLocalizationsUz extends AppLocalizations {
       'Cheklar, kvestlar, o\'qish va hamyon';
 
   @override
-  String get profileRoleDescDoctor => 'Retseptlar, kvestlar, o\'qish va hamyon';
+  String get profileRoleDescDoctor => 'Blanklar, kvestlar, ta\'lim va hamyon';
 
   @override
   String get profileRoleDescMedrep => 'Provizorlar portfeli va reyting';
@@ -4876,21 +4876,21 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get profilePrivacyCollectBody =>
-      'Ism, telefon raqami, shahar va dorixona yoki klinika. Siz yuboradigan chek va retsept rasmlari. Kurslar va testlar natijalari.';
+      'Ism, telefon raqami, shahar va dorixona yoki klinika. Siz yuboradigan chek va blank rasmlari. Kurslar va testlar natijalari.';
 
   @override
   String get profilePrivacyWhyTitle => 'Ular nima uchun kerak';
 
   @override
   String get profilePrivacyWhyBody =>
-      'Cheklar va retseptlar uchun IQC hisoblash, kvestlarni hisobga olish, vaucherlar berish va statistikangizni ko\'rsatish uchun.';
+      'Cheklar va blanklar uchun IQC hisoblash, kvestlarni hisobga olish, vaucherlar berish va statistikangizni ko\'rsatish uchun.';
 
   @override
   String get profilePrivacyWhoTitle => 'Ularni kim ko\'radi';
 
   @override
   String get profilePrivacyWhoBody =>
-      'Tibbiy vakilingiz cheklaringiz va kvestlaringiz sonini ko\'radi. Retseptlardagi bemor ma\'lumotlari yashirilgan — faqat bosh harflar ko\'rinadi.';
+      'Tibbiy vakilingiz cheklaringiz va kvestlaringiz sonini ko\'radi. Blanklardagi bemor ma\'lumotlari yashirilgan — faqat bosh harflar ko\'rinadi.';
 
   @override
   String get profilePrivacyStoreTitle => 'Ularni qanday saqlaymiz';
@@ -5243,7 +5243,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get tourWelcomeTextDoc =>
-      'Nima qayerda joylashganini va blankalar uchun IQC qanday olishni ko\'rsatamiz. Bu bir daqiqadan kam vaqt oladi.';
+      'Nima qayerda joylashganini va blanklar uchun IQC qanday olishni ko\'rsatamiz. Bu bir daqiqadan kam vaqt oladi.';
 
   @override
   String get tourStart => 'Boshlash';
@@ -5277,7 +5277,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get tourBalanceTextDoc =>
-      'Bu yerda IQC — tasdiqlangan blankalar, kvestlar va so\'rovnomalar uchun ballar. «Hamyon» tugmasi tarix va vaucherlarga almashishni ochadi.';
+      'Bu yerda IQC — tasdiqlangan blanklar, kvestlar va so\'rovnomalar uchun ballar. «Hamyon» tugmasi tarix va vaucherlarga almashishni ochadi.';
 
   @override
   String get tourSendTitle => 'Chek yuboring';
@@ -5287,22 +5287,22 @@ class AppLocalizationsUz extends AppLocalizations {
       'Chekni suratga oling — sun\'iy intellekt dori vositalarini aniqlaydi. Tekshiruvdan so\'ng balansga IQC tushadi.';
 
   @override
-  String get tourSendTitleDoc => 'Blanka yuboring';
+  String get tourSendTitleDoc => 'Blank yuboring';
 
   @override
   String get tourSendTextDoc =>
-      'Blankani suratga oling — sun\'iy intellekt dori vositalarini aniqlaydi. Tekshiruvdan so\'ng balansga IQC tushadi.';
+      'Blankni suratga oling — sun\'iy intellekt dori vositalarini aniqlaydi. Tekshiruvdan so\'ng balansga IQC tushadi.';
 
   @override
   String get tourQuestsTitle => 'Faol kvestlar';
 
   @override
   String get tourQuestsText =>
-      'Ishlab chiqaruvchilardan topshiriqlar: kerakli miqdordagi qadoqlarni soting va bonus oling. Jarayon kartochkada ko\'rinadi.';
+      'Ishlab chiqaruvchilardan topshiriqlar: kerakli miqdordagi qadoqlarni soting va mukofot oling. Jarayon kartochkada ko\'rinadi.';
 
   @override
   String get tourQuestsTextDoc =>
-      'Ishlab chiqaruvchilardan topshiriqlar: kerakli miqdordagi blankalarni yozing va bonus oling. Jarayon kartochkada ko\'rinadi.';
+      'Ishlab chiqaruvchilardan topshiriqlar: kerakli miqdordagi blanklarni yozing va mukofot oling. Jarayon kartochkada ko\'rinadi.';
 
   @override
   String get tourChecksTitle => 'Cheklaringiz';
@@ -5312,11 +5312,11 @@ class AppLocalizationsUz extends AppLocalizations {
       'Barcha yuborilgan cheklar va ularning holati: tekshiruvda, tasdiqlangan, hisoblangan yoki qayta suratga olish kerak.';
 
   @override
-  String get tourChecksTitleDoc => 'Blankalaringiz';
+  String get tourChecksTitleDoc => 'Blanklaringiz';
 
   @override
   String get tourChecksTextDoc =>
-      'Barcha yuborilgan blankalar va ularning holati: tekshiruvda, tasdiqlangan, hisoblangan yoki qayta suratga olish kerak.';
+      'Barcha yuborilgan blanklar va ularning holati: tekshiruvda, tasdiqlangan, hisoblangan yoki qayta suratga olish kerak.';
 
   @override
   String get tourLearnTitle => 'O\'qitish';
@@ -5345,7 +5345,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get tourDoneTextDoc =>
-      'Birinchi IQC olish uchun birinchi blankani yuboring yoki kursni boshlang.';
+      'Birinchi IQC olish uchun birinchi blankni yuboring yoki kursni boshlang.';
 
   @override
   String get tourDoneNote => 'O\'qitishni Profilda takrorlash mumkin.';
@@ -5355,4 +5355,18 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get profileTourAgain => 'O\'qitishni qayta o\'tish';
+
+  @override
+  String get walletConfirmTextPlain => 'Korzinka sovg\'a kartasini oling';
+
+  @override
+  String walletArchiveCount(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n vaucher',
+      one: '$n vaucher',
+    );
+    return '$_temp0';
+  }
 }

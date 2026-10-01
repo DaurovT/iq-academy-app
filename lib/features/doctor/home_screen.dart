@@ -19,6 +19,7 @@ import '../news/survey_home_block.dart';
 import '../pharmacist/providers.dart';
 import '../shared/providers.dart';
 import 'providers.dart';
+import '../pharmacist/home_screen.dart' show HomeWalletButton;
 import '../tour/tour_controller.dart';
 import '../tour/tour_overlay.dart' show TourAutoStart;
 import 'rx_common.dart';
@@ -84,13 +85,11 @@ class _HomeBody extends ConsumerWidget {
                 .asData
                 ?.value ??
             const <Quest>[])
-        .where((q) => q.status == QuestStatus.active)
+        .where((q) => q.isLive)
         .toList();
     final recipes = ref.watch(recipesProvider).asData?.value ?? const <Recipe>[];
     final credits = ref.watch(recipeCreditsProvider);
     RxStage stageOf(Recipe r) => r.status.rxStage(credits[r.id]);
-    final approved = recipes.where((r) => stageOf(r).isApproved).length;
-    final pending = recipes.where((r) => stageOf(r) == RxStage.pending).length;
 
     // Разрыв 24 между блоками — отступом сверху у видимого блока, чтобы
     // скрытые (нет новостей/опроса) не оставляли двойной зазор.
@@ -104,13 +103,8 @@ class _HomeBody extends ConsumerWidget {
         padding: gap,
         child: TourAnchor(
           target: TourTarget.balance,
-          radius: 24,
-          child: _WalletCard(
-            iqc: iqc,
-            activeQuests: quests.length,
-            approved: approved,
-            pending: pending,
-          ),
+          radius: 22,
+          child: _WalletCard(iqc: iqc),
         ),
       ),
       if (quests.isNotEmpty && ref.moduleVisible('quests'))
@@ -166,26 +160,20 @@ class _HomeBody extends ConsumerWidget {
 // ── Кошелёк ─────────────────────────────────────────────────────────────
 
 class _WalletCard extends StatelessWidget {
-  const _WalletCard({
-    required this.iqc,
-    required this.activeQuests,
-    required this.approved,
-    required this.pending,
-  });
+  const _WalletCard({required this.iqc});
 
   final int iqc;
-  final int activeQuests;
-  final int approved;
-  final int pending;
 
   @override
   Widget build(BuildContext context) {
     final pq = context.pq;
     final l10n = context.l10n;
+    // Макет DocHome (ред. после 1.2): компактная карточка — баланс слева,
+    // кнопка «Кошелёк» справа, под ними — «Отправить бланк».
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(22),
         gradient: LinearGradient(
           colors: pq.walletGradient,
           transform: const GradientRotation(math.pi / 4),
@@ -204,104 +192,47 @@ class _WalletCard extends StatelessWidget {
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         Row(children: [
           Expanded(
-            child: Text(l10n.docHomeWalletBalance.toUpperCase(),
-                style: PqText.overline(c: pq.walletMuted)),
-          ),
-          PqPressable(
-            onTap: () => context.go('/app/wallet'),
-            semanticLabel: l10n.docHomeWallet,
-            child: Container(
-              height: 32,
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              decoration: BoxDecoration(
-                color: pq.walletPillBg,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: pq.walletPillBorder),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(l10n.docHomeWalletBalance.toUpperCase(),
+                  style: PqText.overline(c: pq.walletMuted)),
+              const SizedBox(height: 6),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
+                children: [
+                  Flexible(
+                    child: Text('$iqc',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: PqText.heading(40, FontWeight.w800,
+                            height: 1, c: pq.walletText)),
+                  ),
+                  const SizedBox(width: 6),
+                  Text('IQC',
+                      style: PqText.text(16, FontWeight.w700,
+                          height: 1, c: pq.walletText)),
+                ],
               ),
-              child: Row(mainAxisSize: MainAxisSize.min, children: [
-                Text(l10n.docHomeWallet, style: PqText.link(c: pq.walletText)),
-                const SizedBox(width: 4),
-                PqIcon(PqIcons.chevronRight, size: 14, color: pq.walletText),
-              ]),
-            ),
-          ),
-        ]),
-        const SizedBox(height: 20),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.baseline,
-          textBaseline: TextBaseline.alphabetic,
-          children: [
-            Flexible(
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                alignment: Alignment.centerLeft,
-                child: Text('$iqc', style: PqText.balance(c: pq.walletText)),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Text('IQC',
-                style: PqText.text(18, FontWeight.w700, c: pq.walletText)),
-          ],
-        ),
-        const SizedBox(height: 20),
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          decoration: BoxDecoration(
-            border: Border.symmetric(
-                horizontal: BorderSide(color: pq.walletLine)),
-          ),
-          child: IntrinsicHeight(
-            child: Row(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-              _Stat(value: activeQuests, label: l10n.rxHomeStatQuests(activeQuests)),
-              _Stat(value: approved, label: l10n.rxHomeStatApproved, divider: true),
-              _Stat(value: pending, label: l10n.rxHomeStatPending, divider: true),
             ]),
           ),
-        ),
-        const SizedBox(height: 20),
+          const SizedBox(width: 12),
+          HomeWalletButton(
+            label: l10n.docHomeWallet,
+            onTap: () => context.go('/app/wallet'),
+          ),
+        ]),
+        const SizedBox(height: 16),
         TourAnchor(
           target: TourTarget.sendCheck,
           radius: 16,
           child: _SendButton(label: l10n.docHomeSendRecipe),
-        ),
-        const SizedBox(height: 10),
-        Text(
-          l10n.docHomeSendRecipeHint,
-          textAlign: TextAlign.center,
-          style: PqText.caption(c: pq.walletMuted),
         ),
       ]),
     );
   }
 }
 
-class _Stat extends StatelessWidget {
-  const _Stat({required this.value, required this.label, this.divider = false});
-
-  final int value;
-  final String label;
-  final bool divider;
-
-  @override
-  Widget build(BuildContext context) {
-    final pq = context.pq;
-    return Expanded(
-      child: Container(
-        padding: EdgeInsets.only(left: divider ? 14 : 0),
-        decoration: BoxDecoration(
-          border: divider ? Border(left: BorderSide(color: pq.walletLine)) : null,
-        ),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('$value', style: PqText.statSmall(c: Colors.white)),
-          const SizedBox(height: 2),
-          Text(label, style: PqText.caption(c: pq.walletMuted)),
-        ]),
-      ),
-    );
-  }
-}
-
-/// «Отправить бланк» в карточке кошелька: 54, радиус 16; в тёмной теме —
+/// «Отправить бланк» в карточке кошелька: 52, радиус 16; в тёмной теме —
 /// акцентная, в светлой — белая с синим текстом. pqPulse 2s ×3 после .8s.
 class _SendButton extends StatelessWidget {
   const _SendButton({required this.label});
@@ -324,7 +255,7 @@ class _SendButton extends StatelessWidget {
           final pressed = PqPressedScope.of(context);
           return AnimatedContainer(
             duration: const Duration(milliseconds: 200),
-            height: 54,
+            height: 52,
             decoration: BoxDecoration(
               color: pq.isDark
                   ? (pressed ? pq.accentPressed : pq.accent)

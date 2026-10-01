@@ -863,3 +863,61 @@ class OneLineClamp extends StatelessWidget {
     },
   );
 }
+
+/// Мини-карта Korzinka 112×72 с логотипом и номиналом. Номинал ваучера
+/// показывается только на самой карточке — не текстом рядом с баллами IQC.
+class VoucherMiniCard extends StatelessWidget {
+  const VoucherMiniCard({super.key, required this.faceUzs});
+
+  final int faceUzs;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    width: 112,
+    height: 72,
+    decoration: BoxDecoration(
+      gradient: kVoucherGradient,
+      borderRadius: BorderRadius.circular(14),
+    ),
+    clipBehavior: Clip.antiAlias,
+    child: Stack(
+      children: [
+        Positioned(
+          right: -20,
+          top: -20,
+          child: Container(
+            width: 70,
+            height: 70,
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: .12),
+              shape: BoxShape.circle,
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const KorzinkaBrand(
+                fontSize: 12,
+                onest: false,
+                tile: 0,
+                iconSize: 14,
+                gap: 6,
+              ),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  walletNum(faceUzs),
+                  style: PqText.heading(16, FontWeight.w800, c: Colors.white),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}

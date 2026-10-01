@@ -654,33 +654,16 @@ class _ExchangeCard extends ConsumerWidget {
         children: [
           Row(
             children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: kKorzinkaRed,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                alignment: Alignment.center,
-                child: const PqIcon(
-                  PqIcons.gift,
-                  size: 22,
-                  color: Colors.white,
-                ),
-              ),
+              VoucherMiniCard(faceUzs: denom.faceUzs),
               const SizedBox(width: 14),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      formatUzs(denom.faceUzs),
-                      style: PqText.title(c: pq.text),
-                    ),
-                    const SizedBox(height: 2),
+                    // Номинал — только на самой карточке слева.
                     Text(
                       l.walletGiftCardKorzinka,
-                      style: PqText.body(c: pq.textMuted),
+                      style: PqText.rowTitle(c: pq.text),
                     ),
                   ],
                 ),

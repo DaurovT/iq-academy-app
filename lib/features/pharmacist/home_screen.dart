@@ -162,17 +162,7 @@ class _ActiveHome extends ConsumerWidget {
                     ?.value ??
                 const <Quest>[])
             : const <Quest>[];
-    final active = quests.where((q) => q.status == QuestStatus.active).toList();
-    final approved =
-        checks.where((c) => c.status == CheckStatus.approved).length;
-    final pending =
-        checks
-            .where(
-              (c) =>
-                  c.status != CheckStatus.approved &&
-                  c.status != CheckStatus.rejected,
-            )
-            .length;
+    final active = quests.where((q) => q.isLive).toList();
 
     const gap = EdgeInsets.only(top: _kSectionGap);
     return _HomeList(
@@ -185,12 +175,9 @@ class _ActiveHome extends ConsumerWidget {
           padding: gap,
           child: TourAnchor(
             target: TourTarget.balance,
-            radius: 24,
+            radius: 22,
             child: _WalletCard(
               iqc: wallet.balanceIqc,
-              activeQuests: active.length,
-              approved: approved,
-              pending: pending,
               showWallet: ref.moduleVisible('wallet'),
             ),
           ),
@@ -252,10 +239,12 @@ class _GradientCard extends StatelessWidget {
     required this.child,
     required this.padding,
     this.lightBorder = false,
+    this.radius = 24,
   });
 
   final Widget child;
   final EdgeInsetsGeometry padding;
+  final double radius;
 
   /// HomeNew: в светлой теме рамка 1 px прозрачная (сохраняет размер).
   final bool lightBorder;
@@ -267,7 +256,7 @@ class _GradientCard extends StatelessWidget {
     return Container(
       padding: padding,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(radius),
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -290,145 +279,84 @@ class _GradientCard extends StatelessWidget {
 }
 
 class _WalletCard extends StatelessWidget {
-  const _WalletCard({
-    required this.iqc,
-    required this.activeQuests,
-    required this.approved,
-    required this.pending,
-    required this.showWallet,
-  });
+  const _WalletCard({required this.iqc, required this.showWallet});
 
   final int iqc;
-  final int activeQuests;
-  final int approved;
-  final int pending;
   final bool showWallet;
 
   @override
   Widget build(BuildContext context) {
     final pq = context.pq;
     final l = context.l10n;
+    // Макет Refined (ред. после 1.2): компактная карточка — баланс слева,
+    // кнопка «Кошелёк» справа, под ними — «Отправить чек».
     return _GradientCard(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(18),
+      radius: 22,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SizedBox(
-            height: 32,
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    l.homePhWalletBalanceLabel.toUpperCase(),
-                    style: PqText.overline(c: pq.walletMuted),
-                  ),
-                ),
-                if (showWallet)
-                  PqPressable(
-                    onTap: () => context.go('/app/wallet'),
-                    semanticLabel: l.homePhWalletButton,
-                    scale: .96,
-                    child: Container(
-                      height: 32,
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        color: pq.walletPillBg,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: pq.walletPillBorder),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            l.homePhWalletButton,
-                            style: PqText.link(c: pq.walletText),
-                          ),
-                          const SizedBox(width: 4),
-                          PqIcon(
-                            PqIcons.chevronRight,
-                            size: 14,
-                            color: pq.walletText,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-          ),
-          // CSS выравнивает «0» и «IQC» по базовой линии в строке высотой 60:
-          // в браузере цифра стоит на 2 px ниже, а строка на 1 px выше, чем во Flutter.
-          const SizedBox(height: 22),
           Row(
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
             children: [
-              Flexible(
-                child: Text(
-                  formatUzsPlain(iqc),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: PqText.balance(c: pq.walletText),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l.homePhWalletBalanceLabel.toUpperCase(),
+                      style: PqText.overline(c: pq.walletMuted),
+                    ),
+                    const SizedBox(height: 6),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      textBaseline: TextBaseline.alphabetic,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            formatUzsPlain(iqc),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: PqText.heading(
+                              40,
+                              FontWeight.w800,
+                              height: 1,
+                              c: pq.walletText,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          'IQC',
+                          style: PqText.text(
+                            16,
+                            FontWeight.w700,
+                            height: 1,
+                            c: pq.walletText,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(width: 8),
-              Text(
-                'IQC',
-                style: PqText.text(18, FontWeight.w700, c: pq.walletText),
-              ),
+              if (showWallet) ...[
+                const SizedBox(width: 12),
+                HomeWalletButton(
+                  label: l.homePhWalletButton,
+                  onTap: () => context.go('/app/wallet'),
+                ),
+              ],
             ],
           ),
-          const SizedBox(height: 19),
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 14),
-            decoration: BoxDecoration(
-              border: Border(
-                top: BorderSide(color: pq.walletLine),
-                bottom: BorderSide(color: pq.walletLine),
-              ),
-            ),
-            child: IntrinsicHeight(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Expanded(
-                    child: _Stat(
-                      value: activeQuests,
-                      label: l.homeStatActiveQuests(activeQuests),
-                    ),
-                  ),
-                  Expanded(
-                    child: _Stat(
-                      value: approved,
-                      label: l.homeStatApproved,
-                      divider: true,
-                    ),
-                  ),
-                  Expanded(
-                    child: _Stat(
-                      value: pending,
-                      label: l.homeStatPending,
-                      divider: true,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
           TourAnchor(
             target: TourTarget.sendCheck,
             radius: 16,
             child: _SendCheckButton(
               label: l.homePhSendCheck,
               lightForeground: pq.accent,
+              height: 52,
             ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            l.homePhSendCheckSub,
-            textAlign: TextAlign.center,
-            style: PqText.caption(c: pq.walletMuted),
           ),
         ],
       ),
@@ -436,31 +364,42 @@ class _WalletCard extends StatelessWidget {
   }
 }
 
-class _Stat extends StatelessWidget {
-  const _Stat({required this.value, required this.label, this.divider = false});
+/// Кнопка «Кошелёк» на карточке баланса: 48, радиус 16, иконка + подпись +
+/// шеврон. Общая для главных фармацевта и врача.
+class HomeWalletButton extends StatelessWidget {
+  const HomeWalletButton({super.key, required this.label, required this.onTap});
 
-  final int value;
   final String label;
-  final bool divider;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final pq = context.pq;
-    return Container(
-      padding: EdgeInsets.only(left: divider ? 14 : 0),
-      decoration:
-          divider
-              ? BoxDecoration(
-                border: Border(left: BorderSide(color: pq.walletLine)),
-              )
-              : null,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('$value', style: PqText.statSmall(c: Colors.white)),
-          const SizedBox(height: 2),
-          Text(label, style: PqText.caption(c: pq.walletMuted)),
-        ],
+    return PqPressable(
+      onTap: onTap,
+      semanticLabel: label,
+      scale: .96,
+      child: Container(
+        height: 48,
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        decoration: BoxDecoration(
+          color: pq.isDark ? const Color(0x1FFFFFFF) : const Color(0x33FFFFFF),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color:
+                pq.isDark ? const Color(0x38D6E3FF) : const Color(0x73FFFFFF),
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const PqIcon(PqIcons.wallet, size: 20, color: Colors.white),
+            const SizedBox(width: 8),
+            Text(label, style: PqText.button(c: Colors.white)),
+            const SizedBox(width: 8),
+            const PqIcon(PqIcons.chevronRight, size: 16, color: Colors.white),
+          ],
+        ),
       ),
     );
   }
@@ -470,10 +409,15 @@ class _Stat extends StatelessWidget {
 /// акцентная заливка, светлая — белая с цветным текстом. pqPulse ×3 после .8s.
 /// Запускает существующий поток отправки чека ([showNewCheckSheet]).
 class _SendCheckButton extends StatelessWidget {
-  const _SendCheckButton({required this.label, required this.lightForeground});
+  const _SendCheckButton({
+    required this.label,
+    required this.lightForeground,
+    this.height = 54,
+  });
 
   final String label;
   final Color lightForeground;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
@@ -493,7 +437,7 @@ class _SendCheckButton extends StatelessWidget {
             final pressed = PqPressedScope.of(context);
             return AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              height: 54,
+              height: height,
               decoration: BoxDecoration(
                 color:
                     pressed
@@ -805,8 +749,7 @@ class _NewUserHome extends ConsumerWidget {
     final course =
         open.where((c) => c.mandatory == true).firstOrNull ?? open.firstOrNull;
     final courseDone = courses.any((c) => c.progress >= 1);
-    final quest =
-        quests.where((q) => q.status == QuestStatus.active).firstOrNull;
+    final quest = quests.where((q) => q.isLive).firstOrNull;
 
     const gap = EdgeInsets.only(top: _kSectionGap);
     return _HomeList(

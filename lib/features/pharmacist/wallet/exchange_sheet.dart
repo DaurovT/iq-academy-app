@@ -112,7 +112,7 @@ class _ExchangeSheetState extends State<_ExchangeSheet> {
         ),
         const SizedBox(height: 4),
         Text(
-          l.walletConfirmText(formatUzs(d.faceUzs)),
+          l.walletConfirmTextPlain,
           style: PqText.subtitle(c: pq.textMuted),
         ),
         const SizedBox(height: 16),

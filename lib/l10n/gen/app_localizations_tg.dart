@@ -461,7 +461,7 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get profileSupportSubtitle =>
-      'Тавассути Telegram ва телефон ҷавоб медиҳем';
+      'Тавассути Telegram, телефон ва чати дастгирӣ ҷавоб медиҳем';
 
   @override
   String get profileLogout => 'Баромадан аз ҳисоб';
@@ -2236,7 +2236,7 @@ class AppLocalizationsTg extends AppLocalizations {
   String get questsSubtitle => 'Фурӯшед ва мукофот гиред';
 
   @override
-  String get questsSubtitleDoctor => 'Ресепт нависед ва мукофот гиред';
+  String get questsSubtitleDoctor => 'Бланк нависед ва мукофот гиред';
 
   @override
   String get questsSearchLabel => 'Ҷустуҷӯи квестҳо';
@@ -2268,7 +2268,7 @@ class AppLocalizationsTg extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       goal,
       locale: localeName,
-      other: 'аз $goal ресепт',
+      other: 'аз $goal бланк',
     );
     return '$_temp0';
   }
@@ -2294,7 +2294,7 @@ class AppLocalizationsTg extends AppLocalizations {
   String get questsStepPrescribeTitle => 'Нависед';
 
   @override
-  String get questsStepPrescribeSub => 'ресептро';
+  String get questsStepPrescribeSub => 'бланкро';
 
   @override
   String get questsStepSendTitle => 'Фиристед';
@@ -2303,7 +2303,7 @@ class AppLocalizationsTg extends AppLocalizations {
   String get questsStepSendCheckSub => 'акси чекро';
 
   @override
-  String get questsStepSendRecipeSub => 'акси ресептро';
+  String get questsStepSendRecipeSub => 'акси бланкро';
 
   @override
   String get questsStepGetTitle => 'Гиред';
@@ -2369,7 +2369,7 @@ class AppLocalizationsTg extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '$n ресепт',
+      other: '$n бланк',
     );
     return '$_temp0';
   }
@@ -2422,10 +2422,10 @@ class AppLocalizationsTg extends AppLocalizations {
   String get questsStepPhotoCheckSub => 'ЗС қуттиро худкор месанҷад';
 
   @override
-  String get questsStepPhotoRecipe => 'Аз ресепт акс гиред';
+  String get questsStepPhotoRecipe => 'Аз бланк акс гиред';
 
   @override
-  String get questsStepPhotoRecipeSub => 'ЗС ресептро худкор месанҷад';
+  String get questsStepPhotoRecipeSub => 'ЗС бланкро худкор месанҷад';
 
   @override
   String get questsStepGetVoucher => 'Ваучер гиред';
@@ -2442,7 +2442,7 @@ class AppLocalizationsTg extends AppLocalizations {
   String get questsSalesLimit => 'Ҳадди фурӯш';
 
   @override
-  String get questsRecipesLimit => 'Ҳадди ресептҳо';
+  String get questsRecipesLimit => 'Ҳадди бланкҳо';
 
   @override
   String get questsNoLimit => 'Бе маҳдудият';
@@ -2456,13 +2456,13 @@ class AppLocalizationsTg extends AppLocalizations {
   String get questsCountedTitle => 'Чекҳои ба ҳисоб гирифташуда';
 
   @override
-  String get questsCountedRecipesTitle => 'Ресептҳои ба ҳисоб гирифташуда';
+  String get questsCountedRecipesTitle => 'Бланкҳои ба ҳисоб гирифташуда';
 
   @override
   String get questsCountedEmpty => 'Ҳоло ягон чек нест';
 
   @override
-  String get questsCountedEmptyRecipes => 'Ҳоло ягон ресепт нест';
+  String get questsCountedEmptyRecipes => 'Ҳоло ягон бланк нест';
 
   @override
   String get questsCountedEmptySub =>
@@ -2470,7 +2470,7 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get questsCountedEmptySubRecipes =>
-      'Ресептҳо аз рӯи квест пас аз санҷиш дар ин ҷо пайдо мешаванд';
+      'Бланкҳо аз рӯи квест пас аз санҷиш дар ин ҷо пайдо мешаванд';
 
   @override
   String questsCountedSales(int n) {
@@ -2487,7 +2487,7 @@ class AppLocalizationsTg extends AppLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       n,
       locale: localeName,
-      other: '$n ресепт ба ҳисоб гирифта шуд',
+      other: '$n бланк ба ҳисоб гирифта шуд',
     );
     return '$_temp0';
   }
@@ -2496,13 +2496,13 @@ class AppLocalizationsTg extends AppLocalizations {
   String get questsAllChecks => 'Ҳамаи чекҳо';
 
   @override
-  String get questsAllRecipes => 'Ҳамаи ресептҳо';
+  String get questsAllRecipes => 'Ҳамаи бланкҳо';
 
   @override
   String get questsSendCheck => 'Фиристодани чек аз рӯи квест';
 
   @override
-  String get questsSendRecipe => 'Фиристодани ресепт аз рӯи квест';
+  String get questsSendRecipe => 'Фиристодани бланк аз рӯи квест';
 
   @override
   String get questsSearchPlaceholder => 'Ном ё дору';
@@ -2742,7 +2742,7 @@ class AppLocalizationsTg extends AppLocalizations {
   String get walletTxnCheck => 'Чек';
 
   @override
-  String get walletTxnRecipe => 'Ретсепт';
+  String get walletTxnRecipe => 'Бланк';
 
   @override
   String get walletTxnSurvey => 'Пурсиш';
@@ -4206,7 +4206,7 @@ class AppLocalizationsTg extends AppLocalizations {
       'Шумо якчанд нақш доред — интихоб кунед, ки бо кадомаш ворид шавед';
 
   @override
-  String get authRoleSubDoctor => 'Дорухатҳо, квестҳо, омӯзиш ва ҳамён';
+  String get authRoleSubDoctor => 'Бланкҳо, квестҳо, омӯзиш ва ҳамён';
 
   @override
   String get authRoleHint =>
@@ -4526,7 +4526,7 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get checksCamText =>
-      'Камера барои сурат гирифтани чекҳо ва рецептҳо лозим аст';
+      'Камера барои сурат гирифтани чекҳо ва бланкҳо лозим аст';
 
   @override
   String get checksCamPoint1 =>
@@ -4791,7 +4791,7 @@ class AppLocalizationsTg extends AppLocalizations {
   String get profileRoleDescPharmacist => 'Чекҳо, квестҳо, омӯзиш ва ҳамён';
 
   @override
-  String get profileRoleDescDoctor => 'Рецептҳо, квестҳо, омӯзиш ва ҳамён';
+  String get profileRoleDescDoctor => 'Бланкҳо, квестҳо, омӯзиш ва ҳамён';
 
   @override
   String get profileRoleDescMedrep => 'Портфели провизорҳо ва рейтинг';
@@ -4865,21 +4865,21 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get profilePrivacyCollectBody =>
-      'Ном, рақами телефон, шаҳр ва дорухона ё клиника. Суратҳои чекҳо ва рецептҳое, ки шумо мефиристед. Натиҷаҳои курсҳо ва тестҳо.';
+      'Ном, рақами телефон, шаҳр ва дорухона ё клиника. Суратҳои чекҳо ва бланкҳое, ки шумо мефиристед. Натиҷаҳои курсҳо ва тестҳо.';
 
   @override
   String get profilePrivacyWhyTitle => 'Онҳо барои чӣ лозиманд';
 
   @override
   String get profilePrivacyWhyBody =>
-      'Барои ҳисоб кардани IQC барои чекҳо ва рецептҳо, ба ҳисоб гирифтани квестҳо, додани ваучерҳо ва нишон додани омори шумо.';
+      'Барои ҳисоб кардани IQC барои чекҳо ва бланкҳо, ба ҳисоб гирифтани квестҳо, додани ваучерҳо ва нишон додани омори шумо.';
 
   @override
   String get profilePrivacyWhoTitle => 'Онҳоро кӣ мебинад';
 
   @override
   String get profilePrivacyWhoBody =>
-      'Намояндаи тиббии шумо шумораи чекҳо ва квестҳои шуморо мебинад. Маълумоти беморон дар рецептҳо пинҳон аст — танҳо ҳарфҳои аввал намоёнанд.';
+      'Намояндаи тиббии шумо шумораи чекҳо ва квестҳои шуморо мебинад. Маълумоти беморон дар бланкҳо пинҳон аст — танҳо ҳарфҳои аввал намоёнанд.';
 
   @override
   String get profilePrivacyStoreTitle => 'Мо онҳоро чӣ гуна нигоҳ медорем';
@@ -5285,11 +5285,11 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get tourQuestsText =>
-      'Супоришҳо аз истеҳсолкунандагон: миқдори лозимии бастаҳоро фурӯшед ва бонус гиред. Пешрафт дар корт намоён аст.';
+      'Супоришҳо аз истеҳсолкунандагон: миқдори лозимии бастаҳоро фурӯшед ва мукофот гиред. Пешрафт дар корт намоён аст.';
 
   @override
   String get tourQuestsTextDoc =>
-      'Супоришҳо аз истеҳсолкунандагон: миқдори лозимии бланкҳоро нависед ва бонус гиред. Пешрафт дар корт намоён аст.';
+      'Супоришҳо аз истеҳсолкунандагон: миқдори лозимии бланкҳоро нависед ва мукофот гиред. Пешрафт дар корт намоён аст.';
 
   @override
   String get tourChecksTitle => 'Чекҳои шумо';
@@ -5342,4 +5342,18 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get profileTourAgain => 'Омӯзишро аз нав гузаштан';
+
+  @override
+  String get walletConfirmTextPlain => 'Корти тӯҳфавии Korzinka гиред';
+
+  @override
+  String walletArchiveCount(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n ваучер',
+      one: '$n ваучер',
+    );
+    return '$_temp0';
+  }
 }

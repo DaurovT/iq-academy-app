@@ -66,7 +66,18 @@ class _SmsCodeScreenState extends ConsumerState<SmsCodeScreen> {
         _error = null;
       });
     }
-    if (v.length == _len && !_loading) _submitCode();
+    if (v.length == _len && !_loading) {
+      _submitCode();
+    } else {
+      setState(() {}); // показать/скрыть кнопку «Войти» для короткого кода
+    }
+  }
+
+  /// Код короче [_len] (демо-аккаунты для проверки сторов входят по
+  /// 5-значному коду) — автоотправки нет, нужна явная кнопка.
+  bool get _showEnter {
+    final n = _codeCtrl.text.length;
+    return n >= 4 && n < _len && _state != AuthCodeState.success;
   }
 
   Future<void> _submitCode() async {
@@ -192,6 +203,15 @@ class _SmsCodeScreenState extends ConsumerState<SmsCodeScreen> {
                       style: PqText.body(c: pq.textMuted),
                     ),
           ),
+          if (_showEnter)
+            PqAnimate(
+              fx: PqFx.fade,
+              child: PqButton(
+                label: l10n.loginEnter,
+                loading: _loading,
+                onPressed: _submitCode,
+              ),
+            ),
           const AuthPush(),
           Center(
             child: PqPressable(

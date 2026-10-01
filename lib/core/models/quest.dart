@@ -118,3 +118,17 @@ abstract class QuestParticipation with _$QuestParticipation {
   factory QuestParticipation.fromJson(Map<String, dynamic> json) =>
       _$QuestParticipationFromJson(json);
 }
+
+/// Квест «действует»: активен на сервере и срок ещё не истёк. Сервер может
+/// отдавать `active` у квеста с прошедшей датой окончания — на главной такой
+/// квест активным не считаем (раздел «Активные квесты» тогда не показываем).
+extension QuestLive on Quest {
+  bool get isLive {
+    if (status != QuestStatus.active) return false;
+    final end = endDate == null ? null : DateTime.tryParse(endDate!)?.toLocal();
+    if (end == null) return true;
+    // Дата окончания включительно — до конца этого дня.
+    final lastMoment = DateTime(end.year, end.month, end.day, 23, 59, 59);
+    return !DateTime.now().isAfter(lastMoment);
+  }
+}

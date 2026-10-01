@@ -157,7 +157,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
             onChanged: (_) => setState(() {}),
           ),
         ),
-      if (role == Role.pharmacist)
+      if (kMapPickerEnabled && role == Role.pharmacist)
         PqPressable(
           onTap: _pickOnMap,
           child: CustomPaint(

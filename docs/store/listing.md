@@ -64,6 +64,31 @@ PharmIQ Academy is a learning and loyalty app for pharmacists and doctors taking
 • News, surveys and in-app support
 • Sign in with phone, Apple, Google or Telegram
 
+## Что нового в 1.2 (App Store — «What's New in This Version», Google Play — «Примечания к выпуску», ≤500 знаков)
+**Русский**
+Обновили приложение целиком:
+• Новый дизайн всех экранов, светлая и тёмная темы
+• Краткое обучение при первом входе — покажем, где что находится
+• Код из СМС подставляется автоматически, повторная отправка через 60 секунд
+• Плавнее анимации и переходы между разделами
+• Исправления и улучшения стабильности
+
+**O‘zbekcha**
+Ilova to‘liq yangilandi:
+• Barcha ekranlarning yangi dizayni, yorug‘ va qorong‘i mavzular
+• Birinchi kirishda qisqa tanishtiruv — nima qayerda ekanini ko‘rsatamiz
+• SMS kodi avtomatik qo‘yiladi, qayta yuborish 60 soniyadan keyin
+• Animatsiyalar va bo‘limlar orasidagi o‘tishlar ravonroq
+• Xatolar tuzatildi, barqarorlik oshirildi
+
+**English**
+A complete refresh of the app:
+• New design across all screens, light and dark themes
+• A short tour on first sign-in that shows where everything is
+• SMS code fills in automatically, resend available after 60 seconds
+• Smoother animations and transitions
+• Bug fixes and stability improvements
+
 ## Ссылки
 - Политика конфиденциальности: https://pharmview.uz/privacy
 - Удаление аккаунта (Google Play → Data safety): https://pharmview.uz/delete-account
