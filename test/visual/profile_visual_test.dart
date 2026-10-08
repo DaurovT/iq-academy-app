@@ -58,7 +58,7 @@ void main() {
   pqShotBoth('MedProfile', (t, dark) => pqShot(t,
       name: 'MedProfile',
       dark: dark,
-      height: 1500,
+      height: 1530,
       screen: const ProfileScreen(),
       overrides: profileOverrides(
           dark: dark, acc: account(roles: [Role.medrep]), role: Role.medrep),

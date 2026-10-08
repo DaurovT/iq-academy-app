@@ -15,8 +15,8 @@ const kRxCameraPath = '/app/recipes/camera';
 void openRecipeCamera(BuildContext context) => context.push(kRxCameraPath);
 
 /// Этап бланка для экрана и списков: на проверке → одобрен → начислено;
-/// или отклонён.
-enum RxStage { pending, approved, credited, rejected }
+/// или отклонён. [extraReview] — дополнительная проверка (макет RxReview).
+enum RxStage { pending, extraReview, approved, credited, rejected }
 
 /// Сколько IQC начислено за бланк (id → сумма). API эту сумму пока не
 /// отдаёт — карта пустая, и одобренный бланк показывается этапом «Одобрен».
@@ -28,6 +28,7 @@ extension RecipeStatusStage on CheckStatus {
   /// Этап по статусу; [credited] — начисленная сумма, если известна.
   RxStage rxStage([int? credited]) => switch (this) {
         CheckStatus.pending || CheckStatus.aiDetected => RxStage.pending,
+        CheckStatus.review => RxStage.extraReview,
         CheckStatus.approved =>
           credited != null && credited > 0 ? RxStage.credited : RxStage.approved,
         CheckStatus.rejected || CheckStatus.aiWrong => RxStage.rejected,
@@ -39,6 +40,7 @@ extension RxStageUi on RxStage {
   /// начислено — info, отклонён — danger.
   PqTone get tone => switch (this) {
         RxStage.pending => PqTone.warning,
+        RxStage.extraReview => PqTone.violet,
         RxStage.approved => PqTone.success,
         RxStage.credited => PqTone.info,
         RxStage.rejected => PqTone.danger,
@@ -46,6 +48,7 @@ extension RxStageUi on RxStage {
 
   PqIcons get icon => switch (this) {
         RxStage.pending => PqIcons.clock,
+        RxStage.extraReview => PqIcons.shieldOk,
         RxStage.approved => PqIcons.check,
         RxStage.credited => PqIcons.coin,
         RxStage.rejected => PqIcons.alertTriangle,
@@ -53,6 +56,7 @@ extension RxStageUi on RxStage {
 
   String label(AppLocalizations l10n) => switch (this) {
         RxStage.pending => l10n.recipesStatusPending,
+        RxStage.extraReview => l10n.checksStatusExtraReview,
         RxStage.approved => l10n.recipesStatusApproved,
         RxStage.credited => l10n.rxStepCredited,
         RxStage.rejected => l10n.recipesStatusRejected,
@@ -60,6 +64,9 @@ extension RxStageUi on RxStage {
 
   /// Одобрен или уже начислено.
   bool get isApproved => this == RxStage.approved || this == RxStage.credited;
+
+  /// Ещё проверяется (обычная или дополнительная проверка).
+  bool get inReview => this == RxStage.pending || this == RxStage.extraReview;
 }
 
 /// «08.06» — короткая дата без времени.

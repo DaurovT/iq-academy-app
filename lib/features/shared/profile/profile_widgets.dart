@@ -179,6 +179,7 @@ class ProfileRow extends StatelessWidget {
     required this.icon,
     required this.title,
     this.subtitle,
+    this.subtitleMaxLines = 1,
     this.value,
     this.valueColor,
     this.trailing,
@@ -190,6 +191,7 @@ class ProfileRow extends StatelessWidget {
   final PqIcons icon;
   final String title;
   final String? subtitle;
+  final int subtitleMaxLines;
   final String? value;
   final Color? valueColor;
   final Widget? trailing;
@@ -222,7 +224,7 @@ class ProfileRow extends StatelessWidget {
                     const SizedBox(height: 1),
                     Text(
                       subtitle!,
-                      maxLines: 1,
+                      maxLines: subtitleMaxLines,
                       overflow: TextOverflow.ellipsis,
                       style: PqText.text(13, FontWeight.w400, c: pq.textMuted),
                     ),

@@ -69,10 +69,10 @@ class AppLocalizationsTg extends AppLocalizations {
   String get navPortfolio => 'Портфел';
 
   @override
-  String get navPharm => 'Фарм.';
+  String get navPharm => 'Даста';
 
   @override
-  String get navTop => 'Топ';
+  String get navTop => 'Рейтинг';
 
   @override
   String get navDashboard => 'Дашборд';
@@ -2143,7 +2143,7 @@ class AppLocalizationsTg extends AppLocalizations {
       'Ҳафтае як маротиба майдон барои ҳама кушода мешавад';
 
   @override
-  String get sapperStep3Title => 'Тӯҳфаро гиред';
+  String get sapperStep3Title => 'Натиҷаро гиред';
 
   @override
   String get sapperStep3Text =>
@@ -2233,10 +2233,10 @@ class AppLocalizationsTg extends AppLocalizations {
   String get sapperViewResults => 'Дидани натиҷаҳо';
 
   @override
-  String get questsSubtitle => 'Фурӯшед ва мукофот гиред';
+  String get questsSubtitle => 'Фурӯшҳои худро сабт кунед';
 
   @override
-  String get questsSubtitleDoctor => 'Бланк нависед ва мукофот гиред';
+  String get questsSubtitleDoctor => 'Ҳолатҳои таъинотро сабт кунед';
 
   @override
   String get questsSearchLabel => 'Ҷустуҷӯи квестҳо';
@@ -2306,14 +2306,8 @@ class AppLocalizationsTg extends AppLocalizations {
   String get questsStepSendRecipeSub => 'акси бланкро';
 
   @override
-  String get questsStepGetTitle => 'Гиред';
-
-  @override
-  String get questsStepGetSub => 'мукофотро';
-
-  @override
   String get questsDoneFooter =>
-      'Дар ин ҷо квестҳои иҷрошуда ва анҷомёфта бо сана ва мукофоти гирифташуда нигоҳ дошта мешаванд';
+      'Дар ин ҷо квестҳои иҷрошуда ва анҷомёфта бо сана ва натиҷа нигоҳ дошта мешаванд';
 
   @override
   String questsDoneOn(String date) {
@@ -2387,7 +2381,7 @@ class AppLocalizationsTg extends AppLocalizations {
   }
 
   @override
-  String get questsRewardManual => 'Пас аз санҷиш дастӣ дода мешавад';
+  String get questsRewardManual => 'Пас аз санҷиш дода мешавад';
 
   @override
   String get questsRewardIqcSub => 'Холҳо пас аз санҷиш ба баланс мегузаранд';
@@ -2419,21 +2413,15 @@ class AppLocalizationsTg extends AppLocalizations {
   String get questsStepPhotoCheck => 'Аз чек акс гиред';
 
   @override
-  String get questsStepPhotoCheckSub => 'ЗС қуттиро худкор месанҷад';
+  String get questsStepPhotoCheckSub =>
+      'Чеки шумо барои санҷиш фиристода мешавад';
 
   @override
   String get questsStepPhotoRecipe => 'Аз бланк акс гиред';
 
   @override
-  String get questsStepPhotoRecipeSub => 'ЗС бланкро худкор месанҷад';
-
-  @override
-  String get questsStepGetVoucher => 'Ваучер гиред';
-
-  @override
-  String questsStepGetIqc(int n) {
-    return '$n IQC гиред';
-  }
+  String get questsStepPhotoRecipeSub =>
+      'Бланки шумо барои санҷиш фиристода мешавад';
 
   @override
   String get questsConditionsTitle => 'Шартҳо';
@@ -3014,7 +3002,7 @@ class AppLocalizationsTg extends AppLocalizations {
   String get learnRowQuizLocked => 'Пас аз видео кушода мешавад';
 
   @override
-  String get learnRowRewardPending => 'Пас аз тест ҳисоб мекунем';
+  String get learnRowRewardPending => 'Пас аз гузаштани тест';
 
   @override
   String get learnRowRewardDone => 'Ҳисоб шуд';
@@ -3134,7 +3122,7 @@ class AppLocalizationsTg extends AppLocalizations {
   }
 
   @override
-  String get rxHomeSubtitle => 'Бланкҳоро фиристед ва мукофот гиред';
+  String get rxHomeSubtitle => 'Ҳолатҳои таъинотро сабт кунед';
 
   @override
   String get rxHomeBellLabel => 'Огоҳиномаҳо';
@@ -3289,8 +3277,7 @@ class AppLocalizationsTg extends AppLocalizations {
   String get rxStateRejectedTitle => 'Бланк рад шуд';
 
   @override
-  String get rxStateRejectedHint =>
-      'Бланкро дар равшании хуб пурра акс гиред — холҳоро ҳанӯз гирифтан мумкин аст';
+  String get rxStateRejectedHint => 'Бланкро дар равшании хуб пурра акс гиред';
 
   @override
   String get rxStepSent => 'Фиристода шуд';
@@ -3797,17 +3784,18 @@ class AppLocalizationsTg extends AppLocalizations {
   }
 
   @override
-  String get medrepInviteTitle => 'Даъвати провизор';
+  String get medrepInviteTitle => 'Даъват ба даста';
 
   @override
   String get medrepInviteText =>
-      'Пайвандро фиристед — пас аз бақайдгирӣ провизор ба портфели шумо ворид мешавад';
+      'Табиб ҳангоми бақайдгирӣ калимаи рамзиро ворид мекунад. Фармасевт — бо хоҳиши худ';
 
   @override
   String get medrepCopyLink => 'Нусхабардории пайванд';
 
   @override
-  String get medrepPendingSub => 'Провизорҳое, ки тавассути пайванд гузаштанд';
+  String get medrepPendingSub =>
+      'Интизоранд, ки шумо онҳоро ба даста илова кунед';
 
   @override
   String get medrepCompaniesSub => 'Шабакаҳои дорухонаҳо дар портфел';
@@ -3816,35 +3804,35 @@ class AppLocalizationsTg extends AppLocalizations {
   String get medrepDoctorsSub => 'Пешрафт аз рӯи квести бланкҳо';
 
   @override
-  String get medrepEmptyTitle => 'Портфел ҳоло холӣ аст';
+  String get medrepEmptyTitle => 'Даста ҳоло холӣ аст';
 
   @override
   String get medrepEmptyText =>
-      'Провизорҳоро тавассути пайванд даъват кунед — чекҳо ва омори онҳо дар ин ҷо пайдо мешаванд';
+      'Табибон ва фармасевтҳоро даъват кунед — бланкҳо, чекҳо ва омори онҳо дар ин ҷо пайдо мешаванд';
 
   @override
-  String get medrepStep1Title => 'Пайвандро фиристед';
+  String get medrepStep1Title => 'Калимаи рамзиро мубодила кунед';
 
   @override
-  String get medrepStep1Text => 'Тавассути Telegram ё SMS';
+  String get medrepStep1Text => 'Онро ҳангоми бақайдгирӣ ворид мекунанд';
 
   @override
-  String get medrepStep2Title => 'Провизор бақайд гирифта мешавад';
+  String get medrepStep2Title => 'Ҳамкор бақайд гирифта мешавад';
 
   @override
-  String get medrepStep2Text => 'Ӯ дарҳол ба портфели шумо ворид мешавад';
+  String get medrepStep2Text => 'Табиб бо калимаи рамзӣ — фавран дар даста';
 
   @override
-  String get medrepStep3Title => 'Чекҳоро пайгирӣ кунед';
+  String get medrepStep3Title => 'Натиҷаҳоро пайгирӣ кунед';
 
   @override
-  String get medrepStep3Text => 'Омор дар ин ҷо пайдо мешавад';
+  String get medrepStep3Text => 'Бланкҳо ва чекҳо дар ин ҷо пайдо мешаванд';
 
   @override
   String get medrepUpdatedNow => 'Ҳозир нав шуд';
 
   @override
-  String get medrepSearchHint => 'Ном, дорухона ё шаҳр';
+  String get medrepSearchHint => 'Ном, дорухона, клиника ё шаҳр';
 
   @override
   String get medrepFilterAll => 'Ҳама';
@@ -3872,7 +3860,7 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String medrepNotFoundText(String query) {
-    return 'Аз рӯи дархости «$query» провизор нест. Имлоро санҷед ё аз рӯи номи дорухона ҷустуҷӯ кунед';
+    return 'Аз рӯи дархости «$query» касе нест. Имлоро санҷед ё аз рӯи дорухона ё клиника ҷустуҷӯ кунед';
   }
 
   @override
@@ -3955,7 +3943,7 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get medrepNotRankedText =>
-      'Ҷой аз рӯи чекҳои провизорҳои шумо ҳисоб карда мешавад. Аввалинашро даъват кунед — ва шумо дар рӯйхат пайдо мешавед';
+      'Ҷой аз рӯи чекҳои дастаи шумо ҳисоб карда мешавад. Аввалинашро даъват кунед — ва шумо дар рӯйхат пайдо мешавед';
 
   @override
   String get medrepRatingEmpty => 'Рейтинг ҳоло холӣ аст';
@@ -4055,7 +4043,7 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get medrepPendingText =>
-      'Тавассути пайванди шумо гузаштанд ва интизоранд, ки шумо онҳоро ба портфел илова кунед';
+      'Интизоранд, ки шумо онҳоро ба даста илова кунед';
 
   @override
   String medrepFollowedLink(String ago) {
@@ -4434,7 +4422,7 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get checksEmptyText =>
-      'Чеки дорухонаро сурат гиред — ЗС доруҳоро муайян мекунад ва шумо IQC мегиред';
+      'Чекро сурат гиред — пас аз санҷиш натиҷаи шумо ба ҳисоб гирифта мешавад';
 
   @override
   String get checksHowToTitle => 'Чӣ тавр сурат гирифтан';
@@ -5356,4 +5344,211 @@ class AppLocalizationsTg extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get checksStepConfirmed => 'Қабул шуд';
+
+  @override
+  String get rxStepConfirmed => 'Қабул шуд';
+
+  @override
+  String get questsStepDoTitle => 'Иҷро кунед';
+
+  @override
+  String get questsStepDoSub => 'шартҳоро';
+
+  @override
+  String get questsStepWaitTitle => 'Интизор шавед';
+
+  @override
+  String get questsStepWaitSub => 'санҷишро';
+
+  @override
+  String get questsStepWaitCheck => 'Санҷишро интизор шавед';
+
+  @override
+  String get questsStepWaitCheckSub => 'Чекро дубора фиристодан лозим нест';
+
+  @override
+  String get questsStepWaitRecipe => 'Тасдиқи бланкро интизор шавед';
+
+  @override
+  String get questsStepWaitRecipeSub =>
+      'Санҷиши аввалия то 24 соат вақт мегирад';
+
+  @override
+  String get learnTileResult => 'Натиҷа';
+
+  @override
+  String get checksStatusExtraReview => 'Санҷиши иловагӣ';
+
+  @override
+  String get checksHeroExtraTitle => 'Чек дар санҷиши иловагӣ';
+
+  @override
+  String get checksHeroExtraText => 'Санҷиш аз маъмул бештар вақт мегирад';
+
+  @override
+  String get rxStateExtraTitle => 'Бланк дар санҷиши иловагӣ';
+
+  @override
+  String get rxStateExtraText =>
+      'Бланк барои санҷиши иловагӣ ба мутахассис фиристода шуд. Ин вақти бештар мегирад — ҳангоми қарор огоҳинома мефиристем';
+
+  @override
+  String get checksExtraNoteTitle => 'Ҳеҷ кор кардан лозим нест';
+
+  @override
+  String get checksExtraNoteText =>
+      'Баъзан чек муқоисаи иловагиро талаб мекунад — масалан, агар як қисми маълумот бад хонда шавад. Қарор дар огоҳиномаҳо меояд ва дар ин ҷо пайдо мешавад';
+
+  @override
+  String get rxExtraNoteText =>
+      'Баъзан бланк муқоисаи дастиро талаб мекунад — масалан, агар як қисми маълумот бад хонда шавад. Қарор дар огоҳиномаҳо меояд ва дар ин ҷо пайдо мешавад';
+
+  @override
+  String get rxExtraHint => 'Қарор дар огоҳиномаҳо меояд';
+
+  @override
+  String get regCodeLabel => 'Калимаи рамзии намояндаи тиббӣ';
+
+  @override
+  String get regCodeOptional => '· ихтиёрӣ';
+
+  @override
+  String get regCodeExample => 'Масалан, DAUROV';
+
+  @override
+  String get regCodeNoteDoctor =>
+      'Калимаи рамзиро намояндаи тиббии шумо медиҳад. Бе он бақайдгирии табиб имконнопазир аст';
+
+  @override
+  String get regCodeNotePharm =>
+      'Агар шуморо намояндаи тиббӣ даъват карда бошад';
+
+  @override
+  String get regCodeNotFound =>
+      'Чунин калимаи рамзӣ нест. Ҳарфҳоро санҷед ё аз намояндаи тиббии худ пурсед';
+
+  @override
+  String get regCodeMedrep => 'Намояндаи тиббӣ';
+
+  @override
+  String get regCodeJoinDoctor => 'Шумо фавран ба дастаи ӯ ҳамроҳ мешавед';
+
+  @override
+  String get regCodeJoinPharm =>
+      'Намояндаи тиббӣ дархости шуморо тасдиқ мекунад';
+
+  @override
+  String get medrepTeamTitle => 'Даста';
+
+  @override
+  String medrepCountPharm(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n фармасевт',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String medrepCountDoctors(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n табиб',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get medrepCodeForInvite => 'Калимаи рамзӣ барои даъват';
+
+  @override
+  String get medrepInviteShort => 'Даъват';
+
+  @override
+  String medrepUnitBlanks(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'бланк',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get medrepUnitInTeam => 'дар даста';
+
+  @override
+  String get medrepAllTeam => 'Тамоми даста';
+
+  @override
+  String get medrepYourCode => 'Калимаи рамзии шумо';
+
+  @override
+  String get medrepCopyCode => 'Нусхабардории калимаи рамзӣ';
+
+  @override
+  String get medrepCodeCopied => 'Калимаи рамзӣ нусхабардорӣ шуд';
+
+  @override
+  String medrepEnteredCode(String ago) {
+    return 'Калимаи рамзиро ворид кард · $ago';
+  }
+
+  @override
+  String medrepStep1TextCode(String code) {
+    return 'Калимаи шумо — $code';
+  }
+
+  @override
+  String medrepCodeHintNick(String username) {
+    return '6 аломат аз ники шумо @$username · регистр муҳим нест';
+  }
+
+  @override
+  String get medrepCodeHint => 'Ҳангоми воридкунӣ регистр муҳим нест';
+
+  @override
+  String get medrepHowTitle => 'Ин чӣ тавр кор мекунад';
+
+  @override
+  String get medrepHowDoctor =>
+      'Ҳангоми бақайдгирӣ калимаро ҳатман ворид мекунад — ва фавран ба дастаи шумо ҳамроҳ мешавад';
+
+  @override
+  String get medrepHowPharm =>
+      'Калимаро бо хоҳиши худ ворид мекунад. Дар бахши «Интизори тасдиқ» пайдо мешавад';
+
+  @override
+  String medrepShareText(String code) {
+    return 'Калимаи рамзии ман дар PharmIQ Academy — $code. Онро ҳангоми бақайдгирӣ дар барнома ворид кунед.';
+  }
+
+  @override
+  String get medrepBlanksAllTime => 'Бланкҳо дар тамоми вақт';
+
+  @override
+  String get medrepUnitApproved => 'тасдиқшуда';
+
+  @override
+  String medrepSince(String date) {
+    return 'аз $date';
+  }
+
+  @override
+  String get medrepPatientsHidden =>
+      'Маълумоти беморон ба намояндаи тиббӣ нишон дода намешавад';
+
+  @override
+  String get medrepProfileCode => 'Калимаи рамзӣ';
+
+  @override
+  String get medrepProfileCodeSub => 'Барои даъват ба даста';
+
+  @override
+  String get medrepTeamNobody => 'Дар ин ҷо ҳоло касе нест';
 }

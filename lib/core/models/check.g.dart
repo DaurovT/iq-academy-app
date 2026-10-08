@@ -24,7 +24,11 @@ Map<String, dynamic> _$PhotoToJson(_Photo instance) => <String, dynamic>{
 
 _Check _$CheckFromJson(Map<String, dynamic> json) => _Check(
   id: (json['id'] as num).toInt(),
-  status: $enumDecode(_$CheckStatusEnumMap, json['status']),
+  status: $enumDecode(
+    _$CheckStatusEnumMap,
+    json['status'],
+    unknownValue: CheckStatus.pending,
+  ),
   createdAt: json['createdAt'] as String,
   photoCount: (json['photoCount'] as num).toInt(),
   drugs:
@@ -47,6 +51,7 @@ const _$CheckStatusEnumMap = {
   CheckStatus.pending: 'pending',
   CheckStatus.aiDetected: 'ai_detected',
   CheckStatus.aiWrong: 'ai_wrong',
+  CheckStatus.review: 'review',
   CheckStatus.approved: 'approved',
   CheckStatus.rejected: 'rejected',
 };
@@ -67,7 +72,11 @@ Map<String, dynamic> _$CheckAllocationToJson(_CheckAllocation instance) =>
 
 _CheckDetail _$CheckDetailFromJson(Map<String, dynamic> json) => _CheckDetail(
   id: (json['id'] as num).toInt(),
-  status: $enumDecode(_$CheckStatusEnumMap, json['status']),
+  status: $enumDecode(
+    _$CheckStatusEnumMap,
+    json['status'],
+    unknownValue: CheckStatus.pending,
+  ),
   createdAt: json['createdAt'] as String,
   photoCount: (json['photoCount'] as num).toInt(),
   drugs:
@@ -109,7 +118,11 @@ Map<String, dynamic> _$RecipeDrugToJson(_RecipeDrug instance) =>
 
 _Recipe _$RecipeFromJson(Map<String, dynamic> json) => _Recipe(
   id: (json['id'] as num).toInt(),
-  status: $enumDecode(_$CheckStatusEnumMap, json['status']),
+  status: $enumDecode(
+    _$CheckStatusEnumMap,
+    json['status'],
+    unknownValue: CheckStatus.pending,
+  ),
   createdAt: json['createdAt'] as String,
   photoCount: (json['photoCount'] as num).toInt(),
   drugs:
@@ -131,7 +144,11 @@ Map<String, dynamic> _$RecipeToJson(_Recipe instance) => <String, dynamic>{
 _RecipeDetail _$RecipeDetailFromJson(Map<String, dynamic> json) =>
     _RecipeDetail(
       id: (json['id'] as num).toInt(),
-      status: $enumDecode(_$CheckStatusEnumMap, json['status']),
+      status: $enumDecode(
+        _$CheckStatusEnumMap,
+        json['status'],
+        unknownValue: CheckStatus.pending,
+      ),
       createdAt: json['createdAt'] as String,
       photoCount: (json['photoCount'] as num).toInt(),
       drugs:

@@ -456,6 +456,13 @@ class _RecentRow extends StatelessWidget {
           valueIsAmount: false,
           onTap: open,
         ),
+      RxStage.extraReview => PqListRow(
+          icon: stage.icon,
+          tone: stage.tone,
+          title: stage.label(l10n),
+          subtitle: '$title · ${formatShortDateTime(recipe.createdAt)}',
+          onTap: open,
+        ),
       RxStage.approved => PqListRow(
           icon: stage.icon,
           tone: stage.tone,

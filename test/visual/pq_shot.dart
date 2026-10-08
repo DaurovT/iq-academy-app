@@ -54,7 +54,7 @@ const doctorNav = [
 ];
 const medrepNav = [
   PqNavItem(icon: PqIcons.barChart, label: 'Портфель'),
-  PqNavItem(icon: PqIcons.users, label: 'Фармацевты'),
+  PqNavItem(icon: PqIcons.users, label: 'Команда'),
   PqNavItem(icon: PqIcons.target, label: 'Квесты'),
   PqNavItem(icon: PqIcons.award, label: 'Рейтинг'),
   PqNavItem(icon: PqIcons.user, label: 'Профиль'),

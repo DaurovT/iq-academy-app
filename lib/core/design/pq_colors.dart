@@ -322,6 +322,10 @@ class PqColors extends ThemeExtension<PqColors> {
         PqTone.danger => (bg: dangerSoft, fg: danger),
         PqTone.info => (bg: infoSoft, fg: info),
         PqTone.neutral => (bg: surfaceAlt, fg: textSecondary),
+        // Нет в токенах: «Доп. проверка» — #2b1f4d/#c4b5fd и #ede9fe/#6d28d9.
+        PqTone.violet => isDark
+            ? (bg: const Color(0xFF2B1F4D), fg: const Color(0xFFC4B5FD))
+            : (bg: const Color(0xFFEDE9FE), fg: const Color(0xFF6D28D9)),
       };
 
   @override
@@ -333,8 +337,9 @@ class PqColors extends ThemeExtension<PqColors> {
 }
 
 /// Смысловой тон: «один цвет — одно значение во всём приложении».
-/// На проверке — warning, одобрен — success, начислено — info, отклонён — danger.
-enum PqTone { accent, success, warning, danger, info, neutral }
+/// На проверке — warning, одобрен — success, начислено — info, отклонён — danger,
+/// дополнительная проверка — violet.
+enum PqTone { accent, success, warning, danger, info, neutral, violet }
 
 extension PqColorsContext on BuildContext {
   /// Токены редизайна для текущей темы.

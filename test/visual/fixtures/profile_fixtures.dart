@@ -138,6 +138,8 @@ List profileOverrides({
     supportThreadProvider.overrideWith((ref) async => thread),
     companiesProvider.overrideWith(
         (ref) async => const [Company(id: 1, name: 'Bionorica SE', labelCode: 'BIO')]),
+    medrepCodeProvider.overrideWith(
+        (ref) async => const MedrepCode(code: 'DAUROV', username: 'daurov_a')),
     walletProvider.overrideWith((ref) async => const Wallet(balanceUzs: 0, balanceIqc: 2840)),
     myVouchersProvider.overrideWith((ref) async => [
           for (var i = 0; i < 3; i++)

@@ -484,7 +484,7 @@ class _CourseCard extends ConsumerWidget {
           _Tile(
             icon: PqIcons.star,
             iconColor: learnRewardFg(pq),
-            label: l.learnTileReward,
+            label: l.learnTileResult,
             value: l.learnIqc(stats.reward),
           ),
         );

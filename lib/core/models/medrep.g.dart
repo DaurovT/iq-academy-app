@@ -199,6 +199,8 @@ _PendingReferral _$PendingReferralFromJson(Map<String, dynamic> json) =>
       phone: json['phone'] as String,
       shop: json['shop'] as String?,
       requestedAt: json['requestedAt'] as String,
+      kind: json['kind'] as String? ?? 'bot',
+      source: json['source'] as String?,
     );
 
 Map<String, dynamic> _$PendingReferralToJson(_PendingReferral instance) =>
@@ -208,12 +210,18 @@ Map<String, dynamic> _$PendingReferralToJson(_PendingReferral instance) =>
       'phone': instance.phone,
       'shop': instance.shop,
       'requestedAt': instance.requestedAt,
+      'kind': instance.kind,
+      'source': instance.source,
     };
 
 _RecentCheck _$RecentCheckFromJson(Map<String, dynamic> json) => _RecentCheck(
   id: (json['id'] as num).toInt(),
   createdAt: json['createdAt'] as String,
-  status: $enumDecode(_$CheckStatusEnumMap, json['status']),
+  status: $enumDecode(
+    _$CheckStatusEnumMap,
+    json['status'],
+    unknownValue: CheckStatus.pending,
+  ),
   packs: (json['packs'] as num).toInt(),
 );
 
@@ -229,6 +237,7 @@ const _$CheckStatusEnumMap = {
   CheckStatus.pending: 'pending',
   CheckStatus.aiDetected: 'ai_detected',
   CheckStatus.aiWrong: 'ai_wrong',
+  CheckStatus.review: 'review',
   CheckStatus.approved: 'approved',
   CheckStatus.rejected: 'rejected',
 };
@@ -404,4 +413,138 @@ Map<String, dynamic> _$DoctorsOverviewToJson(_DoctorsOverview instance) =>
       'quests': instance.quests,
       'totals': instance.totals,
       'regions': instance.regions,
+    };
+
+_MedrepCode _$MedrepCodeFromJson(Map<String, dynamic> json) => _MedrepCode(
+  code: json['code'] as String,
+  username: json['username'] as String?,
+  company: json['company'] as String?,
+  joinedByCode: (json['joinedByCode'] as num?)?.toInt() ?? 0,
+);
+
+Map<String, dynamic> _$MedrepCodeToJson(_MedrepCode instance) =>
+    <String, dynamic>{
+      'code': instance.code,
+      'username': instance.username,
+      'company': instance.company,
+      'joinedByCode': instance.joinedByCode,
+    };
+
+_MedrepCodeOwner _$MedrepCodeOwnerFromJson(Map<String, dynamic> json) =>
+    _MedrepCodeOwner(
+      name: json['name'] as String,
+      company: json['company'] as String?,
+    );
+
+Map<String, dynamic> _$MedrepCodeOwnerToJson(_MedrepCodeOwner instance) =>
+    <String, dynamic>{'name': instance.name, 'company': instance.company};
+
+_MedrepCodeCheck _$MedrepCodeCheckFromJson(Map<String, dynamic> json) =>
+    _MedrepCodeCheck(
+      ok: json['ok'] as bool,
+      medrep:
+          json['medrep'] == null
+              ? null
+              : MedrepCodeOwner.fromJson(
+                json['medrep'] as Map<String, dynamic>,
+              ),
+    );
+
+Map<String, dynamic> _$MedrepCodeCheckToJson(_MedrepCodeCheck instance) =>
+    <String, dynamic>{'ok': instance.ok, 'medrep': instance.medrep};
+
+_TeamTotals _$TeamTotalsFromJson(Map<String, dynamic> json) => _TeamTotals(
+  all: (json['all'] as num?)?.toInt() ?? 0,
+  doctors: (json['doctors'] as num?)?.toInt() ?? 0,
+  pharmacists: (json['pharmacists'] as num?)?.toInt() ?? 0,
+  pending: (json['pending'] as num?)?.toInt() ?? 0,
+);
+
+Map<String, dynamic> _$TeamTotalsToJson(_TeamTotals instance) =>
+    <String, dynamic>{
+      'all': instance.all,
+      'doctors': instance.doctors,
+      'pharmacists': instance.pharmacists,
+      'pending': instance.pending,
+    };
+
+_TeamDoctor _$TeamDoctorFromJson(Map<String, dynamic> json) => _TeamDoctor(
+  accountId: (json['accountId'] as num?)?.toInt(),
+  telegramId: (json['telegramId'] as num?)?.toInt(),
+  name: json['name'] as String,
+  specialty: json['specialty'] as String? ?? '',
+  workplace: json['workplace'] as String? ?? '',
+  city: json['city'] as String? ?? '',
+  phone: json['phone'] as String? ?? '',
+  recipes: (json['recipes'] as num?)?.toInt() ?? 0,
+  approved: (json['approved'] as num?)?.toInt() ?? 0,
+  lastAt: json['lastAt'] as String?,
+  active: json['active'] as bool? ?? false,
+  joinedAt: json['joinedAt'] as String?,
+);
+
+Map<String, dynamic> _$TeamDoctorToJson(_TeamDoctor instance) =>
+    <String, dynamic>{
+      'accountId': instance.accountId,
+      'telegramId': instance.telegramId,
+      'name': instance.name,
+      'specialty': instance.specialty,
+      'workplace': instance.workplace,
+      'city': instance.city,
+      'phone': instance.phone,
+      'recipes': instance.recipes,
+      'approved': instance.approved,
+      'lastAt': instance.lastAt,
+      'active': instance.active,
+      'joinedAt': instance.joinedAt,
+    };
+
+_TeamPharmacist _$TeamPharmacistFromJson(Map<String, dynamic> json) =>
+    _TeamPharmacist(
+      telegramId: (json['telegramId'] as num?)?.toInt(),
+      accountId: (json['accountId'] as num?)?.toInt(),
+      name: json['name'] as String,
+      shop: json['shop'] as String? ?? '',
+      city: json['city'] as String? ?? '',
+      checks: (json['checks'] as num?)?.toInt() ?? 0,
+      quests: (json['quests'] as num?)?.toInt() ?? 0,
+      lastAt: json['lastAt'] as String?,
+      active: json['active'] as bool? ?? false,
+    );
+
+Map<String, dynamic> _$TeamPharmacistToJson(_TeamPharmacist instance) =>
+    <String, dynamic>{
+      'telegramId': instance.telegramId,
+      'accountId': instance.accountId,
+      'name': instance.name,
+      'shop': instance.shop,
+      'city': instance.city,
+      'checks': instance.checks,
+      'quests': instance.quests,
+      'lastAt': instance.lastAt,
+      'active': instance.active,
+    };
+
+_MedrepTeam _$MedrepTeamFromJson(Map<String, dynamic> json) => _MedrepTeam(
+  totals:
+      json['totals'] == null
+          ? const TeamTotals()
+          : TeamTotals.fromJson(json['totals'] as Map<String, dynamic>),
+  doctors:
+      (json['doctors'] as List<dynamic>?)
+          ?.map((e) => TeamDoctor.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const [],
+  pharmacists:
+      (json['pharmacists'] as List<dynamic>?)
+          ?.map((e) => TeamPharmacist.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const [],
+);
+
+Map<String, dynamic> _$MedrepTeamToJson(_MedrepTeam instance) =>
+    <String, dynamic>{
+      'totals': instance.totals,
+      'doctors': instance.doctors,
+      'pharmacists': instance.pharmacists,
     };

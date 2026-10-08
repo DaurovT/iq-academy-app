@@ -299,7 +299,7 @@ class _ResultCell extends StatelessWidget {
               maxLines: 1,
               style: PqText.heading(14, FontWeight.w800, height: 1, c: fg))
           : PqIcon(voucher ? PqIcons.ticket : PqIcons.coins, size: 18, color: fg);
-      label = l10n.sapperCellPrize(p.label);
+      label = l10n.sapperCellPrize(sapperPrizeLabel(p.label));
       if (p.wonByMe || mine) {
         label = '${l10n.sapperCellMine}, $label';
       }

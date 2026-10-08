@@ -69,10 +69,10 @@ class AppLocalizationsKk extends AppLocalizations {
   String get navPortfolio => 'Портфель';
 
   @override
-  String get navPharm => 'Фарм.';
+  String get navPharm => 'Команда';
 
   @override
-  String get navTop => 'Топ';
+  String get navTop => 'Рейтинг';
 
   @override
   String get navDashboard => 'Дашборд';
@@ -2141,7 +2141,7 @@ class AppLocalizationsKk extends AppLocalizations {
   String get sapperStep2Text => 'Аптасына бір рет алаң барлығына ашылады';
 
   @override
-  String get sapperStep3Title => 'Сыйлықты алыңыз';
+  String get sapperStep3Title => 'Нәтижені алыңыз';
 
   @override
   String get sapperStep3Text =>
@@ -2231,10 +2231,10 @@ class AppLocalizationsKk extends AppLocalizations {
   String get sapperViewResults => 'Қорытындыны көру';
 
   @override
-  String get questsSubtitle => 'Сатыңыз және марапат алыңыз';
+  String get questsSubtitle => 'Сатылымдарыңызды тіркеңіз';
 
   @override
-  String get questsSubtitleDoctor => 'Бланк жазыңыз және марапат алыңыз';
+  String get questsSubtitleDoctor => 'Жазып беру жағдайларын тіркеңіз';
 
   @override
   String get questsSearchLabel => 'Квесттерді іздеу';
@@ -2304,14 +2304,8 @@ class AppLocalizationsKk extends AppLocalizations {
   String get questsStepSendRecipeSub => 'бланк фотосын';
 
   @override
-  String get questsStepGetTitle => 'Алыңыз';
-
-  @override
-  String get questsStepGetSub => 'марапатты';
-
-  @override
   String get questsDoneFooter =>
-      'Мұнда орындалған және аяқталған квесттер күнімен және алынған марапатымен сақталады';
+      'Мұнда орындалған және аяқталған квесттер күнімен және нәтижесімен сақталады';
 
   @override
   String questsDoneOn(String date) {
@@ -2385,7 +2379,7 @@ class AppLocalizationsKk extends AppLocalizations {
   }
 
   @override
-  String get questsRewardManual => 'Тексерістен кейін қолмен беріледі';
+  String get questsRewardManual => 'Тексерістен кейін беріледі';
 
   @override
   String get questsRewardIqcSub => 'Ұпайлар тексерістен кейін балансқа түседі';
@@ -2417,22 +2411,13 @@ class AppLocalizationsKk extends AppLocalizations {
   String get questsStepPhotoCheck => 'Чекті суретке түсіріңіз';
 
   @override
-  String get questsStepPhotoCheckSub =>
-      'ЖИ қаптаманы автоматты түрде тексереді';
+  String get questsStepPhotoCheckSub => 'Чегіңіз тексеруге жіберіледі';
 
   @override
   String get questsStepPhotoRecipe => 'Бланкты суретке түсіріңіз';
 
   @override
-  String get questsStepPhotoRecipeSub => 'ЖИ бланкты автоматты түрде тексереді';
-
-  @override
-  String get questsStepGetVoucher => 'Ваучер алыңыз';
-
-  @override
-  String questsStepGetIqc(int n) {
-    return '$n IQC алыңыз';
-  }
+  String get questsStepPhotoRecipeSub => 'Бланкіңіз тексеруге жіберіледі';
 
   @override
   String get questsConditionsTitle => 'Шарттар';
@@ -3013,7 +2998,7 @@ class AppLocalizationsKk extends AppLocalizations {
   String get learnRowQuizLocked => 'Бейнеден кейін ашылады';
 
   @override
-  String get learnRowRewardPending => 'Тесттен кейін есептейміз';
+  String get learnRowRewardPending => 'Тесттен өткеннен кейін';
 
   @override
   String get learnRowRewardDone => 'Есептелді';
@@ -3133,7 +3118,7 @@ class AppLocalizationsKk extends AppLocalizations {
   }
 
   @override
-  String get rxHomeSubtitle => 'Бланктарды жіберіп, марапаттар алыңыз';
+  String get rxHomeSubtitle => 'Жазып беру жағдайларын тіркеңіз';
 
   @override
   String get rxHomeBellLabel => 'Хабарландырулар';
@@ -3289,7 +3274,7 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get rxStateRejectedHint =>
-      'Бланкты жақсы жарықта толығымен суретке түсіріңіз — ұпайларды әлі де алуға болады';
+      'Бланкты жақсы жарықта толығымен суретке түсіріңіз';
 
   @override
   String get rxStepSent => 'Жіберілді';
@@ -3797,17 +3782,17 @@ class AppLocalizationsKk extends AppLocalizations {
   }
 
   @override
-  String get medrepInviteTitle => 'Провизорды шақыру';
+  String get medrepInviteTitle => 'Командаға шақыру';
 
   @override
   String get medrepInviteText =>
-      'Сілтемені жіберіңіз — тіркелгеннен кейін провизор портфеліңізге түседі';
+      'Дәрігер тіркелу кезінде кодтық сөзді енгізеді. Фармацевт — қалауы бойынша';
 
   @override
   String get medrepCopyLink => 'Сілтемені көшіру';
 
   @override
-  String get medrepPendingSub => 'Сілтеме арқылы өткен провизорлар';
+  String get medrepPendingSub => 'Оларды командаға қосуыңызды күтуде';
 
   @override
   String get medrepCompaniesSub => 'Портфельдегі дәріхана желілері';
@@ -3816,35 +3801,35 @@ class AppLocalizationsKk extends AppLocalizations {
   String get medrepDoctorsSub => 'Бланк квесі бойынша прогресс';
 
   @override
-  String get medrepEmptyTitle => 'Портфель әзірге бос';
+  String get medrepEmptyTitle => 'Команда әзірге бос';
 
   @override
   String get medrepEmptyText =>
-      'Провизорларды сілтеме арқылы шақырыңыз — олардың чектері мен статистикасы осында пайда болады';
+      'Дәрігерлер мен фармацевттерді шақырыңыз — олардың бланктері, чектері мен статистикасы осында пайда болады';
 
   @override
-  String get medrepStep1Title => 'Сілтемені жіберіңіз';
+  String get medrepStep1Title => 'Кодтық сөзбен бөлісіңіз';
 
   @override
-  String get medrepStep1Text => 'Telegram немесе SMS арқылы';
+  String get medrepStep1Text => 'Оны тіркелу кезінде енгізеді';
 
   @override
-  String get medrepStep2Title => 'Провизор тіркеледі';
+  String get medrepStep2Title => 'Әріптес тіркеледі';
 
   @override
-  String get medrepStep2Text => 'Ол бірден портфеліңізге түседі';
+  String get medrepStep2Text => 'Кодтық сөзі бар дәрігер — бірден командада';
 
   @override
-  String get medrepStep3Title => 'Чектерді бақылаңыз';
+  String get medrepStep3Title => 'Нәтижелерді бақылаңыз';
 
   @override
-  String get medrepStep3Text => 'Статистика осында пайда болады';
+  String get medrepStep3Text => 'Бланктер мен чектер осында пайда болады';
 
   @override
   String get medrepUpdatedNow => 'Жаңа ғана жаңартылды';
 
   @override
-  String get medrepSearchHint => 'Аты, дәріхана немесе қала';
+  String get medrepSearchHint => 'Аты, дәріхана, клиника немесе қала';
 
   @override
   String get medrepFilterAll => 'Барлығы';
@@ -3872,7 +3857,7 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String medrepNotFoundText(String query) {
-    return '«$query» сұранысы бойынша провизорлар жоқ. Жазылуын тексеріңіз немесе дәріхана атауы бойынша іздеңіз';
+    return '«$query» сұранысы бойынша ешкім жоқ. Жазылуын тексеріңіз немесе дәріхана не клиника бойынша іздеңіз';
   }
 
   @override
@@ -3955,7 +3940,7 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get medrepNotRankedText =>
-      'Орын провизорларыңыздың чектері бойынша есептеледі. Біріншісін шақырыңыз — сонда тізімде пайда боласыз';
+      'Орын командаңыздың чектері бойынша есептеледі. Біріншісін шақырыңыз — сонда тізімде пайда боласыз';
 
   @override
   String get medrepRatingEmpty => 'Рейтинг әзірге бос';
@@ -4054,8 +4039,7 @@ class AppLocalizationsKk extends AppLocalizations {
   String get medrepHide => 'Жию';
 
   @override
-  String get medrepPendingText =>
-      'Сілтемеңіз арқылы өтіп, оларды портфельге қосуыңызды күтуде';
+  String get medrepPendingText => 'Оларды командаға қосуыңызды күтуде';
 
   @override
   String medrepFollowedLink(String ago) {
@@ -4434,7 +4418,7 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get checksEmptyText =>
-      'Дәріханадан алған чекті суретке түсіріңіз — ЖИ препараттарды таниды, ал сіз IQC аласыз';
+      'Чекті суретке түсіріңіз — тексерістен кейін нәтижеңіз есепке алынады';
 
   @override
   String get checksHowToTitle => 'Қалай суретке түсіру керек';
@@ -5349,4 +5333,209 @@ class AppLocalizationsKk extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get checksStepConfirmed => 'Расталды';
+
+  @override
+  String get rxStepConfirmed => 'Расталды';
+
+  @override
+  String get questsStepDoTitle => 'Орындаңыз';
+
+  @override
+  String get questsStepDoSub => 'шарттарды';
+
+  @override
+  String get questsStepWaitTitle => 'Күтіңіз';
+
+  @override
+  String get questsStepWaitSub => 'тексерісті';
+
+  @override
+  String get questsStepWaitCheck => 'Тексерісті күтіңіз';
+
+  @override
+  String get questsStepWaitCheckSub => 'Чекті қайта жіберудің қажеті жоқ';
+
+  @override
+  String get questsStepWaitRecipe => 'Бланктың расталуын күтіңіз';
+
+  @override
+  String get questsStepWaitRecipeSub =>
+      'Алғашқы тексеру 24 сағатқа дейін созылады';
+
+  @override
+  String get learnTileResult => 'Нәтиже';
+
+  @override
+  String get checksStatusExtraReview => 'Қос. тексеру';
+
+  @override
+  String get checksHeroExtraTitle => 'Чек қосымша тексеруде';
+
+  @override
+  String get checksHeroExtraText => 'Тексеру әдеттегіден ұзағырақ уақыт алады';
+
+  @override
+  String get rxStateExtraTitle => 'Бланк қосымша тексеруде';
+
+  @override
+  String get rxStateExtraText =>
+      'Бланк маманға қосымша тексеруге жіберілді. Бұл көбірек уақыт алады — шешім шыққанда хабарлама жібереміз';
+
+  @override
+  String get checksExtraNoteTitle => 'Ештеңе істеудің қажеті жоқ';
+
+  @override
+  String get checksExtraNoteText =>
+      'Кейде чек қосымша салыстыруды қажет етеді — мысалы, деректердің бір бөлігі нашар оқылса. Шешім хабарламаларда келеді және осы жерде көрсетіледі';
+
+  @override
+  String get rxExtraNoteText =>
+      'Кейде бланк қолмен салыстыруды қажет етеді — мысалы, деректердің бір бөлігі нашар оқылса. Шешім хабарламаларда келеді және осы жерде көрсетіледі';
+
+  @override
+  String get rxExtraHint => 'Шешім хабарламаларда келеді';
+
+  @override
+  String get regCodeLabel => 'Медөкілдің кодтық сөзі';
+
+  @override
+  String get regCodeOptional => '· міндетті емес';
+
+  @override
+  String get regCodeExample => 'Мысалы, DAUROV';
+
+  @override
+  String get regCodeNoteDoctor =>
+      'Кодтық сөзді медөкіліңіз береді. Онсыз дәрігерді тіркеу мүмкін емес';
+
+  @override
+  String get regCodeNotePharm => 'Егер сізді медициналық өкіл шақырса';
+
+  @override
+  String get regCodeNotFound =>
+      'Мұндай кодтық сөз жоқ. Әріптерді тексеріңіз немесе медөкіліңізден нақтылаңыз';
+
+  @override
+  String get regCodeMedrep => 'Медөкіл';
+
+  @override
+  String get regCodeJoinDoctor => 'Сіз бірден оның командасына қосыласыз';
+
+  @override
+  String get regCodeJoinPharm => 'Медөкіл өтініміңізді растайды';
+
+  @override
+  String get medrepTeamTitle => 'Команда';
+
+  @override
+  String medrepCountPharm(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n фармацевт',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String medrepCountDoctors(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n дәрігер',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get medrepCodeForInvite => 'Шақыруға арналған кодтық сөз';
+
+  @override
+  String get medrepInviteShort => 'Шақыру';
+
+  @override
+  String medrepUnitBlanks(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'бланк',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get medrepUnitInTeam => 'командада';
+
+  @override
+  String get medrepAllTeam => 'Бүкіл команда';
+
+  @override
+  String get medrepYourCode => 'Сіздің кодтық сөзіңіз';
+
+  @override
+  String get medrepCopyCode => 'Кодтық сөзді көшіру';
+
+  @override
+  String get medrepCodeCopied => 'Кодтық сөз көшірілді';
+
+  @override
+  String medrepEnteredCode(String ago) {
+    return 'Кодтық сөзді енгізді · $ago';
+  }
+
+  @override
+  String medrepStep1TextCode(String code) {
+    return 'Сіздің сөзіңіз — $code';
+  }
+
+  @override
+  String medrepCodeHintNick(String username) {
+    return '@$username нигіңізден 6 таңба · регистр маңызды емес';
+  }
+
+  @override
+  String get medrepCodeHint => 'Енгізу кезінде регистр маңызды емес';
+
+  @override
+  String get medrepHowTitle => 'Бұл қалай жұмыс істейді';
+
+  @override
+  String get medrepHowDoctor =>
+      'Тіркелу кезінде сөзді міндетті түрде енгізеді — және бірден командаңызға қосылады';
+
+  @override
+  String get medrepHowPharm =>
+      'Сөзді қалауы бойынша енгізеді. «Растауды күтуде» бөлімінде пайда болады';
+
+  @override
+  String medrepShareText(String code) {
+    return 'PharmIQ Academy-дегі кодтық сөзім — $code. Оны қолданбада тіркелу кезінде енгізіңіз.';
+  }
+
+  @override
+  String get medrepBlanksAllTime => 'Барлық уақыттағы бланктер';
+
+  @override
+  String get medrepUnitApproved => 'мақұлданған';
+
+  @override
+  String medrepSince(String date) {
+    return '$date бастап';
+  }
+
+  @override
+  String get medrepPatientsHidden =>
+      'Пациенттердің деректері медөкілге көрсетілмейді';
+
+  @override
+  String get medrepProfileCode => 'Кодтық сөз';
+
+  @override
+  String get medrepProfileCodeSub => 'Командаға шақыру үшін';
+
+  @override
+  String get medrepTeamNobody => 'Мұнда әзірге ешкім жоқ';
 }

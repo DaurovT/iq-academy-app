@@ -281,7 +281,8 @@ as LocalizedText,
 /// @nodoc
 mixin _$RegField {
 
- String get name; RegFieldType get type;@LocalizedTextConverter() LocalizedText get label; bool get required; List<RegOption>? get options; String? get consentUrl;
+ String get name; RegFieldType get type;@LocalizedTextConverter() LocalizedText get label; bool get required; List<RegOption>? get options; String? get consentUrl;/// Подсказка под полем и ограничение длины (кодовое слово медпреда).
+@LocalizedTextConverter() LocalizedText? get hint; int? get maxLength;
 /// Create a copy of RegField
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -294,16 +295,16 @@ $RegFieldCopyWith<RegField> get copyWith => _$RegFieldCopyWithImpl<RegField>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RegField&&(identical(other.name, name) || other.name == name)&&(identical(other.type, type) || other.type == type)&&(identical(other.label, label) || other.label == label)&&(identical(other.required, required) || other.required == required)&&const DeepCollectionEquality().equals(other.options, options)&&(identical(other.consentUrl, consentUrl) || other.consentUrl == consentUrl));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RegField&&(identical(other.name, name) || other.name == name)&&(identical(other.type, type) || other.type == type)&&(identical(other.label, label) || other.label == label)&&(identical(other.required, required) || other.required == required)&&const DeepCollectionEquality().equals(other.options, options)&&(identical(other.consentUrl, consentUrl) || other.consentUrl == consentUrl)&&(identical(other.hint, hint) || other.hint == hint)&&(identical(other.maxLength, maxLength) || other.maxLength == maxLength));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,name,type,label,required,const DeepCollectionEquality().hash(options),consentUrl);
+int get hashCode => Object.hash(runtimeType,name,type,label,required,const DeepCollectionEquality().hash(options),consentUrl,hint,maxLength);
 
 @override
 String toString() {
-  return 'RegField(name: $name, type: $type, label: $label, required: $required, options: $options, consentUrl: $consentUrl)';
+  return 'RegField(name: $name, type: $type, label: $label, required: $required, options: $options, consentUrl: $consentUrl, hint: $hint, maxLength: $maxLength)';
 }
 
 
@@ -314,7 +315,7 @@ abstract mixin class $RegFieldCopyWith<$Res>  {
   factory $RegFieldCopyWith(RegField value, $Res Function(RegField) _then) = _$RegFieldCopyWithImpl;
 @useResult
 $Res call({
- String name, RegFieldType type,@LocalizedTextConverter() LocalizedText label, bool required, List<RegOption>? options, String? consentUrl
+ String name, RegFieldType type,@LocalizedTextConverter() LocalizedText label, bool required, List<RegOption>? options, String? consentUrl,@LocalizedTextConverter() LocalizedText? hint, int? maxLength
 });
 
 
@@ -331,7 +332,7 @@ class _$RegFieldCopyWithImpl<$Res>
 
 /// Create a copy of RegField
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? type = null,Object? label = null,Object? required = null,Object? options = freezed,Object? consentUrl = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? type = null,Object? label = null,Object? required = null,Object? options = freezed,Object? consentUrl = freezed,Object? hint = freezed,Object? maxLength = freezed,}) {
   return _then(_self.copyWith(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
@@ -339,7 +340,9 @@ as RegFieldType,label: null == label ? _self.label : label // ignore: cast_nulla
 as LocalizedText,required: null == required ? _self.required : required // ignore: cast_nullable_to_non_nullable
 as bool,options: freezed == options ? _self.options : options // ignore: cast_nullable_to_non_nullable
 as List<RegOption>?,consentUrl: freezed == consentUrl ? _self.consentUrl : consentUrl // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,hint: freezed == hint ? _self.hint : hint // ignore: cast_nullable_to_non_nullable
+as LocalizedText?,maxLength: freezed == maxLength ? _self.maxLength : maxLength // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 
@@ -424,10 +427,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  RegFieldType type, @LocalizedTextConverter()  LocalizedText label,  bool required,  List<RegOption>? options,  String? consentUrl)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String name,  RegFieldType type, @LocalizedTextConverter()  LocalizedText label,  bool required,  List<RegOption>? options,  String? consentUrl, @LocalizedTextConverter()  LocalizedText? hint,  int? maxLength)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RegField() when $default != null:
-return $default(_that.name,_that.type,_that.label,_that.required,_that.options,_that.consentUrl);case _:
+return $default(_that.name,_that.type,_that.label,_that.required,_that.options,_that.consentUrl,_that.hint,_that.maxLength);case _:
   return orElse();
 
 }
@@ -445,10 +448,10 @@ return $default(_that.name,_that.type,_that.label,_that.required,_that.options,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  RegFieldType type, @LocalizedTextConverter()  LocalizedText label,  bool required,  List<RegOption>? options,  String? consentUrl)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String name,  RegFieldType type, @LocalizedTextConverter()  LocalizedText label,  bool required,  List<RegOption>? options,  String? consentUrl, @LocalizedTextConverter()  LocalizedText? hint,  int? maxLength)  $default,) {final _that = this;
 switch (_that) {
 case _RegField():
-return $default(_that.name,_that.type,_that.label,_that.required,_that.options,_that.consentUrl);case _:
+return $default(_that.name,_that.type,_that.label,_that.required,_that.options,_that.consentUrl,_that.hint,_that.maxLength);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -465,10 +468,10 @@ return $default(_that.name,_that.type,_that.label,_that.required,_that.options,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  RegFieldType type, @LocalizedTextConverter()  LocalizedText label,  bool required,  List<RegOption>? options,  String? consentUrl)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String name,  RegFieldType type, @LocalizedTextConverter()  LocalizedText label,  bool required,  List<RegOption>? options,  String? consentUrl, @LocalizedTextConverter()  LocalizedText? hint,  int? maxLength)?  $default,) {final _that = this;
 switch (_that) {
 case _RegField() when $default != null:
-return $default(_that.name,_that.type,_that.label,_that.required,_that.options,_that.consentUrl);case _:
+return $default(_that.name,_that.type,_that.label,_that.required,_that.options,_that.consentUrl,_that.hint,_that.maxLength);case _:
   return null;
 
 }
@@ -480,7 +483,7 @@ return $default(_that.name,_that.type,_that.label,_that.required,_that.options,_
 @JsonSerializable()
 
 class _RegField implements RegField {
-  const _RegField({required this.name, required this.type, @LocalizedTextConverter() required this.label, required this.required, final  List<RegOption>? options, this.consentUrl}): _options = options;
+  const _RegField({required this.name, required this.type, @LocalizedTextConverter() required this.label, required this.required, final  List<RegOption>? options, this.consentUrl, @LocalizedTextConverter() this.hint, this.maxLength}): _options = options;
   factory _RegField.fromJson(Map<String, dynamic> json) => _$RegFieldFromJson(json);
 
 @override final  String name;
@@ -497,6 +500,9 @@ class _RegField implements RegField {
 }
 
 @override final  String? consentUrl;
+/// Подсказка под полем и ограничение длины (кодовое слово медпреда).
+@override@LocalizedTextConverter() final  LocalizedText? hint;
+@override final  int? maxLength;
 
 /// Create a copy of RegField
 /// with the given fields replaced by the non-null parameter values.
@@ -511,16 +517,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RegField&&(identical(other.name, name) || other.name == name)&&(identical(other.type, type) || other.type == type)&&(identical(other.label, label) || other.label == label)&&(identical(other.required, required) || other.required == required)&&const DeepCollectionEquality().equals(other._options, _options)&&(identical(other.consentUrl, consentUrl) || other.consentUrl == consentUrl));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RegField&&(identical(other.name, name) || other.name == name)&&(identical(other.type, type) || other.type == type)&&(identical(other.label, label) || other.label == label)&&(identical(other.required, required) || other.required == required)&&const DeepCollectionEquality().equals(other._options, _options)&&(identical(other.consentUrl, consentUrl) || other.consentUrl == consentUrl)&&(identical(other.hint, hint) || other.hint == hint)&&(identical(other.maxLength, maxLength) || other.maxLength == maxLength));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,name,type,label,required,const DeepCollectionEquality().hash(_options),consentUrl);
+int get hashCode => Object.hash(runtimeType,name,type,label,required,const DeepCollectionEquality().hash(_options),consentUrl,hint,maxLength);
 
 @override
 String toString() {
-  return 'RegField(name: $name, type: $type, label: $label, required: $required, options: $options, consentUrl: $consentUrl)';
+  return 'RegField(name: $name, type: $type, label: $label, required: $required, options: $options, consentUrl: $consentUrl, hint: $hint, maxLength: $maxLength)';
 }
 
 
@@ -531,7 +537,7 @@ abstract mixin class _$RegFieldCopyWith<$Res> implements $RegFieldCopyWith<$Res>
   factory _$RegFieldCopyWith(_RegField value, $Res Function(_RegField) _then) = __$RegFieldCopyWithImpl;
 @override @useResult
 $Res call({
- String name, RegFieldType type,@LocalizedTextConverter() LocalizedText label, bool required, List<RegOption>? options, String? consentUrl
+ String name, RegFieldType type,@LocalizedTextConverter() LocalizedText label, bool required, List<RegOption>? options, String? consentUrl,@LocalizedTextConverter() LocalizedText? hint, int? maxLength
 });
 
 
@@ -548,7 +554,7 @@ class __$RegFieldCopyWithImpl<$Res>
 
 /// Create a copy of RegField
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? type = null,Object? label = null,Object? required = null,Object? options = freezed,Object? consentUrl = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? type = null,Object? label = null,Object? required = null,Object? options = freezed,Object? consentUrl = freezed,Object? hint = freezed,Object? maxLength = freezed,}) {
   return _then(_RegField(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
@@ -556,7 +562,9 @@ as RegFieldType,label: null == label ? _self.label : label // ignore: cast_nulla
 as LocalizedText,required: null == required ? _self.required : required // ignore: cast_nullable_to_non_nullable
 as bool,options: freezed == options ? _self._options : options // ignore: cast_nullable_to_non_nullable
 as List<RegOption>?,consentUrl: freezed == consentUrl ? _self.consentUrl : consentUrl // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,hint: freezed == hint ? _self.hint : hint // ignore: cast_nullable_to_non_nullable
+as LocalizedText?,maxLength: freezed == maxLength ? _self.maxLength : maxLength // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 

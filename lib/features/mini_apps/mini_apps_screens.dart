@@ -552,7 +552,7 @@ class _HowToPlay extends StatelessWidget {
     final steps = [
       (PqIcons.grid, l10n.sapperStep1Title, l10n.sapperStep1Text(price)),
       (PqIcons.clock, l10n.sapperStep2Title, l10n.sapperStep2Text),
-      (PqIcons.gift, l10n.sapperStep3Title, l10n.sapperStep3Text),
+      (PqIcons.squareCheck, l10n.sapperStep3Title, l10n.sapperStep3Text),
     ];
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
       Text(l10n.sapperHowTitle, style: PqText.section(c: pq.text)),

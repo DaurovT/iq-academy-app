@@ -6,6 +6,7 @@ import 'package:platform_app/core/auth/auth_controller.dart';
 import 'package:platform_app/core/l10n/locale_controller.dart';
 import 'package:platform_app/core/models/account.dart';
 import 'package:platform_app/core/models/common.dart';
+import 'package:platform_app/core/models/medrep.dart';
 import 'package:platform_app/core/models/registration.dart';
 import 'package:platform_app/features/shared/onboarding/welcome_screen.dart';
 
@@ -49,6 +50,14 @@ class FakeApi implements PlatformApi {
 class _FakeAuth implements AuthApi {
   @override
   Future<({bool exists})> checkNumber(String phone) async => (exists: false);
+
+  /// Макеты RegDoctor / RegDoctorCode: DAUROV — слово Аралбека, прочие — нет.
+  @override
+  Future<MedrepCodeCheck> checkMedrepCode(String code) async => code == 'DAUROV'
+      ? const MedrepCodeCheck(
+          ok: true,
+          medrep: MedrepCodeOwner(name: 'Аралбек Тошматов', company: 'Bionorica SE'))
+      : const MedrepCodeCheck(ok: false);
 
   @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
@@ -127,6 +136,13 @@ RegistrationSchema fixtureSchema(Role role) => RegistrationSchema(
         label: _t('Аптека / место работы'),
         required: true,
       ),
+    RegField(
+      name: 'medrepCode',
+      type: RegFieldType.text,
+      label: _t('Код медпреда'),
+      required: role == Role.doctor,
+      maxLength: 6,
+    ),
     RegField(
       name: 'consent',
       type: RegFieldType.consent,

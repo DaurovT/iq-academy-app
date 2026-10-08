@@ -9,8 +9,8 @@ import '../../widgets/pq_states.dart';
 import 'medrep_widgets.dart';
 import 'providers.dart';
 
-/// «Ожидают подтверждения» — заявки провизоров, перешедших по реферальной
-/// ссылке (макет MedPending).
+/// «Ожидают подтверждения» — заявки фармацевтов, которые ввели кодовое слово
+/// в приложении или пришли из бота (макет MedPending).
 class ReferralsScreen extends ConsumerStatefulWidget {
   const ReferralsScreen({super.key});
 
@@ -22,14 +22,20 @@ class _ReferralsScreenState extends ConsumerState<ReferralsScreen> {
   /// id заявки → какое действие выполняется (true — принять).
   final _busy = <int, bool>{};
 
-  Future<void> _act(int id, bool accept) async {
+  Future<void> _act(PendingReferral r, bool accept) async {
     final l = context.l10n;
+    final id = r.id;
     setState(() => _busy[id] = accept);
     try {
       final api = ref.read(apiProvider).medrep;
-      accept ? await api.acceptReferral(id) : await api.rejectReferral(id);
+      accept
+          ? await api.acceptReferral(id, kind: r.kind)
+          : await api.rejectReferral(id, kind: r.kind);
       ref.invalidate(referralsProvider);
-      if (accept) ref.invalidate(portfolioProvider);
+      if (accept) {
+        ref.invalidate(portfolioProvider);
+        ref.invalidate(medrepTeamProvider);
+      }
       if (!mounted) return;
       showPqToast(
         context,
@@ -98,15 +104,15 @@ class _ReferralsScreenState extends ConsumerState<ReferralsScreen> {
       );
     }
     return PqStagger(gap: 14, children: [
-      PqPageTitle(l.medrepCountPharmacists(items.length),
+      PqPageTitle(l.medrepCountPharm(items.length),
           subtitle: l.medrepPendingText),
       for (final r in items)
         _ReferralCard(
           key: ValueKey(r.id),
           referral: r,
           busy: _busy[r.id],
-          onAccept: () => _act(r.id, true),
-          onReject: () => _act(r.id, false),
+          onAccept: () => _act(r, true),
+          onReject: () => _act(r, false),
           now: ref.watch(medrepNowProvider)(),
         ),
     ]);
@@ -154,7 +160,10 @@ class _ReferralCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: PqText.caption(c: pq.textMuted)),
               const SizedBox(height: 2),
-              Text(l.medrepFollowedLink(medAgo(l, r.requestedAt, now)),
+              Text(
+                  r.source == 'code' || (r.source == null && r.kind == 'app')
+                      ? l.medrepEnteredCode(medAgo(l, r.requestedAt, now))
+                      : l.medrepFollowedLink(medAgo(l, r.requestedAt, now)),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: PqText.caption(c: pq.textMuted)),

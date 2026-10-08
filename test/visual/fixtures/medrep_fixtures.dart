@@ -57,6 +57,41 @@ const portfolio = [
 ];
 
 
+/// Команда из макета MedPharmacists: те же 17 фармацевтов + 6 врачей
+/// (id врачей подобраны под градиенты аватаров: id % 5).
+MedrepTeam team({List<PortfolioPharmacist> pf = portfolio}) => MedrepTeam(
+      totals: TeamTotals(
+          all: pf.length + (pf.isEmpty ? 0 : doctors.length),
+          doctors: pf.isEmpty ? 0 : doctors.length,
+          pharmacists: pf.length,
+          pending: 3),
+      doctors: pf.isEmpty ? const [] : doctors,
+      pharmacists: [
+        for (final p in pf)
+          TeamPharmacist(
+            telegramId: p.telegramId,
+            name: p.name,
+            shop: p.shop,
+            city: p.city,
+            checks: p.checks,
+            quests: p.quests,
+            active: p.checks > 0,
+          ),
+      ],
+    );
+
+const doctors = [
+  TeamDoctor(accountId: 2003, name: 'Нодира Юсупова', specialty: 'Терапевт', workplace: 'Поликлиника №10', city: 'Ташкент', recipes: 34, approved: 30, lastAt: '2026-06-29T08:00:00', active: true, joinedAt: '2025-08-12T10:00:00'),
+  TeamDoctor(accountId: 2004, name: 'Шерзод Рахматов', specialty: 'Педиатр', workplace: 'Детская пол-ка №3', city: 'Ташкент', recipes: 21, approved: 18, lastAt: '2026-06-28T08:00:00', active: true, joinedAt: '2025-09-01T10:00:00'),
+  TeamDoctor(accountId: 2001, name: 'Гулнора Мирзаева', specialty: 'Невролог', workplace: 'Клиника Medion', city: 'Самарканд', recipes: 9, approved: 7, lastAt: '2026-04-02T08:00:00', active: false, joinedAt: '2025-10-05T10:00:00'),
+  TeamDoctor(accountId: 2002, name: 'Азиза Каримова', specialty: 'Терапевт', workplace: 'Поликлиника №4', city: 'Ташкент', recipes: 6, approved: 5, active: true),
+  TeamDoctor(accountId: 2005, name: 'Рустам Алиев', specialty: 'ЛОР', workplace: 'Клиника Shifo', city: 'Бухара', recipes: 3, approved: 3, active: true),
+  TeamDoctor(accountId: 2006, name: 'Мадина Усманова', specialty: 'Педиатр', workplace: 'Поликлиника №7', city: 'Навои', recipes: 0, approved: 0, active: false),
+];
+
+const medrepCode = MedrepCode(
+    code: 'DAUROV', username: 'daurov_a', company: 'Bionorica SE', joinedByCode: 6);
+
 const metrics = MedrepMetrics(
   mode: AttributionMode.shared,
   pharmCount: 17,
@@ -165,9 +200,9 @@ final quests = [
 ];
 
 const referrals = [
-  PendingReferral(id: 101, name: 'Шахноза Нурматова', phone: '+998901112233', shop: 'SHIFO PLUS №3', requestedAt: '2026-06-30T10:00:00'),
-  PendingReferral(id: 103, name: 'Отабек Юсупов', phone: '+998901112244', shop: 'MED LINE', requestedAt: '2026-06-29T09:00:00'),
-  PendingReferral(id: 104, name: 'Гулнора Раджабова', phone: '+998901112255', shop: 'DORIXONA MIX', requestedAt: '2026-06-28T09:00:00'),
+  PendingReferral(id: 101, name: 'Шахноза Нурматова', phone: '+998901112233', shop: 'SHIFO PLUS №3', requestedAt: '2026-06-30T10:00:00', kind: 'app', source: 'code'),
+  PendingReferral(id: 103, name: 'Отабек Юсупов', phone: '+998901112244', shop: 'MED LINE', requestedAt: '2026-06-29T09:00:00', source: 'link'),
+  PendingReferral(id: 104, name: 'Гулнора Раджабова', phone: '+998901112255', shop: 'DORIXONA MIX', requestedAt: '2026-06-28T09:00:00', source: 'link'),
 ];
 
 /// Все подмены раздела. [now] — «сегодня» макетов.
@@ -183,8 +218,8 @@ List<Override> medrepOverrides({
       medrepNowProvider.overrideWithValue(() => now ?? DateTime(2026, 6, 30, 12)),
       portfolioProvider.overrideWith((_) async => pf),
       medrepMetricsProvider.overrideWith((ref, p) async => metrics),
-      medrepReflinkProvider
-          .overrideWith((_) async => 'https://t.me/PharmQuestBot?start=ref_…'),
+      medrepCodeProvider.overrideWith((_) async => medrepCode),
+      medrepTeamProvider.overrideWith((_) async => team(pf: pf)),
       leaderboardProvider.overrideWith((ref, m) async => board(myRank: myRank)),
       companiesProvider.overrideWith((_) async => const <Company>[]),
       medrepQuestsProvider.overrideWith((_) async => quests),

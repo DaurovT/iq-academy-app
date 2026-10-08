@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -10,8 +11,10 @@ import '../../../core/l10n/l10n.dart';
 import '../../../core/legal.dart';
 import '../../../core/models/account.dart';
 import '../../../core/models/common.dart';
+import '../../../core/models/medrep.dart';
 import '../../../core/models/registration.dart';
 import '../../../widgets/pq_states.dart';
+import '../../medrep/medrep_widgets.dart' show MedAvatar;
 import '../login/auth_ui.dart';
 import '../pickers/city_picker.dart';
 import '../pickers/map_picker.dart';
@@ -43,6 +46,12 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
   final Map<String, dynamic> _values = {};
   bool _loading = false;
   String? _error;
+
+  // Кодовое слово медпреда (поле medrepCode): как только введено целиком —
+  // проверяем на сервере и показываем, чьё оно.
+  static const _codeField = 'medrepCode';
+  MedrepCodeCheck? _codeCheck;
+  int _codeSeq = 0;
 
   // Успешная регистрация: сессия удержана до нажатия «Начать обучение».
   bool _done = false;
@@ -80,14 +89,55 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
   static String _lower(String s) =>
       s.length > 1 && s[1] != s[1].toLowerCase() ? s : s.toLowerCase();
 
+  int _codeLength(RegField f) => f.maxLength ?? 6;
+
+  /// Слово введено целиком и сервер не сказал, что такого нет. Если проверка
+  /// не прошла из-за сети — не блокируем: слово проверит сервер при отправке.
+  bool _codeUsable(RegField f) {
+    final v = (_values[f.name] as String?) ?? '';
+    return v.length == _codeLength(f) && _codeCheck?.ok != false;
+  }
+
+  void _onCode(RegField f, String raw) {
+    final code = raw.toUpperCase();
+    _codeSeq++;
+    setState(() {
+      if (code.isEmpty) {
+        _values.remove(f.name);
+      } else {
+        _values[f.name] = code;
+      }
+      _codeCheck = null;
+    });
+    if (code.length == _codeLength(f)) _checkCode(code);
+  }
+
+  Future<void> _checkCode(String code) async {
+    final seq = _codeSeq;
+    try {
+      final r = await ref.read(apiProvider).auth.checkMedrepCode(code);
+      if (mounted && seq == _codeSeq) setState(() => _codeCheck = r);
+    } catch (_) {
+      // Нет сети или сервер недоступен — слово проверится при регистрации.
+    }
+  }
+
   /// Все обязательные поля заполнены и согласие дано.
   bool _complete(RegistrationSchema schema) {
     for (final f in schema.fields) {
+      // Необязательное кодовое слово: пусто — можно, начато — нужно целиком.
+      if (!f.required &&
+          f.name == _codeField &&
+          ((_values[f.name] as String?) ?? '').isNotEmpty &&
+          !_codeUsable(f)) {
+        return false;
+      }
       if (!f.required) continue;
       final v = _values[f.name];
       switch (f.type) {
         case RegFieldType.text:
           if (v is! String || v.trim().isEmpty) return false;
+          if (f.name == _codeField && !_codeUsable(f)) return false;
         case RegFieldType.phone:
           if (v is! String || authPhoneDigits(v).length != kAuthPhoneDigits) return false;
         case RegFieldType.select:
@@ -282,6 +332,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
         );
 
       case RegFieldType.text:
+        if (f.name == _codeField) return _codeFieldView(f);
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -412,6 +463,166 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
     }
   }
 
+  /// «Кодовое слово медпреда» (макеты RegDoctor / RegDoctorCode /
+  /// RegPharmacist): поле 56 с ключом; верное слово — зелёная рамка 2,
+  /// галочка и карточка медпреда; неверное — красная рамка, «тряска» и ошибка.
+  Widget _codeFieldView(RegField f) {
+    final pq = context.pq;
+    final l10n = context.l10n;
+    final doctor = widget.role == Role.doctor;
+    final code = (_values[f.name] as String?) ?? '';
+    final ok = _codeCheck?.ok == true;
+    final bad = _codeCheck?.ok == false;
+    final owner = ok ? _codeCheck?.medrep : null;
+    final stateColor = ok ? pq.success : (bad ? pq.danger : null);
+
+    Widget field = Container(
+      height: 56,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: pq.fieldBg,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: stateColor ?? pq.border,
+          width: stateColor == null ? 1 : 2,
+        ),
+      ),
+      child: Row(
+        children: [
+          PqIcon(PqIcons.key, size: 20, color: stateColor ?? pq.textMuted),
+          const SizedBox(width: 10),
+          Expanded(
+            child: TextField(
+              controller: _ctrl(f),
+              onChanged: (v) => _onCode(f, v),
+              autocorrect: false,
+              enableSuggestions: false,
+              textCapitalization: TextCapitalization.characters,
+              textInputAction: TextInputAction.done,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp('[A-Za-z0-9]')),
+                LengthLimitingTextInputFormatter(_codeLength(f)),
+                const _UpperCaseFormatter(),
+              ],
+              cursorColor: pq.accent,
+              cursorWidth: 2,
+              style:
+                  code.isEmpty
+                      ? PqText.field(c: pq.text)
+                      : PqText.heading(18, FontWeight.w800, ls: 4, c: pq.text),
+              decoration: InputDecoration(
+                isDense: true,
+                filled: false,
+                border: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                contentPadding: EdgeInsets.zero,
+                hintText: l10n.regCodeExample,
+                hintStyle: PqText.field(c: pq.textMuted),
+              ),
+            ),
+          ),
+          if (ok) ...[
+            const SizedBox(width: 10),
+            PqAnimate(
+              fx: PqFx.pop,
+              duration: const Duration(milliseconds: 400),
+              child: Container(
+                width: 24,
+                height: 24,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(color: pq.success, shape: BoxShape.circle),
+                child: PqIcon(PqIcons.check, size: 14, color: pq.bg),
+              ),
+            ),
+          ] else if (bad) ...[
+            const SizedBox(width: 10),
+            PqIcon(PqIcons.alertTriangle, size: 20, color: pq.danger),
+          ],
+        ],
+      ),
+    );
+    if (bad) field = PqAnimate(key: ValueKey('bad-$code'), fx: PqFx.shake, child: field);
+
+    final company = owner?.company?.trim() ?? '';
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text.rich(
+          TextSpan(
+            children: [
+              TextSpan(text: l10n.regCodeLabel),
+              if (f.required)
+                TextSpan(text: ' *', style: TextStyle(color: pq.danger))
+              else
+                TextSpan(
+                  text: ' ${l10n.regCodeOptional}',
+                  style: PqText.text(14, FontWeight.w500, c: pq.textMuted),
+                ),
+            ],
+          ),
+          style: PqText.link(c: pq.textSecondary),
+        ),
+        const SizedBox(height: 8),
+        field,
+        if (owner != null) ...[
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            decoration: BoxDecoration(
+              color: pq.successSoft,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Row(
+              children: [
+                MedAvatar(owner.name),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        owner.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: PqText.text(15, FontWeight.w700, c: pq.text),
+                      ),
+                      const SizedBox(height: 1),
+                      Text(
+                        company.isEmpty
+                            ? l10n.regCodeMedrep
+                            : '${l10n.regCodeMedrep} · $company',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: PqText.caption(c: pq.textSecondary),
+                      ),
+                      const SizedBox(height: 1),
+                      Text(
+                        doctor ? l10n.regCodeJoinDoctor : l10n.regCodeJoinPharm,
+                        style: PqText.caption(w: FontWeight.w700, c: pq.success),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+        const SizedBox(height: 8),
+        if (bad)
+          Semantics(
+            liveRegion: true,
+            child: Text(l10n.regCodeNotFound, style: PqText.body(c: pq.danger)),
+          )
+        else
+          Text(
+            doctor ? l10n.regCodeNoteDoctor : l10n.regCodeNotePharm,
+            style: PqText.body(c: pq.textMuted),
+          ),
+      ],
+    );
+  }
+
   Future<void> _openSelect(RegField f, String label, List<RegOption> options) async {
     final chosen = await showPqOptionPicker(
       context,
@@ -421,6 +632,15 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
     );
     if (chosen != null && mounted) setState(() => _values[f.name] = chosen);
   }
+}
+
+/// Латиница кодового слова — всегда заглавными.
+class _UpperCaseFormatter extends TextInputFormatter {
+  const _UpperCaseFormatter();
+
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) =>
+      newValue.copyWith(text: newValue.text.toUpperCase());
 }
 
 /// Чип специальности: 40, радиус 20; выбран — рамка акцентом, мягкая

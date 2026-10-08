@@ -8,6 +8,7 @@ import '../../core/img.dart';
 import '../../core/l10n/l10n.dart';
 import '../../core/models/check.dart';
 import '../../widgets/pq_states.dart';
+import '../shared/widgets/extra_review_note.dart';
 import '../shared/widgets/photo_lightbox.dart';
 import 'providers.dart';
 import 'rx_common.dart';
@@ -82,6 +83,8 @@ class _Body extends StatelessWidget {
         ),
       ]),
       _StatusCard(stage: stage, rejectReason: detail.rejectReason),
+      if (stage == RxStage.extraReview)
+        CheckExtraReviewNote(text: l10n.rxExtraNoteText),
       _Section(title: l10n.rxPhotos, child: _Photos(detail: detail)),
       if (!rejected) ...[
         _Section(
@@ -107,7 +110,7 @@ class _Body extends StatelessWidget {
           child: PqCard(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             child: Text(
-              stage == RxStage.pending ? l10n.rxQuestsPending : l10n.rxQuestsNone,
+              stage.inReview ? l10n.rxQuestsPending : l10n.rxQuestsNone,
               style: rxText14(pq.textMuted),
             ),
           ),
@@ -231,6 +234,7 @@ class _StatusCard extends StatelessWidget {
     final reason = rejectReason?.trim() ?? '';
     final (title, text) = switch (stage) {
       RxStage.pending => (l10n.rxStatePendingTitle, l10n.rxStatePendingText),
+      RxStage.extraReview => (l10n.rxStateExtraTitle, l10n.rxStateExtraText),
       RxStage.approved => (l10n.rxStateApprovedTitle, l10n.rxStateApprovedText),
       RxStage.credited => (l10n.rxStateCreditedTitle, l10n.rxStateCreditedText),
       RxStage.rejected => (
@@ -284,27 +288,37 @@ class _Steps extends StatelessWidget {
     final track = pq.isDark ? pq.border : const Color(0xFFE5E7EB);
     final colors = switch (stage) {
       RxStage.pending => [pq.success, pq.warning, track, track],
+      RxStage.extraReview => [pq.success, pq.tone(PqTone.violet).fg, track, track],
       RxStage.approved => [pq.success, pq.success, pq.success, track],
       RxStage.credited => [pq.success, pq.success, pq.success, pq.info],
       RxStage.rejected => [pq.success, pq.danger, track, track],
     };
     // Текущий шаг: 1 — проверка/отказ, 2 — одобрен, 3 — начислено.
     final current = switch (stage) {
-      RxStage.pending || RxStage.rejected => 1,
+      RxStage.pending || RxStage.extraReview || RxStage.rejected => 1,
       RxStage.approved => 2,
       RxStage.credited => 3,
     };
+    final extra = stage == RxStage.extraReview;
+    // RxReview: колонки 1 : 1.4 : 1 : 1 — «Доп. проверка» в одну строку.
+    int flex(int i) => extra && i == 1 ? 14 : 10;
     final labels = [
       l10n.rxStepSent,
-      stage == RxStage.rejected ? l10n.rxStepRejected : l10n.rxStepReview,
+      stage == RxStage.rejected
+          ? l10n.rxStepRejected
+          : extra
+              ? l10n.checksStatusExtraReview
+              : l10n.rxStepReview,
       l10n.rxStepApproved,
-      l10n.rxStepCredited,
+      l10n.rxStepConfirmed,
     ];
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
       Row(children: [
         for (var i = 0; i < 4; i++) ...[
           if (i > 0) const SizedBox(width: 4),
-          Expanded(child: _bar(colors[i], breath: stage == RxStage.pending && i == 1)),
+          Expanded(
+              flex: flex(i),
+              child: _bar(colors[i], breath: stage.inReview && i == 1)),
         ],
       ]),
       const SizedBox(height: 6),
@@ -312,8 +326,13 @@ class _Steps extends StatelessWidget {
         for (var i = 0; i < 4; i++) ...[
           if (i > 0) const SizedBox(width: 4),
           Expanded(
+            flex: flex(i),
             child: Text(
               labels[i],
+              // Одно слово не переносим по буквам («Подтверждено»).
+              maxLines: labels[i].contains(' ') && !(extra && i == 1) ? null : 1,
+              softWrap: labels[i].contains(' ') && !(extra && i == 1),
+              overflow: TextOverflow.visible,
               style: PqText.caption(
                 w: i == current ? FontWeight.w700 : FontWeight.w500,
                 c: stage == RxStage.rejected && i == 1
@@ -479,7 +498,7 @@ class _AiCard extends StatelessWidget {
             ]),
           ),
       ];
-    } else if (stage == RxStage.pending) {
+    } else if (stage.inReview) {
       // Полосы-заглушки: 55% / 40% ширины строки и 48 px справа.
       Widget bar(double f) => ConstrainedBox(
             constraints: const BoxConstraints(minHeight: 48),

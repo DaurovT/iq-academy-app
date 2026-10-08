@@ -227,13 +227,13 @@ abstract class AppLocalizations {
   /// No description provided for @navPharm.
   ///
   /// In ru, this message translates to:
-  /// **'Фарм.'**
+  /// **'Команда'**
   String get navPharm;
 
   /// No description provided for @navTop.
   ///
   /// In ru, this message translates to:
-  /// **'Топ'**
+  /// **'Рейтинг'**
   String get navTop;
 
   /// No description provided for @navDashboard.
@@ -3893,7 +3893,7 @@ abstract class AppLocalizations {
   /// No description provided for @sapperStep3Title.
   ///
   /// In ru, this message translates to:
-  /// **'Получите приз'**
+  /// **'Получите результат'**
   String get sapperStep3Title;
 
   /// No description provided for @sapperStep3Text.
@@ -4031,13 +4031,13 @@ abstract class AppLocalizations {
   /// No description provided for @questsSubtitle.
   ///
   /// In ru, this message translates to:
-  /// **'Продавайте и получайте награды'**
+  /// **'Фиксируйте свои продажи'**
   String get questsSubtitle;
 
   /// No description provided for @questsSubtitleDoctor.
   ///
   /// In ru, this message translates to:
-  /// **'Выписывайте бланки и получайте награды'**
+  /// **'Фиксируйте случаи выписки'**
   String get questsSubtitleDoctor;
 
   /// No description provided for @questsSearchLabel.
@@ -4142,22 +4142,10 @@ abstract class AppLocalizations {
   /// **'фото бланка'**
   String get questsStepSendRecipeSub;
 
-  /// No description provided for @questsStepGetTitle.
-  ///
-  /// In ru, this message translates to:
-  /// **'Получите'**
-  String get questsStepGetTitle;
-
-  /// No description provided for @questsStepGetSub.
-  ///
-  /// In ru, this message translates to:
-  /// **'награду'**
-  String get questsStepGetSub;
-
   /// No description provided for @questsDoneFooter.
   ///
   /// In ru, this message translates to:
-  /// **'Здесь хранятся выполненные и завершённые квесты — с датой и полученной наградой'**
+  /// **'Здесь хранятся выполненные и завершённые квесты — с датой и с результатом'**
   String get questsDoneFooter;
 
   /// No description provided for @questsDoneOn.
@@ -4229,7 +4217,7 @@ abstract class AppLocalizations {
   /// No description provided for @questsRewardManual.
   ///
   /// In ru, this message translates to:
-  /// **'Выдаётся вручную после проверки'**
+  /// **'Выдаётся после проверки'**
   String get questsRewardManual;
 
   /// No description provided for @questsRewardIqcSub.
@@ -4277,7 +4265,7 @@ abstract class AppLocalizations {
   /// No description provided for @questsStepPhotoCheckSub.
   ///
   /// In ru, this message translates to:
-  /// **'ИИ проверит упаковку автоматически'**
+  /// **'Ваш чек будет отправлен на проверку'**
   String get questsStepPhotoCheckSub;
 
   /// No description provided for @questsStepPhotoRecipe.
@@ -4289,20 +4277,8 @@ abstract class AppLocalizations {
   /// No description provided for @questsStepPhotoRecipeSub.
   ///
   /// In ru, this message translates to:
-  /// **'ИИ проверит бланк автоматически'**
+  /// **'Ваш бланк будет отправлен на проверку'**
   String get questsStepPhotoRecipeSub;
-
-  /// No description provided for @questsStepGetVoucher.
-  ///
-  /// In ru, this message translates to:
-  /// **'Получите ваучер'**
-  String get questsStepGetVoucher;
-
-  /// No description provided for @questsStepGetIqc.
-  ///
-  /// In ru, this message translates to:
-  /// **'Получите {n} IQC'**
-  String questsStepGetIqc(int n);
 
   /// No description provided for @questsConditionsTitle.
   ///
@@ -5201,7 +5177,7 @@ abstract class AppLocalizations {
   /// No description provided for @learnRowRewardPending.
   ///
   /// In ru, this message translates to:
-  /// **'Начислим после теста'**
+  /// **'После прохождения теста'**
   String get learnRowRewardPending;
 
   /// No description provided for @learnRowRewardDone.
@@ -5411,7 +5387,7 @@ abstract class AppLocalizations {
   /// No description provided for @rxHomeSubtitle.
   ///
   /// In ru, this message translates to:
-  /// **'Отправляйте бланки и получайте награды'**
+  /// **'Фиксируйте случаи выписки'**
   String get rxHomeSubtitle;
 
   /// No description provided for @rxHomeBellLabel.
@@ -5657,7 +5633,7 @@ abstract class AppLocalizations {
   /// No description provided for @rxStateRejectedHint.
   ///
   /// In ru, this message translates to:
-  /// **'Сфотографируйте бланк целиком при хорошем свете — баллы ещё можно получить'**
+  /// **'Сфотографируйте бланк целиком при хорошем свете'**
   String get rxStateRejectedHint;
 
   /// No description provided for @rxStepSent.
@@ -6329,13 +6305,13 @@ abstract class AppLocalizations {
   /// No description provided for @medrepInviteTitle.
   ///
   /// In ru, this message translates to:
-  /// **'Пригласить провизора'**
+  /// **'Пригласить в команду'**
   String get medrepInviteTitle;
 
   /// No description provided for @medrepInviteText.
   ///
   /// In ru, this message translates to:
-  /// **'Отправьте ссылку — после регистрации провизор попадёт в ваш портфель'**
+  /// **'Врач вводит кодовое слово при регистрации. Фармацевт — по желанию'**
   String get medrepInviteText;
 
   /// No description provided for @medrepCopyLink.
@@ -6347,7 +6323,7 @@ abstract class AppLocalizations {
   /// No description provided for @medrepPendingSub.
   ///
   /// In ru, this message translates to:
-  /// **'Провизоры, которые перешли по ссылке'**
+  /// **'Ждут, когда вы добавите их в команду'**
   String get medrepPendingSub;
 
   /// No description provided for @medrepCompaniesSub.
@@ -6365,49 +6341,49 @@ abstract class AppLocalizations {
   /// No description provided for @medrepEmptyTitle.
   ///
   /// In ru, this message translates to:
-  /// **'Портфель пока пуст'**
+  /// **'Команда пока пуста'**
   String get medrepEmptyTitle;
 
   /// No description provided for @medrepEmptyText.
   ///
   /// In ru, this message translates to:
-  /// **'Пригласите провизоров по ссылке — их чеки и статистика появятся здесь'**
+  /// **'Пригласите врачей и фармацевтов — их бланки, чеки и статистика появятся здесь'**
   String get medrepEmptyText;
 
   /// No description provided for @medrepStep1Title.
   ///
   /// In ru, this message translates to:
-  /// **'Отправьте ссылку'**
+  /// **'Поделитесь кодовым словом'**
   String get medrepStep1Title;
 
   /// No description provided for @medrepStep1Text.
   ///
   /// In ru, this message translates to:
-  /// **'В Telegram или по SMS'**
+  /// **'Его вводят при регистрации'**
   String get medrepStep1Text;
 
   /// No description provided for @medrepStep2Title.
   ///
   /// In ru, this message translates to:
-  /// **'Провизор регистрируется'**
+  /// **'Коллега регистрируется'**
   String get medrepStep2Title;
 
   /// No description provided for @medrepStep2Text.
   ///
   /// In ru, this message translates to:
-  /// **'Он сразу попадает в ваш портфель'**
+  /// **'Врач с кодовым словом — сразу в команде'**
   String get medrepStep2Text;
 
   /// No description provided for @medrepStep3Title.
   ///
   /// In ru, this message translates to:
-  /// **'Следите за чеками'**
+  /// **'Следите за результатами'**
   String get medrepStep3Title;
 
   /// No description provided for @medrepStep3Text.
   ///
   /// In ru, this message translates to:
-  /// **'Статистика появится здесь'**
+  /// **'Бланки и чеки появятся здесь'**
   String get medrepStep3Text;
 
   /// No description provided for @medrepUpdatedNow.
@@ -6419,7 +6395,7 @@ abstract class AppLocalizations {
   /// No description provided for @medrepSearchHint.
   ///
   /// In ru, this message translates to:
-  /// **'Имя, аптека или город'**
+  /// **'Имя, аптека, клиника или город'**
   String get medrepSearchHint;
 
   /// No description provided for @medrepFilterAll.
@@ -6473,7 +6449,7 @@ abstract class AppLocalizations {
   /// No description provided for @medrepNotFoundText.
   ///
   /// In ru, this message translates to:
-  /// **'По запросу «{query}» провизоров нет. Проверьте написание или поищите по названию аптеки'**
+  /// **'По запросу «{query}» никого нет. Проверьте написание или поищите по аптеке или клинике'**
   String medrepNotFoundText(String query);
 
   /// No description provided for @medrepNotFoundShort.
@@ -6581,7 +6557,7 @@ abstract class AppLocalizations {
   /// No description provided for @medrepNotRankedText.
   ///
   /// In ru, this message translates to:
-  /// **'Место считается по чекам ваших провизоров. Пригласите первого — и вы появитесь в списке'**
+  /// **'Место считается по чекам вашей команды. Пригласите первого — и вы появитесь в списке'**
   String get medrepNotRankedText;
 
   /// No description provided for @medrepRatingEmpty.
@@ -6713,7 +6689,7 @@ abstract class AppLocalizations {
   /// No description provided for @medrepPendingText.
   ///
   /// In ru, this message translates to:
-  /// **'Перешли по вашей ссылке и ждут, когда вы добавите их в портфель'**
+  /// **'Ждут, когда вы добавите их в команду'**
   String get medrepPendingText;
 
   /// No description provided for @medrepFollowedLink.
@@ -7283,7 +7259,7 @@ abstract class AppLocalizations {
   /// No description provided for @checksEmptyText.
   ///
   /// In ru, this message translates to:
-  /// **'Сфотографируйте чек из аптеки — ИИ распознает препараты, и вы получите IQC'**
+  /// **'Сфотографируйте чек — после проверки ваш результат будет учтён'**
   String get checksEmptyText;
 
   /// No description provided for @checksHowToTitle.
@@ -8899,6 +8875,336 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'{n, plural, one{{n} ваучер} few{{n} ваучера} many{{n} ваучеров} other{{n} ваучера}}'**
   String walletArchiveCount(int n);
+
+  /// No description provided for @checksStepConfirmed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Подтверждено'**
+  String get checksStepConfirmed;
+
+  /// No description provided for @rxStepConfirmed.
+  ///
+  /// In ru, this message translates to:
+  /// **'Подтверждено'**
+  String get rxStepConfirmed;
+
+  /// No description provided for @questsStepDoTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Выполните'**
+  String get questsStepDoTitle;
+
+  /// No description provided for @questsStepDoSub.
+  ///
+  /// In ru, this message translates to:
+  /// **'условия'**
+  String get questsStepDoSub;
+
+  /// No description provided for @questsStepWaitTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дождитесь'**
+  String get questsStepWaitTitle;
+
+  /// No description provided for @questsStepWaitSub.
+  ///
+  /// In ru, this message translates to:
+  /// **'проверки'**
+  String get questsStepWaitSub;
+
+  /// No description provided for @questsStepWaitCheck.
+  ///
+  /// In ru, this message translates to:
+  /// **'Дождитесь проверки'**
+  String get questsStepWaitCheck;
+
+  /// No description provided for @questsStepWaitCheckSub.
+  ///
+  /// In ru, this message translates to:
+  /// **'Повторно отправлять чек не нужно'**
+  String get questsStepWaitCheckSub;
+
+  /// No description provided for @questsStepWaitRecipe.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ожидайте подтверждения бланка'**
+  String get questsStepWaitRecipe;
+
+  /// No description provided for @questsStepWaitRecipeSub.
+  ///
+  /// In ru, this message translates to:
+  /// **'Первичная проверка занимает до 24 часов'**
+  String get questsStepWaitRecipeSub;
+
+  /// No description provided for @learnTileResult.
+  ///
+  /// In ru, this message translates to:
+  /// **'Результат'**
+  String get learnTileResult;
+
+  /// No description provided for @checksStatusExtraReview.
+  ///
+  /// In ru, this message translates to:
+  /// **'Доп. проверка'**
+  String get checksStatusExtraReview;
+
+  /// No description provided for @checksHeroExtraTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Чек на дополнительной проверке'**
+  String get checksHeroExtraTitle;
+
+  /// No description provided for @checksHeroExtraText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Проверка займёт больше времени, чем обычно'**
+  String get checksHeroExtraText;
+
+  /// No description provided for @rxStateExtraTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Бланк на дополнительной проверке'**
+  String get rxStateExtraTitle;
+
+  /// No description provided for @rxStateExtraText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Бланк передан на дополнительную проверку специалисту. Это займёт больше времени — пришлём уведомление, когда будет решение'**
+  String get rxStateExtraText;
+
+  /// No description provided for @checksExtraNoteTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ничего делать не нужно'**
+  String get checksExtraNoteTitle;
+
+  /// No description provided for @checksExtraNoteText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Иногда чек требует дополнительной сверки — например, если часть данных плохо читается. Решение придёт в уведомлениях и появится здесь'**
+  String get checksExtraNoteText;
+
+  /// No description provided for @rxExtraNoteText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Иногда бланк требует ручной сверки — например, если часть данных плохо читается. Решение придёт в уведомлениях и появится здесь'**
+  String get rxExtraNoteText;
+
+  /// No description provided for @rxExtraHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Решение придёт в уведомлениях'**
+  String get rxExtraHint;
+
+  /// No description provided for @regCodeLabel.
+  ///
+  /// In ru, this message translates to:
+  /// **'Кодовое слово медпреда'**
+  String get regCodeLabel;
+
+  /// No description provided for @regCodeOptional.
+  ///
+  /// In ru, this message translates to:
+  /// **'· необязательно'**
+  String get regCodeOptional;
+
+  /// No description provided for @regCodeExample.
+  ///
+  /// In ru, this message translates to:
+  /// **'Например, DAUROV'**
+  String get regCodeExample;
+
+  /// No description provided for @regCodeNoteDoctor.
+  ///
+  /// In ru, this message translates to:
+  /// **'Кодовое слово даёт ваш медпред. Без него регистрация врача недоступна'**
+  String get regCodeNoteDoctor;
+
+  /// No description provided for @regCodeNotePharm.
+  ///
+  /// In ru, this message translates to:
+  /// **'Если вас пригласил медицинский представитель'**
+  String get regCodeNotePharm;
+
+  /// No description provided for @regCodeNotFound.
+  ///
+  /// In ru, this message translates to:
+  /// **'Такого кодового слова нет. Проверьте буквы или уточните у своего медпреда'**
+  String get regCodeNotFound;
+
+  /// No description provided for @regCodeMedrep.
+  ///
+  /// In ru, this message translates to:
+  /// **'Медпред'**
+  String get regCodeMedrep;
+
+  /// No description provided for @regCodeJoinDoctor.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вы сразу попадёте в его команду'**
+  String get regCodeJoinDoctor;
+
+  /// No description provided for @regCodeJoinPharm.
+  ///
+  /// In ru, this message translates to:
+  /// **'Медпред подтвердит вашу заявку'**
+  String get regCodeJoinPharm;
+
+  /// No description provided for @medrepTeamTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Команда'**
+  String get medrepTeamTitle;
+
+  /// No description provided for @medrepCountPharm.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{{n} фармацевт} few{{n} фармацевта} many{{n} фармацевтов} other{{n} фармацевта}}'**
+  String medrepCountPharm(int n);
+
+  /// No description provided for @medrepCountDoctors.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{{n} врач} few{{n} врача} many{{n} врачей} other{{n} врача}}'**
+  String medrepCountDoctors(int n);
+
+  /// No description provided for @medrepCodeForInvite.
+  ///
+  /// In ru, this message translates to:
+  /// **'Кодовое слово для приглашения'**
+  String get medrepCodeForInvite;
+
+  /// No description provided for @medrepInviteShort.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пригласить'**
+  String get medrepInviteShort;
+
+  /// No description provided for @medrepUnitBlanks.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{бланк} few{бланка} many{бланков} other{бланка}}'**
+  String medrepUnitBlanks(int n);
+
+  /// No description provided for @medrepUnitInTeam.
+  ///
+  /// In ru, this message translates to:
+  /// **'в команде'**
+  String get medrepUnitInTeam;
+
+  /// No description provided for @medrepAllTeam.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вся команда'**
+  String get medrepAllTeam;
+
+  /// No description provided for @medrepYourCode.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ваше кодовое слово'**
+  String get medrepYourCode;
+
+  /// No description provided for @medrepCopyCode.
+  ///
+  /// In ru, this message translates to:
+  /// **'Скопировать кодовое слово'**
+  String get medrepCopyCode;
+
+  /// No description provided for @medrepCodeCopied.
+  ///
+  /// In ru, this message translates to:
+  /// **'Кодовое слово скопировано'**
+  String get medrepCodeCopied;
+
+  /// No description provided for @medrepEnteredCode.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ввёл кодовое слово · {ago}'**
+  String medrepEnteredCode(String ago);
+
+  /// No description provided for @medrepStep1TextCode.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ваше слово — {code}'**
+  String medrepStep1TextCode(String code);
+
+  /// No description provided for @medrepCodeHintNick.
+  ///
+  /// In ru, this message translates to:
+  /// **'6 символов из вашего ника @{username} · регистр не важен'**
+  String medrepCodeHintNick(String username);
+
+  /// No description provided for @medrepCodeHint.
+  ///
+  /// In ru, this message translates to:
+  /// **'Регистр при вводе не важен'**
+  String get medrepCodeHint;
+
+  /// No description provided for @medrepHowTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Как это работает'**
+  String get medrepHowTitle;
+
+  /// No description provided for @medrepHowDoctor.
+  ///
+  /// In ru, this message translates to:
+  /// **'Обязательно вводит слово при регистрации — и сразу попадает в вашу команду'**
+  String get medrepHowDoctor;
+
+  /// No description provided for @medrepHowPharm.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вводит слово по желанию. Появится в «Ожидают подтверждения»'**
+  String get medrepHowPharm;
+
+  /// No description provided for @medrepShareText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Моё кодовое слово в PharmIQ Academy — {code}. Введите его при регистрации в приложении.'**
+  String medrepShareText(String code);
+
+  /// No description provided for @medrepBlanksAllTime.
+  ///
+  /// In ru, this message translates to:
+  /// **'Бланков за всё время'**
+  String get medrepBlanksAllTime;
+
+  /// No description provided for @medrepUnitApproved.
+  ///
+  /// In ru, this message translates to:
+  /// **'одобрено'**
+  String get medrepUnitApproved;
+
+  /// No description provided for @medrepSince.
+  ///
+  /// In ru, this message translates to:
+  /// **'с {date}'**
+  String medrepSince(String date);
+
+  /// No description provided for @medrepPatientsHidden.
+  ///
+  /// In ru, this message translates to:
+  /// **'Данные пациентов медпреду не показываются'**
+  String get medrepPatientsHidden;
+
+  /// No description provided for @medrepProfileCode.
+  ///
+  /// In ru, this message translates to:
+  /// **'Кодовое слово'**
+  String get medrepProfileCode;
+
+  /// No description provided for @medrepProfileCodeSub.
+  ///
+  /// In ru, this message translates to:
+  /// **'Для приглашения в команду'**
+  String get medrepProfileCodeSub;
+
+  /// No description provided for @medrepTeamNobody.
+  ///
+  /// In ru, this message translates to:
+  /// **'Здесь пока никого нет'**
+  String get medrepTeamNobody;
 }
 
 class _AppLocalizationsDelegate

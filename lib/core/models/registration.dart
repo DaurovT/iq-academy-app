@@ -37,6 +37,10 @@ abstract class RegField with _$RegField {
     required bool required,
     List<RegOption>? options,
     String? consentUrl,
+
+    /// Подсказка под полем и ограничение длины (кодовое слово медпреда).
+    @LocalizedTextConverter() LocalizedText? hint,
+    int? maxLength,
   }) = _RegField;
 
   factory RegField.fromJson(Map<String, dynamic> json) =>

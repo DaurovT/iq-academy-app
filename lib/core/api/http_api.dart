@@ -131,6 +131,12 @@ class HttpAuthApi implements AuthApi {
   }
 
   @override
+  Future<MedrepCodeCheck> checkMedrepCode(String code) async {
+    final r = await _dio.post('/auth/medrep-code/check', data: {'code': code});
+    return MedrepCodeCheck.fromJson(_obj(r.data));
+  }
+
+  @override
   Future<TgLoginStart> telegramStart() async {
     final r = await _dio.post('/auth/telegram/start', data: {});
     return TgLoginStart.fromJson(_obj(r.data));
@@ -550,9 +556,15 @@ class HttpMedrepApi implements MedrepApi {
   }
 
   @override
-  Future<String> reflink() async {
-    final r = await _dio.get('/client/medrep/reflink');
-    return r.data['url'] as String;
+  Future<MedrepCode> code() async {
+    final r = await _dio.get('/client/medrep/code');
+    return MedrepCode.fromJson(_obj(r.data));
+  }
+
+  @override
+  Future<MedrepTeam> team() async {
+    final r = await _dio.get('/client/medrep/team');
+    return MedrepTeam.fromJson(_obj(r.data));
   }
 
   @override
@@ -567,14 +579,19 @@ class HttpMedrepApi implements MedrepApi {
     return _list(r.data, PendingReferral.fromJson);
   }
 
+  /// Заявки из приложения и из бота принимаются разными маршрутами.
+  String _pendingPath(int id, String kind) => kind == 'app'
+      ? '/client/medrep/team/pending/$id'
+      : '/client/medrep/referrals/$id';
+
   @override
-  Future<void> acceptReferral(int id) async {
-    await _dio.post('/client/medrep/referrals/$id/accept');
+  Future<void> acceptReferral(int id, {String kind = 'bot'}) async {
+    await _dio.post('${_pendingPath(id, kind)}/accept');
   }
 
   @override
-  Future<void> rejectReferral(int id) async {
-    await _dio.post('/client/medrep/referrals/$id/reject');
+  Future<void> rejectReferral(int id, {String kind = 'bot'}) async {
+    await _dio.post('${_pendingPath(id, kind)}/reject');
   }
 
   @override

@@ -354,7 +354,12 @@ class _RewardCard extends StatelessWidget {
             ),
             alignment: Alignment.center,
             child: PqIcon(
-              q.rewardReceived ? PqIcons.checkCheck : PqIcons.gift,
+              // QuestDetail (фармацевт) — галочка в квадрате, DocQuestDetail — подарок.
+              q.rewardReceived
+                  ? PqIcons.checkCheck
+                  : q.target == QuestTarget.recipes
+                  ? PqIcons.gift
+                  : PqIcons.squareCheck,
               size: 24,
               color: voucher ? PqColors.onVoucher : Colors.white,
             ),
@@ -364,11 +369,7 @@ class _RewardCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  l.questsRewardLabel.toUpperCase(),
-                  style: PqText.overline(c: pq.walletMuted),
-                ),
-                const SizedBox(height: 3),
+                // В обновлённом макете подписи «НАГРАДА» над строкой нет.
                 Text(
                   title,
                   style: PqText.heading(18, FontWeight.w700, c: Colors.white),
@@ -398,7 +399,6 @@ class _Steps extends StatelessWidget {
     final pq = context.pq;
     final l = context.l10n;
     final recipes = q.target == QuestTarget.recipes;
-    final voucher = q.rewardType == RewardType.voucher;
     final drugs =
         q.mechanics.isNotEmpty
             ? q.mechanics.map((m) => m.drug).join(', ')
@@ -420,8 +420,8 @@ class _Steps extends StatelessWidget {
         recipes ? l.questsStepPhotoRecipeSub : l.questsStepPhotoCheckSub,
       ),
       (
-        voucher ? l.questsStepGetVoucher : l.questsStepGetIqc(q.prizeIqc),
-        voucher ? l.questsRewardManual : l.questsRewardIqcSub,
+        recipes ? l.questsStepWaitRecipe : l.questsStepWaitCheck,
+        recipes ? l.questsStepWaitRecipeSub : l.questsStepWaitCheckSub,
       ),
     ];
     return Column(

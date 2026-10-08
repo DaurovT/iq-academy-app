@@ -9,6 +9,7 @@ import '../../core/format.dart';
 import '../../core/l10n/l10n.dart';
 import '../../core/models/check.dart';
 import '../../widgets/pq_states.dart';
+import '../shared/widgets/extra_review_note.dart';
 import '../shared/widgets/photo_lightbox.dart';
 import 'checks/check_ui.dart';
 import 'checks_screen.dart';
@@ -82,9 +83,11 @@ class CheckDetailScreen extends ConsumerWidget {
       const _BackLink(),
       _Header(detail: d, stage: stage),
       _Hero(detail: d, stage: stage),
+      if (stage == CheckStage.extraReview)
+        CheckExtraReviewNote(text: context.l10n.checksExtraNoteText),
       if (d.photos.isNotEmpty) _Photos(detail: d),
       if (stage != CheckStage.rejected &&
-          (stage == CheckStage.review || d.drugs.isNotEmpty))
+          (stage.inReview || d.drugs.isNotEmpty))
         _AiSection(drugs: d.drugs, stage: stage),
       if (stage != CheckStage.rejected) _Accrual(detail: d, stage: stage),
       _Quests(detail: d, stage: stage),
@@ -181,6 +184,10 @@ class _Hero extends StatelessWidget {
     final t = pq.tone(stage.tone);
     final (String title, String text) = switch (stage) {
       CheckStage.review => (l.checksHeroPendingTitle, l.checksHeroPendingText),
+      CheckStage.extraReview => (
+        l.checksHeroExtraTitle,
+        l.checksHeroExtraText,
+      ),
       CheckStage.approved => (
         l.checksHeroApprovedTitle,
         l.checksHeroApprovedText,
@@ -521,7 +528,7 @@ class _Quests extends StatelessWidget {
                   ? Padding(
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     child: Text(
-                      stage == CheckStage.review
+                      stage.inReview
                           ? l.checkDetailQuestAfterApproval
                           : l.checkDetailQuestNone,
                       style: PqText.body(c: pq.textMuted),

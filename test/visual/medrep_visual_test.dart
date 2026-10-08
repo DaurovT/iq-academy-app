@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:platform_app/features/medrep/companies_screen.dart';
 import 'package:platform_app/features/medrep/company_screen.dart';
+import 'package:platform_app/features/medrep/doctor_detail_screen.dart';
 import 'package:platform_app/features/medrep/home_screen.dart';
+import 'package:platform_app/features/medrep/invite_screen.dart';
 import 'package:platform_app/features/medrep/leaderboard_screen.dart';
 import 'package:platform_app/features/medrep/pharmacist_checks_screen.dart';
 import 'package:platform_app/features/medrep/pharmacist_detail_screen.dart';
@@ -30,14 +32,16 @@ void shot(String name, double height, int nav, Widget screen,
 }
 
 void main() {
-  shot('MedHome', 1480, 0, const MedrepHome());
-  shot('MedEmpty', 874, 0, const MedrepHome(), overrides: medrepOverrides(pf: const []));
-  shot('MedPharmacists', 1000, 1, const PortfolioScreen());
+  shot('MedHome', 1530, 0, const MedrepHome());
+  shot('MedEmpty', 880, 0, const MedrepHome(), overrides: medrepOverrides(pf: const []));
+  shot('MedPharmacists', 1210, 1, const PortfolioScreen());
   shot('MedSearchEmpty', 874, 1, const PortfolioScreen(), before: (t) async {
     await t.pump(const Duration(milliseconds: 300));
     await t.enterText(find.byType(TextField), 'Шахноза');
     await t.pump();
   });
+  shot('MedInvite', 980, 1, const MedrepInviteScreen());
+  shot('MedDoctor', 874, 1, const MedrepDoctorDetailScreen(doctorKey: 'a2003'));
   shot('MedPharmacist', 874, 1, const MedrepPharmacistDetailScreen(telegramId: 100));
   shot('MedPhChecks', 874, 1, const MedrepPharmacistChecksScreen(telegramId: 100),
       overrides: medrepOverrides(now: DateTime(2026, 7, 3, 12)));

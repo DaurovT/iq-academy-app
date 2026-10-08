@@ -39,9 +39,9 @@ void main() {
   pqShotBoth('RxList', (t, dark) => pqShot(t,
       name: 'RxList',
       dark: dark,
-      height: 960,
+      height: 1080,
       screen: const RecipesScreen(),
-      overrides: doctorOverrides(recipes: const [rx4, rx2, rx3List, rx1], unread: 0),
+      overrides: doctorOverrides(recipes: const [rx5, rx4, rx2, rx3List, rx1], unread: 0),
       nav: doctorNav,
       navIndex: 1));
 
@@ -55,6 +55,7 @@ void main() {
 
   for (final (name, id, h) in [
     ('RxPending', 2, 1160.0),
+    ('RxReview', 5, 1373.0),
     ('RxApproved', 4, 1520.0),
     ('RxCredited', 1, 1510.0),
     ('RxRejected', 3, 1000.0),

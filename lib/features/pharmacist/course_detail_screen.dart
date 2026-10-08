@@ -76,7 +76,7 @@ class _Body extends StatelessWidget {
           icon: PqIcons.star,
           tileBg: PqColors.reward,
           tileFg: Colors.white,
-          title: l.learnTileReward,
+          title: l.learnTileResult,
           subtitle: done ? l.learnRowRewardDone : l.learnRowRewardPending,
           trailing: l.learnIqc(stats.reward),
           trailingColor: learnRewardFg(pq),

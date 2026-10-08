@@ -179,7 +179,7 @@ class _ChecksScreenState extends ConsumerState<ChecksScreen> {
     ];
     final review = [
       for (final c in list)
-        if (checkStageOf(c.status) == CheckStage.review) c,
+        if (checkStageOf(c.status).inReview) c,
     ];
     final history = [
       for (final c in list)
@@ -401,6 +401,8 @@ class _ReviewRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final pq = context.pq;
     final l = context.l10n;
+    final stage = checkStageOf(check.status);
+    final extra = stage == CheckStage.extraReview;
     return PqPressable(
       onTap: onOpen,
       child: Padding(
@@ -410,7 +412,7 @@ class _ReviewRow extends StatelessWidget {
           children: [
             Row(
               children: [
-                const PqIconTile(PqIcons.clock, tone: PqTone.warning),
+                PqIconTile(stage.icon, tone: stage.tone),
                 const SizedBox(width: 14),
                 Expanded(
                   child: Column(
@@ -432,24 +434,28 @@ class _ReviewRow extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 12),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      l.checksWaitValue,
-                      style: PqText.amount(c: pq.warning),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      l.checksWaitCaption,
-                      style: PqText.caption(c: pq.textMuted),
-                    ),
-                  ],
-                ),
+                // Доп. проверка идёт дольше обычного — срок «~24 ч» не обещаем.
+                if (extra)
+                  PqStatusBadge(stage.label(l), tone: stage.tone)
+                else
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        l.checksWaitValue,
+                        style: PqText.amount(c: pq.warning),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        l.checksWaitCaption,
+                        style: PqText.caption(c: pq.textMuted),
+                      ),
+                    ],
+                  ),
               ],
             ),
             const SizedBox(height: 14),
-            const CheckSteps(stage: CheckStage.review),
+            CheckSteps(stage: stage),
           ],
         ),
       ),

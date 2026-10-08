@@ -703,6 +703,14 @@ class _CheckRow extends StatelessWidget {
             onPressed: () => showNewCheckSheet(context),
           ),
         );
+      case CheckStatus.review:
+        return PqListRow(
+          icon: PqIcons.shieldOk,
+          tone: PqTone.violet,
+          title: c.status.label(l),
+          subtitle: meta,
+          onTap: open,
+        );
       case CheckStatus.pending:
       case CheckStatus.aiDetected:
       case CheckStatus.aiWrong:

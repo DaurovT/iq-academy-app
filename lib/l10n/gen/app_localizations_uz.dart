@@ -69,10 +69,10 @@ class AppLocalizationsUz extends AppLocalizations {
   String get navPortfolio => 'Portfel';
 
   @override
-  String get navPharm => 'Farm.';
+  String get navPharm => 'Jamoa';
 
   @override
-  String get navTop => 'Top';
+  String get navTop => 'Reyting';
 
   @override
   String get navDashboard => 'Boshqaruv';
@@ -2147,7 +2147,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get sapperStep2Text => 'Haftada bir marta maydon hamma uchun ochiladi';
 
   @override
-  String get sapperStep3Title => 'Sovg\'ani oling';
+  String get sapperStep3Title => 'Natijani oling';
 
   @override
   String get sapperStep3Text =>
@@ -2237,10 +2237,10 @@ class AppLocalizationsUz extends AppLocalizations {
   String get sapperViewResults => 'Natijalarni ko‘rish';
 
   @override
-  String get questsSubtitle => 'Soting va mukofotlar oling';
+  String get questsSubtitle => 'Sotuvlaringizni qayd eting';
 
   @override
-  String get questsSubtitleDoctor => 'Blank yozing va mukofotlar oling';
+  String get questsSubtitleDoctor => 'Yozib berish holatlarini qayd eting';
 
   @override
   String get questsSearchLabel => 'Kvestlarni qidirish';
@@ -2310,14 +2310,8 @@ class AppLocalizationsUz extends AppLocalizations {
   String get questsStepSendRecipeSub => 'blank suratini';
 
   @override
-  String get questsStepGetTitle => 'Oling';
-
-  @override
-  String get questsStepGetSub => 'mukofotni';
-
-  @override
   String get questsDoneFooter =>
-      'Bu yerda bajarilgan va yakunlangan kvestlar sanasi va olingan mukofoti bilan saqlanadi';
+      'Bu yerda bajarilgan va yakunlangan kvestlar sanasi va natijasi bilan saqlanadi';
 
   @override
   String questsDoneOn(String date) {
@@ -2391,7 +2385,7 @@ class AppLocalizationsUz extends AppLocalizations {
   }
 
   @override
-  String get questsRewardManual => 'Tekshiruvdan so‘ng qo‘lda beriladi';
+  String get questsRewardManual => 'Tekshiruvdan so‘ng beriladi';
 
   @override
   String get questsRewardIqcSub => 'Ballar tekshiruvdan so‘ng balansga tushadi';
@@ -2423,21 +2417,13 @@ class AppLocalizationsUz extends AppLocalizations {
   String get questsStepPhotoCheck => 'Chekni suratga oling';
 
   @override
-  String get questsStepPhotoCheckSub => 'SI qadoqni avtomatik tekshiradi';
+  String get questsStepPhotoCheckSub => 'Chekingiz tekshiruvga yuboriladi';
 
   @override
   String get questsStepPhotoRecipe => 'Blankni suratga oling';
 
   @override
-  String get questsStepPhotoRecipeSub => 'SI blankni avtomatik tekshiradi';
-
-  @override
-  String get questsStepGetVoucher => 'Vaucher oling';
-
-  @override
-  String questsStepGetIqc(int n) {
-    return '$n IQC oling';
-  }
+  String get questsStepPhotoRecipeSub => 'Blankingiz tekshiruvga yuboriladi';
 
   @override
   String get questsConditionsTitle => 'Shartlar';
@@ -3018,7 +3004,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get learnRowQuizLocked => 'Videodan so‘ng ochiladi';
 
   @override
-  String get learnRowRewardPending => 'Testdan so‘ng hisoblaymiz';
+  String get learnRowRewardPending => 'Testdan o‘tgandan so‘ng';
 
   @override
   String get learnRowRewardDone => 'Hisoblandi';
@@ -3139,7 +3125,7 @@ class AppLocalizationsUz extends AppLocalizations {
   }
 
   @override
-  String get rxHomeSubtitle => 'Blanklarni yuboring va mukofotlar oling';
+  String get rxHomeSubtitle => 'Yozib berish holatlarini qayd eting';
 
   @override
   String get rxHomeBellLabel => 'Bildirishnomalar';
@@ -3295,7 +3281,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get rxStateRejectedHint =>
-      'Blankni yaxshi yorug\'likda to\'liq suratga oling — ballarni hali olish mumkin';
+      'Blankni yaxshi yorug\'likda to\'liq suratga oling';
 
   @override
   String get rxStepSent => 'Yuborildi';
@@ -3804,17 +3790,17 @@ class AppLocalizationsUz extends AppLocalizations {
   }
 
   @override
-  String get medrepInviteTitle => 'Provizorni taklif qilish';
+  String get medrepInviteTitle => 'Jamoaga taklif qilish';
 
   @override
   String get medrepInviteText =>
-      'Havolani yuboring — ro\'yxatdan o\'tgach, provizor portfelingizga tushadi';
+      'Shifokor ro‘yxatdan o‘tishda kod so‘zini kiritadi. Farmatsevt — xohishiga ko‘ra';
 
   @override
   String get medrepCopyLink => 'Havolani nusxalash';
 
   @override
-  String get medrepPendingSub => 'Havola orqali o\'tgan provizorlar';
+  String get medrepPendingSub => 'Ularni jamoaga qo‘shishingizni kutishmoqda';
 
   @override
   String get medrepCompaniesSub => 'Portfeldagi dorixona tarmoqlari';
@@ -3823,35 +3809,35 @@ class AppLocalizationsUz extends AppLocalizations {
   String get medrepDoctorsSub => 'Blankalar kvesti bo\'yicha jarayon';
 
   @override
-  String get medrepEmptyTitle => 'Portfel hozircha bo\'sh';
+  String get medrepEmptyTitle => 'Jamoa hozircha bo‘sh';
 
   @override
   String get medrepEmptyText =>
-      'Provizorlarni havola orqali taklif qiling — ularning cheklari va statistikasi shu yerda paydo bo\'ladi';
+      'Shifokor va farmatsevtlarni taklif qiling — ularning blanklari, cheklari va statistikasi shu yerda paydo bo‘ladi';
 
   @override
-  String get medrepStep1Title => 'Havolani yuboring';
+  String get medrepStep1Title => 'Kod so‘zini ulashing';
 
   @override
-  String get medrepStep1Text => 'Telegram yoki SMS orqali';
+  String get medrepStep1Text => 'U ro‘yxatdan o‘tishda kiritiladi';
 
   @override
-  String get medrepStep2Title => 'Provizor ro\'yxatdan o\'tadi';
+  String get medrepStep2Title => 'Hamkasb ro‘yxatdan o‘tadi';
 
   @override
-  String get medrepStep2Text => 'U darhol portfelingizga tushadi';
+  String get medrepStep2Text => 'Kod so‘zi bilan shifokor — darhol jamoada';
 
   @override
-  String get medrepStep3Title => 'Cheklarni kuzating';
+  String get medrepStep3Title => 'Natijalarni kuzating';
 
   @override
-  String get medrepStep3Text => 'Statistika shu yerda paydo bo\'ladi';
+  String get medrepStep3Text => 'Blanklar va cheklar shu yerda paydo bo‘ladi';
 
   @override
   String get medrepUpdatedNow => 'Hozir yangilandi';
 
   @override
-  String get medrepSearchHint => 'Ism, dorixona yoki shahar';
+  String get medrepSearchHint => 'Ism, dorixona, klinika yoki shahar';
 
   @override
   String get medrepFilterAll => 'Barchasi';
@@ -3879,7 +3865,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String medrepNotFoundText(String query) {
-    return '«$query» so\'rovi bo\'yicha provizorlar yo\'q. Yozilishini tekshiring yoki dorixona nomi bo\'yicha qidiring';
+    return '«$query» so‘rovi bo‘yicha hech kim yo‘q. Yozilishini tekshiring yoki dorixona yoxud klinika bo‘yicha qidiring';
   }
 
   @override
@@ -3962,7 +3948,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get medrepNotRankedText =>
-      'O\'rin provizorlaringiz cheklari bo\'yicha hisoblanadi. Birinchisini taklif qiling — va siz ro\'yxatda paydo bo\'lasiz';
+      'O‘rin jamoangiz cheklari bo‘yicha hisoblanadi. Birinchisini taklif qiling — va siz ro‘yxatda paydo bo‘lasiz';
 
   @override
   String get medrepRatingEmpty => 'Reyting hozircha bo\'sh';
@@ -4061,8 +4047,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get medrepHide => 'Yig\'ish';
 
   @override
-  String get medrepPendingText =>
-      'Havolangiz orqali o\'tishdi va ularni portfelga qo\'shishingizni kutishmoqda';
+  String get medrepPendingText => 'Ularni jamoaga qo‘shishingizni kutishmoqda';
 
   @override
   String medrepFollowedLink(String ago) {
@@ -4442,7 +4427,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get checksEmptyText =>
-      'Dorixona chekini suratga oling — SI dorilarni aniqlaydi va siz IQC olasiz';
+      'Chekni suratga oling — tekshiruvdan so‘ng natijangiz hisobga olinadi';
 
   @override
   String get checksHowToTitle => 'Qanday suratga olish kerak';
@@ -5369,4 +5354,209 @@ class AppLocalizationsUz extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get checksStepConfirmed => 'Qabul qilindi';
+
+  @override
+  String get rxStepConfirmed => 'Qabul qilindi';
+
+  @override
+  String get questsStepDoTitle => 'Bajaring';
+
+  @override
+  String get questsStepDoSub => 'shartlarni';
+
+  @override
+  String get questsStepWaitTitle => 'Kuting';
+
+  @override
+  String get questsStepWaitSub => 'tekshiruvni';
+
+  @override
+  String get questsStepWaitCheck => 'Tekshiruvni kuting';
+
+  @override
+  String get questsStepWaitCheckSub => 'Chekni qayta yuborish shart emas';
+
+  @override
+  String get questsStepWaitRecipe => 'Blank tasdiqlanishini kuting';
+
+  @override
+  String get questsStepWaitRecipeSub =>
+      'Dastlabki tekshiruv 24 soatgacha davom etadi';
+
+  @override
+  String get learnTileResult => 'Natija';
+
+  @override
+  String get checksStatusExtraReview => 'Qo‘sh. tekshiruv';
+
+  @override
+  String get checksHeroExtraTitle => 'Chek qo‘shimcha tekshiruvda';
+
+  @override
+  String get checksHeroExtraText => 'Tekshiruv odatdagidan ko‘proq vaqt oladi';
+
+  @override
+  String get rxStateExtraTitle => 'Blank qo‘shimcha tekshiruvda';
+
+  @override
+  String get rxStateExtraText =>
+      'Blank mutaxassisga qo‘shimcha tekshiruvga yuborildi. Bu ko‘proq vaqt oladi — qaror chiqqach, bildirishnoma yuboramiz';
+
+  @override
+  String get checksExtraNoteTitle => 'Hech narsa qilish shart emas';
+
+  @override
+  String get checksExtraNoteText =>
+      'Ba’zan chek qo‘shimcha solishtirishni talab qiladi — masalan, ma’lumotlarning bir qismi yomon o‘qilsa. Qaror bildirishnomalarda keladi va shu yerda ko‘rinadi';
+
+  @override
+  String get rxExtraNoteText =>
+      'Ba’zan blank qo‘lda solishtirishni talab qiladi — masalan, ma’lumotlarning bir qismi yomon o‘qilsa. Qaror bildirishnomalarda keladi va shu yerda ko‘rinadi';
+
+  @override
+  String get rxExtraHint => 'Qaror bildirishnomalarda keladi';
+
+  @override
+  String get regCodeLabel => 'Tibbiy vakilning kod so‘zi';
+
+  @override
+  String get regCodeOptional => '· ixtiyoriy';
+
+  @override
+  String get regCodeExample => 'Masalan, DAUROV';
+
+  @override
+  String get regCodeNoteDoctor =>
+      'Kod so‘zini tibbiy vakilingiz beradi. Usiz shifokor ro‘yxatdan o‘ta olmaydi';
+
+  @override
+  String get regCodeNotePharm => 'Agar sizni tibbiy vakil taklif qilgan bo‘lsa';
+
+  @override
+  String get regCodeNotFound =>
+      'Bunday kod so‘zi yo‘q. Harflarni tekshiring yoki tibbiy vakilingizdan aniqlang';
+
+  @override
+  String get regCodeMedrep => 'Tibbiy vakil';
+
+  @override
+  String get regCodeJoinDoctor => 'Siz darhol uning jamoasiga qo‘shilasiz';
+
+  @override
+  String get regCodeJoinPharm => 'Tibbiy vakil arizangizni tasdiqlaydi';
+
+  @override
+  String get medrepTeamTitle => 'Jamoa';
+
+  @override
+  String medrepCountPharm(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n ta farmatsevt',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String medrepCountDoctors(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n ta shifokor',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get medrepCodeForInvite => 'Taklif uchun kod so‘zi';
+
+  @override
+  String get medrepInviteShort => 'Taklif qilish';
+
+  @override
+  String medrepUnitBlanks(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'blank',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get medrepUnitInTeam => 'jamoada';
+
+  @override
+  String get medrepAllTeam => 'Butun jamoa';
+
+  @override
+  String get medrepYourCode => 'Sizning kod so‘zingiz';
+
+  @override
+  String get medrepCopyCode => 'Kod so‘zini nusxalash';
+
+  @override
+  String get medrepCodeCopied => 'Kod so‘zi nusxalandi';
+
+  @override
+  String medrepEnteredCode(String ago) {
+    return 'Kod so‘zini kiritdi · $ago';
+  }
+
+  @override
+  String medrepStep1TextCode(String code) {
+    return 'Sizning so‘zingiz — $code';
+  }
+
+  @override
+  String medrepCodeHintNick(String username) {
+    return '@$username nikingizdan 6 ta belgi · registr muhim emas';
+  }
+
+  @override
+  String get medrepCodeHint => 'Kiritishda registr muhim emas';
+
+  @override
+  String get medrepHowTitle => 'Bu qanday ishlaydi';
+
+  @override
+  String get medrepHowDoctor =>
+      'Ro‘yxatdan o‘tishda so‘zni albatta kiritadi — va darhol jamoangizga qo‘shiladi';
+
+  @override
+  String get medrepHowPharm =>
+      'So‘zni xohishiga ko‘ra kiritadi. «Tasdiqlashni kutmoqda» bo‘limida paydo bo‘ladi';
+
+  @override
+  String medrepShareText(String code) {
+    return 'PharmIQ Academy’dagi kod so‘zim — $code. Uni ilovada ro‘yxatdan o‘tishda kiriting.';
+  }
+
+  @override
+  String get medrepBlanksAllTime => 'Butun davrdagi blanklar';
+
+  @override
+  String get medrepUnitApproved => 'tasdiqlangan';
+
+  @override
+  String medrepSince(String date) {
+    return '$date dan';
+  }
+
+  @override
+  String get medrepPatientsHidden =>
+      'Bemorlar ma’lumotlari tibbiy vakilga ko‘rsatilmaydi';
+
+  @override
+  String get medrepProfileCode => 'Kod so‘zi';
+
+  @override
+  String get medrepProfileCodeSub => 'Jamoaga taklif qilish uchun';
+
+  @override
+  String get medrepTeamNobody => 'Bu yerda hozircha hech kim yo‘q';
 }

@@ -82,8 +82,8 @@ class _ListView extends ConsumerWidget {
     RxStage stageOf(Recipe r) => r.status.rxStage(credits[r.id]);
     final list = switch (tab) {
       _Tab.all => all,
-      _Tab.pending => all.where((r) => stageOf(r) == RxStage.pending).toList(),
-      _Tab.done => all.where((r) => stageOf(r) != RxStage.pending).toList(),
+      _Tab.pending => all.where((r) => stageOf(r).inReview).toList(),
+      _Tab.done => all.where((r) => !stageOf(r).inReview).toList(),
     };
     final earned = all.fold<int>(0, (s, r) => s + (credits[r.id] ?? 0));
     final count = l10n.rxListCount(all.length);
@@ -179,18 +179,21 @@ class _RecipeCard extends StatelessWidget {
               recipe: recipe,
               value: l10n.rxRewardIqc(credited ?? 0),
               color: pq.tone(PqTone.info).fg),
-          RxStage.pending => Row(children: [
+          RxStage.pending || RxStage.extraReview => Row(children: [
               PqBreath(
                 child: Container(
                   width: 8,
                   height: 8,
-                  decoration:
-                      BoxDecoration(color: pq.warning, shape: BoxShape.circle),
+                  decoration: BoxDecoration(
+                      color: pq.tone(stage.tone).fg, shape: BoxShape.circle),
                 ),
               ),
               const SizedBox(width: 8),
               Expanded(
-                child: Text(l10n.rxPendingHint,
+                child: Text(
+                    stage == RxStage.extraReview
+                        ? l10n.rxExtraHint
+                        : l10n.rxPendingHint,
                     style: rxText14(pq.textMuted)),
               ),
             ]),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../core/design/design.dart';
 import '../../core/format.dart';
@@ -99,11 +100,83 @@ void medBack(BuildContext context, [String fallback = '/app']) {
   }
 }
 
-/// Копирует реферальную ссылку и показывает тост «Ссылка скопирована».
-Future<void> medCopyLink(BuildContext context, String link) async {
-  await Clipboard.setData(ClipboardData(text: link));
+/// Копирует кодовое слово и показывает тост «Кодовое слово скопировано».
+Future<void> medCopyCode(BuildContext context, String code) async {
+  if (code.isEmpty) return;
+  await Clipboard.setData(ClipboardData(text: code));
   if (!context.mounted) return;
-  showPqToast(context, context.l10n.medrepHomeLinkCopied, icon: PqIcons.copy);
+  showPqToast(context, context.l10n.medrepCodeCopied, icon: PqIcons.copy);
+}
+
+/// Системное «Поделиться» с кодовым словом. Ссылки-приглашения в приложении
+/// нет — коллеге достаточно ввести слово при регистрации.
+Future<void> medShareCode(BuildContext context, String code) async {
+  if (code.isEmpty) return;
+  final text = context.l10n.medrepShareText(code);
+  try {
+    await SharePlus.instance.share(ShareParams(text: text));
+  } catch (_) {
+    // Нет системного окна «Поделиться» — хотя бы скопируем слово.
+    if (context.mounted) await medCopyCode(context, code);
+  }
+}
+
+/// Кодовое слово крупными буквами: Onest 800 с разрядкой (22/5 в строке
+/// «Команды», 28/6 на главной, 48/10 на экране приглашения). Пока слово не
+/// загрузилось — прочерки той же ширины.
+class MedCodeWord extends StatelessWidget {
+  const MedCodeWord(this.code, {super.key, this.size = 28, this.spacing = 6, this.color});
+
+  final String? code;
+  final double size;
+  final double spacing;
+  final Color? color;
+
+  @override
+  Widget build(BuildContext context) {
+    final pq = context.pq;
+    final text = code == null || code!.isEmpty ? '——————' : code!;
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      alignment: Alignment.centerLeft,
+      child: Text(
+        text,
+        maxLines: 1,
+        softWrap: false,
+        style: PqText.heading(size, FontWeight.w800,
+            height: size >= 40 ? 1 : null,
+            ls: spacing,
+            c: (color ?? pq.text).withValues(alpha: code == null ? .35 : 1)),
+      ),
+    );
+  }
+}
+
+/// Пунктирная рамка 1 px (CSS `border: 1px dashed`) поверх блока.
+class MedDashedBorder extends CustomPainter {
+  MedDashedBorder({required this.color, required this.radius});
+
+  final Color color;
+  final double radius;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rrect = RRect.fromRectAndRadius(
+        (Offset.zero & size).deflate(.5), Radius.circular(radius));
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1;
+    for (final m in (Path()..addRRect(rrect)).computeMetrics()) {
+      for (double d = 0; d < m.length; d += 6) {
+        canvas.drawPath(m.extractPath(d, d + 3), paint);
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(MedDashedBorder old) =>
+      old.color != color || old.radius != radius;
 }
 
 /// Приглушённый текст на градиентной карточке.

@@ -136,10 +136,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
     if (!ranked) {
       return PqStagger(gap: 16, children: [
         ...header,
-        _NotRankedCard(
-          link: ref.watch(medrepReflinkProvider).asData?.value ??
-              'https://t.me/PharmQuestBot?start=ref_',
-        ),
+        const _NotRankedCard(),
         PqListCard(children: [
           for (var i = 0; i < b.items.length && i < 5; i++)
             MedPersonRow(
@@ -376,9 +373,7 @@ class _RankRow extends StatelessWidget {
 // ── Нет в рейтинге ──────────────────────────────────────────────────────
 
 class _NotRankedCard extends StatelessWidget {
-  const _NotRankedCard({required this.link});
-
-  final String link;
+  const _NotRankedCard();
 
   @override
   Widget build(BuildContext context) {
@@ -416,7 +411,7 @@ class _NotRankedCard extends StatelessWidget {
           PqButton(
             label: l.medrepInviteTitle,
             icon: PqIcons.share,
-            onPressed: () => medCopyLink(context, link),
+            onPressed: () => context.push('/app/portfolio/invite'),
           ),
         ]),
       ),

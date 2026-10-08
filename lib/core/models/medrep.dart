@@ -147,6 +147,12 @@ abstract class PendingReferral with _$PendingReferral {
     required String phone,
     String? shop,
     required String requestedAt,
+
+    /// Откуда заявка: 'app' — из приложения (по кодовому слову), 'bot' — из бота.
+    @Default('bot') String kind,
+
+    /// 'code' — ввёл кодовое слово, 'link' — перешёл по ссылке.
+    String? source,
   }) = _PendingReferral;
 
   factory PendingReferral.fromJson(Map<String, dynamic> json) =>
@@ -158,7 +164,7 @@ abstract class RecentCheck with _$RecentCheck {
   const factory RecentCheck({
     required int id,
     required String createdAt,
-    required CheckStatus status,
+    @JsonKey(unknownEnumValue: CheckStatus.pending) required CheckStatus status,
     required int packs,
   }) = _RecentCheck;
 
@@ -282,4 +288,110 @@ abstract class DoctorsOverview with _$DoctorsOverview {
 
   factory DoctorsOverview.fromJson(Map<String, dynamic> json) =>
       _$DoctorsOverviewFromJson(json);
+}
+
+// ── Команда медпреда и кодовое слово (docs/medrep-team-api.md) ──────────────
+
+/// Кодовое слово медпреда: 6 символов из его ника.
+@freezed
+abstract class MedrepCode with _$MedrepCode {
+  const factory MedrepCode({
+    required String code,
+    String? username,
+    String? company,
+    @Default(0) int joinedByCode,
+  }) = _MedrepCode;
+
+  factory MedrepCode.fromJson(Map<String, dynamic> json) =>
+      _$MedrepCodeFromJson(json);
+}
+
+/// Чьё кодовое слово ввели при регистрации.
+@freezed
+abstract class MedrepCodeOwner with _$MedrepCodeOwner {
+  const factory MedrepCodeOwner({
+    required String name,
+    String? company,
+  }) = _MedrepCodeOwner;
+
+  factory MedrepCodeOwner.fromJson(Map<String, dynamic> json) =>
+      _$MedrepCodeOwnerFromJson(json);
+}
+
+/// Ответ проверки кодового слова.
+@freezed
+abstract class MedrepCodeCheck with _$MedrepCodeCheck {
+  const factory MedrepCodeCheck({
+    required bool ok,
+    MedrepCodeOwner? medrep,
+  }) = _MedrepCodeCheck;
+
+  factory MedrepCodeCheck.fromJson(Map<String, dynamic> json) =>
+      _$MedrepCodeCheckFromJson(json);
+}
+
+@freezed
+abstract class TeamTotals with _$TeamTotals {
+  const factory TeamTotals({
+    @Default(0) int all,
+    @Default(0) int doctors,
+    @Default(0) int pharmacists,
+    @Default(0) int pending,
+  }) = _TeamTotals;
+
+  factory TeamTotals.fromJson(Map<String, dynamic> json) =>
+      _$TeamTotalsFromJson(json);
+}
+
+/// Врач в команде медпреда.
+@freezed
+abstract class TeamDoctor with _$TeamDoctor {
+  const factory TeamDoctor({
+    int? accountId,
+    int? telegramId,
+    required String name,
+    @Default('') String specialty,
+    @Default('') String workplace,
+    @Default('') String city,
+    @Default('') String phone,
+    @Default(0) int recipes,
+    @Default(0) int approved,
+    String? lastAt,
+    @Default(false) bool active,
+    String? joinedAt,
+  }) = _TeamDoctor;
+
+  factory TeamDoctor.fromJson(Map<String, dynamic> json) =>
+      _$TeamDoctorFromJson(json);
+}
+
+/// Фармацевт в команде (из бота — с telegramId, из приложения — с accountId).
+@freezed
+abstract class TeamPharmacist with _$TeamPharmacist {
+  const factory TeamPharmacist({
+    int? telegramId,
+    int? accountId,
+    required String name,
+    @Default('') String shop,
+    @Default('') String city,
+    @Default(0) int checks,
+    @Default(0) int quests,
+    String? lastAt,
+    @Default(false) bool active,
+  }) = _TeamPharmacist;
+
+  factory TeamPharmacist.fromJson(Map<String, dynamic> json) =>
+      _$TeamPharmacistFromJson(json);
+}
+
+@freezed
+abstract class MedrepTeam with _$MedrepTeam {
+  const factory MedrepTeam({
+    @Default(TeamTotals()) TeamTotals totals,
+    @Default([]) List<TeamDoctor> doctors,
+    @Default([]) List<TeamPharmacist> pharmacists,
+  }) = _MedrepTeam;
+
+  factory MedrepTeam.fromJson(Map<String, dynamic> json) =>
+      _$MedrepTeamFromJson(json);
 }

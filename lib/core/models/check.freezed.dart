@@ -547,7 +547,7 @@ as String,
 /// @nodoc
 mixin _$Check {
 
- int get id; CheckStatus get status; String get createdAt; int get photoCount; List<CheckDrug> get drugs; String? get rejectReason;
+ int get id;@JsonKey(unknownEnumValue: CheckStatus.pending) CheckStatus get status; String get createdAt; int get photoCount; List<CheckDrug> get drugs; String? get rejectReason;
 /// Create a copy of Check
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -580,7 +580,7 @@ abstract mixin class $CheckCopyWith<$Res>  {
   factory $CheckCopyWith(Check value, $Res Function(Check) _then) = _$CheckCopyWithImpl;
 @useResult
 $Res call({
- int id, CheckStatus status, String createdAt, int photoCount, List<CheckDrug> drugs, String? rejectReason
+ int id,@JsonKey(unknownEnumValue: CheckStatus.pending) CheckStatus status, String createdAt, int photoCount, List<CheckDrug> drugs, String? rejectReason
 });
 
 
@@ -690,7 +690,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  CheckStatus status,  String createdAt,  int photoCount,  List<CheckDrug> drugs,  String? rejectReason)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id, @JsonKey(unknownEnumValue: CheckStatus.pending)  CheckStatus status,  String createdAt,  int photoCount,  List<CheckDrug> drugs,  String? rejectReason)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Check() when $default != null:
 return $default(_that.id,_that.status,_that.createdAt,_that.photoCount,_that.drugs,_that.rejectReason);case _:
@@ -711,7 +711,7 @@ return $default(_that.id,_that.status,_that.createdAt,_that.photoCount,_that.dru
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  CheckStatus status,  String createdAt,  int photoCount,  List<CheckDrug> drugs,  String? rejectReason)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id, @JsonKey(unknownEnumValue: CheckStatus.pending)  CheckStatus status,  String createdAt,  int photoCount,  List<CheckDrug> drugs,  String? rejectReason)  $default,) {final _that = this;
 switch (_that) {
 case _Check():
 return $default(_that.id,_that.status,_that.createdAt,_that.photoCount,_that.drugs,_that.rejectReason);case _:
@@ -731,7 +731,7 @@ return $default(_that.id,_that.status,_that.createdAt,_that.photoCount,_that.dru
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  CheckStatus status,  String createdAt,  int photoCount,  List<CheckDrug> drugs,  String? rejectReason)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id, @JsonKey(unknownEnumValue: CheckStatus.pending)  CheckStatus status,  String createdAt,  int photoCount,  List<CheckDrug> drugs,  String? rejectReason)?  $default,) {final _that = this;
 switch (_that) {
 case _Check() when $default != null:
 return $default(_that.id,_that.status,_that.createdAt,_that.photoCount,_that.drugs,_that.rejectReason);case _:
@@ -746,11 +746,11 @@ return $default(_that.id,_that.status,_that.createdAt,_that.photoCount,_that.dru
 @JsonSerializable()
 
 class _Check implements Check {
-  const _Check({required this.id, required this.status, required this.createdAt, required this.photoCount, required final  List<CheckDrug> drugs, this.rejectReason}): _drugs = drugs;
+  const _Check({required this.id, @JsonKey(unknownEnumValue: CheckStatus.pending) required this.status, required this.createdAt, required this.photoCount, required final  List<CheckDrug> drugs, this.rejectReason}): _drugs = drugs;
   factory _Check.fromJson(Map<String, dynamic> json) => _$CheckFromJson(json);
 
 @override final  int id;
-@override final  CheckStatus status;
+@override@JsonKey(unknownEnumValue: CheckStatus.pending) final  CheckStatus status;
 @override final  String createdAt;
 @override final  int photoCount;
  final  List<CheckDrug> _drugs;
@@ -795,7 +795,7 @@ abstract mixin class _$CheckCopyWith<$Res> implements $CheckCopyWith<$Res> {
   factory _$CheckCopyWith(_Check value, $Res Function(_Check) _then) = __$CheckCopyWithImpl;
 @override @useResult
 $Res call({
- int id, CheckStatus status, String createdAt, int photoCount, List<CheckDrug> drugs, String? rejectReason
+ int id,@JsonKey(unknownEnumValue: CheckStatus.pending) CheckStatus status, String createdAt, int photoCount, List<CheckDrug> drugs, String? rejectReason
 });
 
 
@@ -1100,7 +1100,7 @@ as int,
 /// @nodoc
 mixin _$CheckDetail {
 
- int get id; CheckStatus get status; String get createdAt; int get photoCount; List<CheckDrug> get drugs; String? get rejectReason; List<Photo> get photos; String? get aiText; List<CheckAllocation> get allocations;
+ int get id;@JsonKey(unknownEnumValue: CheckStatus.pending) CheckStatus get status; String get createdAt; int get photoCount; List<CheckDrug> get drugs; String? get rejectReason; List<Photo> get photos; String? get aiText; List<CheckAllocation> get allocations;
 /// Create a copy of CheckDetail
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1133,7 +1133,7 @@ abstract mixin class $CheckDetailCopyWith<$Res>  {
   factory $CheckDetailCopyWith(CheckDetail value, $Res Function(CheckDetail) _then) = _$CheckDetailCopyWithImpl;
 @useResult
 $Res call({
- int id, CheckStatus status, String createdAt, int photoCount, List<CheckDrug> drugs, String? rejectReason, List<Photo> photos, String? aiText, List<CheckAllocation> allocations
+ int id,@JsonKey(unknownEnumValue: CheckStatus.pending) CheckStatus status, String createdAt, int photoCount, List<CheckDrug> drugs, String? rejectReason, List<Photo> photos, String? aiText, List<CheckAllocation> allocations
 });
 
 
@@ -1246,7 +1246,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  CheckStatus status,  String createdAt,  int photoCount,  List<CheckDrug> drugs,  String? rejectReason,  List<Photo> photos,  String? aiText,  List<CheckAllocation> allocations)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id, @JsonKey(unknownEnumValue: CheckStatus.pending)  CheckStatus status,  String createdAt,  int photoCount,  List<CheckDrug> drugs,  String? rejectReason,  List<Photo> photos,  String? aiText,  List<CheckAllocation> allocations)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CheckDetail() when $default != null:
 return $default(_that.id,_that.status,_that.createdAt,_that.photoCount,_that.drugs,_that.rejectReason,_that.photos,_that.aiText,_that.allocations);case _:
@@ -1267,7 +1267,7 @@ return $default(_that.id,_that.status,_that.createdAt,_that.photoCount,_that.dru
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  CheckStatus status,  String createdAt,  int photoCount,  List<CheckDrug> drugs,  String? rejectReason,  List<Photo> photos,  String? aiText,  List<CheckAllocation> allocations)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id, @JsonKey(unknownEnumValue: CheckStatus.pending)  CheckStatus status,  String createdAt,  int photoCount,  List<CheckDrug> drugs,  String? rejectReason,  List<Photo> photos,  String? aiText,  List<CheckAllocation> allocations)  $default,) {final _that = this;
 switch (_that) {
 case _CheckDetail():
 return $default(_that.id,_that.status,_that.createdAt,_that.photoCount,_that.drugs,_that.rejectReason,_that.photos,_that.aiText,_that.allocations);case _:
@@ -1287,7 +1287,7 @@ return $default(_that.id,_that.status,_that.createdAt,_that.photoCount,_that.dru
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  CheckStatus status,  String createdAt,  int photoCount,  List<CheckDrug> drugs,  String? rejectReason,  List<Photo> photos,  String? aiText,  List<CheckAllocation> allocations)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id, @JsonKey(unknownEnumValue: CheckStatus.pending)  CheckStatus status,  String createdAt,  int photoCount,  List<CheckDrug> drugs,  String? rejectReason,  List<Photo> photos,  String? aiText,  List<CheckAllocation> allocations)?  $default,) {final _that = this;
 switch (_that) {
 case _CheckDetail() when $default != null:
 return $default(_that.id,_that.status,_that.createdAt,_that.photoCount,_that.drugs,_that.rejectReason,_that.photos,_that.aiText,_that.allocations);case _:
@@ -1302,11 +1302,11 @@ return $default(_that.id,_that.status,_that.createdAt,_that.photoCount,_that.dru
 @JsonSerializable()
 
 class _CheckDetail implements CheckDetail {
-  const _CheckDetail({required this.id, required this.status, required this.createdAt, required this.photoCount, required final  List<CheckDrug> drugs, this.rejectReason, required final  List<Photo> photos, this.aiText, required final  List<CheckAllocation> allocations}): _drugs = drugs,_photos = photos,_allocations = allocations;
+  const _CheckDetail({required this.id, @JsonKey(unknownEnumValue: CheckStatus.pending) required this.status, required this.createdAt, required this.photoCount, required final  List<CheckDrug> drugs, this.rejectReason, required final  List<Photo> photos, this.aiText, required final  List<CheckAllocation> allocations}): _drugs = drugs,_photos = photos,_allocations = allocations;
   factory _CheckDetail.fromJson(Map<String, dynamic> json) => _$CheckDetailFromJson(json);
 
 @override final  int id;
-@override final  CheckStatus status;
+@override@JsonKey(unknownEnumValue: CheckStatus.pending) final  CheckStatus status;
 @override final  String createdAt;
 @override final  int photoCount;
  final  List<CheckDrug> _drugs;
@@ -1366,7 +1366,7 @@ abstract mixin class _$CheckDetailCopyWith<$Res> implements $CheckDetailCopyWith
   factory _$CheckDetailCopyWith(_CheckDetail value, $Res Function(_CheckDetail) _then) = __$CheckDetailCopyWithImpl;
 @override @useResult
 $Res call({
- int id, CheckStatus status, String createdAt, int photoCount, List<CheckDrug> drugs, String? rejectReason, List<Photo> photos, String? aiText, List<CheckAllocation> allocations
+ int id,@JsonKey(unknownEnumValue: CheckStatus.pending) CheckStatus status, String createdAt, int photoCount, List<CheckDrug> drugs, String? rejectReason, List<Photo> photos, String? aiText, List<CheckAllocation> allocations
 });
 
 
@@ -1671,7 +1671,7 @@ as int,
 /// @nodoc
 mixin _$Recipe {
 
- int get id; CheckStatus get status; String get createdAt; int get photoCount; List<RecipeDrug> get drugs; String? get rejectReason;
+ int get id;@JsonKey(unknownEnumValue: CheckStatus.pending) CheckStatus get status; String get createdAt; int get photoCount; List<RecipeDrug> get drugs; String? get rejectReason;
 /// Create a copy of Recipe
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1704,7 +1704,7 @@ abstract mixin class $RecipeCopyWith<$Res>  {
   factory $RecipeCopyWith(Recipe value, $Res Function(Recipe) _then) = _$RecipeCopyWithImpl;
 @useResult
 $Res call({
- int id, CheckStatus status, String createdAt, int photoCount, List<RecipeDrug> drugs, String? rejectReason
+ int id,@JsonKey(unknownEnumValue: CheckStatus.pending) CheckStatus status, String createdAt, int photoCount, List<RecipeDrug> drugs, String? rejectReason
 });
 
 
@@ -1814,7 +1814,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  CheckStatus status,  String createdAt,  int photoCount,  List<RecipeDrug> drugs,  String? rejectReason)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id, @JsonKey(unknownEnumValue: CheckStatus.pending)  CheckStatus status,  String createdAt,  int photoCount,  List<RecipeDrug> drugs,  String? rejectReason)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Recipe() when $default != null:
 return $default(_that.id,_that.status,_that.createdAt,_that.photoCount,_that.drugs,_that.rejectReason);case _:
@@ -1835,7 +1835,7 @@ return $default(_that.id,_that.status,_that.createdAt,_that.photoCount,_that.dru
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  CheckStatus status,  String createdAt,  int photoCount,  List<RecipeDrug> drugs,  String? rejectReason)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id, @JsonKey(unknownEnumValue: CheckStatus.pending)  CheckStatus status,  String createdAt,  int photoCount,  List<RecipeDrug> drugs,  String? rejectReason)  $default,) {final _that = this;
 switch (_that) {
 case _Recipe():
 return $default(_that.id,_that.status,_that.createdAt,_that.photoCount,_that.drugs,_that.rejectReason);case _:
@@ -1855,7 +1855,7 @@ return $default(_that.id,_that.status,_that.createdAt,_that.photoCount,_that.dru
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  CheckStatus status,  String createdAt,  int photoCount,  List<RecipeDrug> drugs,  String? rejectReason)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id, @JsonKey(unknownEnumValue: CheckStatus.pending)  CheckStatus status,  String createdAt,  int photoCount,  List<RecipeDrug> drugs,  String? rejectReason)?  $default,) {final _that = this;
 switch (_that) {
 case _Recipe() when $default != null:
 return $default(_that.id,_that.status,_that.createdAt,_that.photoCount,_that.drugs,_that.rejectReason);case _:
@@ -1870,11 +1870,11 @@ return $default(_that.id,_that.status,_that.createdAt,_that.photoCount,_that.dru
 @JsonSerializable()
 
 class _Recipe implements Recipe {
-  const _Recipe({required this.id, required this.status, required this.createdAt, required this.photoCount, required final  List<RecipeDrug> drugs, this.rejectReason}): _drugs = drugs;
+  const _Recipe({required this.id, @JsonKey(unknownEnumValue: CheckStatus.pending) required this.status, required this.createdAt, required this.photoCount, required final  List<RecipeDrug> drugs, this.rejectReason}): _drugs = drugs;
   factory _Recipe.fromJson(Map<String, dynamic> json) => _$RecipeFromJson(json);
 
 @override final  int id;
-@override final  CheckStatus status;
+@override@JsonKey(unknownEnumValue: CheckStatus.pending) final  CheckStatus status;
 @override final  String createdAt;
 @override final  int photoCount;
  final  List<RecipeDrug> _drugs;
@@ -1919,7 +1919,7 @@ abstract mixin class _$RecipeCopyWith<$Res> implements $RecipeCopyWith<$Res> {
   factory _$RecipeCopyWith(_Recipe value, $Res Function(_Recipe) _then) = __$RecipeCopyWithImpl;
 @override @useResult
 $Res call({
- int id, CheckStatus status, String createdAt, int photoCount, List<RecipeDrug> drugs, String? rejectReason
+ int id,@JsonKey(unknownEnumValue: CheckStatus.pending) CheckStatus status, String createdAt, int photoCount, List<RecipeDrug> drugs, String? rejectReason
 });
 
 
@@ -1955,7 +1955,7 @@ as String?,
 /// @nodoc
 mixin _$RecipeDetail {
 
- int get id; CheckStatus get status; String get createdAt; int get photoCount; List<RecipeDrug> get drugs; String? get rejectReason; List<Photo> get photos; String? get aiText;
+ int get id;@JsonKey(unknownEnumValue: CheckStatus.pending) CheckStatus get status; String get createdAt; int get photoCount; List<RecipeDrug> get drugs; String? get rejectReason; List<Photo> get photos; String? get aiText;
 /// Create a copy of RecipeDetail
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1988,7 +1988,7 @@ abstract mixin class $RecipeDetailCopyWith<$Res>  {
   factory $RecipeDetailCopyWith(RecipeDetail value, $Res Function(RecipeDetail) _then) = _$RecipeDetailCopyWithImpl;
 @useResult
 $Res call({
- int id, CheckStatus status, String createdAt, int photoCount, List<RecipeDrug> drugs, String? rejectReason, List<Photo> photos, String? aiText
+ int id,@JsonKey(unknownEnumValue: CheckStatus.pending) CheckStatus status, String createdAt, int photoCount, List<RecipeDrug> drugs, String? rejectReason, List<Photo> photos, String? aiText
 });
 
 
@@ -2100,7 +2100,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  CheckStatus status,  String createdAt,  int photoCount,  List<RecipeDrug> drugs,  String? rejectReason,  List<Photo> photos,  String? aiText)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id, @JsonKey(unknownEnumValue: CheckStatus.pending)  CheckStatus status,  String createdAt,  int photoCount,  List<RecipeDrug> drugs,  String? rejectReason,  List<Photo> photos,  String? aiText)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RecipeDetail() when $default != null:
 return $default(_that.id,_that.status,_that.createdAt,_that.photoCount,_that.drugs,_that.rejectReason,_that.photos,_that.aiText);case _:
@@ -2121,7 +2121,7 @@ return $default(_that.id,_that.status,_that.createdAt,_that.photoCount,_that.dru
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  CheckStatus status,  String createdAt,  int photoCount,  List<RecipeDrug> drugs,  String? rejectReason,  List<Photo> photos,  String? aiText)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id, @JsonKey(unknownEnumValue: CheckStatus.pending)  CheckStatus status,  String createdAt,  int photoCount,  List<RecipeDrug> drugs,  String? rejectReason,  List<Photo> photos,  String? aiText)  $default,) {final _that = this;
 switch (_that) {
 case _RecipeDetail():
 return $default(_that.id,_that.status,_that.createdAt,_that.photoCount,_that.drugs,_that.rejectReason,_that.photos,_that.aiText);case _:
@@ -2141,7 +2141,7 @@ return $default(_that.id,_that.status,_that.createdAt,_that.photoCount,_that.dru
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  CheckStatus status,  String createdAt,  int photoCount,  List<RecipeDrug> drugs,  String? rejectReason,  List<Photo> photos,  String? aiText)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id, @JsonKey(unknownEnumValue: CheckStatus.pending)  CheckStatus status,  String createdAt,  int photoCount,  List<RecipeDrug> drugs,  String? rejectReason,  List<Photo> photos,  String? aiText)?  $default,) {final _that = this;
 switch (_that) {
 case _RecipeDetail() when $default != null:
 return $default(_that.id,_that.status,_that.createdAt,_that.photoCount,_that.drugs,_that.rejectReason,_that.photos,_that.aiText);case _:
@@ -2156,11 +2156,11 @@ return $default(_that.id,_that.status,_that.createdAt,_that.photoCount,_that.dru
 @JsonSerializable()
 
 class _RecipeDetail implements RecipeDetail {
-  const _RecipeDetail({required this.id, required this.status, required this.createdAt, required this.photoCount, required final  List<RecipeDrug> drugs, this.rejectReason, required final  List<Photo> photos, this.aiText}): _drugs = drugs,_photos = photos;
+  const _RecipeDetail({required this.id, @JsonKey(unknownEnumValue: CheckStatus.pending) required this.status, required this.createdAt, required this.photoCount, required final  List<RecipeDrug> drugs, this.rejectReason, required final  List<Photo> photos, this.aiText}): _drugs = drugs,_photos = photos;
   factory _RecipeDetail.fromJson(Map<String, dynamic> json) => _$RecipeDetailFromJson(json);
 
 @override final  int id;
-@override final  CheckStatus status;
+@override@JsonKey(unknownEnumValue: CheckStatus.pending) final  CheckStatus status;
 @override final  String createdAt;
 @override final  int photoCount;
  final  List<RecipeDrug> _drugs;
@@ -2213,7 +2213,7 @@ abstract mixin class _$RecipeDetailCopyWith<$Res> implements $RecipeDetailCopyWi
   factory _$RecipeDetailCopyWith(_RecipeDetail value, $Res Function(_RecipeDetail) _then) = __$RecipeDetailCopyWithImpl;
 @override @useResult
 $Res call({
- int id, CheckStatus status, String createdAt, int photoCount, List<RecipeDrug> drugs, String? rejectReason, List<Photo> photos, String? aiText
+ int id,@JsonKey(unknownEnumValue: CheckStatus.pending) CheckStatus status, String createdAt, int photoCount, List<RecipeDrug> drugs, String? rejectReason, List<Photo> photos, String? aiText
 });
 
 

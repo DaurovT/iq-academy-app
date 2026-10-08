@@ -8,25 +8,28 @@ import '../../../core/design/design.dart';
 import '../../../core/l10n/l10n.dart';
 import '../../../core/models/check.dart';
 
-/// Этап чека в редизайне 1.2: «Отправлен → Проверка → Одобрен → Начислено».
+/// Этап чека в редизайне 1.2: «Отправлен → Проверка → Одобрен → Подтверждено».
 ///
 /// Отдельного статуса «начислено» в API нет: считаем чек начисленным, когда
 /// он одобрен и уже зачтён хотя бы в один квест (есть `allocations`).
-enum CheckStage { review, approved, credited, rejected }
+/// [extraReview] — дополнительная (ручная) проверка, макет CheckReview.
+enum CheckStage { review, extraReview, approved, credited, rejected }
 
 CheckStage checkStageOf(CheckStatus s, {bool credited = false}) => switch (s) {
   CheckStatus.pending ||
   CheckStatus.aiDetected ||
   CheckStatus.aiWrong => CheckStage.review,
+  CheckStatus.review => CheckStage.extraReview,
   CheckStatus.approved => credited ? CheckStage.credited : CheckStage.approved,
   CheckStatus.rejected => CheckStage.rejected,
 };
 
 extension CheckStageUi on CheckStage {
-  /// Один цвет — одно значение: проверка — warning, одобрен — success,
-  /// начислено — info, отклонён — danger.
+  /// Один цвет — одно значение: проверка — warning, доп. проверка — violet,
+  /// одобрен — success, начислено — info, отклонён — danger.
   PqTone get tone => switch (this) {
     CheckStage.review => PqTone.warning,
+    CheckStage.extraReview => PqTone.violet,
     CheckStage.approved => PqTone.success,
     CheckStage.credited => PqTone.info,
     CheckStage.rejected => PqTone.danger,
@@ -34,6 +37,7 @@ extension CheckStageUi on CheckStage {
 
   PqIcons get icon => switch (this) {
     CheckStage.review => PqIcons.clock,
+    CheckStage.extraReview => PqIcons.shieldOk,
     CheckStage.approved => PqIcons.check,
     CheckStage.credited => PqIcons.coin,
     CheckStage.rejected => PqIcons.alertTriangle,
@@ -41,10 +45,15 @@ extension CheckStageUi on CheckStage {
 
   String label(AppLocalizations l) => switch (this) {
     CheckStage.review => l.checksStatusPending,
+    CheckStage.extraReview => l.checksStatusExtraReview,
     CheckStage.approved => l.checksStatusApproved,
     CheckStage.credited => l.checksStepCredited,
     CheckStage.rejected => l.checksStatusRejected,
   };
+
+  /// Ещё проверяется (обычная или дополнительная проверка).
+  bool get inReview =>
+      this == CheckStage.review || this == CheckStage.extraReview;
 }
 
 /// Шаги прогресса чека: 4 сегмента по 4 px (pq-seg) и подписи под ними.
@@ -69,8 +78,13 @@ class CheckSteps extends StatelessWidget {
     final l = context.l10n;
     // Пустой сегмент: #2e2f3a (border) в тёмной, #e5e7eb в светлой теме.
     final track = pq.isDark ? pq.border : const Color(0xFFE5E7EB);
+    final extra = stage == CheckStage.extraReview;
     final (List<Color> colors, int current) = switch (stage) {
       CheckStage.review => ([pq.success, pq.warning, track, track], 1),
+      CheckStage.extraReview => (
+        [pq.success, pq.tone(PqTone.violet).fg, track, track],
+        1,
+      ),
       CheckStage.approved => ([pq.success, pq.success, pq.success, track], 2),
       CheckStage.credited => ([pq.success, pq.success, pq.success, pq.info], 3),
       CheckStage.rejected => ([pq.success, pq.danger, track, track], 1),
@@ -79,9 +93,11 @@ class CheckSteps extends StatelessWidget {
       l.checksStepSent,
       stage == CheckStage.rejected
           ? l.checksStatusRejected
+          : extra
+          ? l.checksStatusExtraReview
           : l.checksStepReview,
       l.checksStepApproved,
-      l.checksStepCredited,
+      l.checksStepConfirmed,
     ];
     Widget seg(int i) {
       Widget box = Container(
@@ -91,11 +107,15 @@ class CheckSteps extends StatelessWidget {
           borderRadius: BorderRadius.circular(2),
         ),
       );
-      if (stage == CheckStage.review && i == current) {
+      if (stage.inReview && i == current) {
         box = PqBreath(child: box);
       }
-      return animate ? PqSegFill(index: i, child: box) : box;
+      // В макете CheckReview сегменты без pq-seg (не «заполняются»).
+      return animate && !extra ? PqSegFill(index: i, child: box) : box;
     }
+
+    // CheckReview: колонки 1 : 1.4 : 1 : 1 — «Доп. проверка» в одну строку.
+    int flex(int i) => extra && i == 1 ? 14 : 10;
 
     return Semantics(
       label: labels[current],
@@ -106,7 +126,7 @@ class CheckSteps extends StatelessWidget {
             children: [
               for (var i = 0; i < 4; i++) ...[
                 if (i > 0) const SizedBox(width: 4),
-                Expanded(child: seg(i)),
+                Expanded(flex: flex(i), child: seg(i)),
               ],
             ],
           ),
@@ -118,9 +138,14 @@ class CheckSteps extends StatelessWidget {
                 for (var i = 0; i < 4; i++) ...[
                   if (i > 0) const SizedBox(width: 4),
                   Expanded(
+                    flex: flex(i),
                     child: Text(
                       labels[i],
-                      maxLines: 2,
+                      // Одно слово не переносим по буквам («Подтверждено»):
+                      // как в CSS, оно может чуть выйти за колонку.
+                      maxLines: labels[i].contains(' ') && !(extra && i == 1) ? 2 : 1,
+                      softWrap: labels[i].contains(' ') && !(extra && i == 1),
+                      overflow: TextOverflow.visible,
                       style: PqText.text(
                         12,
                         i == current ? FontWeight.w700 : FontWeight.w500,

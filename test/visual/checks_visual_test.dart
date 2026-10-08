@@ -83,6 +83,7 @@ CheckDetail _detail(int id, CheckStatus s, String at, int photos,
     );
 
 final _pending = _detail(11203, CheckStatus.pending, '2026-06-28T09:12:00', 2);
+final _review = _detail(11240, CheckStatus.review, '2026-10-07T11:20:00', 2);
 final _approvedD = _detail(23345, CheckStatus.approved, '2026-06-30T18:38:00', 1,
     drugs: const [CheckDrug(name: 'Бронхо Веда', packs: 56)]);
 final _credited = _detail(23156, CheckStatus.approved, '2026-06-29T18:15:00', 1,
@@ -159,6 +160,7 @@ void main() {
 
   for (final (name, d, h) in [
     ('CheckPending', _pending, 1160.0),
+    ('CheckReview', _review, 1333.0),
     ('CheckApproved', _approvedD, 1080.0),
     ('CheckCredited', _credited, 1070.0),
     ('CheckRejected', _rejected, 1000.0),

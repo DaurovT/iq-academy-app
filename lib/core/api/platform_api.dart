@@ -74,6 +74,9 @@ abstract interface class AuthApi {
   Future<Session> register(
       Role role, String schemaVersion, Map<String, dynamic> values,
       {String? oauthLinkToken});
+
+  /// Проверка кодового слова медпреда на экране регистрации.
+  Future<MedrepCodeCheck> checkMedrepCode(String code);
   Future<TgLoginStart> telegramStart();
   Future<TgPollResult> telegramPoll(String nonce);
 
@@ -163,11 +166,19 @@ abstract interface class MedrepApi {
   Future<DoctorsOverview> doctors({int? questId});
   Future<Leaderboard> leaderboard(String metric);
   Future<List<MedrepQuest>> quests();
-  Future<String> reflink();
+
+  /// Кодовое слово медпреда для приглашения в команду.
+  Future<MedrepCode> code();
+
+  /// Команда: врачи и фармацевты медпреда.
+  Future<MedrepTeam> team();
   Future<List<Company>> companies();
   Future<List<PendingReferral>> pendingReferrals();
-  Future<void> acceptReferral(int id);
-  Future<void> rejectReferral(int id);
+
+  /// Принять/отклонить заявку. [kind]: 'app' — из приложения (кодовое слово),
+  /// 'bot' — из бота (см. docs/medrep-team-api.md).
+  Future<void> acceptReferral(int id, {String kind = 'bot'});
+  Future<void> rejectReferral(int id, {String kind = 'bot'});
   Future<void> incentivize(int telegramId, int rating, String note);
 }
 

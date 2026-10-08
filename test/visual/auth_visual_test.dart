@@ -153,15 +153,19 @@ void main() {
     ),
   );
 
-  for (final doctor in [false, true]) {
-    final name = doctor ? 'RegDoctor' : 'RegPharmacist';
+  // RegDoctor — верное кодовое слово, RegDoctorCode — такого слова нет.
+  for (final (name, doctor, code, h) in [
+    ('RegPharmacist', false, null, 1130.0),
+    ('RegDoctor', true, 'DAUROV', 1360.0),
+    ('RegDoctorCode', true, 'DAUROF', 1290.0),
+  ]) {
     pqShotBoth(
       name,
       (t, dark) => pqShot(
         t,
         name: name,
         dark: dark,
-        height: doctor ? 1280 : 1080,
+        height: h,
         overrides: [
           ...base,
           registrationSchemaProvider.overrideWith((ref, role) async => fixtureSchema(role)),
@@ -179,6 +183,13 @@ void main() {
             await t.tap(find.text('Педиатр'));
             await t.pump();
             await t.tap(find.text('Терапевт'));
+            await t.pump();
+            // Поля: ФИО, телефон, клиника, кодовое слово.
+            await t.enterText(find.byType(TextField).at(3), code!);
+            FocusManager.instance.primaryFocus?.unfocus();
+            for (var i = 0; i < 6; i++) {
+              await t.pump(const Duration(milliseconds: 100));
+            }
           } else {
             await t.tap(find.byType(TextField).first);
           }

@@ -36,9 +36,24 @@ bool sapperIsVoucher(String label) {
   return s.contains('ваучер') || s.contains('voucher') || s.contains('vaucher');
 }
 
-/// «10 IQC» → «+10 IQC» (как в макете); ваучер — без изменений.
-String sapperPrizeText(String label) =>
-    RegExp(r'^\d').hasMatch(label.trim()) ? '+${label.trim()}' : label;
+/// Подпись приза для показа. У ваучера убираем валюту: это карта магазина,
+/// пишем только номинал («ваучер 13 000 сум» → «ваучер 13 000»).
+String sapperPrizeLabel(String label) {
+  final s = label.trim();
+  if (!sapperIsVoucher(s)) return s;
+  return s
+      .replaceFirst(
+        RegExp(r"\s*(сум|сўм|сом|so['‘’ʻ`]?m|uzs|iqc)\.?\s*$", caseSensitive: false),
+        '',
+      )
+      .trim();
+}
+
+/// «10 IQC» → «+10 IQC» (как в макете); ваучер — номинал без валюты.
+String sapperPrizeText(String label) {
+  final s = sapperPrizeLabel(label);
+  return RegExp(r'^\d').hasMatch(s) ? '+$s' : s;
+}
 
 /// Число из подписи IQC-приза для клетки поля: «10 IQC» → «10».
 String? sapperPrizeAmount(String label) =>
@@ -236,7 +251,7 @@ class SapperPrizeChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SapperGlassPill(
-        '$count × $label',
+        '$count × ${sapperPrizeLabel(label)}',
         icon: sapperIsVoucher(label) ? PqIcons.ticket : PqIcons.coins,
         alpha: .16,
       );

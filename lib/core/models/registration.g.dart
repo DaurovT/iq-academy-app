@@ -27,6 +27,8 @@ _RegField _$RegFieldFromJson(Map<String, dynamic> json) => _RegField(
           ?.map((e) => RegOption.fromJson(e as Map<String, dynamic>))
           .toList(),
   consentUrl: json['consentUrl'] as String?,
+  hint: const LocalizedTextConverter().fromJson(json['hint']),
+  maxLength: (json['maxLength'] as num?)?.toInt(),
 );
 
 Map<String, dynamic> _$RegFieldToJson(_RegField instance) => <String, dynamic>{
@@ -36,6 +38,11 @@ Map<String, dynamic> _$RegFieldToJson(_RegField instance) => <String, dynamic>{
   'required': instance.required,
   'options': instance.options,
   'consentUrl': instance.consentUrl,
+  'hint': _$JsonConverterToJson<Object?, LocalizedText>(
+    instance.hint,
+    const LocalizedTextConverter().toJson,
+  ),
+  'maxLength': instance.maxLength,
 };
 
 const _$RegFieldTypeEnumMap = {
@@ -45,6 +52,11 @@ const _$RegFieldTypeEnumMap = {
   RegFieldType.multiselect: 'multiselect',
   RegFieldType.consent: 'consent',
 };
+
+Json? _$JsonConverterToJson<Json, Value>(
+  Value? value,
+  Json? Function(Value value) toJson,
+) => value == null ? null : toJson(value);
 
 _RegistrationSchema _$RegistrationSchemaFromJson(Map<String, dynamic> json) =>
     _RegistrationSchema(

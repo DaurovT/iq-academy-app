@@ -12,6 +12,10 @@ enum CheckStatus {
   aiDetected,
   @JsonValue('ai_wrong')
   aiWrong,
+
+  /// Дополнительная (ручная) проверка — макеты CheckReview / RxReview.
+  @JsonValue('review')
+  review,
   @JsonValue('approved')
   approved,
   @JsonValue('rejected')
@@ -24,6 +28,7 @@ extension CheckStatusL10n on CheckStatus {
         CheckStatus.pending => l10n.checkModelStatusPending,
         CheckStatus.aiDetected => l10n.checkModelStatusAiDetected,
         CheckStatus.aiWrong => l10n.checkModelStatusAiWrong,
+        CheckStatus.review => l10n.checksStatusExtraReview,
         CheckStatus.approved => l10n.checkModelStatusApproved,
         CheckStatus.rejected => l10n.checkModelStatusRejected,
       };
@@ -54,7 +59,7 @@ abstract class Photo with _$Photo {
 abstract class Check with _$Check {
   const factory Check({
     required int id,
-    required CheckStatus status,
+    @JsonKey(unknownEnumValue: CheckStatus.pending) required CheckStatus status,
     required String createdAt,
     required int photoCount,
     required List<CheckDrug> drugs,
@@ -80,7 +85,7 @@ abstract class CheckAllocation with _$CheckAllocation {
 abstract class CheckDetail with _$CheckDetail {
   const factory CheckDetail({
     required int id,
-    required CheckStatus status,
+    @JsonKey(unknownEnumValue: CheckStatus.pending) required CheckStatus status,
     required String createdAt,
     required int photoCount,
     required List<CheckDrug> drugs,
@@ -111,7 +116,7 @@ abstract class RecipeDrug with _$RecipeDrug {
 abstract class Recipe with _$Recipe {
   const factory Recipe({
     required int id,
-    required CheckStatus status,
+    @JsonKey(unknownEnumValue: CheckStatus.pending) required CheckStatus status,
     required String createdAt,
     required int photoCount,
     required List<RecipeDrug> drugs,
@@ -125,7 +130,7 @@ abstract class Recipe with _$Recipe {
 abstract class RecipeDetail with _$RecipeDetail {
   const factory RecipeDetail({
     required int id,
-    required CheckStatus status,
+    @JsonKey(unknownEnumValue: CheckStatus.pending) required CheckStatus status,
     required String createdAt,
     required int photoCount,
     required List<RecipeDrug> drugs,

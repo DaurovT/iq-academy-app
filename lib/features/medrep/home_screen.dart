@@ -23,22 +23,20 @@ class MedrepHome extends ConsumerStatefulWidget {
 class _MedrepHomeState extends ConsumerState<MedrepHome> {
   String _period = 'all';
 
-  static const _fallbackLink = 'https://t.me/PharmQuestBot?start=ref_';
-
   Future<void> _refresh() async {
     ref.invalidate(medrepMetricsProvider);
-    ref.invalidate(medrepReflinkProvider);
-    ref.invalidate(portfolioProvider);
+    ref.invalidate(medrepCodeProvider);
+    ref.invalidate(medrepTeamProvider);
     ref.invalidate(leaderboardProvider('checks'));
     ref.invalidate(companiesProvider);
     ref.invalidate(unreadCountProvider);
-    await ref.read(portfolioProvider.future).catchError((_) => <PortfolioPharmacist>[]);
+    await ref.read(medrepTeamProvider.future).then((_) {}, onError: (_) {});
   }
 
   @override
   Widget build(BuildContext context) {
     final l = context.l10n;
-    final portfolio = ref.watch(portfolioProvider);
+    final team = ref.watch(medrepTeamProvider);
     final unread = ref.watch(unreadCountProvider).asData?.value ?? 0;
     return PqScreen(
       safeBottom: false,
@@ -51,14 +49,16 @@ class _MedrepHomeState extends ConsumerState<MedrepHome> {
         Expanded(
           child: PqRefresh(
             onRefresh: _refresh,
-            child: PqAsync<List<PortfolioPharmacist>>(
-              value: portfolio,
+            child: PqAsync<MedrepTeam>(
+              value: team,
               loading: PqLoadingKind.home,
-              onRetry: () => ref.invalidate(portfolioProvider),
-              data: (items) => SingleChildScrollView(
+              onRetry: () => ref.invalidate(medrepTeamProvider),
+              data: (t) => SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 padding: const EdgeInsets.fromLTRB(16, 4, 16, kPqNavClearance),
-                child: items.isEmpty ? _empty(context) : _content(context, items),
+                child: t.doctors.isEmpty && t.pharmacists.isEmpty
+                    ? _empty(context)
+                    : _content(context, t),
               ),
             ),
           ),
@@ -78,17 +78,16 @@ class _MedrepHomeState extends ConsumerState<MedrepHome> {
     return c == null || c.isEmpty ? null : c;
   }
 
-  String get _link =>
-      ref.watch(medrepReflinkProvider).asData?.value ?? _fallbackLink;
+  /// Кодовое слово (null — ещё грузится или не пришло).
+  String? get _code => ref.watch(medrepCodeProvider).asData?.value.code;
 
-  Widget _title(BuildContext context, {String? attribution}) {
+  /// Приветствие и компания (в обновлённом макете MedHome — без атрибуции).
+  Widget _title(BuildContext context) {
     final l = context.l10n;
     final name = _name;
-    final company = _company;
-    final parts = [if (company != null) company, if (attribution != null) attribution];
     return PqPageTitle(
       name.isEmpty ? l.medrepHomeGreetingNoName : l.medrepHelloName(name),
-      subtitle: parts.isEmpty ? null : parts.join(' · '),
+      subtitle: _company,
     );
   }
 
@@ -97,7 +96,7 @@ class _MedrepHomeState extends ConsumerState<MedrepHome> {
   Widget _empty(BuildContext context) {
     final pq = context.pq;
     final l = context.l10n;
-    final link = _link;
+    final code = _code;
     Widget step(PqIcons icon, String title, String text) => Padding(
           padding: const EdgeInsets.symmetric(vertical: 12),
           child: Row(children: [
@@ -127,7 +126,8 @@ class _MedrepHomeState extends ConsumerState<MedrepHome> {
         message: l.medrepEmptyText,
       ),
       PqListCard(children: [
-        step(PqIcons.share, l.medrepStep1Title, l.medrepStep1Text),
+        step(PqIcons.share, l.medrepStep1Title,
+            code == null ? l.medrepStep1Text : l.medrepStep1TextCode(code)),
         step(PqIcons.userPlus, l.medrepStep2Title, l.medrepStep2Text),
         step(PqIcons.barChart, l.medrepStep3Title, l.medrepStep3Text),
       ]),
@@ -135,17 +135,17 @@ class _MedrepHomeState extends ConsumerState<MedrepHome> {
         PqButton(
           label: l.medrepInviteTitle,
           icon: PqIcons.share,
-          onPressed: () => medCopyLink(context, link),
+          onPressed: () => context.push('/app/portfolio/invite'),
         ),
         const SizedBox(height: 8),
         MedOutlineButton(
-          label: l.medrepCopyLink,
+          label: l.medrepCopyCode,
           icon: PqIcons.copy,
           height: 52,
           fontSize: 16,
           transparent: true,
           expand: true,
-          onTap: () => medCopyLink(context, link),
+          onTap: code == null ? null : () => medCopyCode(context, code),
         ),
       ]),
     ]);
@@ -153,24 +153,24 @@ class _MedrepHomeState extends ConsumerState<MedrepHome> {
 
   // ── MedHome ────────────────────────────────────────────────────────────
 
-  Widget _content(BuildContext context, List<PortfolioPharmacist> items) {
+  Widget _content(BuildContext context, MedrepTeam team) {
     final l = context.l10n;
+    final teamSize = team.doctors.length + team.pharmacists.length;
     final metrics = ref.watch(medrepMetricsProvider(_period));
-    final mode = metrics.asData?.value.mode;
-    final attribution = mode == null
-        ? null
-        : mode == AttributionMode.primary
-            ? l.medrepAttrPrimary
-            : l.medrepAttrShared;
     final showRating = ref.moduleVisible('leaderboard');
     final board = showRating
         ? ref.watch(leaderboardProvider('checks')).asData?.value
         : null;
     final showPortfolio = ref.moduleVisible('medrep_portfolio');
-    final top = [...items]..sort((a, b) => b.checks.compareTo(a.checks));
+    // «Самые активные» — фармацевты по чекам (карточка открывается по
+    // Telegram-id, поэтому без него в топ не берём).
+    final top = [
+      for (final p in team.pharmacists)
+        if (p.telegramId != null) p,
+    ]..sort((a, b) => b.checks.compareTo(a.checks));
 
     return PqStagger(gap: 24, children: [
-      _title(context, attribution: attribution),
+      _title(context),
       Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         PqSegmented<String>(
           values: const ['all', '30', '7'],
@@ -185,6 +185,7 @@ class _MedrepHomeState extends ConsumerState<MedrepHome> {
         const SizedBox(height: 12),
         _StatsGrid(
           metrics: metrics,
+          teamSize: teamSize,
           onRetry: () => ref.invalidate(medrepMetricsProvider(_period)),
         ),
       ]),
@@ -194,7 +195,7 @@ class _MedrepHomeState extends ConsumerState<MedrepHome> {
         Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
           PqSectionHeader(
             l.medrepMostActive,
-            actionLabel: l.medrepAllN(items.length),
+            actionLabel: l.medrepAllTeam,
             onAction: () => context.go('/app/portfolio'),
           ),
           const SizedBox(height: 8),
@@ -213,7 +214,7 @@ class _MedrepHomeState extends ConsumerState<MedrepHome> {
               ),
           ]),
         ]),
-      _InviteCard(link: _link),
+      _InviteCard(code: _code),
       _Menu(),
     ]);
   }
@@ -222,8 +223,14 @@ class _MedrepHomeState extends ConsumerState<MedrepHome> {
 // ── Показатели 2×2 ───────────────────────────────────────────────────────
 
 class _StatsGrid extends StatelessWidget {
-  const _StatsGrid({required this.metrics, required this.onRetry});
+  const _StatsGrid({
+    required this.metrics,
+    required this.teamSize,
+    required this.onRetry,
+  });
 
+  /// Сколько человек в команде (врачи + фармацевты) — первая плитка.
+  final int teamSize;
   final AsyncValue<MedrepMetrics> metrics;
   final VoidCallback onRetry;
 
@@ -268,7 +275,7 @@ class _StatsGrid extends StatelessWidget {
         );
     return Column(children: [
       Row(children: [
-        card(0, PqIcons.users, accent, m?.pharmCount, l.medrepUnitPharm),
+        card(0, PqIcons.users, accent, teamSize, (_) => l.medrepUnitInTeam),
         const SizedBox(width: 12),
         card(1, PqIcons.receipt, success, m?.checksCount, l.medrepUnitChecks),
       ]),
@@ -421,47 +428,66 @@ class _RatingCard extends StatelessWidget {
   }
 }
 
-// ── Пригласить провизора ─────────────────────────────────────────────────
+// ── Пригласить в команду ─────────────────────────────────────────────────
 
+/// Карточка приглашения (MedHome): кодовое слово в пунктирной рамке,
+/// «Копировать» и «Поделиться». Ссылки-приглашения в приложении нет.
 class _InviteCard extends StatelessWidget {
-  const _InviteCard({required this.link});
+  const _InviteCard({required this.code});
 
-  final String link;
+  final String? code;
 
   @override
   Widget build(BuildContext context) {
     final pq = context.pq;
     final l = context.l10n;
-    final shown = link.replaceFirst(RegExp(r'^https?://'), '');
+    final c = code;
     return PqCard(
       padding: const EdgeInsets.all(18),
       radius: 22,
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const PqIconTile(PqIcons.userPlus, size: 40, iconSize: 20),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(l.medrepInviteTitle, style: PqText.title(c: pq.text)),
-              const SizedBox(height: 2),
-              Text(l.medrepInviteText, style: PqText.body(c: pq.textMuted)),
+        PqPressable(
+          onTap: () => context.push('/app/portfolio/invite'),
+          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            const PqIconTile(PqIcons.userPlus, size: 40, iconSize: 20),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(l.medrepInviteTitle, style: PqText.title(c: pq.text)),
+                const SizedBox(height: 2),
+                Text(l.medrepInviteText, style: PqText.body(c: pq.textMuted)),
+              ]),
+            ),
+          ]),
+        ),
+        const SizedBox(height: 14),
+        Text(l.medrepYourCode.toUpperCase(), style: PqText.overline(c: pq.textMuted)),
+        const SizedBox(height: 6),
+        CustomPaint(
+          foregroundPainter: MedDashedBorder(color: pq.accentText, radius: 16),
+          child: Container(
+            height: 60,
+            padding: const EdgeInsets.only(left: 18, right: 8),
+            decoration: BoxDecoration(
+              color: pq.surfaceAlt,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Row(children: [
+              Expanded(child: MedCodeWord(c, size: 28, spacing: 6)),
+              const SizedBox(width: 12),
+              PqPressable(
+                onTap: c == null ? null : () => medCopyCode(context, c),
+                semanticLabel: l.medrepCopyCode,
+                child: SizedBox(
+                  width: 44,
+                  height: 44,
+                  child: Center(
+                    child: PqIcon(PqIcons.copy, size: 20, color: pq.accentText),
+                  ),
+                ),
+              ),
             ]),
           ),
-        ]),
-        const SizedBox(height: 14),
-        Container(
-          height: 48,
-          padding: const EdgeInsets.symmetric(horizontal: 14),
-          alignment: Alignment.centerLeft,
-          decoration: BoxDecoration(
-            color: pq.surfaceAlt,
-            borderRadius: BorderRadius.circular(14),
-          ),
-          child: Text(shown,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              softWrap: false,
-              style: PqText.text(14, FontWeight.w400, c: pq.textSecondary)),
         ),
         const SizedBox(height: 14),
         Row(children: [
@@ -473,7 +499,7 @@ class _InviteCard extends StatelessWidget {
               radius: 14,
               transparent: true,
               expand: true,
-              onTap: () => medCopyLink(context, link),
+              onTap: c == null ? null : () => medCopyCode(context, c),
             ),
           ),
           const SizedBox(width: 10),
@@ -482,7 +508,7 @@ class _InviteCard extends StatelessWidget {
               label: l.medrepHomeShare,
               icon: PqIcons.share,
               iconGap: 8,
-              onTap: () => medCopyLink(context, link),
+              onTap: c == null ? null : () => medShareCode(context, c),
             ),
           ),
         ]),

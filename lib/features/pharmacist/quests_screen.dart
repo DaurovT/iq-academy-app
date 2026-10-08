@@ -361,7 +361,10 @@ class _HowItWorks extends StatelessWidget {
         l.questsStepSendTitle,
         recipes ? l.questsStepSendRecipeSub : l.questsStepSendCheckSub,
       ),
-      (PqIcons.gift, l.questsStepGetTitle, l.questsStepGetSub),
+      // Врач (DocQuests) — «Дождитесь проверки», фармацевт (Quests) — «Выполните условия».
+      recipes
+          ? (PqIcons.gift, l.questsStepWaitTitle, l.questsStepWaitSub)
+          : (PqIcons.squareCheck, l.questsStepDoTitle, l.questsStepDoSub),
     ];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,

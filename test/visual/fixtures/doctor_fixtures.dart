@@ -103,6 +103,13 @@ const rx4 = Recipe(
     photoCount: 1,
     drugs: [RecipeDrug(name: 'Доритрицин N10', qty: 2)]);
 
+const rx5 = Recipe(
+    id: 5,
+    status: CheckStatus.review,
+    createdAt: '2026-10-07T11:20:00',
+    photoCount: 1,
+    drugs: []);
+
 const _photo = [Photo(id: 1, url: 'https://example.invalid/rx.jpg')];
 
 const ocrText = 'DMED · Oddiy · Bemor tomonidan to\'lanadi\n'
@@ -142,6 +149,13 @@ final details = <int, RecipeDetail>{
       photoCount: 1,
       drugs: [],
       rejectReason: 'На фото не видно печати и подписи',
+      photos: _photo),
+  5: const RecipeDetail(
+      id: 5,
+      status: CheckStatus.review,
+      createdAt: '2026-10-07T11:20:00',
+      photoCount: 1,
+      drugs: [],
       photos: _photo),
   4: const RecipeDetail(
       id: 4,

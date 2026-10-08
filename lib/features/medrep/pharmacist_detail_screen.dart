@@ -42,8 +42,8 @@ class MedrepPharmacistDetailScreen extends ConsumerWidget {
       safeBottom: false,
       child: Column(children: [
         PqTopBar(
-          title: l.portfolioTitle,
-          backLabel: l.pharmDetailBack,
+          title: l.medrepTeamTitle,
+          backLabel: l.medrepTeamTitle,
           onBack: () => medBack(context, '/app/portfolio'),
         ),
         Expanded(

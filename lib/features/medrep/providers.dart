@@ -16,9 +16,14 @@ final medrepMetricsProvider =
   return ref.watch(apiProvider).medrep.metrics(dateFrom: dateFrom);
 });
 
-/// Реферальная ссылка медпреда для привязки провизоров.
-final medrepReflinkProvider = FutureProvider<String>((ref) {
-  return ref.watch(apiProvider).medrep.reflink();
+/// Кодовое слово медпреда — по нему врачи и фармацевты попадают в команду.
+final medrepCodeProvider = FutureProvider<MedrepCode>((ref) {
+  return ref.watch(apiProvider).medrep.code();
+});
+
+/// Команда медпреда: врачи и фармацевты.
+final medrepTeamProvider = FutureProvider<MedrepTeam>((ref) {
+  return ref.watch(apiProvider).medrep.team();
 });
 
 final portfolioProvider = FutureProvider<List<PortfolioPharmacist>>((ref) {

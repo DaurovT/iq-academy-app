@@ -722,6 +722,7 @@ String _statusLabel(AppLocalizations l, CheckStatus s) => switch (s) {
   CheckStatus.pending => l.checkModelStatusPending,
   CheckStatus.aiDetected => l.checkModelStatusAiDetected,
   CheckStatus.aiWrong => l.checkModelStatusAiWrong,
+  CheckStatus.review => l.checksStatusExtraReview,
   CheckStatus.approved => l.checkModelStatusApproved,
   CheckStatus.rejected => l.checkModelStatusRejected,
 };

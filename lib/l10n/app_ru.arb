@@ -20,8 +20,8 @@
   "navWallet": "Кошелёк",
   "navRecipes": "Бланки",
   "navPortfolio": "Портфель",
-  "navPharm": "Фарм.",
-  "navTop": "Топ",
+  "navPharm": "Команда",
+  "navTop": "Рейтинг",
   "navDashboard": "Дашборд",
   "navProducts": "Продукты",
   "navBrands": "Бренды",
@@ -1421,7 +1421,7 @@
   },
   "sapperStep2Title": "Дождитесь подведения итогов",
   "sapperStep2Text": "Раз в неделю поле открывается для всех",
-  "sapperStep3Title": "Получите приз",
+  "sapperStep3Title": "Получите результат",
   "sapperStep3Text": "IQC зачислим на баланс, ваучер появится в кошельке",
   "sapperSelectHint": "Нажмите на свободные клетки, чтобы выбрать",
   "sapperSelectedHint": "Выбрано: {n} · спишем {price} IQC",
@@ -1526,8 +1526,8 @@
   },
   "sapperPlayNew": "Участвовать в новой акции",
   "sapperViewResults": "Посмотреть итоги",
-  "questsSubtitle": "Продавайте и получайте награды",
-  "questsSubtitleDoctor": "Выписывайте бланки и получайте награды",
+  "questsSubtitle": "Фиксируйте свои продажи",
+  "questsSubtitleDoctor": "Фиксируйте случаи выписки",
   "questsSearchLabel": "Поиск квестов",
   "questsTabDone": "Завершённые",
   "questsSortHint": "Сначала — ближе всего к награде",
@@ -1566,9 +1566,7 @@
   "questsStepSendTitle": "Отправьте",
   "questsStepSendCheckSub": "фото чека",
   "questsStepSendRecipeSub": "фото бланка",
-  "questsStepGetTitle": "Получите",
-  "questsStepGetSub": "награду",
-  "questsDoneFooter": "Здесь хранятся выполненные и завершённые квесты — с датой и полученной наградой",
+  "questsDoneFooter": "Здесь хранятся выполненные и завершённые квесты — с датой и с результатом",
   "questsDoneOn": "Выполнен · {date}",
   "@questsDoneOn": {
     "placeholders": {
@@ -1622,7 +1620,7 @@
       }
     }
   },
-  "questsRewardManual": "Выдаётся вручную после проверки",
+  "questsRewardManual": "Выдаётся после проверки",
   "questsRewardIqcSub": "Баллы придут на баланс после проверки",
   "questsRewardReceived": "Награда получена",
   "questsStepSellDrug": "Продайте {drug}",
@@ -1658,18 +1656,9 @@
     }
   },
   "questsStepPhotoCheck": "Сфотографируйте чек",
-  "questsStepPhotoCheckSub": "ИИ проверит упаковку автоматически",
+  "questsStepPhotoCheckSub": "Ваш чек будет отправлен на проверку",
   "questsStepPhotoRecipe": "Сфотографируйте бланк",
-  "questsStepPhotoRecipeSub": "ИИ проверит бланк автоматически",
-  "questsStepGetVoucher": "Получите ваучер",
-  "questsStepGetIqc": "Получите {n} IQC",
-  "@questsStepGetIqc": {
-    "placeholders": {
-      "n": {
-        "type": "int"
-      }
-    }
-  },
+  "questsStepPhotoRecipeSub": "Ваш бланк будет отправлен на проверку",
   "questsConditionsTitle": "Условия",
   "questsSalesLimit": "Лимит продаж",
   "questsRecipesLimit": "Лимит бланков",
@@ -2048,7 +2037,7 @@
   "learnRowVideo": "Видеоурок",
   "learnRowQuiz": "Тест",
   "learnRowQuizLocked": "Откроется после видео",
-  "learnRowRewardPending": "Начислим после теста",
+  "learnRowRewardPending": "После прохождения теста",
   "learnRowRewardDone": "Начислено",
   "learnLessonOf": "Урок {i} из {n}",
   "@learnLessonOf": {
@@ -2134,7 +2123,7 @@
       }
     }
   },
-  "rxHomeSubtitle": "Отправляйте бланки и получайте награды",
+  "rxHomeSubtitle": "Фиксируйте случаи выписки",
   "rxHomeBellLabel": "Уведомления",
   "rxHomeBellUnread": "Уведомления, есть новые",
   "rxHomeStatQuests": "{n, plural, one{активный квест} few{активных квеста} many{активных квестов} other{активного квеста}}",
@@ -2230,7 +2219,7 @@
   "rxStateApprovedTitle": "Бланк одобрен",
   "rxStateApprovedText": "Всё в порядке. IQC поступят на баланс в ближайшее время",
   "rxStateRejectedTitle": "Бланк отклонён",
-  "rxStateRejectedHint": "Сфотографируйте бланк целиком при хорошем свете — баллы ещё можно получить",
+  "rxStateRejectedHint": "Сфотографируйте бланк целиком при хорошем свете",
   "rxStepSent": "Отправлен",
   "rxStepReview": "Проверка",
   "rxStepApproved": "Одобрен",
@@ -2609,22 +2598,22 @@
       }
     }
   },
-  "medrepInviteTitle": "Пригласить провизора",
-  "medrepInviteText": "Отправьте ссылку — после регистрации провизор попадёт в ваш портфель",
+  "medrepInviteTitle": "Пригласить в команду",
+  "medrepInviteText": "Врач вводит кодовое слово при регистрации. Фармацевт — по желанию",
   "medrepCopyLink": "Скопировать ссылку",
-  "medrepPendingSub": "Провизоры, которые перешли по ссылке",
+  "medrepPendingSub": "Ждут, когда вы добавите их в команду",
   "medrepCompaniesSub": "Аптечные сети в портфеле",
   "medrepDoctorsSub": "Прогресс по квесту на бланки",
-  "medrepEmptyTitle": "Портфель пока пуст",
-  "medrepEmptyText": "Пригласите провизоров по ссылке — их чеки и статистика появятся здесь",
-  "medrepStep1Title": "Отправьте ссылку",
-  "medrepStep1Text": "В Telegram или по SMS",
-  "medrepStep2Title": "Провизор регистрируется",
-  "medrepStep2Text": "Он сразу попадает в ваш портфель",
-  "medrepStep3Title": "Следите за чеками",
-  "medrepStep3Text": "Статистика появится здесь",
+  "medrepEmptyTitle": "Команда пока пуста",
+  "medrepEmptyText": "Пригласите врачей и фармацевтов — их бланки, чеки и статистика появятся здесь",
+  "medrepStep1Title": "Поделитесь кодовым словом",
+  "medrepStep1Text": "Его вводят при регистрации",
+  "medrepStep2Title": "Коллега регистрируется",
+  "medrepStep2Text": "Врач с кодовым словом — сразу в команде",
+  "medrepStep3Title": "Следите за результатами",
+  "medrepStep3Text": "Бланки и чеки появятся здесь",
   "medrepUpdatedNow": "Обновлено сейчас",
-  "medrepSearchHint": "Имя, аптека или город",
+  "medrepSearchHint": "Имя, аптека, клиника или город",
   "medrepFilterAll": "Все",
   "medrepFilterActive": "Активные",
   "medrepFilterPassive": "Пассивные",
@@ -2633,7 +2622,7 @@
   "medrepFilterRejected": "Отклонены",
   "medrepClear": "Очистить",
   "medrepNotFoundTitle": "Никого не нашли",
-  "medrepNotFoundText": "По запросу «{query}» провизоров нет. Проверьте написание или поищите по названию аптеки",
+  "medrepNotFoundText": "По запросу «{query}» никого нет. Проверьте написание или поищите по аптеке или клинике",
   "@medrepNotFoundText": {
     "placeholders": {
       "query": {
@@ -2706,7 +2695,7 @@
     }
   },
   "medrepNotRankedTitle": "Вас пока нет в рейтинге",
-  "medrepNotRankedText": "Место считается по чекам ваших провизоров. Пригласите первого — и вы появитесь в списке",
+  "medrepNotRankedText": "Место считается по чекам вашей команды. Пригласите первого — и вы появитесь в списке",
   "medrepRatingEmpty": "Рейтинг пока пуст",
   "medrepQuestsSub": "Прогресс ваших провизоров",
   "medrepQuestRunning": "Идёт",
@@ -2800,7 +2789,7 @@
   },
   "medrepShow": "Показать",
   "medrepHide": "Свернуть",
-  "medrepPendingText": "Перешли по вашей ссылке и ждут, когда вы добавите их в портфель",
+  "medrepPendingText": "Ждут, когда вы добавите их в команду",
   "medrepFollowedLink": "Перешёл по ссылке · {ago}",
   "@medrepFollowedLink": {
     "placeholders": {
@@ -3078,7 +3067,7 @@
   "checksUploadQueued": "Ждёт отправки",
   "checksUploadAuto": "Отправим автоматически, когда появится связь",
   "checksEmptyTitle": "Здесь появятся ваши чеки",
-  "checksEmptyText": "Сфотографируйте чек из аптеки — ИИ распознает препараты, и вы получите IQC",
+  "checksEmptyText": "Сфотографируйте чек — после проверки ваш результат будет учтён",
   "checksHowToTitle": "Как сфотографировать",
   "checksHow1Title": "Весь чек в кадре",
   "checksHow1Text": "Все четыре угла видны",
@@ -3481,5 +3470,116 @@
         "type": "int"
       }
     }
-  }
+  },
+  "checksStepConfirmed": "Подтверждено",
+  "rxStepConfirmed": "Подтверждено",
+  "questsStepDoTitle": "Выполните",
+  "questsStepDoSub": "условия",
+  "questsStepWaitTitle": "Дождитесь",
+  "questsStepWaitSub": "проверки",
+  "questsStepWaitCheck": "Дождитесь проверки",
+  "questsStepWaitCheckSub": "Повторно отправлять чек не нужно",
+  "questsStepWaitRecipe": "Ожидайте подтверждения бланка",
+  "questsStepWaitRecipeSub": "Первичная проверка занимает до 24 часов",
+  "learnTileResult": "Результат",
+  "checksStatusExtraReview": "Доп. проверка",
+  "checksHeroExtraTitle": "Чек на дополнительной проверке",
+  "checksHeroExtraText": "Проверка займёт больше времени, чем обычно",
+  "rxStateExtraTitle": "Бланк на дополнительной проверке",
+  "rxStateExtraText": "Бланк передан на дополнительную проверку специалисту. Это займёт больше времени — пришлём уведомление, когда будет решение",
+  "checksExtraNoteTitle": "Ничего делать не нужно",
+  "checksExtraNoteText": "Иногда чек требует дополнительной сверки — например, если часть данных плохо читается. Решение придёт в уведомлениях и появится здесь",
+  "rxExtraNoteText": "Иногда бланк требует ручной сверки — например, если часть данных плохо читается. Решение придёт в уведомлениях и появится здесь",
+  "rxExtraHint": "Решение придёт в уведомлениях",
+  "regCodeLabel": "Кодовое слово медпреда",
+  "regCodeOptional": "· необязательно",
+  "regCodeExample": "Например, DAUROV",
+  "regCodeNoteDoctor": "Кодовое слово даёт ваш медпред. Без него регистрация врача недоступна",
+  "regCodeNotePharm": "Если вас пригласил медицинский представитель",
+  "regCodeNotFound": "Такого кодового слова нет. Проверьте буквы или уточните у своего медпреда",
+  "regCodeMedrep": "Медпред",
+  "regCodeJoinDoctor": "Вы сразу попадёте в его команду",
+  "regCodeJoinPharm": "Медпред подтвердит вашу заявку",
+  "medrepTeamTitle": "Команда",
+  "medrepCountPharm": "{n, plural, one{{n} фармацевт} few{{n} фармацевта} many{{n} фармацевтов} other{{n} фармацевта}}",
+  "@medrepCountPharm": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepCountDoctors": "{n, plural, one{{n} врач} few{{n} врача} many{{n} врачей} other{{n} врача}}",
+  "@medrepCountDoctors": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepCodeForInvite": "Кодовое слово для приглашения",
+  "medrepInviteShort": "Пригласить",
+  "medrepUnitBlanks": "{n, plural, one{бланк} few{бланка} many{бланков} other{бланка}}",
+  "@medrepUnitBlanks": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepUnitInTeam": "в команде",
+  "medrepAllTeam": "Вся команда",
+  "medrepYourCode": "Ваше кодовое слово",
+  "medrepCopyCode": "Скопировать кодовое слово",
+  "medrepCodeCopied": "Кодовое слово скопировано",
+  "medrepEnteredCode": "Ввёл кодовое слово · {ago}",
+  "@medrepEnteredCode": {
+    "placeholders": {
+      "ago": {
+        "type": "String"
+      }
+    }
+  },
+  "medrepStep1TextCode": "Ваше слово — {code}",
+  "@medrepStep1TextCode": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "medrepCodeHintNick": "6 символов из вашего ника @{username} · регистр не важен",
+  "@medrepCodeHintNick": {
+    "placeholders": {
+      "username": {
+        "type": "String"
+      }
+    }
+  },
+  "medrepCodeHint": "Регистр при вводе не важен",
+  "medrepHowTitle": "Как это работает",
+  "medrepHowDoctor": "Обязательно вводит слово при регистрации — и сразу попадает в вашу команду",
+  "medrepHowPharm": "Вводит слово по желанию. Появится в «Ожидают подтверждения»",
+  "medrepShareText": "Моё кодовое слово в PharmIQ Academy — {code}. Введите его при регистрации в приложении.",
+  "@medrepShareText": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "medrepBlanksAllTime": "Бланков за всё время",
+  "medrepUnitApproved": "одобрено",
+  "medrepSince": "с {date}",
+  "@medrepSince": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "medrepPatientsHidden": "Данные пациентов медпреду не показываются",
+  "medrepProfileCode": "Кодовое слово",
+  "medrepProfileCodeSub": "Для приглашения в команду",
+  "medrepTeamNobody": "Здесь пока никого нет"
 }

@@ -12,6 +12,7 @@ import '../../../core/l10n/locale_controller.dart';
 import '../../../core/models/common.dart';
 import '../../../core/theme/theme_controller.dart';
 import '../../../widgets/pq_states.dart';
+import '../../medrep/medrep_widgets.dart' show medCopyCode;
 import '../../medrep/providers.dart';
 import '../providers.dart';
 import '../../tour/tour_controller.dart';
@@ -170,6 +171,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with WidgetsBindi
     final companies = role == Role.medrep
         ? ref.watch(companiesProvider).asData?.value.map((c) => c.name).join(', ')
         : null;
+    final medrepCode = role == Role.medrep
+        ? ref.watch(medrepCodeProvider).asData?.value.code
+        : null;
     final roleLabel = role?.label(l) ?? '';
 
     final (workLabel, noWork) = switch (role) {
@@ -215,6 +219,32 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with WidgetsBindi
             value: hasCompany ? companies : l.profileNotSpecified,
             valueColor: hasCompany ? null : pq.warning,
             onTap: role == Role.medrep ? () => context.push('/app/companies') : edit,
+          ),
+        // MedProfile: кодовое слово медпреда с копированием.
+        if (medrepCode != null && medrepCode.isNotEmpty)
+          ProfileRow(
+            icon: PqIcons.key,
+            title: l.medrepProfileCode,
+            subtitle: l.medrepProfileCodeSub,
+            subtitleMaxLines: 2,
+            chevron: false,
+            onTap: () => context.push('/app/portfolio/invite'),
+            trailing: Row(mainAxisSize: MainAxisSize.min, children: [
+              Text(medrepCode,
+                  style: PqText.heading(16, FontWeight.w800, ls: 2, c: pq.text)),
+              const SizedBox(width: 2),
+              PqPressable(
+                onTap: () => medCopyCode(context, medrepCode),
+                semanticLabel: l.medrepCopyCode,
+                child: SizedBox(
+                  width: 40,
+                  height: 40,
+                  child: Center(
+                    child: PqIcon(PqIcons.copy, size: 18, color: pq.accentText),
+                  ),
+                ),
+              ),
+            ]),
           ),
         ProfileRow(
           icon: PqIcons.shieldCheck,
