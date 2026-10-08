@@ -12,10 +12,10 @@ import '../../../core/models/common.dart';
 /// Общие элементы раздела «Профиль, уведомления, поддержка» (макеты 1.2).
 
 /// Версия приложения для подвала профиля. Пакета package_info в проекте нет —
-/// значение можно передать при сборке: `--dart-define=APP_VERSION=1.2.0`.
+/// значение можно передать при сборке: `--dart-define=APP_VERSION=1.2.1`.
 const kProfileAppVersion = String.fromEnvironment(
   'APP_VERSION',
-  defaultValue: '1.2.0',
+  defaultValue: '1.2.1',
 );
 
 /// Текст ошибки API для пользователя: `detail` сервера или общий текст.

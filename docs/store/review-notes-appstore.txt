@@ -1,3 +1,9 @@
+WHAT CHANGED IN 1.2.1
+A small update on top of 1.2: minor design refinements and clearer wording on several screens. Two functional additions:
+1) Registration now has a «Кодовое слово медпреда» (medical representative code word) field. It links a new user to the representative who invited them. It is required for doctors and optional for pharmacists. The demo accounts below are already registered, so no code word is needed to sign in. The code word of the demo medical representative is shown in that account: «Профиль» (Profile) → «Кодовое слово» (Code word).
+2) Medical representatives have a «Команда» (Team) tab that lists the pharmacists and doctors linked to them.
+The business model is unchanged. There are still no in-app purchases, no subscriptions and no payments of any kind; IQC are internal loyalty points that cannot be bought or exchanged for money.
+
 WHAT THE APP IS
 PharmIQ Academy is a professional learning and loyalty app for pharmacy staff and doctors in Uzbekistan who take part in partner programs of pharmaceutical companies. Users take short courses and quizzes, answer surveys, complete activity quests and earn IQC points. The interface is in Russian (also Uzbek, Kazakh, Kyrgyz, Tajik); Russian button names are given in quotes below.
 
@@ -11,7 +17,7 @@ IQC POINTS
 IQC are internal loyalty points. They cannot be purchased (no in-app purchases, no payments of any kind) and cannot be withdrawn or exchanged for money. Points are earned only by completing courses, surveys and verified quests, and can be redeemed for partner gift vouchers.
 
 QUESTS
-Pharmacists upload a photo of a pharmacy receipt, doctors a photo of a prescription form they issued. An AI model (Microsoft Azure, disclosed in the privacy policy) reads the medicine names and a moderator verifies the submission. Medical representatives see aggregated activity of the pharmacists linked to them.
+Pharmacists upload a photo of a pharmacy receipt, doctors a photo of a prescription form they issued. An AI model (Microsoft Azure, disclosed in the privacy policy) reads the medicine names and a moderator verifies the submission. Medical representatives see aggregated activity of the pharmacists and doctors linked to them (no patient data).
 
 SUPER SAPPER («Супер Сапёр») — LOYALTY POINTS PRIZE PROMOTION
 A scheduled prize promotion for program participants. No money is involved: participants pick cells on a shared field using IQC loyalty points, which cannot be purchased, transferred or exchanged for money. The full prize list, cell price and dates are shown before participation; all cells are revealed at the announced time and prizes (partner gift vouchers or bonus points) are delivered automatically; if a promotion is cancelled, all points are refunded. The organizer is PHARMIQ ACADEMY LLC; Apple is not a sponsor and is not involved.
