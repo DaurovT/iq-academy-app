@@ -267,6 +267,7 @@
   "loginChangeNumber": "‹ Тағйири рақам",
   "loginOr": "ё",
   "tgLoginExpired": "Вақти воридшавӣ гузашт",
+  "tgNotRegistered": "Ин Telegram ҳанӯз сабт нашудааст — бо рақами телефон сабти ном кунед",
   "tgLoginParseError": "Ҷавоби воридшавӣ коркард нашуд: {error}",
   "@tgLoginParseError": {
     "placeholders": {

@@ -267,6 +267,7 @@
   "loginChangeNumber": "‹ Raqamni o'zgartirish",
   "loginOr": "yoki",
   "tgLoginExpired": "Kirish vaqti tugadi",
+  "tgNotRegistered": "Bu Telegram hali ro'yxatdan o'tmagan — telefon raqami orqali ro'yxatdan o'ting",
   "tgLoginParseError": "Kirish javobini qayta ishlab bo'lmadi: {error}",
   "@tgLoginParseError": {
     "placeholders": {

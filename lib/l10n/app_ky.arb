@@ -267,6 +267,7 @@
   "loginChangeNumber": "‹ Номерди өзгөртүү",
   "loginOr": "же",
   "tgLoginExpired": "Кирүү убактысы бүттү",
+  "tgNotRegistered": "Бул Telegram али катталган эмес — телефон номери аркылуу катталыңыз",
   "tgLoginParseError": "Кирүү жообун иштетүү мүмкүн болгон жок: {error}",
   "@tgLoginParseError": {
     "placeholders": {

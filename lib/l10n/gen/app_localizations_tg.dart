@@ -365,6 +365,10 @@ class AppLocalizationsTg extends AppLocalizations {
   String get tgLoginExpired => 'Вақти воридшавӣ гузашт';
 
   @override
+  String get tgNotRegistered =>
+      'Ин Telegram ҳанӯз сабт нашудааст — бо рақами телефон сабти ном кунед';
+
+  @override
   String tgLoginParseError(Object error) {
     return 'Ҷавоби воридшавӣ коркард нашуд: $error';
   }

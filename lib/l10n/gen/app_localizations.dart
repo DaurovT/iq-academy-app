@@ -722,6 +722,12 @@ abstract class AppLocalizations {
   /// **'Время входа истекло'**
   String get tgLoginExpired;
 
+  /// No description provided for @tgNotRegistered.
+  ///
+  /// In ru, this message translates to:
+  /// **'Этот Telegram ещё не зарегистрирован — зарегистрируйтесь по номеру телефона'**
+  String get tgNotRegistered;
+
   /// No description provided for @tgLoginParseError.
   ///
   /// In ru, this message translates to:

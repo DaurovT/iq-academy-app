@@ -71,10 +71,18 @@ Map<String, dynamic> _$TgPollPendingToJson(TgPollPending instance) =>
     <String, dynamic>{'status': instance.$type};
 
 TgPollExpired _$TgPollExpiredFromJson(Map<String, dynamic> json) =>
-    TgPollExpired($type: json['status'] as String?);
+    TgPollExpired(
+      reason: json['reason'] as String?,
+      message: json['message'] as String?,
+      $type: json['status'] as String?,
+    );
 
 Map<String, dynamic> _$TgPollExpiredToJson(TgPollExpired instance) =>
-    <String, dynamic>{'status': instance.$type};
+    <String, dynamic>{
+      'reason': instance.reason,
+      'message': instance.message,
+      'status': instance.$type,
+    };
 
 TgPollDone _$TgPollDoneFromJson(Map<String, dynamic> json) => TgPollDone(
   token: json['token'] as String,

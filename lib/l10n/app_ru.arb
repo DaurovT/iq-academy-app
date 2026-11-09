@@ -284,6 +284,7 @@
   "loginChangeNumber": "‹ Изменить номер",
   "loginOr": "или",
   "tgLoginExpired": "Время входа истекло",
+  "tgNotRegistered": "Этот Telegram ещё не зарегистрирован — зарегистрируйтесь по номеру телефона",
   "tgLoginParseError": "Не удалось обработать ответ входа: {error}",
   "@tgLoginParseError": {
     "placeholders": {

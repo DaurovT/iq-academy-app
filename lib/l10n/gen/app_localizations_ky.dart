@@ -364,6 +364,10 @@ class AppLocalizationsKy extends AppLocalizations {
   String get tgLoginExpired => 'Кирүү убактысы бүттү';
 
   @override
+  String get tgNotRegistered =>
+      'Бул Telegram али катталган эмес — телефон номери аркылуу катталыңыз';
+
+  @override
   String tgLoginParseError(Object error) {
     return 'Кирүү жообун иштетүү мүмкүн болгон жок: $error';
   }

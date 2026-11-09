@@ -365,6 +365,10 @@ class AppLocalizationsKk extends AppLocalizations {
   String get tgLoginExpired => 'Кіру уақыты өтіп кетті';
 
   @override
+  String get tgNotRegistered =>
+      'Бұл Telegram әлі тіркелмеген — телефон нөмірі арқылы тіркеліңіз';
+
+  @override
   String tgLoginParseError(Object error) {
     return 'Кіру жауабын өңдеу мүмкін болмады: $error';
   }

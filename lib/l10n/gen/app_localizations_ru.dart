@@ -372,6 +372,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get tgLoginExpired => 'Время входа истекло';
 
   @override
+  String get tgNotRegistered =>
+      'Этот Telegram ещё не зарегистрирован — зарегистрируйтесь по номеру телефона';
+
+  @override
   String tgLoginParseError(Object error) {
     return 'Не удалось обработать ответ входа: $error';
   }

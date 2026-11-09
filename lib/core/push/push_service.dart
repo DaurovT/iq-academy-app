@@ -11,6 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../api/providers.dart';
 import '../auth/auth_controller.dart';
+import '../router/open_link.dart';
 import '../router/app_router.dart';
 
 /// Пуш-уведомления (Firebase Cloud Messaging), Android + iOS.
@@ -233,8 +234,13 @@ class PushService {
         return '/app'; // блок опроса живёт на главной
       case 'support':
         return '/app/support';
-      case 'reward':
       case 'voucher':
+        // ваучер из очереди: refId = заявка → экран ваучера с QR
+        final q = int.tryParse(refId);
+        return q != null ? '/app/wallet/voucher/${kQueueVoucherOffset + q}' : '/app/wallet';
+      case 'issued_voucher':
+        return refId.isNotEmpty ? '/app/wallet/voucher/$refId' : '/app/wallet';
+      case 'reward':
         return '/app/wallet';
       case 'check':
         return refId.isNotEmpty ? '/app/checks/$refId' : '/app/checks';
@@ -250,7 +256,7 @@ class PushService {
     if (r == null || useRef == null) return;
     _pendingRoute = null;
     try {
-      useRef.read(routerProvider).push(r);
+      openAppLink(useRef.read(routerProvider), r);
     } catch (e) {
       debugPrint('PushService._consumePendingRoute: $e');
     }

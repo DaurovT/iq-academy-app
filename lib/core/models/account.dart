@@ -51,7 +51,9 @@ abstract class TgLoginStart with _$TgLoginStart {
 @Freezed(unionKey: 'status')
 sealed class TgPollResult with _$TgPollResult {
   const factory TgPollResult.pending() = TgPollPending;
-  const factory TgPollResult.expired() = TgPollExpired;
+  /// `reason: "not_registered"` — этого Telegram нет в PharmIQ, аккаунт не создан:
+  /// ведём на регистрацию. Без причины — обычное истечение ссылки.
+  const factory TgPollResult.expired({String? reason, String? message}) = TgPollExpired;
   const factory TgPollResult.done({
     required String token,
     required Account account,

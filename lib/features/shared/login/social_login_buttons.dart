@@ -112,10 +112,17 @@ class _SocialLoginButtonsState extends ConsumerState<SocialLoginButtons> {
               await ref
                   .read(authControllerProvider.notifier)
                   .completeLogin(Session(token: token, account: account));
-            case TgPollExpired():
+            case TgPollExpired(:final reason):
               t.cancel();
               if (mounted) setState(() => _busy = null);
-              _toast(l10n.tgLoginExpired);
+              if (reason == 'not_registered') {
+                // Telegram не зарегистрирован — аккаунт сам не создаётся, сразу на регистрацию
+                if (!mounted) return;
+                showPqToast(context, l10n.tgNotRegistered);
+                context.go('/register');
+              } else {
+                _toast(l10n.tgLoginExpired);
+              }
             case TgPollPending():
               break; // ждём дальше
           }

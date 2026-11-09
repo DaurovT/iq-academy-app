@@ -365,6 +365,10 @@ class AppLocalizationsUz extends AppLocalizations {
   String get tgLoginExpired => 'Kirish vaqti tugadi';
 
   @override
+  String get tgNotRegistered =>
+      'Bu Telegram hali ro\'yxatdan o\'tmagan — telefon raqami orqali ro\'yxatdan o\'ting';
+
+  @override
   String tgLoginParseError(Object error) {
     return 'Kirish javobini qayta ishlab bo\'lmadi: $error';
   }

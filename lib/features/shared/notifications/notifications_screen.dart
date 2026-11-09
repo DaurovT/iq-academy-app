@@ -9,6 +9,7 @@ import '../../../core/design/design.dart';
 import '../../../core/l10n/l10n.dart';
 import '../../../core/models/common.dart';
 import '../../../core/models/notification.dart';
+import '../../../core/router/open_link.dart';
 import '../../../widgets/pq_states.dart';
 import '../profile/profile_widgets.dart';
 import '../providers.dart';
@@ -85,7 +86,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
 
   void _open(AppNotification n) {
     _markRead(n);
-    if (n.link != null) context.push(n.link!);
+    if (n.link != null) openAppLink(GoRouter.of(context), n.link!);
   }
 
   Future<void> _refresh() async {

@@ -989,11 +989,11 @@ return done(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  pending,TResult Function()?  expired,TResult Function( String token,  Account account)?  done,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  pending,TResult Function( String? reason,  String? message)?  expired,TResult Function( String token,  Account account)?  done,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case TgPollPending() when pending != null:
 return pending();case TgPollExpired() when expired != null:
-return expired();case TgPollDone() when done != null:
+return expired(_that.reason,_that.message);case TgPollDone() when done != null:
 return done(_that.token,_that.account);case _:
   return orElse();
 
@@ -1012,11 +1012,11 @@ return done(_that.token,_that.account);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  pending,required TResult Function()  expired,required TResult Function( String token,  Account account)  done,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  pending,required TResult Function( String? reason,  String? message)  expired,required TResult Function( String token,  Account account)  done,}) {final _that = this;
 switch (_that) {
 case TgPollPending():
 return pending();case TgPollExpired():
-return expired();case TgPollDone():
+return expired(_that.reason,_that.message);case TgPollDone():
 return done(_that.token,_that.account);}
 }
 /// A variant of `when` that fallback to returning `null`
@@ -1031,11 +1031,11 @@ return done(_that.token,_that.account);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  pending,TResult? Function()?  expired,TResult? Function( String token,  Account account)?  done,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  pending,TResult? Function( String? reason,  String? message)?  expired,TResult? Function( String token,  Account account)?  done,}) {final _that = this;
 switch (_that) {
 case TgPollPending() when pending != null:
 return pending();case TgPollExpired() when expired != null:
-return expired();case TgPollDone() when done != null:
+return expired(_that.reason,_that.message);case TgPollDone() when done != null:
 return done(_that.token,_that.account);case _:
   return null;
 
@@ -1087,15 +1087,21 @@ String toString() {
 @JsonSerializable()
 
 class TgPollExpired implements TgPollResult {
-  const TgPollExpired({final  String? $type}): $type = $type ?? 'expired';
+  const TgPollExpired({this.reason, this.message, final  String? $type}): $type = $type ?? 'expired';
   factory TgPollExpired.fromJson(Map<String, dynamic> json) => _$TgPollExpiredFromJson(json);
 
-
+ final  String? reason;
+ final  String? message;
 
 @JsonKey(name: 'status')
 final String $type;
 
 
+/// Create a copy of TgPollResult
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$TgPollExpiredCopyWith<TgPollExpired> get copyWith => _$TgPollExpiredCopyWithImpl<TgPollExpired>(this, _$identity);
 
 @override
 Map<String, dynamic> toJson() {
@@ -1104,23 +1110,53 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TgPollExpired);
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TgPollExpired&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.message, message) || other.message == message));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => runtimeType.hashCode;
+int get hashCode => Object.hash(runtimeType,reason,message);
 
 @override
 String toString() {
-  return 'TgPollResult.expired()';
+  return 'TgPollResult.expired(reason: $reason, message: $message)';
 }
 
 
 }
 
+/// @nodoc
+abstract mixin class $TgPollExpiredCopyWith<$Res> implements $TgPollResultCopyWith<$Res> {
+  factory $TgPollExpiredCopyWith(TgPollExpired value, $Res Function(TgPollExpired) _then) = _$TgPollExpiredCopyWithImpl;
+@useResult
+$Res call({
+ String? reason, String? message
+});
 
 
+
+
+}
+/// @nodoc
+class _$TgPollExpiredCopyWithImpl<$Res>
+    implements $TgPollExpiredCopyWith<$Res> {
+  _$TgPollExpiredCopyWithImpl(this._self, this._then);
+
+  final TgPollExpired _self;
+  final $Res Function(TgPollExpired) _then;
+
+/// Create a copy of TgPollResult
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? reason = freezed,Object? message = freezed,}) {
+  return _then(TgPollExpired(
+reason: freezed == reason ? _self.reason : reason // ignore: cast_nullable_to_non_nullable
+as String?,message: freezed == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+
+}
 
 /// @nodoc
 @JsonSerializable()
