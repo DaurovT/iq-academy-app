@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../core/design/design.dart';
 import '../../core/l10n/l10n.dart';
 import '../../core/models/check.dart';
+import '../../core/uploads/pending_upload.dart';
 import '../../core/uploads/upload_queue.dart';
 import 'rx_common.dart';
 
@@ -23,6 +24,9 @@ class RecipeCameraScreen extends ConsumerStatefulWidget {
   ConsumerState<RecipeCameraScreen> createState() => _RecipeCameraScreenState();
 }
 
+/// Сколько фото одного бланка можно выбрать из галереи.
+const kRxMaxPhotos = 5;
+
 class _RecipeCameraScreenState extends ConsumerState<RecipeCameraScreen> {
   bool _busy = false;
 
@@ -35,10 +39,27 @@ class _RecipeCameraScreenState extends ConsumerState<RecipeCameraScreen> {
     try {
       final picker = ImagePicker();
       final List<XFile> picked;
+      final queue = ref.read(uploadQueueProvider.notifier);
       if (source == ImageSource.gallery) {
-        picked = await picker.pickMultiImage();
+        // Все фото бланка уходят одним запросом — ограничиваем число и сжимаем.
+        picked =
+            (await picker.pickMultiImage(
+              limit: kRxMaxPhotos,
+              maxWidth: kPhotoMaxSide,
+              maxHeight: kPhotoMaxSide,
+              imageQuality: kPhotoQuality,
+            )).take(kRxMaxPhotos).toList();
       } else {
-        final x = await picker.pickImage(source: ImageSource.camera);
+        // Android может выгрузить приложение, пока открыта камера, — снимок
+        // подберёт очередь при следующем запуске.
+        await queue.markCapture(UploadKind.recipe);
+        final x = await picker.pickImage(
+          source: ImageSource.camera,
+          maxWidth: kPhotoMaxSide,
+          maxHeight: kPhotoMaxSide,
+          imageQuality: kPhotoQuality,
+        );
+        await queue.markCapture(null);
         picked = x == null ? const [] : [x];
       }
       if (picked.isEmpty || !mounted) return;

@@ -2363,7 +2363,7 @@ abstract class AppLocalizations {
   /// No description provided for @checksNewCheckTitle.
   ///
   /// In ru, this message translates to:
-  /// **'Новый чек'**
+  /// **'Новые чеки'**
   String get checksNewCheckTitle;
 
   /// No description provided for @checksTapToAddPhoto.
@@ -4058,12 +4058,6 @@ abstract class AppLocalizations {
   /// **'Завершённые'**
   String get questsTabDone;
 
-  /// No description provided for @questsSortHint.
-  ///
-  /// In ru, this message translates to:
-  /// **'Сначала — ближе всего к награде'**
-  String get questsSortHint;
-
   /// No description provided for @questsAlmostDone.
   ///
   /// In ru, this message translates to:
@@ -5627,7 +5621,7 @@ abstract class AppLocalizations {
   /// No description provided for @rxStateApprovedText.
   ///
   /// In ru, this message translates to:
-  /// **'Всё в порядке. IQC поступят на баланс в ближайшее время'**
+  /// **'Всё в порядке — бланк засчитан в квест'**
   String get rxStateApprovedText;
 
   /// No description provided for @rxStateRejectedTitle.
@@ -7319,13 +7313,13 @@ abstract class AppLocalizations {
   /// No description provided for @checksPickSubtitle.
   ///
   /// In ru, this message translates to:
-  /// **'ИИ распознает препараты по фото'**
+  /// **'До 10 чеков за раз · одно фото — один чек'**
   String get checksPickSubtitle;
 
   /// No description provided for @checksPhotosOf.
   ///
   /// In ru, this message translates to:
-  /// **'Фото: {n} из {max}'**
+  /// **'{n} из {max} · каждое фото — отдельный чек'**
   String checksPhotosOf(int n, int max);
 
   /// No description provided for @checksClose.
@@ -7373,7 +7367,7 @@ abstract class AppLocalizations {
   /// No description provided for @checksAddMore.
   ///
   /// In ru, this message translates to:
-  /// **'Ещё фото'**
+  /// **'Ещё'**
   String get checksAddMore;
 
   /// No description provided for @checksAddMoreA11y.
@@ -7391,7 +7385,7 @@ abstract class AppLocalizations {
   /// No description provided for @checksPhotosHint.
   ///
   /// In ru, this message translates to:
-  /// **'Проверьте: номер чека, дата и препараты хорошо видны'**
+  /// **'Каждое фото станет отдельным чеком. Снимайте чек целиком'**
   String get checksPhotosHint;
 
   /// No description provided for @checksSending.
@@ -7409,7 +7403,7 @@ abstract class AppLocalizations {
   /// No description provided for @checksSentText.
   ///
   /// In ru, this message translates to:
-  /// **'Проверка обычно занимает до 24 часов. Сообщим, когда начислим IQC'**
+  /// **'Проверка обычно занимает до 24 часов — сообщим о результате'**
   String get checksSentText;
 
   /// No description provided for @checksDone.
@@ -7421,7 +7415,7 @@ abstract class AppLocalizations {
   /// No description provided for @checksSendAnother.
   ///
   /// In ru, this message translates to:
-  /// **'Отправить ещё чек'**
+  /// **'Отправить ещё'**
   String get checksSendAnother;
 
   /// No description provided for @checksSendFailed.
@@ -7565,7 +7559,7 @@ abstract class AppLocalizations {
   /// No description provided for @checksHeroRejectedText.
   ///
   /// In ru, this message translates to:
-  /// **'Сделайте чёткое фото — баллы ещё можно получить'**
+  /// **'Сделайте чёткое фото и отправьте снова'**
   String get checksHeroRejectedText;
 
   /// No description provided for @checksStepSent.
@@ -9211,6 +9205,198 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Здесь пока никого нет'**
   String get medrepTeamNobody;
+
+  /// No description provided for @checksPhotosHintBold.
+  ///
+  /// In ru, this message translates to:
+  /// **'Один чек — одно фото.'**
+  String get checksPhotosHintBold;
+
+  /// No description provided for @checksSendN.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{Отправить {n} чек} few{Отправить {n} чека} many{Отправить {n} чеков} other{Отправить {n} чека}}'**
+  String checksSendN(int n);
+
+  /// No description provided for @checksSentN.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{Отправлен {n} чек} few{Отправлено {n} чека} many{Отправлено {n} чеков} other{Отправлено {n} чека}}'**
+  String checksSentN(int n);
+
+  /// No description provided for @checksSentMultiText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Каждое фото стало отдельным чеком. Проверка обычно занимает до 24 часов — сообщим о результате'**
+  String get checksSentMultiText;
+
+  /// No description provided for @checksQueueTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ждут отправки'**
+  String get checksQueueTitle;
+
+  /// No description provided for @checksQueueWaiting.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ждёт сети'**
+  String get checksQueueWaiting;
+
+  /// No description provided for @checksQueueSending.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправляем…'**
+  String get checksQueueSending;
+
+  /// No description provided for @checksQueueTaken.
+  ///
+  /// In ru, this message translates to:
+  /// **'Снят {when} · отправим сами'**
+  String checksQueueTaken(String when);
+
+  /// No description provided for @checksQueueRejected.
+  ///
+  /// In ru, this message translates to:
+  /// **'Не отправится'**
+  String get checksQueueRejected;
+
+  /// No description provided for @checksQueueRejectedSub.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сервер не принял фото · {when}'**
+  String checksQueueRejectedSub(String when);
+
+  /// No description provided for @checksQueueMissing.
+  ///
+  /// In ru, this message translates to:
+  /// **'Фото не сохранилось — переснимите'**
+  String get checksQueueMissing;
+
+  /// No description provided for @checksQueueMissingSub.
+  ///
+  /// In ru, this message translates to:
+  /// **'Файл пропал после обновления приложения'**
+  String get checksQueueMissingSub;
+
+  /// No description provided for @checksQueueNote.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пока чек в очереди, он хранится только на этом телефоне. Удалите приложение — чек пропадёт'**
+  String get checksQueueNote;
+
+  /// No description provided for @checksQueueDelete.
+  ///
+  /// In ru, this message translates to:
+  /// **'Удалить'**
+  String get checksQueueDelete;
+
+  /// No description provided for @checksQueueRetake.
+  ///
+  /// In ru, this message translates to:
+  /// **'Переснять'**
+  String get checksQueueRetake;
+
+  /// No description provided for @checksQueueRetry.
+  ///
+  /// In ru, this message translates to:
+  /// **'Повторить'**
+  String get checksQueueRetry;
+
+  /// No description provided for @rxCountedTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Засчитан в квест'**
+  String get rxCountedTitle;
+
+  /// No description provided for @rxCountedCard.
+  ///
+  /// In ru, this message translates to:
+  /// **'Бланк учтён в квесте'**
+  String get rxCountedCard;
+
+  /// No description provided for @rxCountedSub.
+  ///
+  /// In ru, this message translates to:
+  /// **'Прогресс видно во вкладке «Квесты»'**
+  String get rxCountedSub;
+
+  /// No description provided for @rxCountedShort.
+  ///
+  /// In ru, this message translates to:
+  /// **'Засчитан'**
+  String get rxCountedShort;
+
+  /// No description provided for @rxCountedCaption.
+  ///
+  /// In ru, this message translates to:
+  /// **'в квест'**
+  String get rxCountedCaption;
+
+  /// No description provided for @loginAlreadyRegisteredBold.
+  ///
+  /// In ru, this message translates to:
+  /// **'Этот номер уже зарегистрирован'**
+  String get loginAlreadyRegisteredBold;
+
+  /// No description provided for @loginAlreadyRegisteredText.
+  ///
+  /// In ru, this message translates to:
+  /// **'— войдите по коду из SMS'**
+  String get loginAlreadyRegisteredText;
+
+  /// No description provided for @medrepDoctorNoBlanks.
+  ///
+  /// In ru, this message translates to:
+  /// **'Бланков пока нет'**
+  String get medrepDoctorNoBlanks;
+
+  /// No description provided for @rxQueueMeta.
+  ///
+  /// In ru, this message translates to:
+  /// **'Снят {when} · {n} фото'**
+  String rxQueueMeta(String when, int n);
+
+  /// No description provided for @rxQueueTaken.
+  ///
+  /// In ru, this message translates to:
+  /// **'Снят {when} · {n} фото · отправим сами'**
+  String rxQueueTaken(String when, int n);
+
+  /// No description provided for @rxQueueRejectedSub.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сервер не принял фото · {when} · {n} фото'**
+  String rxQueueRejectedSub(String when, int n);
+
+  /// No description provided for @rxQueueNote.
+  ///
+  /// In ru, this message translates to:
+  /// **'Пока бланк в очереди, он хранится только на этом телефоне. Удалите приложение — бланк пропадёт'**
+  String get rxQueueNote;
+
+  /// No description provided for @rxDeleteTitle.
+  ///
+  /// In ru, this message translates to:
+  /// **'Удалить бланк?'**
+  String get rxDeleteTitle;
+
+  /// No description provided for @rxDeleteText.
+  ///
+  /// In ru, this message translates to:
+  /// **'Бланк ещё не отправлен и хранится только на этом телефоне. После удаления его не вернуть'**
+  String get rxDeleteText;
+
+  /// No description provided for @medrepDoctorNoBlanksSub.
+  ///
+  /// In ru, this message translates to:
+  /// **'Здесь появятся бланки, которые отправит врач'**
+  String get medrepDoctorNoBlanksSub;
+
+  /// No description provided for @medrepDoctorNew.
+  ///
+  /// In ru, this message translates to:
+  /// **'Новый'**
+  String get medrepDoctorNew;
 }
 
 class _AppLocalizationsDelegate

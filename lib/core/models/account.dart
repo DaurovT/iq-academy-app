@@ -14,6 +14,9 @@ abstract class Account with _$Account {
     required String fullName,
     required Language language,
     required List<Role> roles,
+
+    /// Имя для обращения, если сервер его отдаёт (иначе берём из [fullName]).
+    String? firstName,
   }) = _Account;
 
   factory Account.fromJson(Map<String, dynamic> json) =>

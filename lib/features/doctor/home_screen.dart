@@ -77,17 +77,15 @@ class _HomeBody extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
-    final fullName =
-        ref.watch(authControllerProvider).asData?.value.account?.fullName ?? '';
-    final name = fullName.trim().split(RegExp(r'\s+')).first;
-    final quests = (ref
-                .watch(questsListProvider(QuestTarget.recipes))
-                .asData
-                ?.value ??
-            const <Quest>[])
-        .where((q) => q.isLive)
-        .toList();
-    final recipes = ref.watch(recipesProvider).asData?.value ?? const <Recipe>[];
+    final account = ref.watch(authControllerProvider).asData?.value.account;
+    final name = greetingName(account?.fullName, firstName: account?.firstName);
+    final quests =
+        (ref.watch(questsListProvider(QuestTarget.recipes)).asData?.value ??
+                const <Quest>[])
+            .where((q) => q.isLive)
+            .toList();
+    final recipes =
+        ref.watch(recipesProvider).asData?.value ?? const <Recipe>[];
     final credits = ref.watch(recipeCreditsProvider);
     RxStage stageOf(Recipe r) => r.status.rxStage(credits[r.id]);
 
@@ -457,32 +455,24 @@ class _RecentRow extends StatelessWidget {
           onTap: open,
         ),
       RxStage.extraReview => PqListRow(
-          icon: stage.icon,
-          tone: stage.tone,
-          title: stage.label(l10n),
-          subtitle: '$title · ${formatShortDateTime(recipe.createdAt)}',
-          onTap: open,
-        ),
-      RxStage.approved => PqListRow(
-          icon: stage.icon,
-          tone: stage.tone,
-          title: title,
-          subtitle: drugDate,
-          value: l10n.rxSoon,
-          valueCaption: l10n.rxSoonCaption,
-          valueTone: stage.tone,
-          onTap: open,
-        ),
-      RxStage.credited => PqListRow(
-          icon: stage.icon,
-          tone: stage.tone,
-          title: title,
-          subtitle: drugDate,
-          value: l10n.rxRewardIqc(credited ?? 0),
-          valueCaption: l10n.rxCreditedCaption,
-          valueTone: stage.tone,
-          onTap: open,
-        ),
+        icon: stage.icon,
+        tone: stage.tone,
+        title: stage.label(l10n),
+        subtitle: '$title · ${formatShortDateTime(recipe.createdAt)}',
+        onTap: open,
+      ),
+      // За бланк IQC не начисляются — «Засчитан в квест».
+      RxStage.approved || RxStage.credited => PqListRow(
+        icon: RxStage.approved.icon,
+        tone: RxStage.approved.tone,
+        title: title,
+        subtitle: drugDate,
+        value: l10n.rxCountedShort,
+        valueIsAmount: false,
+        valueCaption: l10n.rxCountedCaption,
+        valueTone: RxStage.approved.tone,
+        onTap: open,
+      ),
       RxStage.rejected => PqListRow(
           icon: stage.icon,
           tone: stage.tone,

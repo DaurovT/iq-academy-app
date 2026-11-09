@@ -206,23 +206,68 @@ const referrals = [
 ];
 
 /// Все подмены раздела. [now] — «сегодня» макетов.
+/// Карточка врача — как в макете MedDoctor.
+const doctorDetail = DoctorDetail(
+  accountId: 2003,
+  name: 'Нодира Юсупова',
+  specialty: 'Терапевт',
+  workplace: 'Поликлиника №10',
+  city: 'Ташкент',
+  recipes: 34,
+  approved: 30,
+  approvedPacks: 52,
+  quests: 1,
+  active: true,
+  joinedAt: '2025-08-12T10:00:00',
+  lastAt: '2026-10-07T11:20:00',
+  recentRecipes: [
+    DoctorRecentRecipe(
+      id: 5,
+      createdAt: '2026-10-07T11:20:00',
+      status: CheckStatus.review,
+    ),
+    DoctorRecentRecipe(
+      id: 4,
+      createdAt: '2026-06-30T18:38:00',
+      status: CheckStatus.approved,
+    ),
+    DoctorRecentRecipe(
+      id: 3,
+      createdAt: '2026-06-20T16:05:00',
+      status: CheckStatus.rejected,
+    ),
+  ],
+);
+
+/// Только пришёл по кодовому слову — ни одного бланка (макет MedDoctorEmpty).
+const doctorDetailEmpty = DoctorDetail(
+  accountId: 2003,
+  name: 'Нодира Юсупова',
+  specialty: 'Терапевт',
+  workplace: 'Поликлиника №10',
+  city: 'Ташкент',
+  active: true,
+  joinedAt: '2025-08-12T10:00:00',
+);
+
 List<Override> medrepOverrides({
+  DoctorDetail doctor = doctorDetail,
   List<PortfolioPharmacist> pf = portfolio,
   int myRank = 4,
   DateTime? now,
-}) =>
-    [
-      authControllerProvider.overrideWith(_Auth.new),
-      appModulesProvider.overrideWith(_Modules.new),
-      unreadCountProvider.overrideWith((_) async => 0),
-      medrepNowProvider.overrideWithValue(() => now ?? DateTime(2026, 6, 30, 12)),
-      portfolioProvider.overrideWith((_) async => pf),
-      medrepMetricsProvider.overrideWith((ref, p) async => metrics),
-      medrepCodeProvider.overrideWith((_) async => medrepCode),
-      medrepTeamProvider.overrideWith((_) async => team(pf: pf)),
-      leaderboardProvider.overrideWith((ref, m) async => board(myRank: myRank)),
-      companiesProvider.overrideWith((_) async => const <Company>[]),
-      medrepQuestsProvider.overrideWith((_) async => quests),
-      pharmacistDetailProvider.overrideWith((ref, id) async => pharmacist),
-      referralsProvider.overrideWith((_) async => referrals),
-    ];
+}) => [
+  authControllerProvider.overrideWith(_Auth.new),
+  appModulesProvider.overrideWith(_Modules.new),
+  unreadCountProvider.overrideWith((_) async => 0),
+  medrepNowProvider.overrideWithValue(() => now ?? DateTime(2026, 6, 30, 12)),
+  portfolioProvider.overrideWith((_) async => pf),
+  medrepMetricsProvider.overrideWith((ref, p) async => metrics),
+  medrepCodeProvider.overrideWith((_) async => medrepCode),
+  medrepTeamProvider.overrideWith((_) async => team(pf: pf)),
+  leaderboardProvider.overrideWith((ref, m) async => board(myRank: myRank)),
+  companiesProvider.overrideWith((_) async => const <Company>[]),
+  medrepQuestsProvider.overrideWith((_) async => quests),
+  pharmacistDetailProvider.overrideWith((ref, id) async => pharmacist),
+  doctorDetailProvider.overrideWith((ref, id) async => doctor),
+  referralsProvider.overrideWith((_) async => referrals),
+];

@@ -31,6 +31,19 @@ class WebUploadStorage implements UploadStorage {
   }
 
   @override
+  String previewPath(String stored) => stored;
+
+  @override
+  Future<bool> filesExist(PendingUpload item) async =>
+      _bytes.containsKey(item.id);
+
+  @override
+  Future<void> markCapture(String? kind) async {}
+
+  @override
+  Future<String?> readCapture() async => null;
+
+  @override
   Future<List<UploadFile>> readFiles(PendingUpload item) async {
     final bytes = _bytes[item.id] ?? const [];
     return [

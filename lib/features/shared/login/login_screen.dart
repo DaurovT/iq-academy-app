@@ -12,7 +12,14 @@ import 'social_login_buttons.dart';
 /// Вход по номеру телефона (макеты Login, LoginKeyboard, LoginError).
 /// Код из SMS — отдельный экран `/login/code` ([SmsCodeScreen]).
 class LoginScreen extends ConsumerStatefulWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({super.key, this.phone, this.alreadyRegistered = false});
+
+  /// Номер, подставленный в поле (например, после регистрации с занятым номером).
+  final String? phone;
+
+  /// Пришли с регистрации, а номер уже есть (сервер ответил 409) — макет
+  /// LoginRegistered: плашка «Этот номер уже зарегистрирован — войдите…».
+  final bool alreadyRegistered;
 
   @override
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
@@ -25,6 +32,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _phoneNotFound = false;
   String? _error;
   int _shake = 0;
+  late bool _registered = widget.alreadyRegistered;
+
+  @override
+  void initState() {
+    super.initState();
+    final digits = authPhoneDigits(widget.phone);
+    if (digits.isNotEmpty) {
+      _phoneCtrl.text =
+          AuthPhoneFormatter()
+              .formatEditUpdate(
+                TextEditingValue.empty,
+                TextEditingValue(text: digits),
+              )
+              .text;
+    }
+  }
 
   @override
   void dispose() {
@@ -76,6 +99,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   void _otherNumber() {
     setState(() {
       _phoneNotFound = false;
+      _registered = false;
       _error = null;
       _phoneCtrl.clear();
     });
@@ -157,8 +181,25 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                   const AuthPush(),
                   title,
+                  if (_registered)
+                    _RegisteredNote(key: const ValueKey('registered')),
                   field,
-                  if (_phoneNotFound)
+                  if (_registered)
+                    Column(
+                      key: const ValueKey('registeredActions'),
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        submit,
+                        const SizedBox(height: 12),
+                        PqButton(
+                          label: l10n.authOtherNumber,
+                          kind: PqButtonKind.text,
+                          height: 52,
+                          onPressed: _otherNumber,
+                        ),
+                      ],
+                    )
+                  else if (_phoneNotFound)
                     Column(
                       key: const ValueKey('notFound'),
                       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -196,6 +237,56 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                   ],
                 ],
+      ),
+    );
+  }
+}
+
+/// Плашка «Этот номер уже зарегистрирован — войдите по коду из SMS»
+/// (макет LoginRegistered): мягкий акцентный фон, иконка 18, появление pqToast.
+class _RegisteredNote extends StatelessWidget {
+  const _RegisteredNote({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final pq = context.pq;
+    final l10n = context.l10n;
+    return PqAnimate(
+      fx: PqFx.toast,
+      duration: const Duration(milliseconds: 350),
+      child: Semantics(
+        liveRegion: true,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          decoration: BoxDecoration(
+            color: pq.isDark ? pq.accentSoft : const Color(0xFFDBEAFE),
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 1),
+                child: PqIcon(PqIcons.info, size: 18, color: pq.accentText),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: l10n.loginAlreadyRegisteredBold,
+                        style: const TextStyle(fontWeight: FontWeight.w700),
+                      ),
+                      TextSpan(text: ' ${l10n.loginAlreadyRegisteredText}'),
+                    ],
+                  ),
+                  style: PqText.body(c: pq.text),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -17,21 +17,64 @@ import 'wallet/wallet_toast.dart';
 
 /// Кошелёк (макет Wallet): баланс, стопка ваучеров Korzinka, очередь выдачи,
 /// обмен IQC. Вкладка нижнего меню.
-class WalletScreen extends ConsumerWidget {
+class WalletScreen extends ConsumerStatefulWidget {
   const WalletScreen({super.key});
 
+  @override
+  ConsumerState<WalletScreen> createState() => _WalletScreenState();
+}
+
+/// Сбрасывает данные кошелька: выданный ваучер и очередь выдачи должны
+/// появляться без pull-to-refresh (случай 29.10.2026 — ваучер «не пришёл»).
+void refreshWallet(WidgetRef ref) {
+  ref.invalidate(walletProvider);
+  ref.invalidate(pendingAccrualsProvider);
+  ref.invalidate(availableVouchersProvider);
+  ref.invalidate(myVouchersProvider);
+  ref.invalidate(walletTxnsProvider);
+}
+
+class _WalletScreenState extends ConsumerState<WalletScreen> {
+  late final AppLifecycleListener _lifecycle;
+
+  @override
+  void initState() {
+    super.initState();
+    // При открытии — свежие данные (провайдеры живут дольше экрана).
+    Future.microtask(() {
+      if (mounted) refreshWallet(ref);
+    });
+    // Вернулись из фона с открытым кошельком — тоже обновляем.
+    _lifecycle = AppLifecycleListener(
+      onResume: () {
+        if (mounted) refreshWallet(ref);
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _lifecycle.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => _WalletView(onRefresh: _refresh);
+
   Future<void> _refresh(WidgetRef ref) async {
-    ref.invalidate(walletProvider);
-    ref.invalidate(pendingAccrualsProvider);
-    ref.invalidate(availableVouchersProvider);
-    ref.invalidate(myVouchersProvider);
-    ref.invalidate(walletTxnsProvider);
+    refreshWallet(ref);
     try {
       await ref.read(walletProvider.future);
     } catch (_) {
       // ошибку покажет PqAsync
     }
   }
+}
+
+class _WalletView extends ConsumerWidget {
+  const _WalletView({required this.onRefresh});
+
+  final Future<void> Function(WidgetRef ref) onRefresh;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -49,7 +92,7 @@ class WalletScreen extends ConsumerWidget {
               ),
               Expanded(
                 child: PqRefresh(
-                  onRefresh: () => _refresh(ref),
+                  onRefresh: () => onRefresh(ref),
                   child: PqAsync<Wallet>(
                     value: ref.watch(walletProvider),
                     loading: PqLoadingKind.home,

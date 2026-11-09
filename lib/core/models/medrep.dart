@@ -365,6 +365,44 @@ abstract class TeamDoctor with _$TeamDoctor {
       _$TeamDoctorFromJson(json);
 }
 
+/// Бланк в карточке врача: без фото и данных пациента.
+@freezed
+abstract class DoctorRecentRecipe with _$DoctorRecentRecipe {
+  const factory DoctorRecentRecipe({
+    required int id,
+    required String createdAt,
+    @JsonKey(unknownEnumValue: CheckStatus.pending) required CheckStatus status,
+  }) = _DoctorRecentRecipe;
+
+  factory DoctorRecentRecipe.fromJson(Map<String, dynamic> json) =>
+      _$DoctorRecentRecipeFromJson(json);
+}
+
+/// Карточка врача команды: `GET /client/medrep/doctors/{accountId}`.
+@freezed
+abstract class DoctorDetail with _$DoctorDetail {
+  const factory DoctorDetail({
+    int? accountId,
+    int? telegramId,
+    required String name,
+    @Default('') String specialty,
+    @Default('') String workplace,
+    @Default('') String city,
+    @Default('') String phone,
+    @Default(0) int recipes,
+    @Default(0) int approved,
+    @Default(0) int approvedPacks,
+    @Default(0) int quests,
+    @Default(false) bool active,
+    String? joinedAt,
+    String? lastAt,
+    @Default(<DoctorRecentRecipe>[]) List<DoctorRecentRecipe> recentRecipes,
+  }) = _DoctorDetail;
+
+  factory DoctorDetail.fromJson(Map<String, dynamic> json) =>
+      _$DoctorDetailFromJson(json);
+}
+
 /// Фармацевт в команде (из бота — с telegramId, из приложения — с accountId).
 @freezed
 abstract class TeamPharmacist with _$TeamPharmacist {

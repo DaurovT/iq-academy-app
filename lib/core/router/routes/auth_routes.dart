@@ -18,7 +18,11 @@ final authRoutes = <RouteBase>[
   GoRoute(path: '/welcome', builder: (_, __) => const WelcomeScreen()),
   GoRoute(
     path: '/login',
-    builder: (_, __) => const LoginScreen(),
+    builder:
+        (_, s) => LoginScreen(
+          phone: s.uri.queryParameters['phone'],
+          alreadyRegistered: s.uri.queryParameters['registered'] == '1',
+        ),
     routes: [
       GoRoute(
         path: 'code',

@@ -107,9 +107,14 @@ class HttpAuthApi implements AuthApi {
   }
 
   @override
-  Future<Account> session() async {
+  Future<({Account account, String? token})> session() async {
     final r = await _dio.post('/auth/userCheck');
-    return Account.fromJson(_obj(r.data));
+    final data = _obj(r.data);
+    final token = data['token'];
+    return (
+      account: Account.fromJson(data),
+      token: token is String && token.isNotEmpty ? token : null,
+    );
   }
 
   @override
@@ -395,7 +400,16 @@ Future<Response> _upload(Dio dio, String path, List<UploadFile> files,
   fields.forEach((k, v) {
     if (v != null) form.fields.add(MapEntry(k, v));
   });
-  return dio.post(path, data: form);
+  // Фото по слабой мобильной связи грузятся долго — даём больше времени,
+  // чем общий таймаут клиента.
+  return dio.post(
+    path,
+    data: form,
+    options: Options(
+      sendTimeout: const Duration(minutes: 5),
+      receiveTimeout: const Duration(minutes: 2),
+    ),
+  );
 }
 
 /// На вебе файла на диске нет — там [UploadFile] несёт байты.
@@ -540,6 +554,12 @@ class HttpMedrepApi implements MedrepApi {
     final r = await _dio.get('/client/medrep/doctors',
         queryParameters: questId == null ? null : {'questId': questId});
     return DoctorsOverview.fromJson(_obj(r.data));
+  }
+
+  @override
+  Future<DoctorDetail> doctor(int accountId) async {
+    final r = await _dio.get('/client/medrep/doctors/$accountId');
+    return DoctorDetail.fromJson(_obj(r.data));
   }
 
   @override

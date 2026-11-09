@@ -8,13 +8,15 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../../core/design/design.dart';
 import '../../../core/l10n/l10n.dart';
+import '../../../core/uploads/pending_upload.dart';
 import '../../../core/uploads/upload_queue.dart';
 import '../../../widgets/local_photo.dart';
 import 'camera_access.dart';
 import 'check_ui.dart';
 
-/// Максимум фото в одном чеке (макет Upload: «Фото: 3 из 3»).
-const kChecksMaxPhotos = 3;
+/// Максимум фото за одну отправку (макет UploadPhotos: «7 из 10»).
+/// Каждое фото — отдельный чек (так их принимает сервер с 09.11.2026).
+const kChecksMaxPhotos = 10;
 
 /// Открывает лист «Новый чек» (макеты UploadPick → UploadPhotos → UploadDone).
 /// Фото уходят в [uploadQueueProvider] — очередь сама догрузит их при сети.
@@ -70,6 +72,9 @@ class _CheckUploadSheetState extends ConsumerState<CheckUploadSheet> {
 
   bool _busy = false;
 
+  /// Сколько чеков ушло в последней отправке (заголовок «Отправлено N чеков»).
+  int _sentCount = 0;
+
   int get _left => kChecksMaxPhotos - _photos.length;
 
   void _add(List<XFile> files) {
@@ -80,7 +85,7 @@ class _CheckUploadSheetState extends ConsumerState<CheckUploadSheet> {
   void _put(List<XFile> files) {
     final take = files.take(_left).toList();
     for (var i = 0; i < take.length; i++) {
-      _photos.add(_Picked(++_seq, take[i], Duration(milliseconds: 1400 * i)));
+      _photos.add(_Picked(++_seq, take[i], Duration(milliseconds: 250 * i)));
     }
     if (_photos.isNotEmpty) _step = _Step.photos;
   }
@@ -93,10 +98,19 @@ class _CheckUploadSheetState extends ConsumerState<CheckUploadSheet> {
       await CameraPrimerFlag.markShown();
       if (allow != true || !mounted) return;
     }
+    final queue = ref.read(uploadQueueProvider.notifier);
     try {
-      final x = await _picker.pickImage(source: ImageSource.camera);
+      await queue.markCapture(UploadKind.check);
+      final x = await _picker.pickImage(
+        source: ImageSource.camera,
+        maxWidth: kPhotoMaxSide,
+        maxHeight: kPhotoMaxSide,
+        imageQuality: kPhotoQuality,
+      );
+      await queue.markCapture(null);
       if (x != null) _add([x]);
     } on PlatformException catch (e) {
+      await queue.markCapture(null);
       if (!e.code.contains('access_denied') || !mounted) return;
       final r = await context.push<String>(kChecksCameraDeniedPath);
       if (r == kChecksPickGallery) await _gallery();
@@ -108,10 +122,22 @@ class _CheckUploadSheetState extends ConsumerState<CheckUploadSheet> {
     if (left <= 0) return;
     try {
       if (left == 1) {
-        final x = await _picker.pickImage(source: ImageSource.gallery);
+        final x = await _picker.pickImage(
+          source: ImageSource.gallery,
+          maxWidth: kPhotoMaxSide,
+          maxHeight: kPhotoMaxSide,
+          imageQuality: kPhotoQuality,
+        );
         if (x != null) _add([x]);
       } else {
-        _add(await _picker.pickMultiImage(limit: left));
+        _add(
+          await _picker.pickMultiImage(
+            limit: left,
+            maxWidth: kPhotoMaxSide,
+            maxHeight: kPhotoMaxSide,
+            imageQuality: kPhotoQuality,
+          ),
+        );
       }
     } on PlatformException catch (_) {
       // Пользователь закрыл выбор или нет доступа — ничего не делаем.
@@ -128,7 +154,8 @@ class _CheckUploadSheetState extends ConsumerState<CheckUploadSheet> {
     setState(() => _busy = true);
     final failed = context.l10n.checksSendFailed;
     try {
-      await ref.read(uploadQueueProvider.notifier).enqueueCheck([
+      _sentCount = _photos.length;
+      await ref.read(uploadQueueProvider.notifier).enqueueChecks([
         for (final p in _photos) p.file,
       ]);
       if (mounted) setState(() => _step = _Step.done);
@@ -322,13 +349,14 @@ class _CheckUploadSheetState extends ConsumerState<CheckUploadSheet> {
     return _layout(
       [
         _header(context, l.checksPhotosOf(_photos.length, kChecksMaxPhotos)),
+        // Сетка 5 колонок, превью 92, зазор 8 (макет UploadPhotos).
         const SizedBox(height: 24),
         LayoutBuilder(
           builder: (context, box) {
-            final w = (box.maxWidth - 24) / 3;
+            final w = (box.maxWidth - 8 * 4) / 5;
             return Wrap(
-              spacing: 12,
-              runSpacing: 12,
+              spacing: 8,
+              runSpacing: 8,
               children: [
                 for (var i = 0; i < _photos.length; i++)
                   SizedBox(
@@ -336,7 +364,8 @@ class _CheckUploadSheetState extends ConsumerState<CheckUploadSheet> {
                     width: w,
                     child: _Thumb(
                       photo: _photos[i],
-                      rotation: const [-3.0, 2.0, -1.0][i % 3],
+                      rotation:
+                          const [-3.0, 2.0, -1.0, 3.0, 2.0, -2.0, 1.0][i % 7],
                       onRemove: () => _remove(_photos[i]),
                     ),
                   ),
@@ -355,11 +384,19 @@ class _CheckUploadSheetState extends ConsumerState<CheckUploadSheet> {
           ),
           child: Row(
             children: [
-              PqIcon(PqIcons.sparkle, size: 18, color: pq.accentText),
+              PqIcon(PqIcons.info, size: 18, color: pq.accentText),
               const SizedBox(width: 12),
               Expanded(
-                child: Text(
-                  l.checksPhotosHint,
+                child: Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: '${l.checksPhotosHintBold} ',
+                        style: const TextStyle(fontWeight: FontWeight.w700),
+                      ),
+                      TextSpan(text: l.checksPhotosHint),
+                    ],
+                  ),
                   style: PqText.body(c: pq.textSecondary),
                 ),
               ),
@@ -369,7 +406,7 @@ class _CheckUploadSheetState extends ConsumerState<CheckUploadSheet> {
       ],
       [
         PqButton(
-          label: l.checksSubmitForReview,
+          label: l.checksSendN(_photos.length),
           loading: _busy,
           loadingLabel: l.checksSending,
           onPressed: _send,
@@ -411,14 +448,16 @@ class _CheckUploadSheetState extends ConsumerState<CheckUploadSheet> {
                 liveRegion: true,
                 header: true,
                 child: Text(
-                  l.checksSentTitle,
+                  _sentCount > 1
+                      ? l.checksSentN(_sentCount)
+                      : l.checksSentTitle,
                   textAlign: TextAlign.center,
                   style: PqText.emptyTitle(c: pq.text),
                 ),
               ),
               const SizedBox(height: 4),
               Text(
-                l.checksSentText,
+                _sentCount > 1 ? l.checksSentMultiText : l.checksSentText,
                 textAlign: TextAlign.center,
                 style: PqText.text(
                   15,
@@ -477,8 +516,9 @@ class _CheckUploadSheetState extends ConsumerState<CheckUploadSheet> {
   }
 }
 
-/// Миниатюра фото (pqThumb): лист с фото под наклоном, полоса «обработки»
-/// (pqLoad 1.2s), затем галочка (pqIn). Фото из одной пачки ждут очереди.
+/// Миниатюра фото (pqThumb, макет UploadPhotos): плитка 92 с радиусом 12,
+/// лист с фото (64×88 ×0.62) под наклоном, короткая полоса «обработки» и
+/// галочка. Фото из одной пачки появляются по очереди.
 class _Thumb extends StatelessWidget {
   const _Thumb({
     required this.photo,
@@ -499,7 +539,7 @@ class _Thumb extends StatelessWidget {
     return PqAnimate(
       fx: PqFx.thumb,
       child: SizedBox(
-        height: 128,
+        height: 92,
         child: Stack(
           clipBehavior: Clip.none,
           children: [
@@ -507,14 +547,14 @@ class _Thumb extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   color: pq.surfaceAlt,
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 alignment: Alignment.center,
                 child: ReceiptPaper(
-                  width: 64,
-                  height: 88,
+                  width: 40,
+                  height: 55,
                   rotation: rotation,
-                  photo: localPhoto(photo.file.path, width: 64, height: 88),
+                  photo: localPhoto(photo.file.path, width: 40, height: 55),
                 ),
               ),
             ),
@@ -525,7 +565,7 @@ class _Thumb extends StatelessWidget {
               bottom: 8,
               child: PqAnimate(
                 fx: PqFx.gone,
-                delay: at(1400),
+                delay: at(700),
                 duration: const Duration(milliseconds: 200),
                 curve: Curves.easeOut,
                 child: Container(
@@ -536,8 +576,8 @@ class _Thumb extends StatelessWidget {
                   ),
                   child: PqAnimate(
                     fx: PqFx.fillX,
-                    delay: at(200),
-                    duration: const Duration(milliseconds: 1200),
+                    delay: at(100),
+                    duration: const Duration(milliseconds: 600),
                     curve: const Cubic(.4, .1, .3, 1),
                     child: Container(
                       decoration: BoxDecoration(
@@ -554,7 +594,7 @@ class _Thumb extends StatelessWidget {
               bottom: 6,
               child: PqAnimate(
                 fx: PqFx.zoomIn,
-                delay: at(1450),
+                delay: at(750),
                 child: Container(
                   width: 24,
                   height: 24,
@@ -567,28 +607,6 @@ class _Thumb extends StatelessWidget {
                 ),
               ),
             ),
-            // «Ждёт» — пока до фото не дошла очередь.
-            if (base > Duration.zero)
-              Positioned.fill(
-                child: IgnorePointer(
-                  child: PqAnimate(
-                    fx: PqFx.gone,
-                    delay: base,
-                    duration: const Duration(milliseconds: 200),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: const Color(0x59000000),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        l.checksPhotoWaiting,
-                        style: PqText.tag(c: Colors.white),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
             Positioned(
               top: -16,
               right: -16,
@@ -621,7 +639,7 @@ class _Thumb extends StatelessWidget {
   }
 }
 
-/// Плитка «Ещё фото»: пунктир 2px, плюс 22.
+/// Плитка «Ещё»: пунктир 2px, радиус 12, плюс 22.
 class _AddMore extends StatelessWidget {
   const _AddMore({required this.onTap});
 
@@ -637,13 +655,16 @@ class _AddMore extends StatelessWidget {
       child: CustomPaint(
         painter: _DashedRRect(pq.borderStrong),
         child: SizedBox(
-          height: 128,
+          height: 92,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               PqIcon(PqIcons.plus, size: 22, color: pq.textMuted),
-              const SizedBox(height: 8),
-              Text(l.checksAddMore, style: PqText.link(c: pq.textMuted)),
+              const SizedBox(height: 4),
+              Text(
+                l.checksAddMore,
+                style: PqText.text(12, FontWeight.w600, c: pq.textMuted),
+              ),
             ],
           ),
         ),

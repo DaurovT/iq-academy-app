@@ -1,12 +1,15 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../core/api/api_exception.dart';
 import '../../../core/api/providers.dart';
 import '../../../core/auth/auth_controller.dart';
 import '../../../core/design/design.dart';
+import '../../../core/format.dart';
 import '../../../core/l10n/l10n.dart';
 import '../../../core/legal.dart';
 import '../../../core/models/account.dart';
@@ -157,11 +160,11 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
     for (final f in schema.fields) {
       if (f.type == RegFieldType.text) {
         final v = (_values[f.name] as String?)?.trim() ?? '';
-        if (v.isNotEmpty) return v.split(RegExp(r'\s+')).first;
+        if (v.isNotEmpty) return greetingName(v);
       }
     }
     final full = session.account.fullName.trim();
-    return full.isEmpty ? '' : full.split(RegExp(r'\s+')).first;
+    return greetingName(full);
   }
 
   Future<void> _submit(RegistrationSchema schema) async {
@@ -184,6 +187,24 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
         });
       }
     } catch (e) {
+      // Номер уже зарегистрирован (409) — регистрация номер не проверяет,
+      // впустить по ней нельзя: сразу ведём на вход по этому номеру.
+      final err = e is DioException ? e.error : e;
+      if (err is ApiException && err.statusCode == 409) {
+        final phone = (_values['phone'] as String?) ?? widget.phone ?? '';
+        if (mounted) {
+          context.go(
+            Uri(
+              path: '/login',
+              queryParameters: {
+                if (phone.isNotEmpty) 'phone': phone,
+                'registered': '1',
+              },
+            ).toString(),
+          );
+        }
+        return;
+      }
       if (mounted) setState(() => _error = e.toString());
     } finally {
       if (mounted) setState(() => _loading = false);

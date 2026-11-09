@@ -35,6 +35,14 @@ final pharmacistDetailProvider =
   return ref.watch(apiProvider).medrep.pharmacist(telegramId);
 });
 
+/// Карточка врача команды по accountId.
+final doctorDetailProvider = FutureProvider.family<DoctorDetail, int>((
+  ref,
+  accountId,
+) {
+  return ref.watch(apiProvider).medrep.doctor(accountId);
+});
+
 final medrepQuestsProvider = FutureProvider<List<MedrepQuest>>((ref) {
   return ref.watch(apiProvider).medrep.quests();
 });

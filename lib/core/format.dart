@@ -36,3 +36,19 @@ String formatShortDateTime(String iso) {
 
 /// «10 000» без суффикса — для строки под балансом кошелька.
 String formatUzsPlain(num v) => _uzs.format(v);
+
+/// Имя для приветствия. ФИО в аккаунтах записано как «Фамилия Имя Отчество»,
+/// поэтому берём второе слово; одно слово — его же. Если сервер прислал имя
+/// отдельно ([firstName]) — оно главнее.
+String greetingName(String? fullName, {String? firstName}) {
+  final f = firstName?.trim() ?? '';
+  if (f.isNotEmpty) return f;
+  final parts =
+      (fullName ?? '')
+          .trim()
+          .split(RegExp(r'\s+'))
+          .where((p) => p.isNotEmpty)
+          .toList();
+  if (parts.isEmpty) return '';
+  return parts.length >= 2 ? parts[1] : parts.first;
+}

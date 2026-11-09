@@ -56,6 +56,20 @@ extension CheckStageUi on CheckStage {
       this == CheckStage.review || this == CheckStage.extraReview;
 }
 
+/// Причина отказа «это не чек / не бланк» — переснимать бессмысленно, и
+/// совет «сделайте чёткое фото» к ней не показываем (причины пишут модераторы
+/// по-русски и по-узбекски).
+bool rejectIsNotDocument(String? reason) {
+  final r = (reason ?? '').toLowerCase();
+  return RegExp(
+    r'не (чек|бланк|рецепт)|не является|emas|not a (check|receipt)',
+  ).hasMatch(r);
+}
+
+/// Отклонённый чек показываем в «Нужно переснять» не дольше 30 дней —
+/// старые остаются только в общей истории.
+const kRetakeWindow = Duration(days: 30);
+
 /// Шаги прогресса чека: 4 сегмента по 4 px (pq-seg) и подписи под ними.
 /// На проверке текущий сегмент «дышит» (pqBreath 1.6s).
 class CheckSteps extends StatelessWidget {
@@ -87,18 +101,21 @@ class CheckSteps extends StatelessWidget {
       ),
       CheckStage.approved => ([pq.success, pq.success, pq.success, track], 2),
       CheckStage.credited => ([pq.success, pq.success, pq.success, pq.info], 3),
-      CheckStage.rejected => ([pq.success, pq.danger, track, track], 1),
+      // Отклонённый — только «Отправлен → Отклонён» (макет CheckRejected).
+      CheckStage.rejected => ([pq.success, pq.danger], 1),
     };
-    final labels = [
-      l.checksStepSent,
-      stage == CheckStage.rejected
-          ? l.checksStatusRejected
-          : extra
-          ? l.checksStatusExtraReview
-          : l.checksStepReview,
-      l.checksStepApproved,
-      l.checksStepConfirmed,
-    ];
+    final labels =
+        [
+          l.checksStepSent,
+          stage == CheckStage.rejected
+              ? l.checksStatusRejected
+              : extra
+              ? l.checksStatusExtraReview
+              : l.checksStepReview,
+          l.checksStepApproved,
+          l.checksStepConfirmed,
+        ].take(colors.length).toList();
+    final n = colors.length;
     Widget seg(int i) {
       Widget box = Container(
         height: 4,
@@ -124,7 +141,7 @@ class CheckSteps extends StatelessWidget {
         children: [
           Row(
             children: [
-              for (var i = 0; i < 4; i++) ...[
+              for (var i = 0; i < n; i++) ...[
                 if (i > 0) const SizedBox(width: 4),
                 Expanded(flex: flex(i), child: seg(i)),
               ],
@@ -135,7 +152,7 @@ class CheckSteps extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                for (var i = 0; i < 4; i++) ...[
+                for (var i = 0; i < n; i++) ...[
                   if (i > 0) const SizedBox(width: 4),
                   Expanded(
                     flex: flex(i),
@@ -212,7 +229,10 @@ class ReceiptPaper extends StatelessWidget {
 
 /// Серые «строки» бумажного чека (заглушка вместо фото).
 class ReceiptLines extends StatelessWidget {
-  const ReceiptLines({super.key});
+  const ReceiptLines({super.key, this.compact = false});
+
+  /// Мелкий лист (34×44 в очереди бланков): 4 строки по 3 px.
+  final bool compact;
 
   static const _lines = [.7, .5, .8, .6, .4, .7];
 
@@ -220,17 +240,19 @@ class ReceiptLines extends StatelessWidget {
   Widget build(BuildContext context) => ColoredBox(
     color: Colors.white,
     child: Padding(
-      padding: const EdgeInsets.only(top: 10),
+      padding: EdgeInsets.only(top: compact ? 7 : 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          for (final w in _lines)
+          for (final w in compact ? _lines.take(4) : _lines)
             Padding(
-              padding: const EdgeInsets.fromLTRB(8, 0, 8, 5),
+              padding: compact
+                  ? const EdgeInsets.fromLTRB(6, 0, 6, 4)
+                  : const EdgeInsets.fromLTRB(8, 0, 8, 5),
               child: FractionallySizedBox(
                 widthFactor: w,
                 child: Container(
-                  height: 4,
+                  height: compact ? 3 : 4,
                   decoration: BoxDecoration(
                     color: const Color(0xFFD1D5DB),
                     borderRadius: BorderRadius.circular(2),

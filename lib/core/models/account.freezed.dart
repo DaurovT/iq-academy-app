@@ -15,7 +15,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Account {
 
- int get id; String get phone; String get fullName; Language get language; List<Role> get roles;
+ int get id; String get phone; String get fullName; Language get language; List<Role> get roles;/// Имя для обращения, если сервер его отдаёт (иначе берём из [fullName]).
+ String? get firstName;
 /// Create a copy of Account
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +29,16 @@ $AccountCopyWith<Account> get copyWith => _$AccountCopyWithImpl<Account>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Account&&(identical(other.id, id) || other.id == id)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.language, language) || other.language == language)&&const DeepCollectionEquality().equals(other.roles, roles));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Account&&(identical(other.id, id) || other.id == id)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.language, language) || other.language == language)&&const DeepCollectionEquality().equals(other.roles, roles)&&(identical(other.firstName, firstName) || other.firstName == firstName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,phone,fullName,language,const DeepCollectionEquality().hash(roles));
+int get hashCode => Object.hash(runtimeType,id,phone,fullName,language,const DeepCollectionEquality().hash(roles),firstName);
 
 @override
 String toString() {
-  return 'Account(id: $id, phone: $phone, fullName: $fullName, language: $language, roles: $roles)';
+  return 'Account(id: $id, phone: $phone, fullName: $fullName, language: $language, roles: $roles, firstName: $firstName)';
 }
 
 
@@ -48,7 +49,7 @@ abstract mixin class $AccountCopyWith<$Res>  {
   factory $AccountCopyWith(Account value, $Res Function(Account) _then) = _$AccountCopyWithImpl;
 @useResult
 $Res call({
- int id, String phone, String fullName, Language language, List<Role> roles
+ int id, String phone, String fullName, Language language, List<Role> roles, String? firstName
 });
 
 
@@ -65,14 +66,15 @@ class _$AccountCopyWithImpl<$Res>
 
 /// Create a copy of Account
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? phone = null,Object? fullName = null,Object? language = null,Object? roles = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? phone = null,Object? fullName = null,Object? language = null,Object? roles = null,Object? firstName = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,phone: null == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
 as String,fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
 as String,language: null == language ? _self.language : language // ignore: cast_nullable_to_non_nullable
 as Language,roles: null == roles ? _self.roles : roles // ignore: cast_nullable_to_non_nullable
-as List<Role>,
+as List<Role>,firstName: freezed == firstName ? _self.firstName : firstName // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -157,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String phone,  String fullName,  Language language,  List<Role> roles)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String phone,  String fullName,  Language language,  List<Role> roles,  String? firstName)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Account() when $default != null:
-return $default(_that.id,_that.phone,_that.fullName,_that.language,_that.roles);case _:
+return $default(_that.id,_that.phone,_that.fullName,_that.language,_that.roles,_that.firstName);case _:
   return orElse();
 
 }
@@ -178,10 +180,10 @@ return $default(_that.id,_that.phone,_that.fullName,_that.language,_that.roles);
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String phone,  String fullName,  Language language,  List<Role> roles)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String phone,  String fullName,  Language language,  List<Role> roles,  String? firstName)  $default,) {final _that = this;
 switch (_that) {
 case _Account():
-return $default(_that.id,_that.phone,_that.fullName,_that.language,_that.roles);case _:
+return $default(_that.id,_that.phone,_that.fullName,_that.language,_that.roles,_that.firstName);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +200,10 @@ return $default(_that.id,_that.phone,_that.fullName,_that.language,_that.roles);
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String phone,  String fullName,  Language language,  List<Role> roles)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String phone,  String fullName,  Language language,  List<Role> roles,  String? firstName)?  $default,) {final _that = this;
 switch (_that) {
 case _Account() when $default != null:
-return $default(_that.id,_that.phone,_that.fullName,_that.language,_that.roles);case _:
+return $default(_that.id,_that.phone,_that.fullName,_that.language,_that.roles,_that.firstName);case _:
   return null;
 
 }
@@ -213,7 +215,7 @@ return $default(_that.id,_that.phone,_that.fullName,_that.language,_that.roles);
 @JsonSerializable()
 
 class _Account implements Account {
-  const _Account({required this.id, required this.phone, required this.fullName, required this.language, required final  List<Role> roles}): _roles = roles;
+  const _Account({required this.id, required this.phone, required this.fullName, required this.language, required final  List<Role> roles, this.firstName}): _roles = roles;
   factory _Account.fromJson(Map<String, dynamic> json) => _$AccountFromJson(json);
 
 @override final  int id;
@@ -227,6 +229,8 @@ class _Account implements Account {
   return EqualUnmodifiableListView(_roles);
 }
 
+/// Имя для обращения, если сервер его отдаёт (иначе берём из [fullName]).
+@override final  String? firstName;
 
 /// Create a copy of Account
 /// with the given fields replaced by the non-null parameter values.
@@ -241,16 +245,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Account&&(identical(other.id, id) || other.id == id)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.language, language) || other.language == language)&&const DeepCollectionEquality().equals(other._roles, _roles));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Account&&(identical(other.id, id) || other.id == id)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.language, language) || other.language == language)&&const DeepCollectionEquality().equals(other._roles, _roles)&&(identical(other.firstName, firstName) || other.firstName == firstName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,phone,fullName,language,const DeepCollectionEquality().hash(_roles));
+int get hashCode => Object.hash(runtimeType,id,phone,fullName,language,const DeepCollectionEquality().hash(_roles),firstName);
 
 @override
 String toString() {
-  return 'Account(id: $id, phone: $phone, fullName: $fullName, language: $language, roles: $roles)';
+  return 'Account(id: $id, phone: $phone, fullName: $fullName, language: $language, roles: $roles, firstName: $firstName)';
 }
 
 
@@ -261,7 +265,7 @@ abstract mixin class _$AccountCopyWith<$Res> implements $AccountCopyWith<$Res> {
   factory _$AccountCopyWith(_Account value, $Res Function(_Account) _then) = __$AccountCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String phone, String fullName, Language language, List<Role> roles
+ int id, String phone, String fullName, Language language, List<Role> roles, String? firstName
 });
 
 
@@ -278,14 +282,15 @@ class __$AccountCopyWithImpl<$Res>
 
 /// Create a copy of Account
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? phone = null,Object? fullName = null,Object? language = null,Object? roles = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? phone = null,Object? fullName = null,Object? language = null,Object? roles = null,Object? firstName = freezed,}) {
   return _then(_Account(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,phone: null == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
 as String,fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
 as String,language: null == language ? _self.language : language // ignore: cast_nullable_to_non_nullable
 as Language,roles: null == roles ? _self._roles : roles // ignore: cast_nullable_to_non_nullable
-as List<Role>,
+as List<Role>,firstName: freezed == firstName ? _self.firstName : firstName // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

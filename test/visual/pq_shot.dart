@@ -47,7 +47,7 @@ const pharmacistNav = [
 ];
 const doctorNav = [
   PqNavItem(icon: PqIcons.home, label: 'Главная'),
-  PqNavItem(icon: PqIcons.fileText, label: 'Рецепты'),
+  PqNavItem(icon: PqIcons.fileText, label: 'Бланки'),
   PqNavItem(icon: PqIcons.target, label: 'Квесты'),
   PqNavItem(icon: PqIcons.bookOpen, label: 'Обучение'),
   PqNavItem(icon: PqIcons.user, label: 'Профиль'),

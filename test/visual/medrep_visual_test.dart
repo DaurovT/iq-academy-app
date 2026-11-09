@@ -42,6 +42,8 @@ void main() {
   });
   shot('MedInvite', 980, 1, const MedrepInviteScreen());
   shot('MedDoctor', 874, 1, const MedrepDoctorDetailScreen(doctorKey: 'a2003'));
+  shot('MedDoctorEmpty', 874, 1, const MedrepDoctorDetailScreen(doctorKey: 'a2003'),
+      overrides: medrepOverrides(doctor: doctorDetailEmpty));
   shot('MedPharmacist', 874, 1, const MedrepPharmacistDetailScreen(telegramId: 100));
   shot('MedPhChecks', 874, 1, const MedrepPharmacistChecksScreen(telegramId: 100),
       overrides: medrepOverrides(now: DateTime(2026, 7, 3, 12)));

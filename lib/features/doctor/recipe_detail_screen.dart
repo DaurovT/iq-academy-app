@@ -8,6 +8,7 @@ import '../../core/img.dart';
 import '../../core/l10n/l10n.dart';
 import '../../core/models/check.dart';
 import '../../widgets/pq_states.dart';
+import '../pharmacist/checks/check_ui.dart' show rejectIsNotDocument;
 import '../shared/widgets/extra_review_note.dart';
 import '../shared/widgets/photo_lightbox.dart';
 import 'providers.dart';
@@ -38,12 +39,16 @@ class RecipeDetailScreen extends ConsumerWidget {
       child: PqAsync<RecipeDetail>(
         value: detail,
         onRetry: refresh,
-        loadingBuilder: (_) => const Padding(
-          padding: EdgeInsets.fromLTRB(16, 12, 16, kPqNavClearance),
-          child: _BackLink(),
-        ),
-        data: (d) => PqRefresh(
-            onRefresh: refresh, child: _Body(detail: d, credited: credited)),
+        loadingBuilder:
+            (_) => const Padding(
+              padding: EdgeInsets.fromLTRB(16, 12, 16, kPqNavClearance),
+              child: _BackLink(),
+            ),
+        data:
+            (d) => PqRefresh(
+              onRefresh: refresh,
+              child: _Body(detail: d, credited: credited),
+            ),
       ),
     );
   }
@@ -67,21 +72,31 @@ class _Body extends StatelessWidget {
 
     final sections = <Widget>[
       const _BackLink(),
-      Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        Row(children: [
-          Expanded(
-            child: Text(l10n.recipeDetailTitle(detail.id),
-                style: PqText.display(c: pq.text)),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  l10n.recipeDetailTitle(detail.id),
+                  style: PqText.display(c: pq.text),
+                ),
+              ),
+              const SizedBox(width: 12),
+              RxStatusBadge(stage),
+            ],
           ),
-          const SizedBox(width: 12),
-          RxStatusBadge(stage),
-        ]),
-        const SizedBox(height: 6),
-        Text(
-          l10n.rxMeta(formatShortDateTime(detail.createdAt), detail.photoCount),
-          style: PqText.subtitle(c: pq.textMuted),
-        ),
-      ]),
+          const SizedBox(height: 6),
+          Text(
+            l10n.rxMeta(
+              formatShortDateTime(detail.createdAt),
+              detail.photoCount,
+            ),
+            style: PqText.subtitle(c: pq.textMuted),
+          ),
+        ],
+      ),
       _StatusCard(stage: stage, rejectReason: detail.rejectReason),
       if (stage == RxStage.extraReview)
         CheckExtraReviewNote(text: l10n.rxExtraNoteText),
@@ -93,16 +108,18 @@ class _Body extends StatelessWidget {
           iconColor: rxSparkleColor(pq),
           child: _AiCard(stage: stage, drugs: detail.drugs),
         ),
-        _Section(
-          title: l10n.rxAccrual,
-          icon: PqIcons.coin,
-          iconColor: pq.accentText,
-          child: _AccrualCard(stage: stage, drugs: detail.drugs, credited: credited),
-        ),
       ],
-      // Зачёт по квестам для бланков API не отдаёт: у одобренного блок
-      // скрыт, чтобы не показывать неверное «не зачтён».
-      if (!stage.isApproved)
+      // За бланк IQC не начисляются — он засчитывается в квест (блока
+      // «Начисление» больше нет). В какой именно квест, API пока не отдаёт:
+      // вариант без названия квеста (макет RxApprovedNoQuest).
+      if (stage.isApproved)
+        _Section(
+          title: l10n.rxCountedTitle,
+          icon: PqIcons.target,
+          iconColor: pq.tone(PqTone.violet).fg,
+          child: const _CountedCard(),
+        )
+      else
         _Section(
           title: l10n.rxQuests,
           icon: PqIcons.trophy,
@@ -126,16 +143,21 @@ class _Body extends StatelessWidget {
               onTap: () => context.push('/app/recipes/${detail.id}/text'),
               child: SizedBox(
                 height: 44,
-                child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  Flexible(
-                    child: Text(l10n.rxShowText,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        l10n.rxShowText,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: PqText.link(c: pq.accent)),
-                  ),
-                  const SizedBox(width: 6),
-                  PqIcon(PqIcons.chevronRight, size: 16, color: pq.accent),
-                ]),
+                        style: PqText.link(c: pq.accent),
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    PqIcon(PqIcons.chevronRight, size: 16, color: pq.accent),
+                  ],
+                ),
               ),
             ),
           ),
@@ -144,50 +166,62 @@ class _Body extends StatelessWidget {
         onTap: () => context.push('/app/support'),
         child: SizedBox(
           height: 48,
-          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            PqIcon(PqIcons.headphones, size: 18, color: pq.accent),
-            const SizedBox(width: 8),
-            Flexible(
-              child: Text(l10n.rxSupport,
-                  style: PqText.text(15, FontWeight.w600, c: pq.accent)),
-            ),
-          ]),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              PqIcon(PqIcons.headphones, size: 18, color: pq.accent),
+              const SizedBox(width: 8),
+              Flexible(
+                child: Text(
+                  l10n.rxSupport,
+                  style: PqText.text(15, FontWeight.w600, c: pq.accent),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     ];
 
     final list = ListView(
       physics: const AlwaysScrollableScrollPhysics(),
-      padding: EdgeInsets.fromLTRB(16, 12, 16, rejected ? 200 : kPqNavClearance),
+      padding: EdgeInsets.fromLTRB(
+        16,
+        12,
+        16,
+        rejected ? 200 : kPqNavClearance,
+      ),
       children: [PqStagger(gap: 24, children: sections)],
     );
     if (!rejected) return list;
 
     final bottom = MediaQuery.paddingOf(context).bottom;
-    return Stack(children: [
-      Positioned.fill(child: list),
-      Positioned(
-        left: 0,
-        right: 0,
-        bottom: 0,
-        child: Container(
-          padding: EdgeInsets.fromLTRB(16, 24, 16, 28 + bottom),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [pq.bg.withValues(alpha: 0), pq.bg],
-              stops: const [0, .45],
+    return Stack(
+      children: [
+        Positioned.fill(child: list),
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: 0,
+          child: Container(
+            padding: EdgeInsets.fromLTRB(16, 24, 16, 28 + bottom),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [pq.bg.withValues(alpha: 0), pq.bg],
+                stops: const [0, .45],
+              ),
+            ),
+            child: PqButton(
+              label: l10n.rxRetakeRecipe,
+              icon: PqIcons.camera,
+              onPressed: () => openRecipeCamera(context),
             ),
           ),
-          child: PqButton(
-            label: l10n.rxRetakeRecipe,
-            icon: PqIcons.camera,
-            onPressed: () => openRecipeCamera(context),
-          ),
         ),
-      ),
-    ]);
+      ],
+    );
   }
 }
 
@@ -203,15 +237,21 @@ class _BackLink extends StatelessWidget {
       alignment: Alignment.centerLeft,
       child: PqPressable(
         semanticLabel: label,
-        onTap: () =>
-            context.canPop() ? context.pop() : context.go('/app/recipes'),
+        onTap:
+            () => context.canPop() ? context.pop() : context.go('/app/recipes'),
         child: SizedBox(
           height: 44,
-          child: Row(mainAxisSize: MainAxisSize.min, children: [
-            PqIcon(PqIcons.chevronLeft, size: 20, color: pq.textSecondary),
-            const SizedBox(width: 4),
-            Text(label, style: PqText.text(15, FontWeight.w600, c: pq.textSecondary)),
-          ]),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              PqIcon(PqIcons.chevronLeft, size: 20, color: pq.textSecondary),
+              const SizedBox(width: 4),
+              Text(
+                label,
+                style: PqText.text(15, FontWeight.w600, c: pq.textSecondary),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -238,11 +278,13 @@ class _StatusCard extends StatelessWidget {
       RxStage.approved => (l10n.rxStateApprovedTitle, l10n.rxStateApprovedText),
       RxStage.credited => (l10n.rxStateCreditedTitle, l10n.rxStateCreditedText),
       RxStage.rejected => (
-          l10n.rxStateRejectedTitle,
-          reason.isEmpty
-              ? l10n.rxStateRejectedHint
-              : '${_sentence(reason)} ${l10n.rxStateRejectedHint}',
-        ),
+        l10n.rxStateRejectedTitle,
+        reason.isEmpty
+            ? l10n.rxStateRejectedHint
+            : rejectIsNotDocument(reason)
+            ? reason
+            : '${_sentence(reason)} ${l10n.rxStateRejectedHint}',
+      ),
     };
     return Container(
       padding: const EdgeInsets.all(18),
@@ -252,21 +294,35 @@ class _StatusCard extends StatelessWidget {
         border: Border.all(color: t.fg),
         boxShadow: pq.cardShadow,
       ),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          PqIconTile(stage.icon, tone: stage.tone, radius: 14, iconSize: 22),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(title, style: PqText.title(c: pq.text)),
-              const SizedBox(height: 4),
-              Text(text, style: PqText.body(c: pq.textSecondary)),
-            ]),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              PqIconTile(
+                stage.icon,
+                tone: stage.tone,
+                radius: 14,
+                iconSize: 22,
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title, style: PqText.title(c: pq.text)),
+                    const SizedBox(height: 4),
+                    Text(text, style: PqText.body(c: pq.textSecondary)),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ]),
-        const SizedBox(height: 14),
-        _Steps(stage: stage),
-      ]),
+          const SizedBox(height: 14),
+          _Steps(stage: stage),
+        ],
+      ),
     );
   }
 
@@ -286,72 +342,89 @@ class _Steps extends StatelessWidget {
     final pq = context.pq;
     final l10n = context.l10n;
     final track = pq.isDark ? pq.border : const Color(0xFFE5E7EB);
+    // За бланк IQC не начисляются — он засчитывается в квест, поэтому шагов
+    // три: «Отправлен → Проверка → Одобрен» (макет RxApproved). Отклонённый —
+    // «Отправлен → Отклонён» (RxRejected).
     final colors = switch (stage) {
-      RxStage.pending => [pq.success, pq.warning, track, track],
-      RxStage.extraReview => [pq.success, pq.tone(PqTone.violet).fg, track, track],
-      RxStage.approved => [pq.success, pq.success, pq.success, track],
-      RxStage.credited => [pq.success, pq.success, pq.success, pq.info],
-      RxStage.rejected => [pq.success, pq.danger, track, track],
+      RxStage.pending => [pq.success, pq.warning, track],
+      RxStage.extraReview => [pq.success, pq.tone(PqTone.violet).fg, track],
+      RxStage.approved ||
+      RxStage.credited => [pq.success, pq.success, pq.success],
+      RxStage.rejected => [pq.success, pq.danger],
     };
     // Текущий шаг: 1 — проверка/отказ, 2 — одобрен, 3 — начислено.
     final current = switch (stage) {
       RxStage.pending || RxStage.extraReview || RxStage.rejected => 1,
-      RxStage.approved => 2,
-      RxStage.credited => 3,
+      RxStage.approved || RxStage.credited => 2,
     };
     final extra = stage == RxStage.extraReview;
     // RxReview: колонки 1 : 1.4 : 1 : 1 — «Доп. проверка» в одну строку.
     int flex(int i) => extra && i == 1 ? 14 : 10;
-    final labels = [
-      l10n.rxStepSent,
-      stage == RxStage.rejected
-          ? l10n.rxStepRejected
-          : extra
+    final labels =
+        [
+          l10n.rxStepSent,
+          stage == RxStage.rejected
+              ? l10n.rxStepRejected
+              : extra
               ? l10n.checksStatusExtraReview
               : l10n.rxStepReview,
-      l10n.rxStepApproved,
-      l10n.rxStepConfirmed,
-    ];
-    return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-      Row(children: [
-        for (var i = 0; i < 4; i++) ...[
-          if (i > 0) const SizedBox(width: 4),
-          Expanded(
-              flex: flex(i),
-              child: _bar(colors[i], breath: stage.inReview && i == 1)),
-        ],
-      ]),
-      const SizedBox(height: 6),
-      Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        for (var i = 0; i < 4; i++) ...[
-          if (i > 0) const SizedBox(width: 4),
-          Expanded(
-            flex: flex(i),
-            child: Text(
-              labels[i],
-              // Одно слово не переносим по буквам («Подтверждено»).
-              maxLines: labels[i].contains(' ') && !(extra && i == 1) ? null : 1,
-              softWrap: labels[i].contains(' ') && !(extra && i == 1),
-              overflow: TextOverflow.visible,
-              style: PqText.caption(
-                w: i == current ? FontWeight.w700 : FontWeight.w500,
-                c: stage == RxStage.rejected && i == 1
-                    ? pq.danger
-                    : i <= current
-                        ? pq.text
-                        : pq.textMuted,
+          l10n.rxStepApproved,
+        ].take(colors.length).toList();
+    final n = colors.length;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          children: [
+            for (var i = 0; i < n; i++) ...[
+              if (i > 0) const SizedBox(width: 4),
+              Expanded(
+                flex: flex(i),
+                child: _bar(colors[i], breath: stage.inReview && i == 1),
               ),
-            ),
-          ),
-        ],
-      ]),
-    ]);
+            ],
+          ],
+        ),
+        const SizedBox(height: 6),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (var i = 0; i < n; i++) ...[
+              if (i > 0) const SizedBox(width: 4),
+              Expanded(
+                flex: flex(i),
+                child: Text(
+                  labels[i],
+                  // Одно слово не переносим по буквам («Подтверждено»).
+                  maxLines:
+                      labels[i].contains(' ') && !(extra && i == 1) ? null : 1,
+                  softWrap: labels[i].contains(' ') && !(extra && i == 1),
+                  overflow: TextOverflow.visible,
+                  style: PqText.caption(
+                    w: i == current ? FontWeight.w700 : FontWeight.w500,
+                    c:
+                        stage == RxStage.rejected && i == 1
+                            ? pq.danger
+                            : i <= current
+                            ? pq.text
+                            : pq.textMuted,
+                  ),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ],
+    );
   }
 
   static Widget _bar(Color c, {bool breath = false}) {
     final bar = Container(
       height: 4,
-      decoration: BoxDecoration(color: c, borderRadius: BorderRadius.circular(2)),
+      decoration: BoxDecoration(
+        color: c,
+        borderRadius: BorderRadius.circular(2),
+      ),
     );
     return breath ? PqBreath(child: bar) : bar;
   }
@@ -375,20 +448,25 @@ class _Section extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pq = context.pq;
-    return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4),
-        child: Row(children: [
-          if (icon != null) ...[
-            PqIcon(icon!, size: 18, color: iconColor),
-            const SizedBox(width: 8),
-          ],
-          Expanded(child: Text(title, style: PqText.section(c: pq.text))),
-        ]),
-      ),
-      const SizedBox(height: 10),
-      child,
-    ]);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          child: Row(
+            children: [
+              if (icon != null) ...[
+                PqIcon(icon!, size: 18, color: iconColor),
+                const SizedBox(width: 8),
+              ],
+              Expanded(child: Text(title, style: PqText.section(c: pq.text))),
+            ],
+          ),
+        ),
+        const SizedBox(height: 10),
+        child,
+      ],
+    );
   }
 }
 
@@ -411,11 +489,12 @@ class _Photos extends StatelessWidget {
         clipBehavior: Clip.none,
         itemCount: photos.length,
         separatorBuilder: (_, __) => const SizedBox(width: 12),
-        itemBuilder: (context, i) => _PhotoTile(
-          url: imgThumb(photos[i].url, w: 320),
-          label: context.l10n.rxOpenPhoto(i + 1),
-          onTap: () => showPhotoLightbox(context, urls, initialIndex: i),
-        ),
+        itemBuilder:
+            (context, i) => _PhotoTile(
+              url: imgThumb(photos[i].url, w: 320),
+              label: context.l10n.rxOpenPhoto(i + 1),
+              onTap: () => showPhotoLightbox(context, urls, initialIndex: i),
+            ),
       ),
     );
   }
@@ -437,36 +516,46 @@ class _PhotoTile extends StatelessWidget {
       child: SizedBox(
         width: 104,
         height: 128,
-        child: Stack(fit: StackFit.expand, children: [
-          ColoredBox(
-            color: pq.surfaceAlt,
-            child: const Center(child: RxPaperSheet()),
-          ),
-          if (url != null)
-            Image.network(
-              url!,
-              fit: BoxFit.cover,
-              frameBuilder: (_, child, frame, sync) => AnimatedOpacity(
-                opacity: sync || frame != null ? 1 : 0,
-                duration: const Duration(milliseconds: 250),
-                child: child,
-              ),
-              errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            ColoredBox(
+              color: pq.surfaceAlt,
+              child: const Center(child: RxPaperSheet()),
             ),
-          if (onTap != null)
-            Positioned(
-              right: 8,
-              bottom: 8,
-              child: Container(
-                width: 28,
-                height: 28,
-                decoration: const BoxDecoration(
-                    color: Color(0x80000000), shape: BoxShape.circle),
-                alignment: Alignment.center,
-                child: const PqIcon(PqIcons.zoomIn, size: 15, color: Colors.white),
+            if (url != null)
+              Image.network(
+                url!,
+                fit: BoxFit.cover,
+                frameBuilder:
+                    (_, child, frame, sync) => AnimatedOpacity(
+                      opacity: sync || frame != null ? 1 : 0,
+                      duration: const Duration(milliseconds: 250),
+                      child: child,
+                    ),
+                errorBuilder: (_, __, ___) => const SizedBox.shrink(),
               ),
-            ),
-        ]),
+            if (onTap != null)
+              Positioned(
+                right: 8,
+                bottom: 8,
+                child: Container(
+                  width: 28,
+                  height: 28,
+                  decoration: const BoxDecoration(
+                    color: Color(0x80000000),
+                    shape: BoxShape.circle,
+                  ),
+                  alignment: Alignment.center,
+                  child: const PqIcon(
+                    PqIcons.zoomIn,
+                    size: 15,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
     return onTap == null
@@ -491,25 +580,33 @@ class _AiCard extends StatelessWidget {
         for (final d in drugs)
           ConstrainedBox(
             constraints: const BoxConstraints(minHeight: 48),
-            child: Row(children: [
-              Expanded(child: Text(d.name, style: PqText.field(c: pq.text))),
-              const SizedBox(width: 12),
-              Text('${d.qty}', style: PqText.amount(c: pq.text)),
-            ]),
+            child: Row(
+              children: [
+                Expanded(child: Text(d.name, style: PqText.field(c: pq.text))),
+                const SizedBox(width: 12),
+                Text('${d.qty}', style: PqText.amount(c: pq.text)),
+              ],
+            ),
           ),
       ];
     } else if (stage.inReview) {
       // Полосы-заглушки: 55% / 40% ширины строки и 48 px справа.
       Widget bar(double f) => ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: 48),
-            child: LayoutBuilder(
-              builder: (_, box) => Row(children: [
-                SizedBox(width: box.maxWidth * f, child: PqBreath(child: _bar(pq))),
-                const Spacer(),
-                SizedBox(width: 48, child: PqBreath(child: _bar(pq))),
-              ]),
-            ),
-          );
+        constraints: const BoxConstraints(minHeight: 48),
+        child: LayoutBuilder(
+          builder:
+              (_, box) => Row(
+                children: [
+                  SizedBox(
+                    width: box.maxWidth * f,
+                    child: PqBreath(child: _bar(pq)),
+                  ),
+                  const Spacer(),
+                  SizedBox(width: 48, child: PqBreath(child: _bar(pq))),
+                ],
+              ),
+        ),
+      );
       children = [
         bar(.55),
         bar(.4),
@@ -528,76 +625,78 @@ class _AiCard extends StatelessWidget {
     }
     return PqCard(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: children),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: children,
+      ),
     );
   }
 
   static Widget _bar(PqColors pq) => Container(
-        height: 12,
-        decoration: BoxDecoration(
-            color: pq.borderStrong, borderRadius: BorderRadius.circular(6)),
-      );
+    height: 12,
+    decoration: BoxDecoration(
+      color: pq.borderStrong,
+      borderRadius: BorderRadius.circular(6),
+    ),
+  );
 }
 
-class _AccrualCard extends StatelessWidget {
-  const _AccrualCard({required this.stage, required this.drugs, this.credited});
-
-  final RxStage stage;
-  final List<RecipeDrug> drugs;
-  final int? credited;
+/// «Бланк учтён в квесте · Прогресс видно во вкладке «Квесты»» + капсула
+/// «Квесты» (макет RxApprovedNoQuest).
+class _CountedCard extends StatelessWidget {
+  const _CountedCard();
 
   @override
   Widget build(BuildContext context) {
     final pq = context.pq;
     final l10n = context.l10n;
-    final (String title, String sub, Widget value) = switch (stage) {
-      RxStage.credited => (
-          l10n.rxAccrualCreditedTitle,
-          rxDrugsLine(drugs),
-          // pqPop .5s после .3s — сумма «впрыгивает».
-          PqAnimate(
-            fx: PqFx.pop,
-            delay: const Duration(milliseconds: 300),
-            child: Text(l10n.rxRewardIqc(credited ?? 0),
-                style: PqText.heading(22, FontWeight.w700, c: pq.info)),
-          ),
-        ),
-      RxStage.approved => (
-          l10n.rxAccrualApprovedTitle,
-          rxDrugsLine(drugs),
-          Text(l10n.rxSoon,
-              style: PqText.heading(22, FontWeight.w700, c: pq.success)),
-        ),
-      _ => (
-          l10n.rxAccrualPendingTitle,
-          l10n.rxAccrualPendingText,
-          Text('—', style: PqText.heading(22, FontWeight.w700, c: pq.textMuted)),
-        ),
-    };
     return PqCard(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(minHeight: 60),
-        child: Row(children: [
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        children: [
+          PqIconTile(PqIcons.check, tone: PqTone.violet, iconSize: 20),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
-              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: PqText.text(16, FontWeight.w600, c: pq.text)),
-                if (sub.isNotEmpty) ...[
-                  const SizedBox(height: 2),
-                  Text(sub,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: rxText14(pq.textMuted)),
-                ],
+                Text(
+                  l10n.rxCountedCard,
+                  style: PqText.heading(16, FontWeight.w700, c: pq.text),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  l10n.rxCountedSub,
+                  style: PqText.text(
+                    14,
+                    FontWeight.w400,
+                    height: 1.4,
+                    c: pq.textMuted,
+                  ),
+                ),
               ],
             ),
           ),
           const SizedBox(width: 12),
-          value,
-        ]),
+          PqPressable(
+            onTap: () => context.go('/app/quests'),
+            semanticLabel: l10n.navQuests,
+            scale: .96,
+            child: Container(
+              height: 40,
+              padding: const EdgeInsets.symmetric(horizontal: 14),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: pq.border),
+              ),
+              child: Text(
+                l10n.navQuests,
+                style: PqText.text(14, FontWeight.w600, c: pq.text),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

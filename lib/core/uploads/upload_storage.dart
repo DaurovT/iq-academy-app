@@ -22,12 +22,25 @@ abstract interface class UploadStorage {
   /// Сохранить очередь (на вебе — no-op).
   void save(List<PendingUpload> items);
 
-  /// Положить выбранные фото на хранение. Возвращает пути для превью.
+  /// Положить выбранные фото на хранение. Возвращает ссылки на файлы для
+  /// [PendingUpload.filePaths] (на мобильных — имена, на вебе — blob-URL).
   Future<List<String>> persist(String id, List<XFile> photos);
+
+  /// Путь для превью по записи из [PendingUpload.filePaths].
+  String previewPath(String stored);
+
+  /// Все фото элемента на месте (иначе — «Фото не сохранилось»).
+  Future<bool> filesExist(PendingUpload item);
 
   /// Собрать файлы элемента очереди для отправки на бэкенд.
   Future<List<UploadFile>> readFiles(PendingUpload item);
 
   /// Удалить фото после успешной отправки.
   Future<void> cleanup(PendingUpload item);
+
+  /// Пометка «открыта камера для чека/бланка» ('check' | 'recipe' | null):
+  /// Android может выгрузить приложение, пока открыта камера, — после
+  /// перезапуска по пометке понятно, куда положить восстановленный снимок.
+  Future<void> markCapture(String? kind);
+  Future<String?> readCapture();
 }

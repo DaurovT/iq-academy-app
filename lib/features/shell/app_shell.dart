@@ -18,7 +18,17 @@ class AppShell extends ConsumerWidget {
 
   final Widget child;
 
-  int _selectedIndex(List<NavItem> tabs, String location) {
+  /// Активная вкладка. Разделы без своей вкладки (например, «Кошелёк») не
+  /// подсвечивают ничего — раньше загоралась «Главная».
+  int _selectedIndex(
+    List<NavItem> tabs,
+    List<NavItem> sections,
+    String location,
+  ) {
+    final ownSection = sections.any(
+      (i) => !i.tab && i.path != '/app' && location.startsWith(i.path),
+    );
+    if (ownSection) return -1;
     var best = 0;
     var bestLen = -1;
     for (var i = 0; i < tabs.length; i++) {
@@ -46,8 +56,9 @@ class AppShell extends ConsumerWidget {
     // скрытые в админке разделы не показываем в меню (пока грузится — показываем всё)
     final modules =
         ref.watch(appModulesProvider).asData?.value ?? AppModules.empty;
+    final sections = navConfig(l10n)[role]!;
     final tabs = [
-      ...navConfig(l10n)[role]!.where(
+      ...sections.where(
         (i) =>
             i.tab && (i.module == null || modules.isVisible(i.module!, role)),
       ),
@@ -60,7 +71,7 @@ class AppShell extends ConsumerWidget {
       ),
     ];
     final location = GoRouterState.of(context).uri.path;
-    final selected = _selectedIndex(tabs, location);
+    final selected = _selectedIndex(tabs, sections, location);
 
     // Вкладки — цели обучающего тура.
     TourTarget? tourTargetOf(String path) => switch (path) {

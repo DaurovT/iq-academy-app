@@ -241,6 +241,7 @@ class _Hero extends StatelessWidget {
   String _rejectedText(AppLocalizations l) {
     final reason = detail.rejectReason?.trim() ?? '';
     if (reason.isEmpty) return l.checksHeroRejectedText;
+    if (rejectIsNotDocument(reason)) return reason;
     final end = RegExp(r'[.!?…]$').hasMatch(reason) ? '' : '.';
     return '$reason$end ${l.checksHeroRejectedText}';
   }

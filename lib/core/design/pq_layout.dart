@@ -331,6 +331,7 @@ class PqSectionHeader extends StatelessWidget {
     this.countTone = PqTone.neutral,
     this.actionLabel,
     this.onAction,
+    this.trailing,
   });
 
   final String title;
@@ -338,6 +339,9 @@ class PqSectionHeader extends StatelessWidget {
   final PqTone countTone;
   final String? actionLabel;
   final VoidCallback? onAction;
+
+  /// Своя кнопка справа вместо ссылки (например, «Повторить»).
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -364,6 +368,7 @@ class PqSectionHeader extends StatelessWidget {
             ],
           ]),
         ),
+        if (trailing != null) trailing!,
         if (actionLabel != null)
           PqPressable(
             onTap: onAction,

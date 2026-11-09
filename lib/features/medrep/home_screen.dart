@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/app_modules.dart';
 import '../../core/auth/auth_controller.dart';
+import '../../core/format.dart';
 import '../../core/design/design.dart';
 import '../../core/l10n/l10n.dart';
 import '../../core/models/medrep.dart';
@@ -67,8 +68,10 @@ class _MedrepHomeState extends ConsumerState<MedrepHome> {
     );
   }
 
-  String get _name =>
-      ref.watch(authControllerProvider).asData?.value.account?.fullName ?? '';
+  String get _name {
+    final a = ref.watch(authControllerProvider).asData?.value.account;
+    return greetingName(a?.fullName, firstName: a?.firstName);
+  }
 
   String? get _company {
     final board = ref.watch(leaderboardProvider('checks')).asData?.value;

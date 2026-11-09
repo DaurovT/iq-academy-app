@@ -2,6 +2,8 @@
 // DocHome / RxList / RxEmpty / RxPending / RxApproved / RxCredited /
 // RxRejected / RxOcr.
 import 'package:flutter_riverpod/misc.dart' show Override;
+import 'package:platform_app/core/uploads/pending_upload.dart';
+import 'package:platform_app/core/uploads/upload_queue.dart';
 import 'package:platform_app/core/app_modules.dart';
 import 'package:platform_app/core/auth/auth_controller.dart';
 import 'package:platform_app/core/models/account.dart';
@@ -184,12 +186,57 @@ const _survey = Survey(
 
 /// Провайдеры раздела врача. [credits] — начисления (API их пока не
 /// отдаёт; в макетах бланк №1 — «Начислено +10 IQC»).
+/// Очередь загрузки без диска и сети; превью — бумажная заглушка.
+class FakeRxQueue extends UploadQueue {
+  FakeRxQueue(this.items);
+
+  final List<PendingUpload> items;
+
+  @override
+  Future<List<PendingUpload>> build() async => items;
+
+  @override
+  Future<void> remove(String id) async {}
+
+  @override
+  String previewPath(String stored) => '';
+}
+
+/// Макет RxQueue: ждёт сети (3 фото), не отправится, фото не сохранилось.
+final rxQueue = [
+  PendingUpload(
+    id: 'q1',
+    kind: UploadKind.recipe,
+    filePaths: const ['a', 'b', 'c'],
+    fields: const {},
+    createdAt: '2026-11-09T14:20:00',
+  ),
+  PendingUpload(
+    id: 'q2',
+    kind: UploadKind.recipe,
+    filePaths: const ['d'],
+    fields: const {},
+    createdAt: '2026-11-09T14:05:00',
+    state: UploadState.rejected,
+  ),
+  PendingUpload(
+    id: 'q3',
+    kind: UploadKind.recipe,
+    filePaths: const ['e'],
+    fields: const {},
+    createdAt: '2026-11-08T18:40:00',
+    state: UploadState.missing,
+  ),
+];
+
 List<Override> doctorOverrides({
   List<Recipe> recipes = const [rx1, rx2, rx3Home],
   Map<int, int> credits = const {1: 10},
   int unread = 1,
+  List<PendingUpload>? queue,
 }) =>
     [
+      if (queue != null) uploadQueueProvider.overrideWith(() => FakeRxQueue(queue)),
       authControllerProvider.overrideWith(_Auth.new),
       appModulesProvider.overrideWith(_Modules.new),
       walletProvider.overrideWith(

@@ -499,6 +499,68 @@ Map<String, dynamic> _$TeamDoctorToJson(_TeamDoctor instance) =>
       'joinedAt': instance.joinedAt,
     };
 
+_DoctorRecentRecipe _$DoctorRecentRecipeFromJson(Map<String, dynamic> json) =>
+    _DoctorRecentRecipe(
+      id: (json['id'] as num).toInt(),
+      createdAt: json['createdAt'] as String,
+      status: $enumDecode(
+        _$CheckStatusEnumMap,
+        json['status'],
+        unknownValue: CheckStatus.pending,
+      ),
+    );
+
+Map<String, dynamic> _$DoctorRecentRecipeToJson(_DoctorRecentRecipe instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'createdAt': instance.createdAt,
+      'status': _$CheckStatusEnumMap[instance.status]!,
+    };
+
+_DoctorDetail _$DoctorDetailFromJson(Map<String, dynamic> json) =>
+    _DoctorDetail(
+      accountId: (json['accountId'] as num?)?.toInt(),
+      telegramId: (json['telegramId'] as num?)?.toInt(),
+      name: json['name'] as String,
+      specialty: json['specialty'] as String? ?? '',
+      workplace: json['workplace'] as String? ?? '',
+      city: json['city'] as String? ?? '',
+      phone: json['phone'] as String? ?? '',
+      recipes: (json['recipes'] as num?)?.toInt() ?? 0,
+      approved: (json['approved'] as num?)?.toInt() ?? 0,
+      approvedPacks: (json['approvedPacks'] as num?)?.toInt() ?? 0,
+      quests: (json['quests'] as num?)?.toInt() ?? 0,
+      active: json['active'] as bool? ?? false,
+      joinedAt: json['joinedAt'] as String?,
+      lastAt: json['lastAt'] as String?,
+      recentRecipes:
+          (json['recentRecipes'] as List<dynamic>?)
+              ?.map(
+                (e) => DoctorRecentRecipe.fromJson(e as Map<String, dynamic>),
+              )
+              .toList() ??
+          const <DoctorRecentRecipe>[],
+    );
+
+Map<String, dynamic> _$DoctorDetailToJson(_DoctorDetail instance) =>
+    <String, dynamic>{
+      'accountId': instance.accountId,
+      'telegramId': instance.telegramId,
+      'name': instance.name,
+      'specialty': instance.specialty,
+      'workplace': instance.workplace,
+      'city': instance.city,
+      'phone': instance.phone,
+      'recipes': instance.recipes,
+      'approved': instance.approved,
+      'approvedPacks': instance.approvedPacks,
+      'quests': instance.quests,
+      'active': instance.active,
+      'joinedAt': instance.joinedAt,
+      'lastAt': instance.lastAt,
+      'recentRecipes': instance.recentRecipes,
+    };
+
 _TeamPharmacist _$TeamPharmacistFromJson(Map<String, dynamic> json) =>
     _TeamPharmacist(
       telegramId: (json['telegramId'] as num?)?.toInt(),

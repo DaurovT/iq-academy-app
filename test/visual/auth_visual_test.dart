@@ -75,6 +75,23 @@ void main() {
     ),
   );
 
+  // После 409 на регистрации: номер подставлен, плашка «уже зарегистрирован».
+  pqShotBoth(
+    'LoginRegistered',
+    (t, dark) => _ios(
+      () => pqShot(
+        t,
+        name: 'LoginRegistered',
+        dark: dark,
+        overrides: base,
+        screen: const LoginScreen(
+          phone: '+998901234567',
+          alreadyRegistered: true,
+        ),
+      ),
+    ),
+  );
+
   pqShotBoth(
     'LoginKeyboard',
     (t, dark) => _ios(

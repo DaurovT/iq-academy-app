@@ -45,6 +45,36 @@ void main() {
       nav: doctorNav,
       navIndex: 1));
 
+  // Неотправленные бланки между «Отправить бланк» и фильтрами.
+  pqShotBoth('RxQueue', (t, dark) => pqShot(t,
+      name: 'RxQueue',
+      dark: dark,
+      height: 1560,
+      screen: const RecipesScreen(),
+      overrides: doctorOverrides(
+          recipes: const [rx5, rx4, rx2, rx3List, rx1], unread: 0, queue: rxQueue),
+      nav: doctorNav,
+      navIndex: 1));
+
+  // «Удалить бланк?» — по кнопке «Удалить» у застрявшего бланка.
+  pqShotBoth('RxQueueDelete', (t, dark) => pqShot(t,
+      name: 'RxQueueDelete',
+      dark: dark,
+      screen: const RecipesScreen(),
+      overrides: doctorOverrides(
+          recipes: const [rx5, rx4, rx2, rx3List, rx1], unread: 0, queue: rxQueue),
+      nav: doctorNav,
+      navIndex: 1,
+      before: (t) async {
+        for (var i = 0; i < 10; i++) {
+          await t.pump(const Duration(milliseconds: 100));
+        }
+        await t.tap(find.text('Удалить').first);
+        for (var i = 0; i < 8; i++) {
+          await t.pump(const Duration(milliseconds: 100));
+        }
+      }));
+
   pqShotBoth('RxEmpty', (t, dark) => pqShot(t,
       name: 'RxEmpty',
       dark: dark,

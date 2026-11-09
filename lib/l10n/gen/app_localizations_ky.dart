@@ -1265,7 +1265,7 @@ class AppLocalizationsKy extends AppLocalizations {
   String get checksAddedUploading => 'Чек кошулду — жүктөлүүдө';
 
   @override
-  String get checksNewCheckTitle => 'Жаңы чек';
+  String get checksNewCheckTitle => 'Жаңы чектер';
 
   @override
   String get checksTapToAddPhoto => 'Сүрөт кошуу үчүн басыңыз';
@@ -2245,9 +2245,6 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get questsTabDone => 'Аяктаган';
-
-  @override
-  String get questsSortHint => 'Адегенде — сыйлыкка эң жакындары';
 
   @override
   String get questsAlmostDone => 'Даяр болууга аз калды';
@@ -3270,8 +3267,7 @@ class AppLocalizationsKy extends AppLocalizations {
   String get rxStateApprovedTitle => 'Бланк жактырылды';
 
   @override
-  String get rxStateApprovedText =>
-      'Баары жайында. IQC жакын арада баланска түшөт';
+  String get rxStateApprovedText => 'Баары туура — бланк квестке эсептелди';
 
   @override
   String get rxStateRejectedTitle => 'Бланк четке кагылды';
@@ -4449,11 +4445,12 @@ class AppLocalizationsKy extends AppLocalizations {
   String get checksSendFirst => 'Биринчи чекти жөнөтүү';
 
   @override
-  String get checksPickSubtitle => 'ЖИ дарыларды сүрөт боюнча тааныйт';
+  String get checksPickSubtitle =>
+      'Бир жолу 10 чекке чейин · бир сүрөт — бир чек';
 
   @override
   String checksPhotosOf(int n, int max) {
-    return 'Сүрөт: $n / $max';
+    return '$n / $max · ар бир сүрөт — өзүнчө чек';
   }
 
   @override
@@ -4478,7 +4475,7 @@ class AppLocalizationsKy extends AppLocalizations {
   String get checksRemovePhoto => 'Сүрөттү өчүрүү';
 
   @override
-  String get checksAddMore => 'Дагы сүрөт';
+  String get checksAddMore => 'Дагы';
 
   @override
   String get checksAddMoreA11y => 'Дагы сүрөт кошуу';
@@ -4488,7 +4485,7 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get checksPhotosHint =>
-      'Текшериңиз: чектин номери, датасы жана дарылар даана көрүнсүн';
+      'Ар бир сүрөт өзүнчө чек болот. Чекти толугу менен тартыңыз';
 
   @override
   String get checksSending => 'Жөнөтүлүүдө…';
@@ -4498,13 +4495,13 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get checksSentText =>
-      'Текшерүү адатта 24 саатка чейин созулат. IQC эсептелгенде кабарлайбыз';
+      'Текшерүү адатта 24 саатка чейин созулат — жыйынтыгын билдиребиз';
 
   @override
   String get checksDone => 'Даяр';
 
   @override
-  String get checksSendAnother => 'Дагы чек жөнөтүү';
+  String get checksSendAnother => 'Дагы жөнөтүү';
 
   @override
   String get checksSendFailed =>
@@ -4583,8 +4580,7 @@ class AppLocalizationsKy extends AppLocalizations {
   String get checksHeroRejectedTitle => 'Чек четке кагылды';
 
   @override
-  String get checksHeroRejectedText =>
-      'Даана сүрөт тартыңыз — упайларды дагы эле алса болот';
+  String get checksHeroRejectedText => 'Так сүрөт тартып, кайра жөнөтүңүз';
 
   @override
   String get checksStepSent => 'Жөнөтүлдү';
@@ -5548,4 +5544,129 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get medrepTeamNobody => 'Бул жерде азырынча эч ким жок';
+
+  @override
+  String get checksPhotosHintBold => 'Бир чек — бир сүрөт.';
+
+  @override
+  String checksSendN(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n чекти жөнөтүү',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String checksSentN(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n чек жөнөтүлдү',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get checksSentMultiText =>
+      'Ар бир сүрөт өзүнчө чек болду. Текшерүү адатта 24 саатка чейин созулат — жыйынтыгын билдиребиз';
+
+  @override
+  String get checksQueueTitle => 'Жөнөтүлүүнү күтүүдө';
+
+  @override
+  String get checksQueueWaiting => 'Тармакты күтүүдө';
+
+  @override
+  String get checksQueueSending => 'Жөнөтүлүүдө…';
+
+  @override
+  String checksQueueTaken(String when) {
+    return '$when тартылган · өзүбүз жөнөтөбүз';
+  }
+
+  @override
+  String get checksQueueRejected => 'Жөнөтүлбөйт';
+
+  @override
+  String checksQueueRejectedSub(String when) {
+    return 'Сервер сүрөттү кабыл алган жок · $when';
+  }
+
+  @override
+  String get checksQueueMissing => 'Сүрөт сакталган жок — кайра тартыңыз';
+
+  @override
+  String get checksQueueMissingSub => 'Файл колдонмо жаңыргандан кийин жоголду';
+
+  @override
+  String get checksQueueNote =>
+      'Чек кезекте турганда ал ушул телефондо гана сакталат. Колдонмону өчүрсөңүз, чек жоголот';
+
+  @override
+  String get checksQueueDelete => 'Өчүрүү';
+
+  @override
+  String get checksQueueRetake => 'Кайра тартуу';
+
+  @override
+  String get checksQueueRetry => 'Кайталоо';
+
+  @override
+  String get rxCountedTitle => 'Квестке эсептелди';
+
+  @override
+  String get rxCountedCard => 'Бланк квестте эсепке алынды';
+
+  @override
+  String get rxCountedSub => 'Прогресс «Квесттер» өтмөгүндө көрүнөт';
+
+  @override
+  String get rxCountedShort => 'Эсептелди';
+
+  @override
+  String get rxCountedCaption => 'квестке';
+
+  @override
+  String get loginAlreadyRegisteredBold => 'Бул номер катталган';
+
+  @override
+  String get loginAlreadyRegisteredText => '— SMS код менен кириңиз';
+
+  @override
+  String get medrepDoctorNoBlanks => 'Азырынча бланктар жок';
+
+  @override
+  String rxQueueMeta(String when, int n) {
+    return '$when тартылды · $n сүрөт';
+  }
+
+  @override
+  String rxQueueTaken(String when, int n) {
+    return '$when тартылды · $n сүрөт · өзүбүз жөнөтөбүз';
+  }
+
+  @override
+  String rxQueueRejectedSub(String when, int n) {
+    return 'Сервер сүрөттү кабыл алган жок · $when · $n сүрөт';
+  }
+
+  @override
+  String get rxQueueNote =>
+      'Бланк кезекте турганда ушул телефондо гана сакталат. Тиркемени өчүрсөңүз, бланк жоголот';
+
+  @override
+  String get rxDeleteTitle => 'Бланкты өчүрөсүзбү?';
+
+  @override
+  String get rxDeleteText =>
+      'Бланк азырынча жөнөтүлө элек жана ушул телефондо гана сакталат. Өчүрүлгөндөн кийин аны кайтаруу мүмкүн эмес';
+
+  @override
+  String get medrepDoctorNoBlanksSub =>
+      'Бул жерде дарыгер жөнөткөн бланктар пайда болот';
+
+  @override
+  String get medrepDoctorNew => 'Жаңы';
 }

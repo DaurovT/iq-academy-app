@@ -69,7 +69,10 @@ abstract interface class AuthApi {
   Future<({bool exists})> checkNumber(String phone);
   Future<void> sendSms(String phone);
   Future<Session> confirmCode(String phone, String code);
-  Future<Account> session();
+
+  /// Текущий аккаунт по токену. Если сервер выдал свежий токен (продление
+  /// входа), он приходит в `token`.
+  Future<({Account account, String? token})> session();
   Future<void> logout();
   Future<Session> register(
       Role role, String schemaVersion, Map<String, dynamic> values,
@@ -164,6 +167,9 @@ abstract interface class MedrepApi {
   /// Врачи компании медпреда по регионам + прогресс по рецептурному квесту.
   /// [questId] — какой квест считать; null = ближайший к завершению активный.
   Future<DoctorsOverview> doctors({int? questId});
+
+  /// Карточка врача команды (по accountId; чужой врач — 404).
+  Future<DoctorDetail> doctor(int accountId);
   Future<Leaderboard> leaderboard(String metric);
   Future<List<MedrepQuest>> quests();
 

@@ -691,7 +691,9 @@ class MedOutlineButton extends StatelessWidget {
       child: Container(
         height: height,
         width: expand ? double.infinity : null,
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        // Растянутая кнопка стоит в паре (половина ширины) — поля меньше,
+        // иначе «Копировать» обрезается на 390.
+        padding: EdgeInsets.symmetric(horizontal: expand ? 10 : 20),
         decoration: BoxDecoration(
           color: transparent ? Colors.transparent : pq.surface,
           borderRadius: BorderRadius.circular(radius),
@@ -706,10 +708,15 @@ class MedOutlineButton extends StatelessWidget {
               const SizedBox(width: 8),
             ],
             Flexible(
-              child: Text(label,
+              // Длинные переводы ужимаем, а не режем многоточием.
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  label,
                   maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: PqText.text(fontSize, FontWeight.w600, c: pq.text)),
+                  style: PqText.text(fontSize, FontWeight.w600, c: pq.text),
+                ),
+              ),
             ),
           ],
         ),

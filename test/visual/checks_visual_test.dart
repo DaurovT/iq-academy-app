@@ -22,12 +22,47 @@ import 'pq_shot.dart';
 
 /// Очередь без диска и сети.
 class _Queue extends UploadQueue {
-  @override
-  Future<List<PendingUpload>> build() async => const [];
+  _Queue([this.items = const []]);
+
+  final List<PendingUpload> items;
 
   @override
-  Future<void> enqueueCheck(List<XFile> photos) async {}
+  Future<List<PendingUpload>> build() async => items;
+
+  @override
+  Future<void> enqueueChecks(List<XFile> photos) async {}
+
+  @override
+  Future<void> markCapture(UploadKind? kind) async {}
 }
+
+/// Макет ChecksQueue: ждёт сети, не отправится, фото не сохранилось.
+final _queue = [
+  PendingUpload(
+    id: 'a',
+    kind: UploadKind.check,
+    filePaths: const [],
+    fields: const {},
+    createdAt: '2026-11-09T13:02:00',
+    lastError: 'offline',
+  ),
+  PendingUpload(
+    id: 'b',
+    kind: UploadKind.check,
+    filePaths: const [],
+    fields: const {},
+    createdAt: '2026-11-09T12:40:00',
+    state: UploadState.rejected,
+  ),
+  PendingUpload(
+    id: 'c',
+    kind: UploadKind.check,
+    filePaths: const [],
+    fields: const {},
+    createdAt: '2026-11-09T12:10:00',
+    state: UploadState.missing,
+  ),
+];
 
 // Даты — локальные (без «Z»), чтобы на экране было ровно как в макете.
 Check _approved(int id, String at, String drug, int packs) => Check(
@@ -97,32 +132,44 @@ List _overrides({
   CheckDetail? detail,
   bool online = true,
   bool loading = false,
-}) =>
-    [
-      checksProvider.overrideWith((_) =>
-          loading ? Completer<List<Check>>().future : Future.value(checks ?? _checks)),
-      if (detail != null) checkDetailProvider.overrideWith((_, __) async => detail),
-      uploadQueueProvider.overrideWith(_Queue.new),
-      checksOnlineProvider.overrideWith((_) => Stream.value(online)),
-      unreadCountProvider.overrideWith((_) async => 0),
-    ];
+  List<PendingUpload> queue = const [],
+}) => [
+  checksProvider.overrideWith(
+    (_) =>
+        loading
+            ? Completer<List<Check>>().future
+            : Future.value(checks ?? _checks),
+  ),
+  if (detail != null) checkDetailProvider.overrideWith((_, __) async => detail),
+  uploadQueueProvider.overrideWith(() => _Queue(queue)),
+  checksOnlineProvider.overrideWith((_) => Stream.value(online)),
+  unreadCountProvider.overrideWith((_) async => 0),
+];
 
 /// Открыть лист «Новый чек» поверх экрана.
-Future<void> Function(WidgetTester) _sheet({List<XFile> photos = const [], bool send = false}) =>
-    (t) async {
-      await t.pump(const Duration(milliseconds: 100));
-      showCheckUploadSheet(t.element(find.byType(ChecksScreen)), initialPhotos: photos);
-      for (var i = 0; i < 20; i++) {
-        await t.pump(const Duration(milliseconds: 100));
-      }
-      if (send) {
-        await t.tap(find.text('Отправить на проверку'));
-        await t.pump(const Duration(milliseconds: 100));
-      }
-    };
+Future<void> Function(WidgetTester) _sheet({
+  List<XFile> photos = const [],
+  bool send = false,
+}) => (t) async {
+  await t.pump(const Duration(milliseconds: 100));
+  showCheckUploadSheet(
+    t.element(find.byType(ChecksScreen)),
+    initialPhotos: photos,
+  );
+  for (var i = 0; i < 20; i++) {
+    await t.pump(const Duration(milliseconds: 100));
+  }
+  if (send) {
+    await t.tap(find.textContaining('Отправить '));
+    await t.pump(const Duration(milliseconds: 100));
+  }
+};
 
 // Реальный файл из репозитория: фото из галереи в тесте не получить.
-final _three = [for (var i = 0; i < 3; i++) XFile('${Directory.current.path}/assets/app_icon.png')];
+final _seven = [
+  for (var i = 0; i < 7; i++)
+    XFile('${Directory.current.path}/assets/app_icon.png'),
+];
 
 void main() {
   pqShotBoth('Checks', (t, dark) => pqShot(t,
@@ -134,7 +181,24 @@ void main() {
       navIndex: 1,
       overrides: _overrides()));
 
-  pqShotBoth('ChecksEmpty', (t, dark) => pqShot(t,
+  pqShotBoth(
+    'ChecksQueue',
+    (t, dark) => pqShot(
+      t,
+      name: 'ChecksQueue',
+      dark: dark,
+      height: 1680,
+      screen: const ChecksScreen(),
+      nav: pharmacistNav,
+      navIndex: 1,
+      overrides: _overrides(queue: _queue, online: false),
+    ),
+  );
+
+  pqShotBoth(
+    'ChecksEmpty',
+    (t, dark) => pqShot(
+      t,
       name: 'ChecksEmpty',
       dark: dark,
       screen: const ChecksScreen(),
@@ -179,8 +243,8 @@ void main() {
   for (final (name, before) in [
     ('Upload', _sheet()),
     ('UploadPick', _sheet()),
-    ('UploadPhotos', _sheet(photos: _three)),
-    ('UploadDone', _sheet(photos: _three.take(1).toList(), send: true)),
+    ('UploadPhotos', _sheet(photos: _seven)),
+    ('UploadDone', _sheet(photos: _seven.take(3).toList(), send: true)),
   ]) {
     pqShotBoth(name, (t, dark) => pqShot(t,
         name: name,

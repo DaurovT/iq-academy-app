@@ -13,6 +13,7 @@ import '../api/providers.dart';
 import '../auth/auth_controller.dart';
 import '../router/open_link.dart';
 import '../router/app_router.dart';
+import '../../features/pharmacist/providers.dart';
 
 /// Пуш-уведомления (Firebase Cloud Messaging), Android + iOS.
 ///
@@ -100,6 +101,7 @@ class PushService {
 
       // приложение открыто → рисуем сами (Android). На iOS покажет система.
       FirebaseMessaging.onMessage.listen((m) {
+        _refreshFor(ref, m.data);
         final n = m.notification;
         if (n == null || !_isAndroid) return;
         _local.show(
@@ -122,6 +124,7 @@ class PushService {
 
       // тап по уведомлению, когда приложение было свёрнуто
       FirebaseMessaging.onMessageOpenedApp.listen((m) {
+        _refreshFor(ref, m.data);
         _pendingRoute = routeFor(m.data);
         _consumePendingRoute(ref);
       });
@@ -218,6 +221,24 @@ class PushService {
       await ref.read(apiProvider).devices.unregister(t);
     } catch (e) {
       debugPrint('PushService.dropToken: $e');
+    }
+  }
+
+  /// Пуш о ваучере или начислении — сбрасываем данные кошелька, чтобы
+  /// выданный ваучер сразу был виден (без pull-to-refresh).
+  static void _refreshFor(WidgetRef ref, Map<String, dynamic> data) {
+    final type = (data['refType'] ?? data['type'] ?? '').toString();
+    if (type != 'voucher' && type != 'issued_voucher' && type != 'reward') {
+      return;
+    }
+    try {
+      ref.invalidate(walletProvider);
+      ref.invalidate(pendingAccrualsProvider);
+      ref.invalidate(availableVouchersProvider);
+      ref.invalidate(myVouchersProvider);
+      ref.invalidate(walletTxnsProvider);
+    } catch (e) {
+      debugPrint('PushService._refreshFor: $e');
     }
   }
 

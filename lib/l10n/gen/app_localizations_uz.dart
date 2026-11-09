@@ -1270,7 +1270,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get checksAddedUploading => 'Chek qo\'shildi — yuklanmoqda';
 
   @override
-  String get checksNewCheckTitle => 'Yangi chek';
+  String get checksNewCheckTitle => 'Yangi cheklar';
 
   @override
   String get checksTapToAddPhoto => 'Surat qo\'shish uchun bosing';
@@ -2251,9 +2251,6 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get questsTabDone => 'Yakunlangan';
-
-  @override
-  String get questsSortHint => 'Avval — mukofotga eng yaqinlari';
 
   @override
   String get questsAlmostDone => 'Deyarli tayyor';
@@ -3277,8 +3274,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get rxStateApprovedTitle => 'Blank tasdiqlandi';
 
   @override
-  String get rxStateApprovedText =>
-      'Hammasi joyida. IQC tez orada balansga tushadi';
+  String get rxStateApprovedText => 'Hammasi joyida — blank kvestga hisoblandi';
 
   @override
   String get rxStateRejectedTitle => 'Blank rad etildi';
@@ -4458,11 +4454,12 @@ class AppLocalizationsUz extends AppLocalizations {
   String get checksSendFirst => 'Birinchi chekni yuborish';
 
   @override
-  String get checksPickSubtitle => 'SI dorilarni surat bo‘yicha aniqlaydi';
+  String get checksPickSubtitle =>
+      'Bir martada 10 tagacha chek · bitta surat — bitta chek';
 
   @override
   String checksPhotosOf(int n, int max) {
-    return 'Surat: $n / $max';
+    return '$n / $max · har bir surat — alohida chek';
   }
 
   @override
@@ -4487,7 +4484,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get checksRemovePhoto => 'Suratni o‘chirish';
 
   @override
-  String get checksAddMore => 'Yana surat';
+  String get checksAddMore => 'Yana';
 
   @override
   String get checksAddMoreA11y => 'Yana surat qo‘shish';
@@ -4497,7 +4494,7 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get checksPhotosHint =>
-      'Tekshiring: chek raqami, sana va dorilar aniq ko‘rinsin';
+      'Har bir surat alohida chek bo‘ladi. Chekni to‘liq suratga oling';
 
   @override
   String get checksSending => 'Yuborilmoqda…';
@@ -4507,13 +4504,13 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get checksSentText =>
-      'Tekshiruv odatda 24 soatgacha davom etadi. IQC hisoblanganda xabar beramiz';
+      'Tekshiruv odatda 24 soatgacha davom etadi — natijasini xabar qilamiz';
 
   @override
   String get checksDone => 'Tayyor';
 
   @override
-  String get checksSendAnother => 'Yana chek yuborish';
+  String get checksSendAnother => 'Yana yuborish';
 
   @override
   String get checksSendFailed =>
@@ -4593,8 +4590,7 @@ class AppLocalizationsUz extends AppLocalizations {
   String get checksHeroRejectedTitle => 'Chek rad etildi';
 
   @override
-  String get checksHeroRejectedText =>
-      'Aniq surat oling — ballarni hali ham olish mumkin';
+  String get checksHeroRejectedText => 'Aniq surat oling va qayta yuboring';
 
   @override
   String get checksStepSent => 'Yuborildi';
@@ -5563,4 +5559,131 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get medrepTeamNobody => 'Bu yerda hozircha hech kim yo‘q';
+
+  @override
+  String get checksPhotosHintBold => 'Bitta chek — bitta surat.';
+
+  @override
+  String checksSendN(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n ta chekni yuborish',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String checksSentN(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n ta chek yuborildi',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get checksSentMultiText =>
+      'Har bir surat alohida chek bo‘ldi. Tekshiruv odatda 24 soatgacha davom etadi — natijasini xabar qilamiz';
+
+  @override
+  String get checksQueueTitle => 'Yuborilishini kutmoqda';
+
+  @override
+  String get checksQueueWaiting => 'Internetni kutmoqda';
+
+  @override
+  String get checksQueueSending => 'Yuborilmoqda…';
+
+  @override
+  String checksQueueTaken(String when) {
+    return '$when da olingan · o‘zimiz yuboramiz';
+  }
+
+  @override
+  String get checksQueueRejected => 'Yuborilmaydi';
+
+  @override
+  String checksQueueRejectedSub(String when) {
+    return 'Server suratni qabul qilmadi · $when';
+  }
+
+  @override
+  String get checksQueueMissing => 'Surat saqlanmadi — qayta oling';
+
+  @override
+  String get checksQueueMissingSub =>
+      'Fayl ilova yangilangandan keyin yo‘qoldi';
+
+  @override
+  String get checksQueueNote =>
+      'Chek navbatda turganida u faqat shu telefonda saqlanadi. Ilovani o‘chirsangiz, chek yo‘qoladi';
+
+  @override
+  String get checksQueueDelete => 'O‘chirish';
+
+  @override
+  String get checksQueueRetake => 'Qayta olish';
+
+  @override
+  String get checksQueueRetry => 'Qayta urinish';
+
+  @override
+  String get rxCountedTitle => 'Kvestga hisoblandi';
+
+  @override
+  String get rxCountedCard => 'Blank kvestda hisobga olindi';
+
+  @override
+  String get rxCountedSub => 'Natija «Kvestlar» bo‘limida ko‘rinadi';
+
+  @override
+  String get rxCountedShort => 'Hisoblandi';
+
+  @override
+  String get rxCountedCaption => 'kvestga';
+
+  @override
+  String get loginAlreadyRegisteredBold =>
+      'Bu raqam allaqachon ro‘yxatdan o‘tgan';
+
+  @override
+  String get loginAlreadyRegisteredText => '— SMS koddan foydalanib kiring';
+
+  @override
+  String get medrepDoctorNoBlanks => 'Hozircha blankalar yo\'q';
+
+  @override
+  String rxQueueMeta(String when, int n) {
+    return '$when da olingan · $n ta rasm';
+  }
+
+  @override
+  String rxQueueTaken(String when, int n) {
+    return '$when da olingan · $n ta rasm · o\'zimiz yuboramiz';
+  }
+
+  @override
+  String rxQueueRejectedSub(String when, int n) {
+    return 'Server rasmni qabul qilmadi · $when · $n ta rasm';
+  }
+
+  @override
+  String get rxQueueNote =>
+      'Blanka navbatda turganda faqat shu telefonda saqlanadi. Ilovani o\'chirsangiz, blanka yo\'qoladi';
+
+  @override
+  String get rxDeleteTitle => 'Blankani o\'chirasizmi?';
+
+  @override
+  String get rxDeleteText =>
+      'Blanka hali yuborilmagan va faqat shu telefonda saqlanadi. O\'chirilgandan keyin uni qaytarib bo\'lmaydi';
+
+  @override
+  String get medrepDoctorNoBlanksSub =>
+      'Bu yerda shifokor yuborgan blankalar paydo bo\'ladi';
+
+  @override
+  String get medrepDoctorNew => 'Yangi';
 }

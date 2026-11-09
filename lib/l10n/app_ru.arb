@@ -818,7 +818,7 @@
   "checkDetailQuestCardTitle": "Зачёт в квесты",
   "checksEmpty": "Чеков пока нет",
   "checksAddedUploading": "Чек добавлен — загружается",
-  "checksNewCheckTitle": "Новый чек",
+  "checksNewCheckTitle": "Новые чеки",
   "checksTapToAddPhoto": "Нажмите чтобы добавить фото",
   "checksTakePhoto": "Сделать фото",
   "checksSubmitForReview": "Отправить на проверку",
@@ -1531,7 +1531,6 @@
   "questsSubtitleDoctor": "Фиксируйте случаи выписки",
   "questsSearchLabel": "Поиск квестов",
   "questsTabDone": "Завершённые",
-  "questsSortHint": "Сначала — ближе всего к награде",
   "questsAlmostDone": "Почти готово",
   "questsCompleted": "Выполнено",
   "questsOfGoalSales": "{goal, plural, one{из {goal} продажи} few{из {goal} продаж} many{из {goal} продаж} other{из {goal} продаж}}",
@@ -2218,7 +2217,7 @@
   "rxStatePendingTitle": "Бланк на проверке",
   "rxStatePendingText": "Специалист проверяет бланк. Обычно это занимает до 24 часов",
   "rxStateApprovedTitle": "Бланк одобрен",
-  "rxStateApprovedText": "Всё в порядке. IQC поступят на баланс в ближайшее время",
+  "rxStateApprovedText": "Всё в порядке — бланк засчитан в квест",
   "rxStateRejectedTitle": "Бланк отклонён",
   "rxStateRejectedHint": "Сфотографируйте бланк целиком при хорошем свете",
   "rxStepSent": "Отправлен",
@@ -3077,8 +3076,8 @@
   "checksHow3Title": "Хороший свет",
   "checksHow3Text": "Без бликов и тени от телефона",
   "checksSendFirst": "Отправить первый чек",
-  "checksPickSubtitle": "ИИ распознает препараты по фото",
-  "checksPhotosOf": "Фото: {n} из {max}",
+  "checksPickSubtitle": "До 10 чеков за раз · одно фото — один чек",
+  "checksPhotosOf": "{n} из {max} · каждое фото — отдельный чек",
   "@checksPhotosOf": {
     "placeholders": {
       "n": {
@@ -3096,15 +3095,15 @@
   "checksTakePhotoCta": "Сфотографировать чек",
   "checksPickGallery": "Выбрать из галереи",
   "checksRemovePhoto": "Удалить фото",
-  "checksAddMore": "Ещё фото",
+  "checksAddMore": "Ещё",
   "checksAddMoreA11y": "Добавить ещё фото",
   "checksPhotoWaiting": "Ждёт",
-  "checksPhotosHint": "Проверьте: номер чека, дата и препараты хорошо видны",
+  "checksPhotosHint": "Каждое фото станет отдельным чеком. Снимайте чек целиком",
   "checksSending": "Отправляем…",
   "checksSentTitle": "Чек отправлен",
-  "checksSentText": "Проверка обычно занимает до 24 часов. Сообщим, когда начислим IQC",
+  "checksSentText": "Проверка обычно занимает до 24 часов — сообщим о результате",
   "checksDone": "Готово",
-  "checksSendAnother": "Отправить ещё чек",
+  "checksSendAnother": "Отправить ещё",
   "checksSendFailed": "Не удалось сохранить фото. Попробуйте ещё раз",
   "checksCamTitle": "Разрешите доступ к камере",
   "checksCamText": "Камера нужна, чтобы фотографировать чеки и бланки",
@@ -3128,7 +3127,7 @@
   "checksHeroCreditedTitle": "IQC начислены",
   "checksHeroCreditedText": "Баллы зачислены на ваш баланс",
   "checksHeroRejectedTitle": "Чек отклонён",
-  "checksHeroRejectedText": "Сделайте чёткое фото — баллы ещё можно получить",
+  "checksHeroRejectedText": "Сделайте чёткое фото и отправьте снова",
   "checksStepSent": "Отправлен",
   "checksStepReview": "Проверка",
   "checksStepApproved": "Одобрен",
@@ -3582,5 +3581,95 @@
   "medrepPatientsHidden": "Данные пациентов медпреду не показываются",
   "medrepProfileCode": "Кодовое слово",
   "medrepProfileCodeSub": "Для приглашения в команду",
-  "medrepTeamNobody": "Здесь пока никого нет"
+  "medrepTeamNobody": "Здесь пока никого нет",
+  "checksPhotosHintBold": "Один чек — одно фото.",
+  "checksSendN": "{n, plural, one{Отправить {n} чек} few{Отправить {n} чека} many{Отправить {n} чеков} other{Отправить {n} чека}}",
+  "@checksSendN": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "checksSentN": "{n, plural, one{Отправлен {n} чек} few{Отправлено {n} чека} many{Отправлено {n} чеков} other{Отправлено {n} чека}}",
+  "@checksSentN": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "checksSentMultiText": "Каждое фото стало отдельным чеком. Проверка обычно занимает до 24 часов — сообщим о результате",
+  "checksQueueTitle": "Ждут отправки",
+  "checksQueueWaiting": "Ждёт сети",
+  "checksQueueSending": "Отправляем…",
+  "checksQueueTaken": "Снят {when} · отправим сами",
+  "@checksQueueTaken": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "checksQueueRejected": "Не отправится",
+  "checksQueueRejectedSub": "Сервер не принял фото · {when}",
+  "@checksQueueRejectedSub": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "checksQueueMissing": "Фото не сохранилось — переснимите",
+  "checksQueueMissingSub": "Файл пропал после обновления приложения",
+  "checksQueueNote": "Пока чек в очереди, он хранится только на этом телефоне. Удалите приложение — чек пропадёт",
+  "checksQueueDelete": "Удалить",
+  "checksQueueRetake": "Переснять",
+  "checksQueueRetry": "Повторить",
+  "rxCountedTitle": "Засчитан в квест",
+  "rxCountedCard": "Бланк учтён в квесте",
+  "rxCountedSub": "Прогресс видно во вкладке «Квесты»",
+  "rxCountedShort": "Засчитан",
+  "rxCountedCaption": "в квест",
+  "loginAlreadyRegisteredBold": "Этот номер уже зарегистрирован",
+  "loginAlreadyRegisteredText": "— войдите по коду из SMS",
+  "medrepDoctorNoBlanks": "Бланков пока нет",
+  "rxQueueMeta": "Снят {when} · {n} фото",
+  "@rxQueueMeta": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "rxQueueTaken": "Снят {when} · {n} фото · отправим сами",
+  "@rxQueueTaken": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "rxQueueRejectedSub": "Сервер не принял фото · {when} · {n} фото",
+  "@rxQueueRejectedSub": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "rxQueueNote": "Пока бланк в очереди, он хранится только на этом телефоне. Удалите приложение — бланк пропадёт",
+  "rxDeleteTitle": "Удалить бланк?",
+  "rxDeleteText": "Бланк ещё не отправлен и хранится только на этом телефоне. После удаления его не вернуть",
+  "medrepDoctorNoBlanksSub": "Здесь появятся бланки, которые отправит врач",
+  "medrepDoctorNew": "Новый"
 }

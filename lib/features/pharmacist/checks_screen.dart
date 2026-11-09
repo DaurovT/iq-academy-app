@@ -10,7 +10,6 @@ import '../../core/l10n/l10n.dart';
 import '../../core/models/check.dart';
 import '../../core/uploads/pending_upload.dart';
 import '../../core/uploads/upload_queue.dart';
-import '../../widgets/local_photo.dart';
 import '../../widgets/pq_states.dart';
 import '../shared/providers.dart';
 import 'checks/check_ui.dart';
@@ -173,17 +172,27 @@ class _ChecksScreenState extends ConsumerState<ChecksScreen> {
     final pq = context.pq;
     final l = context.l10n;
     final empty = list.isEmpty && queue.isEmpty;
+    // «Нужно переснять» — только свежие (30 дней) и только те, что есть
+    // смысл переснимать; остальные отклонённые видны в истории.
+    final retakeSince = DateTime.now().subtract(kRetakeWindow);
     final rejected = [
       for (final c in list)
-        if (c.status == CheckStatus.rejected) c,
+        if (c.status == CheckStatus.rejected &&
+            !rejectIsNotDocument(c.rejectReason) &&
+            (DateTime.tryParse(c.createdAt)?.isAfter(retakeSince) ?? true))
+          c,
     ];
     final review = [
       for (final c in list)
         if (checkStageOf(c.status).inReview) c,
     ];
+    // История: одобренные и отклонённые, которых нет в «Нужно переснять».
+    final retakeIds = {for (final c in rejected) c.id};
     final history = [
       for (final c in list)
-        if (c.status == CheckStatus.approved) c,
+        if (c.status == CheckStatus.approved ||
+            (c.status == CheckStatus.rejected && !retakeIds.contains(c.id)))
+          c,
     ];
 
     final offlineSend = Column(
@@ -232,6 +241,23 @@ class _ChecksScreenState extends ConsumerState<ChecksScreen> {
             onPressed: _send,
           ),
       ] else ...[
+        if (queue.isNotEmpty)
+          _Section(
+            title: l.checksQueueTitle,
+            count: queue.length,
+            tone: PqTone.warning,
+            child: _QueueCard(
+              items: queue,
+              online: online,
+              onRetry: () => ref.read(uploadQueueProvider.notifier).retryNow(),
+              onDelete:
+                  (id) => ref.read(uploadQueueProvider.notifier).remove(id),
+              onRetake: (id) async {
+                await ref.read(uploadQueueProvider.notifier).remove(id);
+                if (context.mounted) _send();
+              },
+            ),
+          ),
         if (rejected.isNotEmpty)
           _Section(
             title: l.checksSectionRetake,
@@ -248,20 +274,13 @@ class _ChecksScreenState extends ConsumerState<ChecksScreen> {
               ],
             ),
           ),
-        if (review.isNotEmpty || queue.isNotEmpty)
+        if (review.isNotEmpty)
           _Section(
             title: l.checksStatusPending,
-            count: review.length + queue.length,
+            count: review.length,
             tone: PqTone.warning,
             child: PqListCard(
               children: [
-                for (var i = 0; i < queue.length; i++)
-                  _QueueRow(
-                    item: queue[i],
-                    active: i == 0 && queue[i].lastError == null,
-                    onRetry:
-                        () => ref.read(uploadQueueProvider.notifier).retryNow(),
-                  ),
                 for (final c in review)
                   _ReviewRow(check: c, onOpen: () => _open(c)),
               ],
@@ -464,70 +483,220 @@ class _ReviewRow extends StatelessWidget {
 }
 
 /// Чек из очереди загрузки (ещё не дошёл до сервера).
+/// «Ждут отправки» (макет ChecksQueue): ждёт сети / не отправится /
+/// фото не сохранилось; внизу — напоминание, что очередь живёт на телефоне.
+class _QueueCard extends ConsumerWidget {
+  const _QueueCard({
+    required this.items,
+    required this.online,
+    required this.onRetry,
+    required this.onDelete,
+    required this.onRetake,
+  });
+
+  final List<PendingUpload> items;
+  final bool online;
+  final VoidCallback onRetry;
+  final ValueChanged<String> onDelete;
+  final ValueChanged<String> onRetake;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final pq = context.pq;
+    final l = context.l10n;
+    // Первый ждущий при наличии сети — сейчас отправляется.
+    final sendingId =
+        online ? items.where((e) => !e.stuck).firstOrNull?.id : null;
+    return PqCard(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        children: [
+          for (var i = 0; i < items.length; i++)
+            Container(
+              decoration: BoxDecoration(
+                border: Border(bottom: BorderSide(color: pq.divider)),
+              ),
+              child: _QueueRow(
+                item: items[i],
+                sending: items[i].id == sendingId && items[i].lastError == null,
+                onRetry: onRetry,
+                onDelete: () => onDelete(items[i].id),
+                onRetake: () => onRetake(items[i].id),
+              ),
+            ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 14, 0, 16),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 1),
+                  child: PqIcon(
+                    PqIcons.smartphone,
+                    size: 18,
+                    color: pq.accentText,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    l.checksQueueNote,
+                    style: PqText.body(c: pq.textSecondary),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _QueueRow extends StatelessWidget {
   const _QueueRow({
     required this.item,
-    required this.active,
+    required this.sending,
     required this.onRetry,
+    required this.onDelete,
+    required this.onRetake,
   });
 
   final PendingUpload item;
-  final bool active;
+  final bool sending;
   final VoidCallback onRetry;
+  final VoidCallback onDelete;
+  final VoidCallback onRetake;
 
   @override
   Widget build(BuildContext context) {
     final pq = context.pq;
     final l = context.l10n;
-    final failed = item.lastError != null;
-    final path = item.filePaths.isEmpty ? null : item.filePaths.first;
+    final when = formatShortDateTime(item.createdAt);
+    final (PqIcons icon, PqTone tone, String title, String sub) = switch (item
+        .state) {
+      UploadState.rejected => (
+        PqIcons.octagonX,
+        PqTone.danger,
+        l.checksQueueRejected,
+        l.checksQueueRejectedSub(when),
+      ),
+      UploadState.missing => (
+        PqIcons.imageOff,
+        PqTone.danger,
+        l.checksQueueMissing,
+        l.checksQueueMissingSub,
+      ),
+      UploadState.waiting => (
+        PqIcons.wifiOff,
+        PqTone.warning,
+        sending ? l.checksQueueSending : l.checksQueueWaiting,
+        l.checksQueueTaken(when),
+      ),
+    };
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 14),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child:
-                path == null
-                    ? const PqIconTile(PqIcons.receipt, tone: PqTone.warning)
-                    : SizedBox.square(
-                      dimension: 44,
-                      child: localPhoto(path, width: 44, height: 44),
+          Row(
+            children: [
+              PqIconTile(icon, tone: tone),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title, style: PqText.rowTitle(c: pq.text)),
+                    const SizedBox(height: 3),
+                    Text(
+                      sub,
+                      style: PqText.caption(
+                        c: pq.textMuted,
+                      ).copyWith(height: 1.4),
                     ),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  failed ? l.checksUploadQueued : l.checksUploadingRow,
-                  style: PqText.rowTitle(c: pq.text),
+                  ],
                 ),
-                const SizedBox(height: 3),
-                Text(
-                  failed
-                      ? l.checksUploadAuto
-                      : l.checksPhotoCount(item.filePaths.length),
-                  style: PqText.caption(c: pq.textMuted),
-                ),
+              ),
+              if (!item.stuck) ...[
+                const SizedBox(width: 12),
+                if (sending)
+                  PqSpinner(color: pq.accent, trackColor: pq.borderStrong)
+                else
+                  _OutlinePill(
+                    label: l.checksQueueRetry,
+                    icon: PqIcons.refresh,
+                    color: pq.text,
+                    onTap: onRetry,
+                  ),
               ],
-            ),
+            ],
           ),
-          const SizedBox(width: 12),
-          if (failed)
-            PqPillButton(
-              label: l.asyncRetry,
-              icon: PqIcons.refresh,
-              background: pq.surfaceAlt,
-              foreground: pq.accentText,
-              onPressed: onRetry,
-            )
-          else if (active)
-            PqSpinner(color: pq.accent, trackColor: pq.borderStrong)
-          else
-            PqIcon(PqIcons.clock, size: 20, color: pq.textMuted),
+          if (item.stuck) ...[
+            const SizedBox(height: 12),
+            Padding(
+              padding: const EdgeInsets.only(left: 58),
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  _OutlinePill(
+                    label: l.checksQueueDelete,
+                    icon: PqIcons.trash,
+                    color: pq.danger,
+                    onTap: onDelete,
+                  ),
+                  PqPillButton(
+                    label: l.checksQueueRetake,
+                    icon: PqIcons.camera,
+                    onPressed: onRetake,
+                  ),
+                ],
+              ),
+            ),
+          ],
         ],
+      ),
+    );
+  }
+}
+
+/// Контурная капсула 40 (рамка border, прозрачный фон): «Повторить», «Удалить».
+class _OutlinePill extends StatelessWidget {
+  const _OutlinePill({
+    required this.label,
+    required this.icon,
+    required this.color,
+    required this.onTap,
+  });
+
+  final String label;
+  final PqIcons icon;
+  final Color color;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final pq = context.pq;
+    return PqPressable(
+      onTap: onTap,
+      semanticLabel: label,
+      scale: .96,
+      child: Container(
+        height: 40,
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: pq.border),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            PqIcon(icon, size: 16, color: color),
+            const SizedBox(width: 6),
+            Text(label, style: PqText.text(14, FontWeight.w600, c: color)),
+          ],
+        ),
       ),
     );
   }
@@ -603,6 +772,22 @@ class _HistoryRow extends StatelessWidget {
         .map((d) => d.name)
         .where((s) => s.isNotEmpty)
         .join(', ');
+    if (check.status == CheckStatus.rejected) {
+      final reason = check.rejectReason?.trim() ?? '';
+      return PqListRow(
+        title: reason.isEmpty ? l.checkDetailTitle(check.id) : reason,
+        subtitle: l.checksNumberDate(
+          check.id,
+          formatShortDateTime(check.createdAt),
+        ),
+        icon: CheckStage.rejected.icon,
+        tone: CheckStage.rejected.tone,
+        value: l.checksStatusRejected,
+        valueIsAmount: false,
+        valueTone: PqTone.danger,
+        onTap: onTap,
+      );
+    }
     final approved = l.checksStatusApproved;
     return PqListRow(
       title: names.isEmpty ? l.checkDetailTitle(check.id) : names,

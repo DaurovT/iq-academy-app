@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/auth/auth_controller.dart';
+import '../../../core/format.dart';
 import '../../../core/design/design.dart';
 import '../../../core/l10n/l10n.dart';
 import '../../../core/models/common.dart';
@@ -25,7 +26,7 @@ class RoleSelectScreen extends ConsumerWidget {
     final l10n = context.l10n;
     final account = ref.watch(authControllerProvider).asData?.value.account;
     final roles = account?.roles ?? const <Role>[];
-    final name = (account?.fullName ?? '').trim().split(RegExp(r'\s+')).first;
+    final name = greetingName(account?.fullName, firstName: account?.firstName);
 
     return AuthScreen(
       child: AuthFlow(

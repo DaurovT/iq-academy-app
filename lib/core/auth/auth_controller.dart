@@ -1,4 +1,8 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../api/api_exception.dart';
 import '../api/providers.dart';
 import '../models/account.dart';
 import '../models/common.dart';
@@ -31,13 +35,64 @@ class AuthController extends AsyncNotifier<AuthState> {
     final token = await tokens.readToken();
     if (token == null) return const AuthState();
 
+    // Выходим из аккаунта ТОЛЬКО если сервер сказал «нет доступа» (401).
+    // Нет сети, таймаут, сервер перезапускается при выкатке — остаёмся
+    // в аккаунте: повторяем запрос, а не получилось — берём аккаунт из кэша.
+    Object? lastError;
+    for (var attempt = 0; attempt < 3; attempt++) {
+      try {
+        final s = await ref.read(apiProvider).auth.session();
+        if (s.token != null) await tokens.writeToken(s.token!);
+        await _cacheAccount(s.account);
+        return AuthState(
+          account: s.account,
+          activeRole: _resolveRole(s.account, await tokens.readActiveRole()),
+        );
+      } catch (e) {
+        if (isUnauthorized(e)) {
+          await tokens.clear();
+          return const AuthState();
+        }
+        lastError = e;
+        if (attempt < 2) {
+          await Future<void>.delayed(Duration(seconds: 2 + attempt * 3));
+        }
+      }
+    }
+    final cached = await _cachedAccount();
+    if (cached != null) {
+      return AuthState(
+        account: cached,
+        activeRole: _resolveRole(cached, await tokens.readActiveRole()),
+      );
+    }
+    // Ни сети, ни кэша (первый запуск после обновления): токен НЕ трогаем —
+    // покажем экран входа, а при следующем запуске сессия восстановится.
+    Error.throwWithStackTrace(
+      lastError ?? StateError('no session'),
+      StackTrace.current,
+    );
+  }
+
+  /// Ответ 401 — токен недействителен (все прочие ошибки — проблемы связи).
+  static bool isUnauthorized(Object e) {
+    final err = e is DioException ? e.error : e;
+    return err is ApiException && err.unauthorized;
+  }
+
+  Future<void> _cacheAccount(Account a) async {
     try {
-      final account = await ref.read(apiProvider).auth.session();
-      return AuthState(account: account, activeRole: _resolveRole(account, await tokens.readActiveRole()));
+      await ref.read(tokenStoreProvider).writeAccount(jsonEncode(a.toJson()));
+    } catch (_) {}
+  }
+
+  Future<Account?> _cachedAccount() async {
+    try {
+      final raw = await ref.read(tokenStoreProvider).readAccount();
+      if (raw == null) return null;
+      return Account.fromJson(jsonDecode(raw) as Map<String, dynamic>);
     } catch (_) {
-      // Токен протух — чистим и считаем гостем.
-      await tokens.clear();
-      return const AuthState();
+      return null;
     }
   }
 
@@ -54,9 +109,9 @@ class AuthController extends AsyncNotifier<AuthState> {
   Future<void> completeLogin(Session session) async {
     final tokens = ref.read(tokenStoreProvider);
     await tokens.writeToken(session.token);
-    final role = session.account.roles.length == 1
-        ? session.account.roles.first
-        : null;
+    await _cacheAccount(session.account);
+    final role =
+        session.account.roles.length == 1 ? session.account.roles.first : null;
     if (role != null) await tokens.writeActiveRole(role.name);
     state = AsyncData(AuthState(account: session.account, activeRole: role));
   }

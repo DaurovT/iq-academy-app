@@ -137,9 +137,10 @@ class _HomeList extends StatelessWidget {
   }
 }
 
-String _name(WidgetRef ref) =>
-    ref.watch(authControllerProvider).asData?.value.account?.fullName.trim() ??
-    '';
+String _name(WidgetRef ref) {
+  final a = ref.watch(authControllerProvider).asData?.value.account;
+  return greetingName(a?.fullName, firstName: a?.firstName);
+}
 
 // ── Главная (макет Refined) ─────────────────────────────────────────────
 

@@ -12,6 +12,7 @@ class TokenStore {
   static const _kThemeMode = 'themeMode';
   static const _kLocale = 'locale';
   static const _kModules = 'appModules';
+  static const _kAccount = 'account';
 
   Future<String?> readToken() => _storage.read(key: _kToken);
   Future<void> writeToken(String token) => _write(_kToken, token);
@@ -46,9 +47,15 @@ class TokenStore {
       (await _storage.read(key: 'tourDone_$account')) == '1';
   Future<void> writeTourDone(String account) => _write('tourDone_$account', '1');
 
-  /// Чистит только сессию (токен + роль); настройки (тема) остаются.
+  /// Последний полученный аккаунт (JSON) — чтобы без связи остаться
+  /// в приложении, а не выкидывать человека на вход.
+  Future<String?> readAccount() => _storage.read(key: _kAccount);
+  Future<void> writeAccount(String json) => _write(_kAccount, json);
+
+  /// Чистит только сессию (токен, роль, аккаунт); настройки (тема) остаются.
   Future<void> clear() async {
     await _storage.delete(key: _kToken);
     await _storage.delete(key: _kActiveRole);
+    await _storage.delete(key: _kAccount);
   }
 }

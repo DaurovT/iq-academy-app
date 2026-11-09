@@ -12,6 +12,9 @@ UploadStorage createUploadStorage() => IoUploadStorage();
 
 /// Мобильная реализация: фото копируются в папку документов (temp может быть
 /// очищен системой), индекс очереди — JSON рядом с ними.
+///
+/// В индексе хранятся только имена файлов, путь к папке собирается заново при
+/// каждом запуске: на iOS путь контейнера приложения меняется при обновлении.
 class IoUploadStorage implements UploadStorage {
   Directory? _dir;
 
@@ -22,6 +25,10 @@ class IoUploadStorage implements UploadStorage {
   }
 
   File get _indexFile => File('${_dir!.path}/queue.json');
+
+  /// Имя файла → полный путь в текущей папке очереди. Старые записи (до 1.2.2)
+  /// хранили абсолютный путь — берём из него только имя.
+  String _resolve(String stored) => '${_dir!.path}/${stored.split('/').last}';
 
   @override
   List<PendingUpload> load() {
@@ -47,22 +54,48 @@ class IoUploadStorage implements UploadStorage {
   Future<List<String>> persist(String id, List<XFile> photos) async {
     final out = <String>[];
     for (var i = 0; i < photos.length; i++) {
-      final dst = '${_dir!.path}/${id}_$i.jpg';
-      await File(photos[i].path).copy(dst);
-      out.add(dst);
+      final name = '${id}_$i.jpg';
+      await File(photos[i].path).copy('${_dir!.path}/$name');
+      out.add(name);
     }
     return out;
   }
 
   @override
+  String previewPath(String stored) => _resolve(stored);
+
+  @override
+  Future<bool> filesExist(PendingUpload item) async =>
+      item.filePaths.isNotEmpty &&
+      item.filePaths.every((p) => File(_resolve(p)).existsSync());
+
+  @override
   Future<List<UploadFile>> readFiles(PendingUpload item) async =>
-      item.filePaths.map((p) => UploadFile(path: p)).toList();
+      item.filePaths.map((p) => UploadFile(path: _resolve(p))).toList();
 
   @override
   Future<void> cleanup(PendingUpload item) async {
     for (final p in item.filePaths) {
-      final f = File(p);
+      final f = File(_resolve(p));
       if (f.existsSync()) f.deleteSync();
     }
+  }
+
+  File get _captureFile => File('${_dir!.path}/capture.txt');
+
+  @override
+  Future<void> markCapture(String? kind) async {
+    if (_dir == null) return;
+    if (kind == null) {
+      if (_captureFile.existsSync()) _captureFile.deleteSync();
+    } else {
+      _captureFile.writeAsStringSync(kind);
+    }
+  }
+
+  @override
+  Future<String?> readCapture() async {
+    if (_dir == null || !_captureFile.existsSync()) return null;
+    return _captureFile.readAsStringSync();
   }
 }

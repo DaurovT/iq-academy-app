@@ -52,11 +52,8 @@ class _QuestsScreenState extends ConsumerState<QuestsScreen> {
       );
     } else {
       final all = listAsync.asData?.value;
-      final active =
-          all == null
-              ? null
-              : (all.where((q) => q.status == QuestStatus.active).toList()
-                ..sort((a, b) => b.progress.compareTo(a.progress)));
+      // Порядок — как отдаёт сервер: ручной из админки, иначе свежие сверху.
+      final active = all?.where((q) => q.status == QuestStatus.active).toList();
       body = PqRefresh(
         onRefresh: () => _refresh(target),
         child: ListView(
@@ -300,7 +297,6 @@ class _ActiveContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pq = context.pq;
     final l = context.l10n;
     final list =
         quests.isEmpty
@@ -313,12 +309,8 @@ class _ActiveContent extends StatelessWidget {
             : Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(
-                  l.questsSortHint,
-                  style: PqText.body(c: pq.textMuted).copyWith(height: 1.4),
-                ),
                 for (final q in quests) ...[
-                  const SizedBox(height: 12),
+                  if (q != quests.first) const SizedBox(height: 12),
                   QuestCard(
                     quest: q,
                     onTap: () => context.push('/app/quests/${q.id}'),

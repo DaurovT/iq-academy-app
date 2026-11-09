@@ -1267,7 +1267,7 @@ class AppLocalizationsTg extends AppLocalizations {
   String get checksAddedUploading => 'Чек илова шуд — бор мешавад';
 
   @override
-  String get checksNewCheckTitle => 'Чеки нав';
+  String get checksNewCheckTitle => 'Чекҳои нав';
 
   @override
   String get checksTapToAddPhoto => 'Барои илова кардани акс пахш кунед';
@@ -2247,9 +2247,6 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get questsTabDone => 'Анҷомёфта';
-
-  @override
-  String get questsSortHint => 'Аввал — наздиктарин ба мукофот';
 
   @override
   String get questsAlmostDone => 'Қариб тайёр';
@@ -3274,8 +3271,7 @@ class AppLocalizationsTg extends AppLocalizations {
   String get rxStateApprovedTitle => 'Бланк тасдиқ шуд';
 
   @override
-  String get rxStateApprovedText =>
-      'Ҳама чиз хуб аст. IQC ба наздикӣ ба баланс мегузаранд';
+  String get rxStateApprovedText => 'Ҳамааш хуб — бланк ба квест ҳисоб шуд';
 
   @override
   String get rxStateRejectedTitle => 'Бланк рад шуд';
@@ -4453,11 +4449,11 @@ class AppLocalizationsTg extends AppLocalizations {
   String get checksSendFirst => 'Фиристодани чеки аввал';
 
   @override
-  String get checksPickSubtitle => 'ЗС доруҳоро аз рӯи акс муайян мекунад';
+  String get checksPickSubtitle => 'Як бор то 10 чек · як акс — як чек';
 
   @override
   String checksPhotosOf(int n, int max) {
-    return 'Акс: $n аз $max';
+    return '$n аз $max · ҳар акс — чеки алоҳида';
   }
 
   @override
@@ -4482,7 +4478,7 @@ class AppLocalizationsTg extends AppLocalizations {
   String get checksRemovePhoto => 'Нест кардани акс';
 
   @override
-  String get checksAddMore => 'Боз акс';
+  String get checksAddMore => 'Боз';
 
   @override
   String get checksAddMoreA11y => 'Боз акс илова кардан';
@@ -4492,7 +4488,7 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get checksPhotosHint =>
-      'Санҷед: рақами чек, сана ва доруҳо хуб намоёнанд';
+      'Ҳар акс чеки алоҳида мешавад. Чекро пурра акс гиред';
 
   @override
   String get checksSending => 'Фиристода мешавад…';
@@ -4502,13 +4498,13 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get checksSentText =>
-      'Санҷиш одатан то 24 соат давом мекунад. Ҳангоми ҳисоб шудани IQC хабар медиҳем';
+      'Санҷиш одатан то 24 соат давом мекунад — натиҷаро хабар медиҳем';
 
   @override
   String get checksDone => 'Тайёр';
 
   @override
-  String get checksSendAnother => 'Боз чек фиристодан';
+  String get checksSendAnother => 'Боз фиристодан';
 
   @override
   String get checksSendFailed => 'Аксро нигоҳ доштан нашуд. Боз кӯшиш кунед';
@@ -4588,8 +4584,7 @@ class AppLocalizationsTg extends AppLocalizations {
   String get checksHeroRejectedTitle => 'Чек рад шуд';
 
   @override
-  String get checksHeroRejectedText =>
-      'Акси равшан гиред — холҳоро ҳанӯз гирифтан мумкин аст';
+  String get checksHeroRejectedText => 'Акси равшан гиред ва дубора фиристед';
 
   @override
   String get checksStepSent => 'Фиристода шуд';
@@ -5555,4 +5550,130 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get medrepTeamNobody => 'Дар ин ҷо ҳоло касе нест';
+
+  @override
+  String get checksPhotosHintBold => 'Як чек — як акс.';
+
+  @override
+  String checksSendN(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'Фиристодани $n чек',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String checksSentN(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n чек фиристода шуд',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get checksSentMultiText =>
+      'Ҳар акс чеки алоҳида шуд. Санҷиш одатан то 24 соат давом мекунад — натиҷаро хабар медиҳем';
+
+  @override
+  String get checksQueueTitle => 'Интизори фиристодан';
+
+  @override
+  String get checksQueueWaiting => 'Интизори шабака';
+
+  @override
+  String get checksQueueSending => 'Фиристода мешавад…';
+
+  @override
+  String checksQueueTaken(String when) {
+    return '$when гирифта шуд · худамон мефиристем';
+  }
+
+  @override
+  String get checksQueueRejected => 'Фиристода намешавад';
+
+  @override
+  String checksQueueRejectedSub(String when) {
+    return 'Сервер аксро қабул накард · $when';
+  }
+
+  @override
+  String get checksQueueMissing => 'Акс нигоҳ дошта нашуд — аз нав гиред';
+
+  @override
+  String get checksQueueMissingSub => 'Файл пас аз навсозии барнома гум шуд';
+
+  @override
+  String get checksQueueNote =>
+      'То чек дар навбат аст, он танҳо дар ҳамин телефон нигоҳ дошта мешавад. Барномаро нест кунед — чек гум мешавад';
+
+  @override
+  String get checksQueueDelete => 'Нест кардан';
+
+  @override
+  String get checksQueueRetake => 'Аз нав гирифтан';
+
+  @override
+  String get checksQueueRetry => 'Такрор кардан';
+
+  @override
+  String get rxCountedTitle => 'Ба квест ҳисоб шуд';
+
+  @override
+  String get rxCountedCard => 'Бланк дар квест ба ҳисоб гирифта шуд';
+
+  @override
+  String get rxCountedSub => 'Пешрафт дар бахши «Квестҳо» дида мешавад';
+
+  @override
+  String get rxCountedShort => 'Ҳисоб шуд';
+
+  @override
+  String get rxCountedCaption => 'ба квест';
+
+  @override
+  String get loginAlreadyRegisteredBold =>
+      'Ин рақам аллакай ба қайд гирифта шудааст';
+
+  @override
+  String get loginAlreadyRegisteredText => '— бо рамзи SMS ворид шавед';
+
+  @override
+  String get medrepDoctorNoBlanks => 'Ҳоло бланкаҳо нест';
+
+  @override
+  String rxQueueMeta(String when, int n) {
+    return '$when гирифта шуд · $n акс';
+  }
+
+  @override
+  String rxQueueTaken(String when, int n) {
+    return '$when гирифта шуд · $n акс · худамон мефиристем';
+  }
+
+  @override
+  String rxQueueRejectedSub(String when, int n) {
+    return 'Сервер аксро қабул накард · $when · $n акс';
+  }
+
+  @override
+  String get rxQueueNote =>
+      'То бланка дар навбат аст, он танҳо дар ҳамин телефон нигоҳ дошта мешавад. Барномаро нест кунед — бланка гум мешавад';
+
+  @override
+  String get rxDeleteTitle => 'Бланкаро нест кунем?';
+
+  @override
+  String get rxDeleteText =>
+      'Бланка ҳанӯз фиристода нашудааст ва танҳо дар ҳамин телефон нигоҳ дошта мешавад. Пас аз нест кардан онро баргардондан мумкин нест';
+
+  @override
+  String get medrepDoctorNoBlanksSub =>
+      'Дар ин ҷо бланкаҳое, ки табиб мефиристад, пайдо мешаванд';
+
+  @override
+  String get medrepDoctorNew => 'Нав';
 }

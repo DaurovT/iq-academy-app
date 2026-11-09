@@ -15,6 +15,7 @@ _Account _$AccountFromJson(Map<String, dynamic> json) => _Account(
       (json['roles'] as List<dynamic>)
           .map((e) => $enumDecode(_$RoleEnumMap, e))
           .toList(),
+  firstName: json['firstName'] as String?,
 );
 
 Map<String, dynamic> _$AccountToJson(_Account instance) => <String, dynamic>{
@@ -23,6 +24,7 @@ Map<String, dynamic> _$AccountToJson(_Account instance) => <String, dynamic>{
   'fullName': instance.fullName,
   'language': _$LanguageEnumMap[instance.language]!,
   'roles': instance.roles.map((e) => _$RoleEnumMap[e]!).toList(),
+  'firstName': instance.firstName,
 };
 
 const _$LanguageEnumMap = {
