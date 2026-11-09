@@ -1,8 +1,10 @@
-WHAT CHANGED IN 1.2.1
-A small update on top of 1.2: minor design refinements and clearer wording on several screens. Two functional additions:
-1) Registration now has a «Кодовое слово медпреда» (medical representative code word) field. It links a new user to the representative who invited them. It is required for doctors and optional for pharmacists. The demo accounts below are already registered, so no code word is needed to sign in. The code word of the demo medical representative is shown in that account: «Профиль» (Profile) → «Кодовое слово» (Code word).
-2) Medical representatives have a «Команда» (Team) tab that lists the pharmacists and doctors linked to them.
-The business model is unchanged. There are still no in-app purchases, no subscriptions and no payments of any kind; IQC are internal loyalty points that cannot be bought or exchanged for money.
+WHAT CHANGED IN 1.2.2
+A maintenance update, no new features and no change to the business model:
+1) Photo uploads are more reliable on slow mobile networks: photos are compressed before sending, and several receipts can be sent at once (each photo becomes a separate receipt).
+2) Photos that could not be sent yet are listed in a «Ждут отправки» (Waiting to be sent) block on the receipts and forms screens, where they can be deleted or retaken.
+3) The app no longer signs the user out after a network error; it signs out only when the server rejects the session.
+4) Minor design and wording fixes.
+There are still no in-app purchases, no subscriptions and no payments of any kind; IQC are internal loyalty points that cannot be bought or exchanged for money.
 
 WHAT THE APP IS
 PharmIQ Academy is a professional learning and loyalty app for pharmacy staff and doctors in Uzbekistan who take part in partner programs of pharmaceutical companies. Users take short courses and quizzes, answer surveys, complete activity quests and earn IQC points. The interface is in Russian (also Uzbek, Kazakh, Kyrgyz, Tajik); Russian button names are given in quotes below.
@@ -21,7 +23,7 @@ Pharmacists upload a photo of a pharmacy receipt, doctors a photo of a prescript
 
 SUPER SAPPER («Супер Сапёр») — LOYALTY POINTS PRIZE PROMOTION
 A scheduled prize promotion for program participants. No money is involved: participants pick cells on a shared field using IQC loyalty points, which cannot be purchased, transferred or exchanged for money. The full prize list, cell price and dates are shown before participation; all cells are revealed at the announced time and prizes (partner gift vouchers or bonus points) are delivered automatically; if a promotion is cancelled, all points are refunded. The organizer is PHARMIQ ACADEMY LLC; Apple is not a sponsor and is not involved.
-To try it: sign in as the Pharmacist demo account — it is topped up to 60 IQC on every sign-in (one cell costs 5 IQC); a promotion is active until 13 October 2026. «Главная» (Home) → «Мини-приложения» (Mini apps) → «Супер Сапёр» → pick a cell → confirm.
+There is no running promotion at the moment, so the screen shows the last finished promotion with its results and rules. When a promotion runs, the Pharmacist demo account is topped up to 60 IQC on every sign-in (one cell costs 5 IQC). Path: «Главная» (Home) → «Мини-приложения» (Mini apps) → «Супер Сапёр».
 Official rules: in the app — «Правила акции» (Promotion rules) on the promotion page and in the cell confirmation dialog — and at https://pharmview.uz/legal/sapper-rules
 
 SIGN-IN
