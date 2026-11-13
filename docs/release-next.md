@@ -1,7 +1,7 @@
 # Пул к следующему релизу приложения
 
 Всё, что нельзя исправить на сервере и что попадёт к людям только с новой сборкой в App Store и
-Google Play. Последний релиз в сторах — **1.2.1 (сборка 4)**, отправлен 08.10.2026
+Google Play. Последний релиз в сторах — **1.2.2 (сборка 5)**, отправлен 08.10.2026
 (`docs/store/release-1.2.1-status.md`: «Команда» медпреда, кодовое слово, «Доп. проверка», правки
 формулировок). Для нового релиза поднять версию в `pubspec.yaml` до **`1.2.2+5`**.
 
@@ -79,21 +79,25 @@ Google Play. Последний релиз в сторах — **1.2.1 (сбор
 - Медпред: карточка врача без бланков (MedDoctorEmpty): метка «Новый» вместо «Активный»,
   пустое состояние «Бланков пока нет».
 
+## Готово к 1.2.3 (13.11.2026)
+
+Версия `1.2.3+6`.
+
+- **Видео урока на телефоне «грузится и не играет»** (жалоба 13.11.2026). Плеер урока
+  (`lib/widgets/video_frame_io.dart`) теперь создаётся с настройками медиа: на iOS видео играет
+  внутри экрана и без нажатия (`allowsInlineMediaPlayback`, пустой `mediaTypesRequiringUserAction`),
+  на Android звук разрешён без жеста (`setMediaPlaybackRequiresUserGesture(false)`); в ссылку Vimeo
+  добавлен `playsinline=1`. Пакеты `webview_flutter_wkwebview` и `webview_flutter_android` стали
+  прямыми зависимостями.
+  Проверено `integration_test/video_play_test.dart` на видео урока «Тонзилгон Н»:
+  - iPhone (симулятор, iOS 18.7): раньше плеер вставал на паузе (воспроизвели жалобу), теперь
+    видео идёт со звуком через ~14 с после открытия;
+  - Android 11 (планшет SM-T515): раньше Vimeo запускал видео без звука, теперь со звуком
+    через ~6 с.
+
 ## Нужно сделать
 
-Найдено после отправки 1.2.2 на проверку (13.11.2026) — в следующую сборку.
-
-1. **Видео урока на телефоне «грузится и не играет»** (жалоба 13.11.2026). На сервере и Vimeo всё
-   в порядке: все 31 видео опубликованных курсов готовы, `embed=public`, плеер отдаёт 200, версии
-   240p–1080p mp4. Проблема в плеере приложения: `lib/widgets/video_frame_io.dart` создаёт
-   `WebViewController()` без настроек медиа, а `video_source.dart` просит Vimeo `autoplay=1` со звуком.
-   - iOS: создавать контроллер с `WebKitWebViewControllerCreationParams(allowsInlineMediaPlayback: true,
-     mediaTypesRequiringUserAction: const <PlaybackMediaTypes>{})` (пакет `webview_flutter_wkwebview`);
-   - Android: `(controller.platform as AndroidWebViewController).setMediaPlaybackRequiresUserGesture(false)`
-     (пакет `webview_flutter_android`);
-   - в ссылку Vimeo добавить `&playsinline=1` (и при желании `&muted=1` для автозапуска без звука —
-     тогда нужна подсказка «включите звук»);
-   - проверить на реальных iPhone и Android до отправки в сторы.
+Пока ничего.
 
 ## Сделано без релиза (для справки)
 

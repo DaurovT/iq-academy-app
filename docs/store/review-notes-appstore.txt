@@ -1,3 +1,6 @@
+WHAT CHANGED IN 1.2.3
+A bug-fix update: lesson videos now start playing inside the lesson screen (before, the player could stay paused on some phones). No new features and no change to the business model.
+
 WHAT CHANGED IN 1.2.2
 A maintenance update, no new features and no change to the business model:
 1) Photo uploads are more reliable on slow mobile networks: photos are compressed before sending, and several receipts can be sent at once (each photo becomes a separate receipt).

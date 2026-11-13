@@ -10,7 +10,7 @@ String embedUrl(String url) {
     final h = RegExp(r'[?&]h=([0-9a-zA-Z]+)').firstMatch(url)?.group(1);
     final hash = h != null ? '&h=$h' : '';
     return 'https://player.vimeo.com/video/${vimeo.group(1)}'
-        '?autoplay=1&title=0&byline=0$hash';
+        '?autoplay=1&playsinline=1&title=0&byline=0$hash';
   }
   final yt = RegExp(r'(?:youtu\.be/|youtube\.com/watch\?v=)([\w-]+)')
       .firstMatch(url);

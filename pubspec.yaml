@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.2.2+5
+version: 1.2.3+6
 
 environment:
   sdk: ^3.7.0
@@ -40,6 +40,10 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter_svg: ^2.0.10
   webview_flutter: ^4.10.0
+  # Настройки медиа плеера урока: воспроизведение внутри экрана (iOS) и
+  # автозапуск без жеста (Android) — иначе видео «грузится и не играет».
+  webview_flutter_android: ^4.14.1
+  webview_flutter_wkwebview: ^3.26.1
   flutter_riverpod: ^3.3.2
   dio: ^5.10.0
   go_router: ^17.0.0
@@ -67,6 +71,9 @@ dependencies:
 
 dev_dependencies:
   flutter_test:
+    sdk: flutter
+  # Проверки на симуляторе/устройстве (integration_test/): видео урока.
+  integration_test:
     sdk: flutter
 
   # The "flutter_lints" package below contains a set of recommended lints to
