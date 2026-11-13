@@ -9,6 +9,12 @@
 # packages, and plugins designed to encourage good coding practices.
 include: package:flutter_lints/flutter.yaml
 
+analyzer:
+  # Проверки на устройстве: пакет integration_test подключается только на
+  # время запуска (см. шапку integration_test/video_play_test.dart).
+  exclude:
+    - integration_test/**
+
 linter:
   # The lint rules applied to this project can be customized in the
   # section below to disable rules from the `package:flutter_lints/flutter.yaml`

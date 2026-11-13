@@ -1,6 +1,11 @@
 // Видео урока должно само запускаться в плеере приложения (жалоба 13.11.2026:
 // «грузится и не играет»). Запуск на симуляторе или устройстве:
 //   flutter test integration_test/video_play_test.dart -d <device>
+// Пакет integration_test в pubspec не держим — иначе его модуль попадает в
+// сборку для магазинов. Перед запуском добавьте в dev_dependencies:
+//   integration_test:
+//     sdk: flutter
+// и не коммитьте это изменение.
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
