@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/design/design.dart';
+import '../../core/img.dart';
 import '../../core/l10n/l10n.dart';
 import '../../core/models/learn.dart';
 import '../../widgets/pq_states.dart';
@@ -421,253 +422,269 @@ class _SearchHeaderState extends State<_SearchHeader> {
 /// Карточка курса (макет Learn): обложка 150, название + награда, описание,
 /// три плитки (видео · тест · награда), прогресс и кнопка-действие.
 /// Плитки и награда берутся из детали курса (в списке их нет).
+/// Карточка курса (макет CourseCardC «обложка»): обложка во всю карточку,
+/// снизу затемнение, на нём название, длительность видео и число вопросов;
+/// сверху метка категории и награда, в углу круглая кнопка запуска.
 class _CourseCard extends ConsumerWidget {
   const _CourseCard({super.key, required this.course, required this.onTap});
 
   final Course course;
   final VoidCallback onTap;
 
+  /// Обложки без картинки — градиент по курсу (как в макете: розовый,
+  /// зелёный, оранжевый…), стабильный между запусками.
+  static const _gradients = <List<Color>>[
+    [Color(0xFFBE185D), Color(0xFFF472B6)],
+    [Color(0xFF15803D), Color(0xFF4ADE80)],
+    [Color(0xFFC2410C), Color(0xFFFB923C)],
+    [Color(0xFF1D4ED8), Color(0xFF60A5FA)],
+    [Color(0xFF6D28D9), Color(0xFFA78BFA)],
+  ];
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final pq = context.pq;
     final l = context.l10n;
-    final detail = ref.watch(courseDetailProvider(course.id));
-    final lessons = detail.asData?.value.lessons;
+    final detail = ref.watch(courseDetailProvider(course.id)).asData?.value;
+    final lessons = detail?.lessons;
     final stats = lessons == null ? null : learnStats(lessons);
     final done = course.progress >= 1;
-    final started = course.progress > 0;
-    final pct = (course.progress.clamp(0, 1) * 100).round();
+    final started = course.progress > 0 && !done;
+    final quiz = lessons?.where((x) => x.kind == 'quiz').firstOrNull;
+    final questions = quiz == null
+        ? null
+        : ref
+            .watch(quizProvider((course.id, quiz.id)))
+            .asData
+            ?.value
+            .questions
+            .length;
+    final label = (course.ownerBrand ?? course.category ?? '').trim();
+    final cover = imgThumb(course.coverUrl, w: 900);
+    final colors = _gradients[course.id.abs() % _gradients.length];
+    const white85 = Color(0xD9FFFFFF);
 
-    Widget? tag;
-    if (done) {
-      tag = PqStatusBadge(l.learnCompleted, tone: PqTone.success);
-    } else if (stats != null && stats.reward > 0) {
-      tag = PqRewardTag.iqc(l.learnIqc(stats.reward));
-    }
+    final meta = <Widget>[
+      if (stats != null && stats.videos > 0 && stats.minutes > 0)
+        _Meta(icon: PqIcons.video, text: l.learnMinutesShort(stats.minutes)),
+      if (quiz != null)
+        _Meta(
+          icon: PqIcons.checkSquare,
+          text: questions != null && questions > 0
+              ? l.homeNewCourseQuizQuestions(questions)
+              : l.learnRowQuiz,
+        ),
+    ];
 
-    final tiles = <Widget>[];
-    if (stats != null && lessons != null) {
-      if (stats.videos > 0) {
-        tiles.add(
-          _Tile(
-            icon: PqIcons.video,
-            iconColor: pq.accentText,
-            label:
-                stats.videos == 1
-                    ? l.learnRowVideo
-                    : l.learnTileVideo(stats.videos),
-            value: stats.minutes > 0 ? l.learnMinutesShort(stats.minutes) : '—',
-          ),
-        );
-      }
-      if (stats.quizzes > 0) {
-        final quizzes = lessons.where((x) => x.kind == 'quiz');
-        tiles.add(
-          _Tile(
-            icon: PqIcons.checkSquare,
-            iconColor: pq.accentText,
-            label:
-                stats.quizzes == 1
-                    ? l.learnRowQuiz
-                    : l.learnTileQuiz(stats.quizzes),
-            value:
-                quizzes.every((x) => x.completed)
-                    ? l.learnCompleted
-                    : quizzes.any((x) => x.locked != true)
-                    ? l.learnQuizStatusOpen
-                    : l.learnQuizStatusLocked,
-          ),
-        );
-      }
-      if (stats.reward > 0) {
-        tiles.add(
-          _Tile(
-            icon: PqIcons.star,
-            iconColor: learnRewardFg(pq),
-            label: l.learnTileResult,
-            value: l.learnIqc(stats.reward),
-          ),
-        );
-      }
-    }
-
-    final (ctaIcon, ctaLabel) =
-        done
-            ? (PqIcons.rotateCcw, l.learnCtaRepeat)
-            : started
-            ? (PqIcons.play, l.learnCtaContinue)
-            : (PqIcons.play, l.learnCtaStart);
-
-    return PqCard(
+    return PqPressable(
       onTap: onTap,
-      padding: EdgeInsets.zero,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          LearnBanner(
-            title: course.title,
-            brand: course.ownerBrand ?? course.category,
-            coverUrl: course.coverUrl,
-            height: 150,
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(19)),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        course.title,
-                        style: PqText.title(c: pq.text),
+      semanticLabel: course.title,
+      scale: .98,
+      child: Container(
+        height: 220,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(22),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x73111827),
+              offset: Offset(0, 10),
+              blurRadius: 24,
+              spreadRadius: -14,
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(22),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: const Alignment(-1, -.7),
+                    end: const Alignment(1, .7),
+                    colors: colors,
+                  ),
+                ),
+              ),
+              // Декор обложки-заглушки: круг и наклонный «лист».
+              if (cover == null) ...[
+                Positioned(
+                  right: -24,
+                  top: -30,
+                  child: Container(
+                    width: 140,
+                    height: 140,
+                    decoration: const BoxDecoration(
+                      color: Color(0x24FFFFFF),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  right: 28,
+                  bottom: -26,
+                  child: Transform.rotate(
+                    angle: -8 * math.pi / 180,
+                    child: Container(
+                      width: 70,
+                      height: 92,
+                      decoration: BoxDecoration(
+                        color: const Color(0x38FFFFFF),
+                        borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    if (tag != null) ...[const SizedBox(width: 12), tag],
-                  ],
+                  ),
                 ),
-                if (course.description.trim().isNotEmpty) ...[
-                  const SizedBox(height: 14),
-                  Text(
-                    course.description,
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                    style: PqText.body(c: pq.textSecondary),
+              ] else
+                Image.network(
+                  cover,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+                ),
+              // Затемнение снизу — под текст.
+              const DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Color(0x00000000), Color(0xC70A0C14)],
+                    stops: [.35, 1],
                   ),
-                ],
-                if (detail.isLoading && stats == null) ...[
-                  const SizedBox(height: 14),
-                  const Row(
-                    children: [
-                      Expanded(child: PqSkeleton(height: 78, radius: 16)),
-                      SizedBox(width: 8),
-                      Expanded(child: PqSkeleton(height: 78, radius: 16)),
-                      SizedBox(width: 8),
-                      Expanded(child: PqSkeleton(height: 78, radius: 16)),
-                    ],
-                  ),
-                ] else if (tiles.isNotEmpty) ...[
-                  const SizedBox(height: 14),
-                  IntrinsicHeight(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        for (var i = 0; i < tiles.length; i++) ...[
-                          if (i > 0) const SizedBox(width: 8),
-                          Expanded(child: tiles[i]),
-                        ],
-                      ],
+                ),
+              ),
+              if (label.isNotEmpty)
+                Positioned(
+                  left: 14,
+                  top: 14,
+                  right: 120,
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 3,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0x8C111827),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        label,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: PqText.tag(c: Colors.white),
+                      ),
                     ),
                   ),
-                ],
-                if (started && !done) ...[
-                  const SizedBox(height: 14),
-                  Text(
-                    l.learnProgressLabel(pct),
-                    style: PqText.caption(c: pq.textMuted, w: FontWeight.w600),
+                ),
+              if (done || (stats != null && stats.reward > 0))
+                Positioned(
+                  right: 14,
+                  top: 14,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 9,
+                      vertical: 3,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      done ? l.learnCompleted : l.learnIqc(stats!.reward),
+                      style: PqText.text(
+                        12,
+                        FontWeight.w800,
+                        c: done
+                            ? const Color(0xFF15803D)
+                            : const Color(0xFF6D28D9),
+                      ),
+                    ),
                   ),
-                  const SizedBox(height: 8),
-                  PqProgressBar(value: course.progress, height: 6),
-                ],
-                const SizedBox(height: 14),
-                _CardCta(icon: ctaIcon, label: ctaLabel),
-              ],
-            ),
+                ),
+              Positioned(
+                left: 16,
+                right: 80,
+                bottom: 16,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      course.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: PqText.heading(
+                        22,
+                        FontWeight.w800,
+                        height: 1.15,
+                        c: Colors.white,
+                      ),
+                    ),
+                    if (meta.isNotEmpty) ...[
+                      const SizedBox(height: 4),
+                      Wrap(spacing: 12, runSpacing: 2, children: meta),
+                    ],
+                  ],
+                ),
+              ),
+              Positioned(
+                right: 16,
+                bottom: 16,
+                child: Container(
+                  width: 48,
+                  height: 48,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                  ),
+                  alignment: Alignment.center,
+                  child: PqIcon(
+                    done ? PqIcons.rotateCcw : PqIcons.play,
+                    size: 20,
+                    color: const Color(0xFF2563EB),
+                  ),
+                ),
+              ),
+              // Начатый курс — тонкая полоса прогресса по нижнему краю.
+              if (started)
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: LinearProgressIndicator(
+                    value: course.progress.clamp(0, 1).toDouble(),
+                    minHeight: 4,
+                    backgroundColor: const Color(0x33FFFFFF),
+                    color: white85,
+                  ),
+                ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
 }
 
-class _Tile extends StatelessWidget {
-  const _Tile({
-    required this.icon,
-    required this.iconColor,
-    required this.label,
-    required this.value,
-  });
+/// Строка метаданных под названием: иконка 15 + текст 13 на обложке.
+class _Meta extends StatelessWidget {
+  const _Meta({required this.icon, required this.text});
 
   final PqIcons icon;
-  final Color iconColor;
-  final String label;
-  final String value;
+  final String text;
 
   @override
   Widget build(BuildContext context) {
-    final pq = context.pq;
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: pq.surfaceAlt,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Иконка — inline-svg в строке 16×1.4: блок 23 px, svg прижат к верху.
-          SizedBox(
-            height: 23,
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: PqIcon(icon, size: 18, color: iconColor),
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            label,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: PqText.caption(c: pq.textMuted),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            value,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: PqText.text(14, FontWeight.w700, c: pq.text),
-          ),
-        ],
-      ),
+    const c = Color(0xD9FFFFFF);
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        PqIcon(icon, size: 15, color: c),
+        const SizedBox(width: 4),
+        Text(text, style: PqText.text(13, FontWeight.w400, c: c)),
+      ],
     );
   }
 }
 
-/// Кнопка внутри карточки (вся карточка — ссылка): 52/16, без тени.
-class _CardCta extends StatelessWidget {
-  const _CardCta({required this.icon, required this.label});
-
-  final PqIcons icon;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    final pq = context.pq;
-    final pressed = PqPressedScope.of(context);
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      height: 52,
-      decoration: BoxDecoration(
-        color: pressed ? pq.accentPressed : pq.accent,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          PqIcon(icon, size: 18, color: pq.onAccent),
-          const SizedBox(width: 8),
-          Flexible(
-            child: Text(
-              label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: PqText.button(c: pq.onAccent),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
