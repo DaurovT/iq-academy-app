@@ -583,13 +583,6 @@
   "recipesTakePhoto": "Акс гирифтан",
   "recipesFromGallery": "Интихоб аз галерея",
   "recipesUploading": "Бланк илова шуд — бор мешавад",
-  "recipesDoctorInfoTitle": "Маълумоти духтур (ихтиёрӣ)",
-  "recipesDoctorName": "Н.Н.П.",
-  "recipesDoctorWorkplace": "Ҷои кор",
-  "recipesDoctorCity": "Шаҳр",
-  "recipesDoctorPhone": "Телефон",
-  "recipesSkip": "Гузарондан",
-  "recipesSend": "Фиристодан",
   "recipesSubmitButton": "Фиристодани бланк",
   "recipesPhotoCount": "акс: {p1}",
   "@recipesPhotoCount": {

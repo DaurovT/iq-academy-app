@@ -583,13 +583,6 @@
   "recipesTakePhoto": "Суретке түсіру",
   "recipesFromGallery": "Галереядан таңдау",
   "recipesUploading": "Бланк қосылды — жүктелуде",
-  "recipesDoctorInfoTitle": "Дәрігер деректері (қалауыңызша)",
-  "recipesDoctorName": "Т.А.Ә.",
-  "recipesDoctorWorkplace": "Жұмыс орны",
-  "recipesDoctorCity": "Қала",
-  "recipesDoctorPhone": "Телефон",
-  "recipesSkip": "Өткізіп жіберу",
-  "recipesSend": "Жіберу",
   "recipesSubmitButton": "Бланк жіберу",
   "recipesPhotoCount": "сурет: {p1}",
   "@recipesPhotoCount": {

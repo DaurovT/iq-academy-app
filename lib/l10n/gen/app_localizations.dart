@@ -1742,48 +1742,6 @@ abstract class AppLocalizations {
   /// **'Бланк добавлен — загружается'**
   String get recipesUploading;
 
-  /// No description provided for @recipesDoctorInfoTitle.
-  ///
-  /// In ru, this message translates to:
-  /// **'Данные врача (по желанию)'**
-  String get recipesDoctorInfoTitle;
-
-  /// No description provided for @recipesDoctorName.
-  ///
-  /// In ru, this message translates to:
-  /// **'ФИО'**
-  String get recipesDoctorName;
-
-  /// No description provided for @recipesDoctorWorkplace.
-  ///
-  /// In ru, this message translates to:
-  /// **'Место работы'**
-  String get recipesDoctorWorkplace;
-
-  /// No description provided for @recipesDoctorCity.
-  ///
-  /// In ru, this message translates to:
-  /// **'Город'**
-  String get recipesDoctorCity;
-
-  /// No description provided for @recipesDoctorPhone.
-  ///
-  /// In ru, this message translates to:
-  /// **'Телефон'**
-  String get recipesDoctorPhone;
-
-  /// No description provided for @recipesSkip.
-  ///
-  /// In ru, this message translates to:
-  /// **'Пропустить'**
-  String get recipesSkip;
-
-  /// No description provided for @recipesSend.
-  ///
-  /// In ru, this message translates to:
-  /// **'Отправить'**
-  String get recipesSend;
-
   /// No description provided for @recipesSubmitButton.
   ///
   /// In ru, this message translates to:

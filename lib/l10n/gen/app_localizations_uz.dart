@@ -925,27 +925,6 @@ class AppLocalizationsUz extends AppLocalizations {
   String get recipesUploading => 'Blank qo\'shildi — yuklanmoqda';
 
   @override
-  String get recipesDoctorInfoTitle => 'Shifokor ma\'lumotlari (ixtiyoriy)';
-
-  @override
-  String get recipesDoctorName => 'F.I.Sh.';
-
-  @override
-  String get recipesDoctorWorkplace => 'Ish joyi';
-
-  @override
-  String get recipesDoctorCity => 'Shahar';
-
-  @override
-  String get recipesDoctorPhone => 'Telefon';
-
-  @override
-  String get recipesSkip => 'O\'tkazib yuborish';
-
-  @override
-  String get recipesSend => 'Yuborish';
-
-  @override
   String get recipesSubmitButton => 'Blank yuborish';
 
   @override

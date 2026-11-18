@@ -920,27 +920,6 @@ class AppLocalizationsKy extends AppLocalizations {
   String get recipesUploading => 'Бланк кошулду — жүктөлүүдө';
 
   @override
-  String get recipesDoctorInfoTitle => 'Дарыгер маалыматы (каалоо боюнча)';
-
-  @override
-  String get recipesDoctorName => 'А.Ж.А.';
-
-  @override
-  String get recipesDoctorWorkplace => 'Иш орду';
-
-  @override
-  String get recipesDoctorCity => 'Шаар';
-
-  @override
-  String get recipesDoctorPhone => 'Телефон';
-
-  @override
-  String get recipesSkip => 'Өткөрүп жиберүү';
-
-  @override
-  String get recipesSend => 'Жөнөтүү';
-
-  @override
   String get recipesSubmitButton => 'Бланк жөнөтүү';
 
   @override

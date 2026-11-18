@@ -583,13 +583,6 @@
   "recipesTakePhoto": "Сүрөткө тартуу",
   "recipesFromGallery": "Галереядан тандоо",
   "recipesUploading": "Бланк кошулду — жүктөлүүдө",
-  "recipesDoctorInfoTitle": "Дарыгер маалыматы (каалоо боюнча)",
-  "recipesDoctorName": "А.Ж.А.",
-  "recipesDoctorWorkplace": "Иш орду",
-  "recipesDoctorCity": "Шаар",
-  "recipesDoctorPhone": "Телефон",
-  "recipesSkip": "Өткөрүп жиберүү",
-  "recipesSend": "Жөнөтүү",
   "recipesSubmitButton": "Бланк жөнөтүү",
   "recipesPhotoCount": "сүрөт: {p1}",
   "@recipesPhotoCount": {

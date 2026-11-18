@@ -923,27 +923,6 @@ class AppLocalizationsTg extends AppLocalizations {
   String get recipesUploading => 'Бланк илова шуд — бор мешавад';
 
   @override
-  String get recipesDoctorInfoTitle => 'Маълумоти духтур (ихтиёрӣ)';
-
-  @override
-  String get recipesDoctorName => 'Н.Н.П.';
-
-  @override
-  String get recipesDoctorWorkplace => 'Ҷои кор';
-
-  @override
-  String get recipesDoctorCity => 'Шаҳр';
-
-  @override
-  String get recipesDoctorPhone => 'Телефон';
-
-  @override
-  String get recipesSkip => 'Гузарондан';
-
-  @override
-  String get recipesSend => 'Фиристодан';
-
-  @override
   String get recipesSubmitButton => 'Фиристодани бланк';
 
   @override

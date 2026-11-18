@@ -929,27 +929,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get recipesUploading => 'Бланк добавлен — загружается';
 
   @override
-  String get recipesDoctorInfoTitle => 'Данные врача (по желанию)';
-
-  @override
-  String get recipesDoctorName => 'ФИО';
-
-  @override
-  String get recipesDoctorWorkplace => 'Место работы';
-
-  @override
-  String get recipesDoctorCity => 'Город';
-
-  @override
-  String get recipesDoctorPhone => 'Телефон';
-
-  @override
-  String get recipesSkip => 'Пропустить';
-
-  @override
-  String get recipesSend => 'Отправить';
-
-  @override
   String get recipesSubmitButton => 'Отправить бланк';
 
   @override

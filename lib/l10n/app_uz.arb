@@ -583,13 +583,6 @@
   "recipesTakePhoto": "Suratga olish",
   "recipesFromGallery": "Galereyadan tanlash",
   "recipesUploading": "Blank qo'shildi — yuklanmoqda",
-  "recipesDoctorInfoTitle": "Shifokor ma'lumotlari (ixtiyoriy)",
-  "recipesDoctorName": "F.I.Sh.",
-  "recipesDoctorWorkplace": "Ish joyi",
-  "recipesDoctorCity": "Shahar",
-  "recipesDoctorPhone": "Telefon",
-  "recipesSkip": "O'tkazib yuborish",
-  "recipesSend": "Yuborish",
   "recipesSubmitButton": "Blank yuborish",
   "recipesPhotoCount": "surat: {p1}",
   "@recipesPhotoCount": {

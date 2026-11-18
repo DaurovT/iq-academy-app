@@ -600,13 +600,6 @@
   "recipesTakePhoto": "Сделать фото",
   "recipesFromGallery": "Выбрать из галереи",
   "recipesUploading": "Бланк добавлен — загружается",
-  "recipesDoctorInfoTitle": "Данные врача (по желанию)",
-  "recipesDoctorName": "ФИО",
-  "recipesDoctorWorkplace": "Место работы",
-  "recipesDoctorCity": "Город",
-  "recipesDoctorPhone": "Телефон",
-  "recipesSkip": "Пропустить",
-  "recipesSend": "Отправить",
   "recipesSubmitButton": "Отправить бланк",
   "recipesPhotoCount": "фото: {p1}",
   "@recipesPhotoCount": {

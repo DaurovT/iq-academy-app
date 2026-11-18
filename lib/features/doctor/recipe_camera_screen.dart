@@ -8,7 +8,6 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../core/design/design.dart';
 import '../../core/l10n/l10n.dart';
-import '../../core/models/check.dart';
 import '../../core/uploads/pending_upload.dart';
 import '../../core/uploads/upload_queue.dart';
 import 'rx_common.dart';
@@ -16,7 +15,7 @@ import 'rx_common.dart';
 /// Съёмка бланка (макет RxCamera). Пакета `camera` в проекте нет, поэтому
 /// экран — «видоискатель»-подсказка: рамка кадра, советы, кнопка затвора
 /// открывает системную камеру (image_picker), кнопка слева — галерею.
-/// Дальше — данные врача (необязательно) и очередь загрузки.
+/// Дальше — очередь загрузки.
 class RecipeCameraScreen extends ConsumerStatefulWidget {
   const RecipeCameraScreen({super.key});
 
@@ -64,15 +63,8 @@ class _RecipeCameraScreenState extends ConsumerState<RecipeCameraScreen> {
       }
       if (picked.isEmpty || !mounted) return;
 
-      // Данные врача — все поля необязательны (бэк переиспользует прошлые).
-      final doctor = await showPqSheet<DoctorRecipeInfo>(
-        context,
-        scrollable: true,
-        builder: (_) => const _DoctorInfoForm(),
-      );
-      if (!mounted) return;
-
-      await ref.read(uploadQueueProvider.notifier).enqueueRecipe(picked, doctor);
+      // Данные врача берутся из профиля (заполняются при регистрации).
+      await queue.enqueueRecipe(picked, null);
       if (!mounted) return;
       showPqToast(context, context.l10n.recipesUploading, icon: PqIcons.check);
       context.go('/app/recipes');
@@ -484,89 +476,4 @@ class _DashedCircle extends CustomPainter {
 
   @override
   bool shouldRepaint(_DashedCircle old) => old.color != color;
-}
-
-/// Лист «Данные врача»: четыре необязательных поля, «Отправить» / «Пропустить».
-class _DoctorInfoForm extends StatefulWidget {
-  const _DoctorInfoForm();
-
-  @override
-  State<_DoctorInfoForm> createState() => _DoctorInfoFormState();
-}
-
-class _DoctorInfoFormState extends State<_DoctorInfoForm> {
-  final _name = TextEditingController();
-  final _workplace = TextEditingController();
-  final _city = TextEditingController();
-  final _phone = TextEditingController();
-
-  @override
-  void dispose() {
-    _name.dispose();
-    _workplace.dispose();
-    _city.dispose();
-    _phone.dispose();
-    super.dispose();
-  }
-
-  static String? _v(TextEditingController c) {
-    final t = c.text.trim();
-    return t.isEmpty ? null : t;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final pq = context.pq;
-    final l10n = context.l10n;
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(l10n.recipesDoctorInfoTitle, style: PqText.sheetTitle(c: pq.text)),
-        const SizedBox(height: 16),
-        PqTextField(
-          controller: _name,
-          label: l10n.recipesDoctorName,
-          textInputAction: TextInputAction.next,
-          textCapitalization: TextCapitalization.words,
-        ),
-        const SizedBox(height: 12),
-        PqTextField(
-          controller: _workplace,
-          label: l10n.recipesDoctorWorkplace,
-          textInputAction: TextInputAction.next,
-        ),
-        const SizedBox(height: 12),
-        PqTextField(
-          controller: _city,
-          label: l10n.recipesDoctorCity,
-          textInputAction: TextInputAction.next,
-          textCapitalization: TextCapitalization.words,
-        ),
-        const SizedBox(height: 12),
-        PqTextField(
-          controller: _phone,
-          label: l10n.recipesDoctorPhone,
-          keyboardType: TextInputType.phone,
-          textInputAction: TextInputAction.done,
-        ),
-        const SizedBox(height: 24),
-        PqButton(
-          label: l10n.recipesSend,
-          onPressed: () => Navigator.of(context).pop(DoctorRecipeInfo(
-            name: _v(_name),
-            workplace: _v(_workplace),
-            city: _v(_city),
-            phone: _v(_phone),
-          )),
-        ),
-        const SizedBox(height: 8),
-        PqButton(
-          label: l10n.recipesSkip,
-          kind: PqButtonKind.text,
-          onPressed: () => Navigator.of(context).pop(const DoctorRecipeInfo()),
-        ),
-      ],
-    );
-  }
 }
