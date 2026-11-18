@@ -1,5 +1,5 @@
-WHAT CHANGED IN 1.2.3
-A bug-fix update with no new features and no change to the business model: lesson videos now start playing inside the lesson screen (before, the player could stay paused on some phones). Recent updates also made photo uploads more reliable on slow networks and stopped the app from signing users out after a network error.
+WHAT CHANGED IN 1.2.4
+A small design update with no new features and no change to the business model: course cards in the "Обучение" (Learning) tab have a new cover-style look, and a photo of a prescription form is sent right after it is taken, without an extra optional form. Recent updates also fixed lesson video playback, made photo uploads more reliable on slow networks and stopped the app from signing users out after a network error.
 There are still no in-app purchases, no subscriptions and no payments of any kind.
 
 WHAT THE APP IS
