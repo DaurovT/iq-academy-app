@@ -38,14 +38,17 @@ const learnCourse = Course(
   ownerBrand: 'Medice',
 );
 
-CourseDetail learnDetail({String description = '$learnDesc.'}) => CourseDetail(
+CourseDetail learnDetail({
+  String description = '$learnDesc.',
+  List<Lesson> lessons = learnLessons,
+}) => CourseDetail(
   id: 7,
   title: learnTitle,
   description: description,
   lessonCount: 2,
   progress: 0,
   ownerBrand: 'Medice',
-  lessons: learnLessons,
+  lessons: lessons,
 );
 
 /// Для LearnNoResults: курсы есть в других вкладках, в «Пройденных» — нет.
@@ -110,3 +113,26 @@ const learnQuiz = Quiz(
     ),
   ],
 );
+
+/// Видео просмотрено — тест открыт (макет CoursePlay3).
+const learnLessonsWatched = [
+  Lesson(
+    id: 11,
+    title: learnTitle,
+    kind: 'video',
+    durationMin: 6,
+    completed: true,
+    rewardIqc: 0,
+    videoDurationSec: 332,
+    videoUrl: 'https://vimeo.com/1',
+  ),
+  Lesson(
+    id: 12,
+    title: 'Тест',
+    kind: 'quiz',
+    durationMin: 0,
+    completed: false,
+    rewardIqc: 30,
+    locked: false,
+  ),
+];

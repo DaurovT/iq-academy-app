@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:platform_app/core/design/design.dart';
+import 'package:platform_app/core/models/learn.dart';
 import 'package:platform_app/features/pharmacist/course_detail_screen.dart';
 import 'package:platform_app/features/pharmacist/learn/quiz_result_views.dart';
 import 'package:platform_app/features/pharmacist/learn_screen.dart';
@@ -15,13 +16,14 @@ import 'pq_shot.dart';
 List _overrides({
   List<dynamic> courses = const [learnCourse],
   String? description,
+  List<Lesson> lessons = learnLessons,
 }) => [
   coursesProvider.overrideWith((_) async => courses.cast()),
   courseDetailProvider.overrideWith(
     (_, __) async =>
         description == null
-            ? learnDetail()
-            : learnDetail(description: description),
+            ? learnDetail(lessons: lessons)
+            : learnDetail(description: description, lessons: lessons),
   ),
   quizProvider.overrideWith((_, __) async => learnQuiz),
   unreadCountProvider.overrideWith((_) async => 0),
@@ -81,16 +83,42 @@ void main() {
     ),
   );
 
-  pqShotBoth(
-    'Course',
-    (t, dark) => pqShot(
+  // Макеты CoursePlay1–3: не начат, смотрит (37%), видео просмотрено.
+  pqShotBoth('Course', (t, dark) {
+    debugSetVideoWatched(11, 0);
+    return pqShot(
       t,
       name: 'Course',
       dark: dark,
       screen: const CourseDetailScreen(id: 7),
-      overrides: _overrides(),
-    ),
-  );
+      overrides: _overrides(description: lessonText),
+    );
+  });
+
+  pqShotBoth('CourseWatching', (t, dark) {
+    debugSetVideoWatched(11, .37);
+    return pqShot(
+      t,
+      name: 'CourseWatching',
+      dark: dark,
+      screen: const CourseDetailScreen(id: 7),
+      overrides: _overrides(description: lessonText),
+    );
+  });
+
+  pqShotBoth('CourseWatched', (t, dark) {
+    debugSetVideoWatched(11, 1);
+    return pqShot(
+      t,
+      name: 'CourseWatched',
+      dark: dark,
+      screen: const CourseDetailScreen(id: 7),
+      overrides: _overrides(
+        description: lessonText,
+        lessons: learnLessonsWatched,
+      ),
+    );
+  });
 
   pqShotBoth(
     'Lesson',

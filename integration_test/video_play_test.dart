@@ -57,4 +57,46 @@ void main() {
     expect(state['paused'], isFalse, reason: 'видео не запустилось');
     expect(state['time'] as num, greaterThan(1), reason: 'видео не идёт');
   }, timeout: const Timeout(Duration(minutes: 3)));
+
+  // Экран курса засчитывает видео, когда плеер сообщил «досмотрено»
+  // (макеты CoursePlay1–3): JS-канал PqVideo должен присылать прогресс.
+  testWidgets('плеер сообщает прогресс и конец видео', (tester) async {
+    var pos = 0.0, dur = 0.0;
+    var ended = false;
+    await tester.pumpWidget(MaterialApp(
+      home: Scaffold(
+        body: SizedBox(
+          width: 390,
+          height: 220,
+          child: VideoFrame(
+            url: _url,
+            onProgress: (p, d, e) {
+              pos = p;
+              dur = d;
+              ended = ended || e;
+            },
+          ),
+        ),
+      ),
+    ));
+    for (var i = 0; i < 40 && pos < 2; i++) {
+      await tester.pump(const Duration(seconds: 1));
+      await Future<void>.delayed(const Duration(seconds: 1));
+    }
+    // ignore: avoid_print
+    print('прогресс: $pos из $dur');
+    expect(dur, greaterThan(0), reason: 'длительность не пришла');
+    expect(pos, greaterThan(1), reason: 'прогресс не приходит');
+
+    // перематываем к концу — должно прийти «досмотрено»
+    await debugLastVideoController!.runJavaScript(
+        "var v=document.querySelector('video'); v.currentTime=v.duration-1.5; v.play();");
+    for (var i = 0; i < 20 && !ended; i++) {
+      await tester.pump(const Duration(seconds: 1));
+      await Future<void>.delayed(const Duration(seconds: 1));
+    }
+    // ignore: avoid_print
+    print('конец: $ended, позиция $pos из $dur');
+    expect(ended, isTrue, reason: 'событие конца видео не пришло');
+  }, timeout: const Timeout(Duration(minutes: 3)));
 }

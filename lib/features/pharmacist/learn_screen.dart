@@ -433,14 +433,6 @@ class _CourseCard extends ConsumerWidget {
 
   /// Обложки без картинки — градиент по курсу (как в макете: розовый,
   /// зелёный, оранжевый…), стабильный между запусками.
-  static const _gradients = <List<Color>>[
-    [Color(0xFFBE185D), Color(0xFFF472B6)],
-    [Color(0xFF15803D), Color(0xFF4ADE80)],
-    [Color(0xFFC2410C), Color(0xFFFB923C)],
-    [Color(0xFF1D4ED8), Color(0xFF60A5FA)],
-    [Color(0xFF6D28D9), Color(0xFFA78BFA)],
-  ];
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = context.l10n;
@@ -460,7 +452,7 @@ class _CourseCard extends ConsumerWidget {
             .length;
     final label = (course.ownerBrand ?? course.category ?? '').trim();
     final cover = imgThumb(course.coverUrl, w: 900);
-    final colors = _gradients[course.id.abs() % _gradients.length];
+    final colors = learnCoverColors(course.id);
     const white85 = Color(0xD9FFFFFF);
 
     final meta = <Widget>[

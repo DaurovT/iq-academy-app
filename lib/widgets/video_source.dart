@@ -47,3 +47,35 @@ video{width:100%;height:100%;object-fit:contain;background:#0B0F1A}</style></hea
 </script>
 </body></html>
 ''';
+
+/// Колбэк прогресса плеера: позиция и длительность в секундах, досмотрено ли.
+typedef VideoProgressCallback = void Function(
+  double position,
+  double duration,
+  bool ended,
+);
+
+/// Скрипт для страницы плеера: ждёт `<video>` и раз в секунду, на паузе и в
+/// конце шлёт `{t, d, e}` в JS-канал `PqVideo`.
+const videoProgressJs = '''
+(function () {
+  if (window.__pqVideo) return; window.__pqVideo = 1;
+  function hook(v) {
+    var last = 0;
+    function send(e) {
+      try { PqVideo.postMessage(JSON.stringify(
+        {t: v.currentTime || 0, d: v.duration || 0, e: e ? 1 : 0})); } catch (_) {}
+    }
+    v.addEventListener('timeupdate', function () {
+      var n = Date.now(); if (n - last > 1000) { last = n; send(false); }
+    });
+    v.addEventListener('pause', function () { send(false); });
+    v.addEventListener('ended', function () { send(true); });
+  }
+  var tries = 0;
+  var iv = setInterval(function () {
+    var v = document.querySelector('video');
+    if (v) { clearInterval(iv); hook(v); } else if (++tries > 120) clearInterval(iv);
+  }, 500);
+})();
+''';

@@ -67,6 +67,19 @@ Lesson? learnNextStep(List<Lesson> lessons) {
   return lessons.isEmpty ? null : lessons.first;
 }
 
+/// Пары цветов градиента обложки (макеты CourseCardC, CoursePlay*): цвет
+/// курса выбирается по id — одинаковый в списке и на экране курса.
+const learnCoverPalette = <List<Color>>[
+  [Color(0xFFBE185D), Color(0xFFF472B6)],
+  [Color(0xFF15803D), Color(0xFF4ADE80)],
+  [Color(0xFFC2410C), Color(0xFFFB923C)],
+  [Color(0xFF1D4ED8), Color(0xFF60A5FA)],
+  [Color(0xFF6D28D9), Color(0xFFA78BFA)],
+];
+
+List<Color> learnCoverColors(int courseId) =>
+    learnCoverPalette[courseId.abs() % learnCoverPalette.length];
+
 /// Длительность урока: «5:32» по видео или «~6 мин».
 String? learnLessonDuration(BuildContext context, Lesson l) {
   final s = l.videoDurationSec;

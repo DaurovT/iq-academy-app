@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
@@ -7,9 +9,14 @@ import 'video_source.dart';
 
 /// Плеер урока на мобильных — WebView с embed-плеером или нашей HTML-обёрткой.
 class VideoFrame extends StatefulWidget {
-  const VideoFrame({super.key, required this.url});
+  const VideoFrame({super.key, required this.url, this.onProgress});
 
   final String url;
+
+  /// Позиция и длительность видео в секундах, `ended` — досмотрено до конца.
+  /// Приходит примерно раз в секунду, пока видео играет (JS-канал к `<video>`
+  /// на странице плеера — у Vimeo, YouTube и нашей HTML-обёртки он есть).
+  final VideoProgressCallback? onProgress;
 
   @override
   State<VideoFrame> createState() => _VideoFrameState();
@@ -23,7 +30,26 @@ WebViewController? debugLastVideoController;
 class _VideoFrameState extends State<VideoFrame> {
   late final WebViewController _ctrl = _createController()
     ..setJavaScriptMode(JavaScriptMode.unrestricted)
-    ..setBackgroundColor(const Color(0xFF0B0F1A));
+    ..setBackgroundColor(const Color(0xFF0B0F1A))
+    ..addJavaScriptChannel('PqVideo', onMessageReceived: _onMessage)
+    ..setNavigationDelegate(
+      NavigationDelegate(
+        onPageFinished: (_) => _ctrl.runJavaScript(videoProgressJs),
+      ),
+    );
+
+  void _onMessage(JavaScriptMessage m) {
+    final cb = widget.onProgress;
+    if (cb == null || !mounted) return;
+    try {
+      final d = jsonDecode(m.message) as Map<String, dynamic>;
+      cb(
+        (d['t'] as num).toDouble(),
+        (d['d'] as num).toDouble(),
+        d['e'] == 1,
+      );
+    } catch (_) {}
+  }
 
   /// Без этих настроек WebView не даёт плееру играть: iOS по умолчанию
   /// открывает видео только на весь экран и ждёт нажатия, Android требует

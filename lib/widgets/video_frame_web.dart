@@ -10,9 +10,13 @@ import 'video_source.dart';
 /// Прямые видеофайлы отдаём через srcdoc — это та же HTML-обёртка с запретом
 /// перемотки вперёд, что и на мобильных.
 class VideoFrame extends StatelessWidget {
-  const VideoFrame({super.key, required this.url});
+  const VideoFrame({super.key, required this.url, this.onProgress});
 
   final String url;
+
+  /// На вебе плеер в чужом iframe — событий `<video>` не видно, колбэк не
+  /// вызывается (экран курса показывает ручное «Завершить урок»).
+  final VideoProgressCallback? onProgress;
 
   @override
   Widget build(BuildContext context) {
