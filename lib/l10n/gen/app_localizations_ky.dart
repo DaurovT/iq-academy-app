@@ -5648,4 +5648,111 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get medrepDoctorNew => 'Жаңы';
+
+  @override
+  String get medrepTabBlanks => 'Бланктар';
+
+  @override
+  String medrepCountBlanks(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n бланк',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get medrepRatingByBlanks => 'Бланктар боюнча рейтинг';
+
+  @override
+  String get medrepTabDoctors => 'Дарыгерлер';
+
+  @override
+  String medrepUnitDoctors(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'дарыгер',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get medrepRatingMedreps => 'Медпреддер';
+
+  @override
+  String get medrepRatingMyTeam => 'Менин командам';
+
+  @override
+  String get medrepRatingYourTeam => 'Сиздин командаңыз';
+
+  @override
+  String get medrepByChecks => 'чектер боюнча';
+
+  @override
+  String get medrepByBlanks => 'бланктар боюнча';
+
+  @override
+  String learnMetaQuiz(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'тест · $n суроо',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String learnRowQuizQuestions(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n суроо',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get learnRowQuizLockedShort => 'видеодон кийин ачылат';
+
+  @override
+  String get learnRowQuizReady => 'баштаса болот';
+
+  @override
+  String get learnRowWatchToEnd => 'Аягына чейин көрүңүз — тест ачылат';
+
+  @override
+  String get learnRowWatched => 'Көрүлдү';
+
+  @override
+  String get learnVideoWatched => 'Видео көрүлдү';
+
+  @override
+  String get learnWatchAgain => 'Кайра көрүү';
+
+  @override
+  String learnCtaQuiz(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'Тесттен өтүү · $n суроо',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get learnReadMore => 'Толук окуу';
+
+  @override
+  String get learnReadLess => 'Жыйноо';
+
+  @override
+  String get profileCodeSend => 'Жөнөтүү';
+
+  @override
+  String get profileCodeSentPharm => 'Өтүнмө жөнөтүлдү — медпред аны ырастайт';
+
+  @override
+  String get profileCodeSentDoctor => 'Сиз медпреддин командасындасыз';
 }

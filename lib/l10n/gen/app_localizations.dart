@@ -9355,6 +9355,150 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Новый'**
   String get medrepDoctorNew;
+
+  /// No description provided for @medrepTabBlanks.
+  ///
+  /// In ru, this message translates to:
+  /// **'Бланки'**
+  String get medrepTabBlanks;
+
+  /// No description provided for @medrepCountBlanks.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{{n} бланк} few{{n} бланка} many{{n} бланков} other{{n} бланка}}'**
+  String medrepCountBlanks(int n);
+
+  /// No description provided for @medrepRatingByBlanks.
+  ///
+  /// In ru, this message translates to:
+  /// **'Рейтинг по бланкам'**
+  String get medrepRatingByBlanks;
+
+  /// No description provided for @medrepTabDoctors.
+  ///
+  /// In ru, this message translates to:
+  /// **'Врачи'**
+  String get medrepTabDoctors;
+
+  /// No description provided for @medrepUnitDoctors.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{врач} few{врача} many{врачей} other{врача}}'**
+  String medrepUnitDoctors(int n);
+
+  /// No description provided for @medrepRatingMedreps.
+  ///
+  /// In ru, this message translates to:
+  /// **'Медпреды'**
+  String get medrepRatingMedreps;
+
+  /// No description provided for @medrepRatingMyTeam.
+  ///
+  /// In ru, this message translates to:
+  /// **'Моя команда'**
+  String get medrepRatingMyTeam;
+
+  /// No description provided for @medrepRatingYourTeam.
+  ///
+  /// In ru, this message translates to:
+  /// **'Ваша команда'**
+  String get medrepRatingYourTeam;
+
+  /// No description provided for @medrepByChecks.
+  ///
+  /// In ru, this message translates to:
+  /// **'по чекам'**
+  String get medrepByChecks;
+
+  /// No description provided for @medrepByBlanks.
+  ///
+  /// In ru, this message translates to:
+  /// **'по бланкам'**
+  String get medrepByBlanks;
+
+  /// No description provided for @learnMetaQuiz.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{тест · {n} вопрос} few{тест · {n} вопроса} many{тест · {n} вопросов} other{тест · {n} вопроса}}'**
+  String learnMetaQuiz(int n);
+
+  /// No description provided for @learnRowQuizQuestions.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{{n} вопрос} few{{n} вопроса} many{{n} вопросов} other{{n} вопроса}}'**
+  String learnRowQuizQuestions(int n);
+
+  /// No description provided for @learnRowQuizLockedShort.
+  ///
+  /// In ru, this message translates to:
+  /// **'откроется после видео'**
+  String get learnRowQuizLockedShort;
+
+  /// No description provided for @learnRowQuizReady.
+  ///
+  /// In ru, this message translates to:
+  /// **'можно начинать'**
+  String get learnRowQuizReady;
+
+  /// No description provided for @learnRowWatchToEnd.
+  ///
+  /// In ru, this message translates to:
+  /// **'Смотрите до конца — откроется тест'**
+  String get learnRowWatchToEnd;
+
+  /// No description provided for @learnRowWatched.
+  ///
+  /// In ru, this message translates to:
+  /// **'Просмотрено'**
+  String get learnRowWatched;
+
+  /// No description provided for @learnVideoWatched.
+  ///
+  /// In ru, this message translates to:
+  /// **'Видео просмотрено'**
+  String get learnVideoWatched;
+
+  /// No description provided for @learnWatchAgain.
+  ///
+  /// In ru, this message translates to:
+  /// **'Посмотреть ещё раз'**
+  String get learnWatchAgain;
+
+  /// No description provided for @learnCtaQuiz.
+  ///
+  /// In ru, this message translates to:
+  /// **'{n, plural, one{Пройти тест · {n} вопрос} few{Пройти тест · {n} вопроса} many{Пройти тест · {n} вопросов} other{Пройти тест · {n} вопроса}}'**
+  String learnCtaQuiz(int n);
+
+  /// No description provided for @learnReadMore.
+  ///
+  /// In ru, this message translates to:
+  /// **'Читать полностью'**
+  String get learnReadMore;
+
+  /// No description provided for @learnReadLess.
+  ///
+  /// In ru, this message translates to:
+  /// **'Свернуть'**
+  String get learnReadLess;
+
+  /// No description provided for @profileCodeSend.
+  ///
+  /// In ru, this message translates to:
+  /// **'Отправить'**
+  String get profileCodeSend;
+
+  /// No description provided for @profileCodeSentPharm.
+  ///
+  /// In ru, this message translates to:
+  /// **'Заявка отправлена — медпред подтвердит её'**
+  String get profileCodeSentPharm;
+
+  /// No description provided for @profileCodeSentDoctor.
+  ///
+  /// In ru, this message translates to:
+  /// **'Вы в команде медпреда'**
+  String get profileCodeSentDoctor;
 }
 
 class _AppLocalizationsDelegate

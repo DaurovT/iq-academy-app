@@ -5665,4 +5665,112 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get medrepDoctorNew => 'Yangi';
+
+  @override
+  String get medrepTabBlanks => 'Blankalar';
+
+  @override
+  String medrepCountBlanks(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n ta blank',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get medrepRatingByBlanks => 'Blankalar bo\'yicha reyting';
+
+  @override
+  String get medrepTabDoctors => 'Shifokorlar';
+
+  @override
+  String medrepUnitDoctors(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'shifokor',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get medrepRatingMedreps => 'Medpredlar';
+
+  @override
+  String get medrepRatingMyTeam => 'Mening jamoam';
+
+  @override
+  String get medrepRatingYourTeam => 'Sizning jamoangiz';
+
+  @override
+  String get medrepByChecks => 'cheklar bo\'yicha';
+
+  @override
+  String get medrepByBlanks => 'blankalar bo\'yicha';
+
+  @override
+  String learnMetaQuiz(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'test · $n ta savol',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String learnRowQuizQuestions(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n ta savol',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get learnRowQuizLockedShort => 'videodan so‘ng ochiladi';
+
+  @override
+  String get learnRowQuizReady => 'boshlash mumkin';
+
+  @override
+  String get learnRowWatchToEnd => 'Oxirigacha ko‘ring — test ochiladi';
+
+  @override
+  String get learnRowWatched => 'Ko‘rildi';
+
+  @override
+  String get learnVideoWatched => 'Video ko‘rildi';
+
+  @override
+  String get learnWatchAgain => 'Yana ko‘rish';
+
+  @override
+  String learnCtaQuiz(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'Testdan o‘tish · $n ta savol',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get learnReadMore => 'To‘liq o‘qish';
+
+  @override
+  String get learnReadLess => 'Yig‘ish';
+
+  @override
+  String get profileCodeSend => 'Yuborish';
+
+  @override
+  String get profileCodeSentPharm =>
+      'So‘rov yuborildi — medpred uni tasdiqlaydi';
+
+  @override
+  String get profileCodeSentDoctor => 'Siz medpred jamoasidasiz';
 }

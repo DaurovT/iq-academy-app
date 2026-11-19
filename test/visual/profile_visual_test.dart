@@ -8,6 +8,7 @@ import 'package:platform_app/features/shared/profile/delete_account_sheet.dart';
 import 'package:platform_app/features/shared/profile/edit_profile_screen.dart';
 import 'package:platform_app/features/shared/profile/privacy_full_screen.dart';
 import 'package:platform_app/features/shared/profile/privacy_screen.dart';
+import 'package:platform_app/features/shared/profile/profile_medrep_code_sheet.dart';
 import 'package:platform_app/features/shared/profile/profile_role_sheet.dart';
 import 'package:platform_app/features/shared/profile/profile_screen.dart';
 import 'package:platform_app/features/shared/settings/notification_settings_screen.dart';
@@ -34,6 +35,17 @@ void main() {
       overrides: profileOverrides(dark: dark),
       nav: pharmacistNav,
       navIndex: 4));
+
+  // Кодовое слово медпреда после регистрации (Профиль → лист).
+  pqShotBoth('ProfileMedrepCode', (t, dark) => pqShot(t,
+      name: 'ProfileMedrepCode',
+      dark: dark,
+      screen: const ProfileScreen(),
+      overrides: profileOverrides(dark: dark),
+      nav: pharmacistNav,
+      navIndex: 4,
+      before: _sheet(ProfileScreen,
+          (c) => showProfileMedrepCodeSheet(c, Role.pharmacist))));
 
   pqShotBoth('ProfileNew', (t, dark) => pqShot(t,
       name: 'ProfileNew',

@@ -5655,4 +5655,112 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get medrepDoctorNew => 'Нав';
+
+  @override
+  String get medrepTabBlanks => 'Бланкҳо';
+
+  @override
+  String medrepCountBlanks(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n бланк',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get medrepRatingByBlanks => 'Рейтинг аз рӯи бланкҳо';
+
+  @override
+  String get medrepTabDoctors => 'Табибон';
+
+  @override
+  String medrepUnitDoctors(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'табиб',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get medrepRatingMedreps => 'Медпредҳо';
+
+  @override
+  String get medrepRatingMyTeam => 'Дастаи ман';
+
+  @override
+  String get medrepRatingYourTeam => 'Дастаи шумо';
+
+  @override
+  String get medrepByChecks => 'аз рӯи чекҳо';
+
+  @override
+  String get medrepByBlanks => 'аз рӯи бланкҳо';
+
+  @override
+  String learnMetaQuiz(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'тест · $n савол',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String learnRowQuizQuestions(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n савол',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get learnRowQuizLockedShort => 'пас аз видео кушода мешавад';
+
+  @override
+  String get learnRowQuizReady => 'метавонед оғоз кунед';
+
+  @override
+  String get learnRowWatchToEnd => 'То охир тамошо кунед — тест кушода мешавад';
+
+  @override
+  String get learnRowWatched => 'Тамошо шуд';
+
+  @override
+  String get learnVideoWatched => 'Видео тамошо шуд';
+
+  @override
+  String get learnWatchAgain => 'Боз тамошо кардан';
+
+  @override
+  String learnCtaQuiz(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'Супоридани тест · $n савол',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get learnReadMore => 'Пурра хондан';
+
+  @override
+  String get learnReadLess => 'Пӯшидан';
+
+  @override
+  String get profileCodeSend => 'Фиристодан';
+
+  @override
+  String get profileCodeSentPharm =>
+      'Дархост фиристода шуд — медпред онро тасдиқ мекунад';
+
+  @override
+  String get profileCodeSentDoctor => 'Шумо дар дастаи медпред ҳастед';
 }

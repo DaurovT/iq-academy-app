@@ -3664,5 +3664,64 @@
   "rxDeleteTitle": "Удалить бланк?",
   "rxDeleteText": "Бланк ещё не отправлен и хранится только на этом телефоне. После удаления его не вернуть",
   "medrepDoctorNoBlanksSub": "Здесь появятся бланки, которые отправит врач",
-  "medrepDoctorNew": "Новый"
+  "medrepDoctorNew": "Новый",
+  "medrepTabBlanks": "Бланки",
+  "medrepCountBlanks": "{n, plural, one{{n} бланк} few{{n} бланка} many{{n} бланков} other{{n} бланка}}",
+  "@medrepCountBlanks": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepRatingByBlanks": "Рейтинг по бланкам",
+  "medrepTabDoctors": "Врачи",
+  "medrepUnitDoctors": "{n, plural, one{врач} few{врача} many{врачей} other{врача}}",
+  "@medrepUnitDoctors": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "medrepRatingMedreps": "Медпреды",
+  "medrepRatingMyTeam": "Моя команда",
+  "medrepRatingYourTeam": "Ваша команда",
+  "medrepByChecks": "по чекам",
+  "medrepByBlanks": "по бланкам",
+  "learnMetaQuiz": "{n, plural, one{тест · {n} вопрос} few{тест · {n} вопроса} many{тест · {n} вопросов} other{тест · {n} вопроса}}",
+  "@learnMetaQuiz": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "learnRowQuizQuestions": "{n, plural, one{{n} вопрос} few{{n} вопроса} many{{n} вопросов} other{{n} вопроса}}",
+  "@learnRowQuizQuestions": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "learnRowQuizLockedShort": "откроется после видео",
+  "learnRowQuizReady": "можно начинать",
+  "learnRowWatchToEnd": "Смотрите до конца — откроется тест",
+  "learnRowWatched": "Просмотрено",
+  "learnVideoWatched": "Видео просмотрено",
+  "learnWatchAgain": "Посмотреть ещё раз",
+  "learnCtaQuiz": "{n, plural, one{Пройти тест · {n} вопрос} few{Пройти тест · {n} вопроса} many{Пройти тест · {n} вопросов} other{Пройти тест · {n} вопроса}}",
+  "@learnCtaQuiz": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "learnReadMore": "Читать полностью",
+  "learnReadLess": "Свернуть",
+  "profileCodeSend": "Отправить",
+  "profileCodeSentPharm": "Заявка отправлена — медпред подтвердит её",
+  "profileCodeSentDoctor": "Вы в команде медпреда"
 }

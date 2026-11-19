@@ -5841,4 +5841,127 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get medrepDoctorNew => 'Новый';
+
+  @override
+  String get medrepTabBlanks => 'Бланки';
+
+  @override
+  String medrepCountBlanks(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n бланка',
+      many: '$n бланков',
+      few: '$n бланка',
+      one: '$n бланк',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get medrepRatingByBlanks => 'Рейтинг по бланкам';
+
+  @override
+  String get medrepTabDoctors => 'Врачи';
+
+  @override
+  String medrepUnitDoctors(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'врача',
+      many: 'врачей',
+      few: 'врача',
+      one: 'врач',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get medrepRatingMedreps => 'Медпреды';
+
+  @override
+  String get medrepRatingMyTeam => 'Моя команда';
+
+  @override
+  String get medrepRatingYourTeam => 'Ваша команда';
+
+  @override
+  String get medrepByChecks => 'по чекам';
+
+  @override
+  String get medrepByBlanks => 'по бланкам';
+
+  @override
+  String learnMetaQuiz(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'тест · $n вопроса',
+      many: 'тест · $n вопросов',
+      few: 'тест · $n вопроса',
+      one: 'тест · $n вопрос',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String learnRowQuizQuestions(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n вопроса',
+      many: '$n вопросов',
+      few: '$n вопроса',
+      one: '$n вопрос',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get learnRowQuizLockedShort => 'откроется после видео';
+
+  @override
+  String get learnRowQuizReady => 'можно начинать';
+
+  @override
+  String get learnRowWatchToEnd => 'Смотрите до конца — откроется тест';
+
+  @override
+  String get learnRowWatched => 'Просмотрено';
+
+  @override
+  String get learnVideoWatched => 'Видео просмотрено';
+
+  @override
+  String get learnWatchAgain => 'Посмотреть ещё раз';
+
+  @override
+  String learnCtaQuiz(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'Пройти тест · $n вопроса',
+      many: 'Пройти тест · $n вопросов',
+      few: 'Пройти тест · $n вопроса',
+      one: 'Пройти тест · $n вопрос',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get learnReadMore => 'Читать полностью';
+
+  @override
+  String get learnReadLess => 'Свернуть';
+
+  @override
+  String get profileCodeSend => 'Отправить';
+
+  @override
+  String get profileCodeSentPharm =>
+      'Заявка отправлена — медпред подтвердит её';
+
+  @override
+  String get profileCodeSentDoctor => 'Вы в команде медпреда';
 }

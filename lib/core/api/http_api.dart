@@ -212,6 +212,12 @@ class HttpAccountApi implements AccountApi {
   final Dio _dio;
 
   @override
+  Future<MedrepCodeCheck> sendMedrepCode(String code) async {
+    final r = await _dio.post('/client/account/medrep-code', data: {'code': code});
+    return MedrepCodeCheck.fromJson(_obj(r.data));
+  }
+
+  @override
   Future<AppModules> appConfig() async {
     final r = await _dio.get('/client/app-config');
     return AppModules.fromJson(_obj(r.data));

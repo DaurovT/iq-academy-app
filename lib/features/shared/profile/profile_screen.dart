@@ -18,6 +18,7 @@ import '../providers.dart';
 import '../../tour/tour_controller.dart';
 import '../settings/notification_settings_screen.dart';
 import 'delete_account_sheet.dart';
+import 'profile_medrep_code_sheet.dart';
 import 'profile_phone_sheet.dart';
 import 'profile_role_sheet.dart';
 import 'profile_widgets.dart';
@@ -245,6 +246,16 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> with WidgetsBindi
                 ),
               ),
             ]),
+          ),
+        // Кодовое слово медпреда можно ввести и после регистрации:
+        // фармацевт → «Ожидают подтверждения», врач → сразу в команду.
+        if (role == Role.pharmacist || role == Role.doctor)
+          ProfileRow(
+            icon: PqIcons.key,
+            title: l.regCodeLabel,
+            subtitle: l.regCodeNotePharm,
+            subtitleMaxLines: 2,
+            onTap: () => showProfileMedrepCodeSheet(context, role!),
           ),
         ProfileRow(
           icon: PqIcons.shieldCheck,

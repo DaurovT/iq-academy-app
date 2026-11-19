@@ -107,6 +107,10 @@ abstract interface class AccountApi {
   Future<({bool sent})> changePhoneStart(String phone);
   Future<({String phone})> changePhoneConfirm(String phone, String code);
 
+  /// Ввести кодовое слово медпреда после регистрации: врач сразу попадает в
+  /// команду, фармацевт — в «Ожидают подтверждения» (docs/medrep-team-api.md).
+  Future<MedrepCodeCheck> sendMedrepCode(String code);
+
   /// Видимость разделов приложения из админки.
   Future<AppModules> appConfig();
 }
