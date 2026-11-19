@@ -9499,6 +9499,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Вы в команде медпреда'**
   String get profileCodeSentDoctor;
+
+  /// No description provided for @regCodeLatinOnly.
+  ///
+  /// In ru, this message translates to:
+  /// **'Переключите клавиатуру на английскую — в кодовом слове только латинские буквы'**
+  String get regCodeLatinOnly;
 }
 
 class _AppLocalizationsDelegate

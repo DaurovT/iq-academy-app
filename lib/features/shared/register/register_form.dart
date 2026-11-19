@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -18,6 +17,7 @@ import '../../../core/models/medrep.dart';
 import '../../../core/models/registration.dart';
 import '../../../widgets/pq_states.dart';
 import '../../medrep/medrep_widgets.dart' show MedAvatar;
+import '../../../widgets/latin_code_formatter.dart';
 import '../login/auth_ui.dart';
 import '../pickers/city_picker.dart';
 import '../pickers/map_picker.dart';
@@ -55,6 +55,9 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
   static const _codeField = 'medrepCode';
   MedrepCodeCheck? _codeCheck;
   int _codeSeq = 0;
+
+  /// В поле кодового слова набраны русские буквы — подсказка про раскладку.
+  bool _codeCyrillic = false;
 
   // Успешная регистрация: сессия удержана до нажатия «Начать обучение».
   bool _done = false;
@@ -518,12 +521,18 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
               onChanged: (v) => _onCode(f, v),
               autocorrect: false,
               enableSuggestions: false,
+              // Латинская клавиатура: слово — только латиница и цифры, а русские
+              // буквы фильтр молча отбрасывает (Android открывал «Русский»).
+              keyboardType: TextInputType.visiblePassword,
               textCapitalization: TextCapitalization.characters,
               textInputAction: TextInputAction.done,
               inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp('[A-Za-z0-9]')),
-                LengthLimitingTextInputFormatter(_codeLength(f)),
-                const _UpperCaseFormatter(),
+                LatinCodeFormatter(
+                  maxLength: _codeLength(f),
+                  onCyrillic: (c) {
+                    if (c != _codeCyrillic) setState(() => _codeCyrillic = c);
+                  },
+                ),
               ],
               cursorColor: pq.accent,
               cursorWidth: 2,
@@ -630,7 +639,9 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
           ),
         ],
         const SizedBox(height: 8),
-        if (bad)
+        if (_codeCyrillic)
+          Text(l10n.regCodeLatinOnly, style: PqText.body(c: pq.warning))
+        else if (bad)
           Semantics(
             liveRegion: true,
             child: Text(l10n.regCodeNotFound, style: PqText.body(c: pq.danger)),
@@ -653,15 +664,6 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
     );
     if (chosen != null && mounted) setState(() => _values[f.name] = chosen);
   }
-}
-
-/// Латиница кодового слова — всегда заглавными.
-class _UpperCaseFormatter extends TextInputFormatter {
-  const _UpperCaseFormatter();
-
-  @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) =>
-      newValue.copyWith(text: newValue.text.toUpperCase());
 }
 
 /// Чип специальности: 40, радиус 20; выбран — рамка акцентом, мягкая

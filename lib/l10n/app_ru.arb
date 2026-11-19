@@ -3723,5 +3723,6 @@
   "learnReadLess": "Свернуть",
   "profileCodeSend": "Отправить",
   "profileCodeSentPharm": "Заявка отправлена — медпред подтвердит её",
-  "profileCodeSentDoctor": "Вы в команде медпреда"
+  "profileCodeSentDoctor": "Вы в команде медпреда",
+  "regCodeLatinOnly": "Переключите клавиатуру на английскую — в кодовом слове только латинские буквы"
 }

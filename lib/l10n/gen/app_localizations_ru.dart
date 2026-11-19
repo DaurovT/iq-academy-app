@@ -5964,4 +5964,8 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get profileCodeSentDoctor => 'Вы в команде медпреда';
+
+  @override
+  String get regCodeLatinOnly =>
+      'Переключите клавиатуру на английскую — в кодовом слове только латинские буквы';
 }

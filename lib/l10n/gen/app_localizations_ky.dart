@@ -5755,4 +5755,8 @@ class AppLocalizationsKy extends AppLocalizations {
 
   @override
   String get profileCodeSentDoctor => 'Сиз медпреддин командасындасыз';
+
+  @override
+  String get regCodeLatinOnly =>
+      'Клавиатураны англис тилине которуңуз — коддук сөздө латын тамгалары гана';
 }

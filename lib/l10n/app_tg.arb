@@ -2272,5 +2272,6 @@
   "learnReadLess": "Пӯшидан",
   "profileCodeSend": "Фиристодан",
   "profileCodeSentPharm": "Дархост фиристода шуд — медпред онро тасдиқ мекунад",
-  "profileCodeSentDoctor": "Шумо дар дастаи медпред ҳастед"
+  "profileCodeSentDoctor": "Шумо дар дастаи медпред ҳастед",
+  "regCodeLatinOnly": "Клавиатураро ба англисӣ гузаронед — дар калимаи рамзӣ танҳо ҳарфҳои лотинӣ"
 }

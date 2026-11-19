@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/api/providers.dart';
@@ -8,6 +7,7 @@ import '../../../core/l10n/l10n.dart';
 import '../../../core/models/common.dart';
 import '../../../core/models/medrep.dart';
 import '../../medrep/medrep_widgets.dart' show MedAvatar;
+import '../../../widgets/latin_code_formatter.dart';
 import 'profile_widgets.dart';
 
 /// Кодовое слово медпреда после регистрации (POST /client/account/medrep-code):
@@ -45,6 +45,9 @@ class _CodeSheetState extends ConsumerState<_CodeSheet> {
   int _seq = 0;
   bool _busy = false;
   String? _error;
+
+  /// Набраны русские буквы — подсказать сменить раскладку.
+  bool _cyrillic = false;
 
   @override
   void dispose() {
@@ -127,13 +130,17 @@ class _CodeSheetState extends ConsumerState<_CodeSheet> {
             onChanged: _onChanged,
             autocorrect: false,
             enableSuggestions: false,
+            // Латинская клавиатура: слово — только латиница и цифры, а русские
+            // буквы фильтр молча отбрасывает (Android открывал «Русский»).
+            keyboardType: TextInputType.visiblePassword,
             textCapitalization: TextCapitalization.characters,
             textInputAction: TextInputAction.done,
             inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp('[A-Za-z0-9]')),
-              LengthLimitingTextInputFormatter(_len),
-              TextInputFormatter.withFunction(
-                (_, v) => v.copyWith(text: v.text.toUpperCase()),
+              LatinCodeFormatter(
+                maxLength: _len,
+                onCyrillic: (c) {
+                  if (c != _cyrillic) setState(() => _cyrillic = c);
+                },
               ),
             ],
             cursorColor: pq.accent,
@@ -222,6 +229,10 @@ class _CodeSheetState extends ConsumerState<_CodeSheet> {
             ),
           ]),
         ),
+      ],
+      if (_cyrillic) ...[
+        const SizedBox(height: 8),
+        Text(l.regCodeLatinOnly, style: PqText.body(c: pq.warning)),
       ],
       if (bad) ...[
         const SizedBox(height: 8),

@@ -2272,5 +2272,6 @@
   "learnReadLess": "Жыйноо",
   "profileCodeSend": "Жөнөтүү",
   "profileCodeSentPharm": "Өтүнмө жөнөтүлдү — медпред аны ырастайт",
-  "profileCodeSentDoctor": "Сиз медпреддин командасындасыз"
+  "profileCodeSentDoctor": "Сиз медпреддин командасындасыз",
+  "regCodeLatinOnly": "Клавиатураны англис тилине которуңуз — коддук сөздө латын тамгалары гана"
 }

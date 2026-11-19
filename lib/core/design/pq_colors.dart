@@ -208,7 +208,7 @@ class PqColors extends ThemeExtension<PqColors> {
     toggleOff: Color(0xFF3A3B48),
     iconButtonBg: Color(0x14FFFFFF),
     iconButtonBorder: null,
-    navBg: Color(0xF01B1C22),
+    navBg: Color(0xFF1B1C22),
     navBorder: Color(0xFF2A2B35),
     navPill: Color(0xFF1A3566),
     navPillIcon: Color(0xFF6B9EF5),

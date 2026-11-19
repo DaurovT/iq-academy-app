@@ -5763,4 +5763,8 @@ class AppLocalizationsTg extends AppLocalizations {
 
   @override
   String get profileCodeSentDoctor => 'Шумо дар дастаи медпред ҳастед';
+
+  @override
+  String get regCodeLatinOnly =>
+      'Клавиатураро ба англисӣ гузаронед — дар калимаи рамзӣ танҳо ҳарфҳои лотинӣ';
 }

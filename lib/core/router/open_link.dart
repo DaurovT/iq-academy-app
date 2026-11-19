@@ -11,14 +11,40 @@ const kQueueVoucherOffset = 2000000000;
 /// `!keyReservation.contains(key)`, и пользователь видит пустой экран.
 /// Поэтому вкладки открываем через `go`, а полноэкранные — через `push`
 /// (чтобы «назад» вернул туда, откуда пришли).
+///
+/// `go` заменяет всю историю, и на экране-карточке («Бланк №6971») системное
+/// «назад» Android закрывало приложение. Поэтому для карточки сначала
+/// открываем её список-родитель (`/app/recipes`), а карточку кладём сверху —
+/// «назад» возвращает к списку.
 void openAppLink(GoRouter router, String link) {
-  final inShell = router.configuration
-      .findMatch(Uri.parse(link))
-      .matches
-      .any((m) => m is ShellRouteMatch);
-  if (inShell) {
+  final uri = Uri.parse(link);
+  if (!_inShell(router, uri)) {
+    router.push(link);
+    return;
+  }
+  final parent = _shellParent(router, uri);
+  if (parent == null) {
     router.go(link);
   } else {
+    router.go(parent);
     router.push(link);
   }
+}
+
+bool _inShell(GoRouter router, Uri uri) => router.configuration
+    .findMatch(uri)
+    .matches
+    .any((m) => m is ShellRouteMatch);
+
+/// Ближайший родительский путь (без последних сегментов), который тоже экран
+/// вкладки, — или null, если ссылка уже ведёт на корень вкладки.
+String? _shellParent(GoRouter router, Uri uri) {
+  final segs = uri.pathSegments.where((s) => s.isNotEmpty).toList();
+  // /app/<вкладка> — корень, родителя нет.
+  for (var n = segs.length - 1; n >= 2; n--) {
+    final path = '/${segs.take(n).join('/')}';
+    final m = router.configuration.findMatch(Uri.parse(path));
+    if (m.isNotEmpty && _inShell(router, Uri.parse(path))) return path;
+  }
+  return null;
 }

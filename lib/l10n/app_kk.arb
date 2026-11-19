@@ -2272,5 +2272,6 @@
   "learnReadLess": "Жию",
   "profileCodeSend": "Жіберу",
   "profileCodeSentPharm": "Өтінім жіберілді — медпред оны растайды",
-  "profileCodeSentDoctor": "Сіз медпред командасындасыз"
+  "profileCodeSentDoctor": "Сіз медпред командасындасыз",
+  "regCodeLatinOnly": "Пернетақтаны ағылшын тіліне ауыстырыңыз — кодтық сөзде тек латын әріптері"
 }

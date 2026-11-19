@@ -5773,4 +5773,8 @@ class AppLocalizationsUz extends AppLocalizations {
 
   @override
   String get profileCodeSentDoctor => 'Siz medpred jamoasidasiz';
+
+  @override
+  String get regCodeLatinOnly =>
+      'Klaviaturani lotin (inglizcha) tiliga o‘tkazing — kod so‘zida faqat lotin harflari';
 }

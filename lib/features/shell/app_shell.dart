@@ -81,7 +81,15 @@ class AppShell extends ConsumerWidget {
       _ => null,
     };
 
-    return Stack(
+    // Системное «назад» Android на вкладке (кроме «Главной») ведёт на
+    // «Главную», а не закрывает приложение; выход — только с «Главной».
+    final atRoot = location != '/app' && !GoRouter.of(context).canPop();
+    return PopScope(
+      canPop: !atRoot,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop && atRoot) context.go('/app');
+      },
+      child: Stack(
       children: [
         Scaffold(
           body: child,
@@ -104,6 +112,7 @@ class AppShell extends ConsumerWidget {
         // Обучающий тур — поверх экрана и нижнего меню.
         const Positioned.fill(child: TourOverlay()),
       ],
+      ),
     );
   }
 }

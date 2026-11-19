@@ -477,8 +477,9 @@ class _RecentRow extends StatelessWidget {
           icon: stage.icon,
           tone: stage.tone,
           title: title,
+          // Дата первой: длинная причина отказа обрезается, а дата остаётся.
           subtitle:
-              '${_reason(recipe.rejectReason) ?? l10n.rxRejectedDefault} · ${rxDayMonth(recipe.createdAt)}',
+              '${rxDayMonth(recipe.createdAt)} · ${_reason(recipe.rejectReason) ?? l10n.rxRejectedDefault}',
           trailing: PqPillButton(
             label: l10n.rxRetake,
             icon: PqIcons.camera,

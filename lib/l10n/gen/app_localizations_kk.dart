@@ -5750,4 +5750,8 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get profileCodeSentDoctor => 'Сіз медпред командасындасыз';
+
+  @override
+  String get regCodeLatinOnly =>
+      'Пернетақтаны ағылшын тіліне ауыстырыңыз — кодтық сөзде тек латын әріптері';
 }
