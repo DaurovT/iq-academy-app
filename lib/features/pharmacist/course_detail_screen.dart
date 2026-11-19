@@ -111,7 +111,8 @@ class _BodyState extends ConsumerState<_Body> {
       _manual = kIsWeb && !lesson.completed;
     });
     if (!kIsWeb && !lesson.completed) {
-      _noProgress = Timer(const Duration(seconds: 8), () {
+      // Плеер Vimeo на медленной сети грузится 10–15 с — ждём с запасом.
+      _noProgress = Timer(const Duration(seconds: 20), () {
         if (mounted && _playing && !_gotProgress) {
           setState(() => _manual = true);
         }
@@ -126,6 +127,8 @@ class _BodyState extends ConsumerState<_Body> {
   void _onProgress(Lesson lesson, double pos, double dur, bool ended) {
     if (dur <= 0) return;
     _gotProgress = true;
+    // Прогресс пришёл позже таймера — ручная кнопка больше не нужна.
+    if (_manual && !kIsWeb) setState(() => _manual = false);
     final frac = (pos / dur).clamp(0.0, 1.0);
     final prev = _watched[lesson.id] ?? 0;
     final done = ended || pos >= dur - 1;
@@ -153,6 +156,9 @@ class _BodyState extends ConsumerState<_Body> {
       setState(() {
         _playing = false;
         _manual = false;
+        // Обложка переходит к следующему непросмотренному видео; если их
+        // больше нет — показывает «Видео просмотрено».
+        _selectedId = null;
       });
       if (res.rewardIqc > 0) {
         showPqToast(
