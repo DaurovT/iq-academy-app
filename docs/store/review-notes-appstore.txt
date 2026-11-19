@@ -1,5 +1,5 @@
-WHAT CHANGED IN 1.2.4
-A small design update with no new features and no change to the business model: course cards in the "Обучение" (Learning) tab have a new cover-style look, and a photo of a prescription form is sent right after it is taken, without an extra optional form. Recent updates also fixed lesson video playback, made photo uploads more reliable on slow networks and stopped the app from signing users out after a network error.
+WHAT CHANGED IN 1.2.5
+An update with no change to the business model. The lesson video now plays right on the course screen; when it has been watched to the end, the lesson is counted and the quiz opens (before, the user tapped "Завершить урок" on a separate screen). Pharmacists and doctors can enter their medical representative's code word later in "Профиль" (it was only offered during registration). Medical representatives see their doctors' prescription-form activity in the team statistics and rating. Recent updates also refreshed the course cards and fixed lesson video playback.
 There are still no in-app purchases, no subscriptions and no payments of any kind.
 
 WHAT THE APP IS
