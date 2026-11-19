@@ -11,6 +11,7 @@ import '../../core/models/medrep.dart';
 import '../../widgets/pq_states.dart';
 import '../shared/providers.dart';
 import 'medrep_widgets.dart';
+import 'portfolio_screen.dart' show teamDoctorKey;
 import 'providers.dart';
 
 /// Главная медпреда «Портфель» (макеты MedHome / MedEmpty, обе темы).
@@ -24,11 +25,14 @@ class MedrepHome extends ConsumerStatefulWidget {
 class _MedrepHomeState extends ConsumerState<MedrepHome> {
   String _period = 'all';
 
+  /// «Самые активные» у смешанной команды: 'pharm' | 'doctors'.
+  String _active = 'pharm';
+
   Future<void> _refresh() async {
     ref.invalidate(medrepMetricsProvider);
     ref.invalidate(medrepCodeProvider);
     ref.invalidate(medrepTeamProvider);
-    ref.invalidate(leaderboardProvider('checks'));
+    ref.invalidate(leaderboardProvider);
     ref.invalidate(companiesProvider);
     ref.invalidate(unreadCountProvider);
     await ref.read(medrepTeamProvider.future).then((_) {}, onError: (_) {});
@@ -160,17 +164,29 @@ class _MedrepHomeState extends ConsumerState<MedrepHome> {
     final l = context.l10n;
     final teamSize = team.doctors.length + team.pharmacists.length;
     final metrics = ref.watch(medrepMetricsProvider(_period));
+    // Бланки показываем, когда сервер их отдаёт (recipesCount != null) и в
+    // команде есть врачи. Команда только из врачей — рейтинг по бланкам.
+    final blanks = metrics.asData?.value.recipesCount != null &&
+        team.doctors.isNotEmpty;
+    final ratingMetric =
+        blanks && team.pharmacists.isEmpty ? 'recipes' : 'checks';
     final showRating = ref.moduleVisible('leaderboard');
     final board = showRating
-        ? ref.watch(leaderboardProvider('checks')).asData?.value
+        ? ref.watch(leaderboardProvider(ratingMetric)).asData?.value
         : null;
     final showPortfolio = ref.moduleVisible('medrep_portfolio');
     // «Самые активные» — фармацевты по чекам (карточка открывается по
-    // Telegram-id, поэтому без него в топ не берём).
-    final top = [
+    // Telegram-id, поэтому без него в топ не берём) и врачи по бланкам
+    // (макеты MedHomeMixA, MedHomeDocs).
+    final topPharm = [
       for (final p in team.pharmacists)
         if (p.telegramId != null) p,
     ]..sort((a, b) => b.checks.compareTo(a.checks));
+    final topDocs = [...team.doctors]
+      ..sort((a, b) => b.recipes.compareTo(a.recipes));
+    final mixedTop = topPharm.isNotEmpty && topDocs.isNotEmpty;
+    final showDocs =
+        topDocs.isNotEmpty && (topPharm.isEmpty || _active == 'doctors');
 
     return PqStagger(gap: 24, children: [
       _title(context),
@@ -189,12 +205,16 @@ class _MedrepHomeState extends ConsumerState<MedrepHome> {
         _StatsGrid(
           metrics: metrics,
           teamSize: teamSize,
+          blanks: blanks,
+          checks: team.pharmacists.isNotEmpty || !blanks,
+          pharmacists: team.pharmacists.length,
+          doctors: team.doctors.length,
           onRetry: () => ref.invalidate(medrepMetricsProvider(_period)),
         ),
       ]),
       if (board != null && board.myRank > 0 && board.items.isNotEmpty)
-        _RatingCard(board: board),
-      if (showPortfolio && top.isNotEmpty)
+        _RatingCard(board: board, blanks: ratingMetric == 'recipes'),
+      if (showPortfolio && (topPharm.isNotEmpty || topDocs.isNotEmpty))
         Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
           PqSectionHeader(
             l.medrepMostActive,
@@ -202,19 +222,46 @@ class _MedrepHomeState extends ConsumerState<MedrepHome> {
             onAction: () => context.go('/app/portfolio'),
           ),
           const SizedBox(height: 8),
+          if (mixedTop) ...[
+            PqSegmented<String>(
+              compact: true,
+              values: const ['pharm', 'doctors'],
+              selected: _active,
+              labelOf: (v) =>
+                  v == 'doctors' ? l.medrepTabDoctors : l.medrepTabPharm,
+              onChanged: (v) => setState(() => _active = v),
+            ),
+            const SizedBox(height: 12),
+          ],
           PqListCard(children: [
-            for (var i = 0; i < top.length && i < 3; i++)
-              MedPersonRow(
-                rank: i + 1,
-                name: top[i].name,
-                avatarSeed: top[i].telegramId,
-                subtitle: [top[i].shop, top[i].city]
-                    .where((s) => s.isNotEmpty)
-                    .join(' · '),
-                value: '${top[i].checks}',
-                unit: l.medrepUnitChecks(top[i].checks),
-                onTap: () => context.push('/app/portfolio/${top[i].telegramId}'),
-              ),
+            if (showDocs)
+              for (var i = 0; i < topDocs.length && i < 3; i++)
+                MedPersonRow(
+                  rank: i + 1,
+                  name: topDocs[i].name,
+                  avatarSeed: topDocs[i].accountId ?? topDocs[i].telegramId,
+                  subtitle: [topDocs[i].specialty, topDocs[i].workplace]
+                      .where((s) => s.isNotEmpty)
+                      .join(' · '),
+                  value: '${topDocs[i].recipes}',
+                  unit: l.medrepUnitBlanks(topDocs[i].recipes),
+                  onTap: () => context.push(
+                      '/app/portfolio/doctor/${teamDoctorKey(topDocs[i])}'),
+                )
+            else
+              for (var i = 0; i < topPharm.length && i < 3; i++)
+                MedPersonRow(
+                  rank: i + 1,
+                  name: topPharm[i].name,
+                  avatarSeed: topPharm[i].telegramId,
+                  subtitle: [topPharm[i].shop, topPharm[i].city]
+                      .where((s) => s.isNotEmpty)
+                      .join(' · '),
+                  value: '${topPharm[i].checks}',
+                  unit: l.medrepUnitChecks(topPharm[i].checks),
+                  onTap: () =>
+                      context.push('/app/portfolio/${topPharm[i].telegramId}'),
+                ),
           ]),
         ]),
       _InviteCard(code: _code),
@@ -223,14 +270,26 @@ class _MedrepHomeState extends ConsumerState<MedrepHome> {
   }
 }
 
-// ── Показатели 2×2 ───────────────────────────────────────────────────────
+// ── Показатели 2×2 / 2×3 ───────────────────────────────────────────────────────
 
 class _StatsGrid extends StatelessWidget {
   const _StatsGrid({
     required this.metrics,
     required this.teamSize,
     required this.onRetry,
+    this.blanks = false,
+    this.checks = true,
+    this.pharmacists = 0,
+    this.doctors = 0,
   });
+
+  /// Плитка «Бланки» (врачи команды) и плитка «Чеки» (фармацевты).
+  final bool blanks;
+  final bool checks;
+
+  /// Сколько фармацевтов и врачей в команде — для сетки смешанной команды.
+  final int pharmacists;
+  final int doctors;
 
   /// Сколько человек в команде (врачи + фармацевты) — первая плитка.
   final int teamSize;
@@ -276,18 +335,39 @@ class _StatsGrid extends StatelessWidget {
             ),
           ),
         );
+    final cyan = pq.isDark
+        ? (bg: const Color(0xFF123A42), fg: const Color(0xFF67E8F9))
+        : (bg: const Color(0xFFCFFAFE), fg: const Color(0xFF0E7490));
+    // Смешанная команда (чеки и бланки) — 2×3: вместо «В команде» плитки
+    // «Фармацевты» и «Врачи» (макет MedHomeMixA).
+    final mixed = checks && blanks;
+    // Упаковки — из одобренных чеков и бланков.
+    final packs = m == null ? null : m.approvedPacksSum + (m.recipePacksSum ?? 0);
+    final tiles = <Widget Function(int i)>[
+      if (mixed) ...[
+        (i) => card(i, PqIcons.pill, accent, pharmacists, l.medrepUnitPharm),
+        (i) => card(i, PqIcons.stethoscope, purple, doctors, l.medrepUnitDoctors),
+      ] else
+        (i) => card(i, PqIcons.users, accent, teamSize, (_) => l.medrepUnitInTeam),
+      if (checks)
+        (i) => card(i, PqIcons.receipt, success, m?.checksCount, l.medrepUnitChecks),
+      if (blanks)
+        (i) => card(i, PqIcons.fileText, cyan, m?.recipesCount, l.medrepUnitBlanks),
+      (i) => card(i, PqIcons.package, purple, packs, l.medrepUnitPacks),
+      (i) => card(i, PqIcons.target, warning, m?.questsDone, l.medrepUnitQuestsDone),
+    ];
+    // Сетка по две плитки (4 или 6).
     return Column(children: [
-      Row(children: [
-        card(0, PqIcons.users, accent, teamSize, (_) => l.medrepUnitInTeam),
-        const SizedBox(width: 12),
-        card(1, PqIcons.receipt, success, m?.checksCount, l.medrepUnitChecks),
-      ]),
-      const SizedBox(height: 12),
-      Row(children: [
-        card(2, PqIcons.package, purple, m?.approvedPacksSum, l.medrepUnitPacks),
-        const SizedBox(width: 12),
-        card(3, PqIcons.target, warning, m?.questsDone, l.medrepUnitQuestsDone),
-      ]),
+      for (var r = 0; r < tiles.length; r += 2) ...[
+        if (r > 0) const SizedBox(height: 12),
+        Row(children: [
+          tiles[r](r),
+          if (r + 1 < tiles.length) ...[
+            const SizedBox(width: 12),
+            tiles[r + 1](r + 1),
+          ],
+        ]),
+      ],
     ]);
   }
 }
@@ -337,9 +417,12 @@ class _StatCard extends StatelessWidget {
 // ── Рейтинг по чекам ─────────────────────────────────────────────────────
 
 class _RatingCard extends StatelessWidget {
-  const _RatingCard({required this.board});
+  const _RatingCard({required this.board, this.blanks = false});
 
   final Leaderboard board;
+
+  /// Рейтинг по бланкам (команда только из врачей), иначе — по чекам.
+  final bool blanks;
 
   @override
   Widget build(BuildContext context) {
@@ -363,7 +446,7 @@ class _RatingCard extends StatelessWidget {
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         Row(children: [
           Expanded(
-            child: Text(l.medrepRatingByChecks.toUpperCase(),
+            child: Text((blanks ? l.medrepRatingByBlanks : l.medrepRatingByChecks).toUpperCase(),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: PqText.overline(c: muted)),
@@ -419,7 +502,7 @@ class _RatingCard extends StatelessWidget {
               : TextSpan(children: [
                   TextSpan(text: '${l.medrepGapTo(rank - 1)} '),
                   TextSpan(
-                    text: l.medrepCountChecks(gap),
+                    text: blanks ? l.medrepCountBlanks(gap) : l.medrepCountChecks(gap),
                     style: const TextStyle(
                         color: Colors.white, fontWeight: FontWeight.w700),
                   ),

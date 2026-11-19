@@ -10,6 +10,7 @@ import '../../core/models/medrep.dart';
 import '../../widgets/pq_states.dart';
 import '../shared/providers.dart';
 import 'medrep_widgets.dart';
+import 'portfolio_screen.dart' show teamDoctorKey;
 import 'providers.dart';
 
 /// Рейтинг медпредов (макеты MedRating / MedNotRanked).
@@ -21,17 +22,67 @@ class LeaderboardScreen extends ConsumerStatefulWidget {
 }
 
 class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Рейтинг меняется в течение дня — при каждом открытии берём свежий.
+    Future.microtask(() {
+      if (mounted) ref.invalidate(leaderboardProvider);
+    });
+  }
+
+  /// null — по умолчанию: «Бланки», если команда только из врачей, иначе «Чеки».
+  String? _picked;
   String _metric = 'checks';
+  List<String> _metrics = const ['checks', 'pharm', 'quests'];
+
+  /// Смешанная команда (фармацевты и врачи): два уровня вкладок —
+  /// «Медпреды | Моя команда», под ними чипы (макеты MedRatingMix, MedRatingTeam).
+  bool _mixed = false;
+  bool _teamScope = false;
+
+  /// «Моя команда»: 'pharm' — фармацевты по чекам, 'doctors' — врачи по бланкам.
+  String _teamTab = 'pharm';
 
   @override
   Widget build(BuildContext context) {
     final l = context.l10n;
+    // Бланки и врачи у медпредов — когда сервер их считает (recipesCount).
+    final blanks =
+        ref.watch(medrepMetricsProvider('all')).asData?.value.recipesCount !=
+            null;
+    final team = ref.watch(medrepTeamProvider).asData?.value;
+    final hasDoctors = team?.doctors.isNotEmpty ?? false;
+    final hasPharm = team?.pharmacists.isNotEmpty ?? false;
+    _mixed = hasDoctors && hasPharm;
+    final onlyDoctors = hasDoctors && !hasPharm && blanks;
+    // Фармацевты — «Чеки», «Фармацевты»; врачи — «Бланки», «Врачи»;
+    // «Квесты» — всем.
+    final withDoctors = blanks && hasDoctors;
+    final withPharm = !onlyDoctors;
+    _metrics = [
+      if (withPharm) 'checks',
+      if (withDoctors) 'recipes',
+      if (withPharm) 'pharm',
+      if (withDoctors) 'doctors',
+      'quests',
+    ];
+    _metric = _picked != null && _metrics.contains(_picked)
+        ? _picked!
+        : (onlyDoctors ? 'recipes' : 'checks');
+    final teamView = _mixed && _teamScope;
     final provider = leaderboardProvider(_metric);
     final board = ref.watch(provider);
     final unread = ref.watch(unreadCountProvider).asData?.value ?? 0;
 
     Widget body;
-    if (board.hasError && !board.hasValue) {
+    if (teamView) {
+      body = SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.fromLTRB(16, 4, 16, kPqNavClearance),
+        child: _teamContent(context, team!),
+      );
+    } else if (board.hasError && !board.hasValue) {
       body = PqAsync<Leaderboard>(
         value: board,
         onRetry: () => ref.invalidate(provider),
@@ -56,6 +107,13 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
         Expanded(
           child: PqRefresh(
             onRefresh: () async {
+              if (teamView) {
+                ref.invalidate(medrepTeamProvider);
+                await ref
+                    .read(medrepTeamProvider.future)
+                    .then((_) {}, onError: (_) {});
+                return;
+              }
               ref.invalidate(provider);
               await ref.read(provider.future).then((_) {}, onError: (_) {});
             },
@@ -66,46 +124,170 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
     );
   }
 
+  String _tabLabel(String v) => switch (v) {
+        'pharm' => context.l10n.medrepTabPharm,
+        'recipes' => context.l10n.medrepTabBlanks,
+        'doctors' => context.l10n.medrepTabDoctors,
+        'quests' => context.l10n.medrepTabQuests,
+        _ => context.l10n.medrepTabChecks,
+      };
+
   String _unit(int n) => switch (_metric) {
         'pharm' => context.l10n.medrepUnitPharm(n),
+        'recipes' => context.l10n.medrepUnitBlanks(n),
+        'doctors' => context.l10n.medrepUnitDoctors(n),
         'quests' => context.l10n.medrepUnitQuests(n),
         _ => context.l10n.medrepUnitChecks(n),
       };
 
   String _count(int n) => switch (_metric) {
         'pharm' => context.l10n.medrepCountPharmacists(n),
+        'recipes' => context.l10n.medrepCountBlanks(n),
+        'doctors' => context.l10n.medrepCountDoctors(n),
         'quests' => context.l10n.medrepCountQuests(n),
         _ => context.l10n.medrepCountChecks(n),
       };
+
+  /// Заголовок и вкладки. Без смешанной команды — сегменты; у смешанной —
+  /// «Медпреды | Моя команда» и чипы второго уровня (переносятся по строкам).
+  List<Widget> _header(String? subtitle) {
+    final l = context.l10n;
+    Widget chips(List<String> values, String selected, ValueChanged<String> on) =>
+        Wrap(spacing: 8, runSpacing: 8, children: [
+          for (final v in values)
+            PqChip(
+              height: 36,
+              label: _tabLabel(v),
+              selected: v == selected,
+              onTap: () => on(v),
+            ),
+        ]);
+    return [
+      PqPageTitle(l.leaderboardTitle, subtitle: subtitle),
+      if (!_mixed)
+        PqSegmented<String>(
+          values: _metrics,
+          selected: _metric,
+          labelOf: _tabLabel,
+          onChanged: (v) => setState(() => _picked = v),
+        )
+      else
+        Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          PqSegmented<bool>(
+            values: const [false, true],
+            selected: _teamScope,
+            labelOf: (v) => v ? l.medrepRatingMyTeam : l.medrepRatingMedreps,
+            onChanged: (v) => setState(() => _teamScope = v),
+          ),
+          const SizedBox(height: 12),
+          if (_teamScope)
+            chips(const ['pharm', 'doctors'], _teamTab,
+                (v) => setState(() => _teamTab = v))
+          else
+            chips(_metrics, _metric, (v) => setState(() => _picked = v)),
+        ]),
+    ];
+  }
+
+  /// «Моя команда»: фармацевты по чекам или врачи по бланкам (макет MedRatingTeam).
+  Widget _teamContent(BuildContext context, MedrepTeam team) {
+    final pq = context.pq;
+    final l = context.l10n;
+    final doctors = _teamTab == 'doctors';
+    final people = <({String name, String sub, int value, String? open})>[
+      if (doctors)
+        for (final d in team.doctors)
+          (
+            name: d.name,
+            sub: [d.specialty, d.workplace].where((s) => s.isNotEmpty).join(' · '),
+            value: d.recipes,
+            open: '/app/portfolio/doctor/${teamDoctorKey(d)}',
+          )
+      else
+        for (final p in team.pharmacists)
+          (
+            name: p.name,
+            sub: [p.shop, p.city].where((s) => s.isNotEmpty).join(' · '),
+            value: p.checks,
+            open: p.telegramId == null ? null : '/app/portfolio/${p.telegramId}',
+          ),
+    ]..sort((a, b) => b.value.compareTo(a.value));
+    String unit(int n) =>
+        doctors ? l.medrepUnitBlanks(n) : l.medrepUnitChecks(n);
+    final subtitle = [
+      l.medrepRatingYourTeam,
+      doctors
+          ? l.medrepCountDoctors(people.length)
+          : l.medrepCountPharm(people.length),
+      doctors ? l.medrepByBlanks : l.medrepByChecks,
+    ].join(' · ');
+
+    if (people.isEmpty) {
+      return PqStagger(gap: 16, children: [
+        ..._header(subtitle),
+        MedEmptyBlock(
+          tile: MedPopTile(
+            icon: PqIcons.users,
+            background: pq.accentSoft,
+            foreground: pq.accentText,
+          ),
+          title: l.medrepTeamNobody,
+        ),
+      ]);
+    }
+    return PqStagger(gap: 16, children: [
+      ..._header(subtitle),
+      Padding(
+        padding: const EdgeInsets.only(top: 8),
+        child: _Podium(
+          top: [
+            for (var i = 0; i < people.length && i < 3; i++)
+              LeaderRow(
+                  rank: i + 1,
+                  name: _shortName(people[i].name),
+                  value: people[i].value),
+          ],
+          unit: unit,
+        ),
+      ),
+      if (people.length > 3)
+        Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+          for (var i = 3; i < people.length; i++) ...[
+            if (i > 3) const SizedBox(height: 8),
+            _RankRow(
+              row: LeaderRow(
+                  rank: i + 1, name: people[i].name, value: people[i].value),
+              me: false,
+              unit: unit(people[i].value),
+              subtitle: people[i].sub,
+              onTap: people[i].open == null
+                  ? null
+                  : () => context.push(people[i].open!),
+            ),
+          ],
+        ]),
+    ]);
+  }
+
+  /// «Нодира Юсупова» → «Нодира Ю.» — подпись под пьедесталом.
+  static String _shortName(String name) {
+    final parts = name.trim().split(RegExp(r'\s+'));
+    if (parts.length < 2 || parts[1].isEmpty) return name;
+    return '${parts[0]} ${parts[1].characters.first}.';
+  }
 
   Widget _content(BuildContext context, Leaderboard? b) {
     final pq = context.pq;
     final l = context.l10n;
     final ranked = b != null && b.myRank > 0 && b.items.isNotEmpty;
+    // Атрибуцию в подзаголовке не показываем — как на главной.
     final subtitle = b == null
         ? null
         : [
             if (b.company != null && b.company!.isNotEmpty) b.company!,
             l.medrepCountMedreps(b.items.length),
-            if (ranked)
-              b.mode == AttributionMode.primary
-                  ? l.medrepAttrPrimary
-                  : l.medrepAttrShared,
           ].join(' · ');
-
-    final header = [
-      PqPageTitle(l.leaderboardTitle, subtitle: subtitle),
-      PqSegmented<String>(
-        values: const ['checks', 'pharm', 'quests'],
-        selected: _metric,
-        labelOf: (v) => switch (v) {
-          'pharm' => l.medrepTabPharm,
-          'quests' => l.medrepTabQuests,
-          _ => l.medrepTabChecks,
-        },
-        onChanged: (v) => setState(() => _metric = v),
-      ),
-    ];
+    final header = _header(subtitle);
 
     if (b == null) {
       return PqStagger(gap: 16, children: [
@@ -322,17 +504,27 @@ class _PodiumColumn extends StatelessWidget {
 // ── Строка места (4+) ────────────────────────────────────────────────────
 
 class _RankRow extends StatelessWidget {
-  const _RankRow({required this.row, required this.me, required this.unit});
+  const _RankRow({
+    required this.row,
+    required this.me,
+    required this.unit,
+    this.subtitle,
+    this.onTap,
+  });
 
   final LeaderRow row;
   final bool me;
   final String unit;
 
+  /// Вторая строка у людей команды: «Хирург · ГКБ №1» (макет MedRatingTeam).
+  final String? subtitle;
+  final VoidCallback? onTap;
+
   @override
   Widget build(BuildContext context) {
     final pq = context.pq;
     final l = context.l10n;
-    return Container(
+    final card = Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
         color: me ? pq.accentSoft : pq.surface,
@@ -354,11 +546,18 @@ class _RankRow extends StatelessWidget {
         ),
         const SizedBox(width: 12),
         Expanded(
-          child: Text(me ? l.medrepYouName(row.name) : row.name,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: PqText.text(16, me ? FontWeight.w700 : FontWeight.w600,
-                  c: pq.text)),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(me ? l.medrepYouName(row.name) : row.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: PqText.text(16, me ? FontWeight.w700 : FontWeight.w600,
+                    c: pq.text)),
+            if (subtitle != null && subtitle!.isNotEmpty)
+              Text(subtitle!,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: PqText.caption(c: pq.textMuted)),
+          ]),
         ),
         const SizedBox(width: 12),
         Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
@@ -367,6 +566,7 @@ class _RankRow extends StatelessWidget {
         ]),
       ]),
     );
+    return onTap == null ? card : PqPressable(onTap: onTap, child: card);
   }
 }
 

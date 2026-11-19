@@ -20,6 +20,15 @@ abstract class MedrepMetrics with _$MedrepMetrics {
     required int checksCount,
     required int approvedPacksSum,
     required int questsDone,
+
+    /// Бланки врачей команды за период (docs/server-todo.md, «Бланки в
+    /// статистике медпреда»). null — сервер ещё не отдаёт: плитки и вкладки
+    /// «Бланки» в приложении скрыты.
+    int? recipesCount,
+    int? approvedRecipes,
+
+    /// Упаковки из одобренных бланков по препаратам компании медпреда.
+    int? recipePacksSum,
   }) = _MedrepMetrics;
 
   factory MedrepMetrics.fromJson(Map<String, dynamic> json) =>
@@ -117,7 +126,7 @@ abstract class LeaderRow with _$LeaderRow {
 abstract class Leaderboard with _$Leaderboard {
   const factory Leaderboard({
     required AttributionMode mode,
-    required String metric, // 'checks' | 'pharm' | 'quests'
+    required String metric, // 'checks' | 'pharm' | 'quests' | 'recipes'
     required List<LeaderRow> items,
     required int myRank,
     String? company,

@@ -100,6 +100,24 @@ const metrics = MedrepMetrics(
   questsDone: 0,
 );
 
+/// Сервер отдаёт бланки врачей команды (docs/server-todo.md).
+const metricsBlanks = MedrepMetrics(
+  mode: AttributionMode.shared,
+  pharmCount: 17,
+  checksCount: 206,
+  approvedPacksSum: 266,
+  questsDone: 2,
+  recipesCount: 73,
+  approvedRecipes: 63,
+  recipePacksSum: 118,
+);
+
+/// Команда только из врачей (медпред рецептурного проекта).
+const doctorsTeam = MedrepTeam(
+  totals: TeamTotals(all: 6, doctors: 6, pending: 0),
+  doctors: doctors,
+);
+
 Leaderboard board({int myRank = 4}) => Leaderboard(
       mode: AttributionMode.shared,
       metric: 'checks',
@@ -255,15 +273,17 @@ List<Override> medrepOverrides({
   List<PortfolioPharmacist> pf = portfolio,
   int myRank = 4,
   DateTime? now,
+  MedrepMetrics m = metrics,
+  MedrepTeam? withTeam,
 }) => [
   authControllerProvider.overrideWith(_Auth.new),
   appModulesProvider.overrideWith(_Modules.new),
   unreadCountProvider.overrideWith((_) async => 0),
   medrepNowProvider.overrideWithValue(() => now ?? DateTime(2026, 6, 30, 12)),
   portfolioProvider.overrideWith((_) async => pf),
-  medrepMetricsProvider.overrideWith((ref, p) async => metrics),
+  medrepMetricsProvider.overrideWith((ref, p) async => m),
   medrepCodeProvider.overrideWith((_) async => medrepCode),
-  medrepTeamProvider.overrideWith((_) async => team(pf: pf)),
+  medrepTeamProvider.overrideWith((_) async => withTeam ?? team(pf: pf)),
   leaderboardProvider.overrideWith((ref, m) async => board(myRank: myRank)),
   companiesProvider.overrideWith((_) async => const <Company>[]),
   medrepQuestsProvider.overrideWith((_) async => quests),

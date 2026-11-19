@@ -418,12 +418,16 @@ class PqSegmented<T> extends StatelessWidget {
     required this.selected,
     required this.labelOf,
     required this.onChanged,
+    this.compact = false,
   });
 
   final List<T> values;
   final T selected;
   final String Function(T) labelOf;
   final ValueChanged<T> onChanged;
+
+  /// Компактные сегменты внутри блока (высота 36, текст 13) — макет MedHomeMixA.
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
@@ -440,7 +444,7 @@ class PqSegmented<T> extends StatelessWidget {
         const gap = 4.0;
         final w = (box.maxWidth - gap * (values.length - 1)) / values.length;
         return SizedBox(
-          height: 40,
+          height: compact ? 36 : 40,
           child: Stack(children: [
             AnimatedPositioned(
               duration: const Duration(milliseconds: 280),
@@ -473,7 +477,8 @@ class PqSegmented<T> extends StatelessWidget {
                       child: Center(
                         child: AnimatedDefaultTextStyle(
                           duration: const Duration(milliseconds: 200),
-                          style: PqText.text(14, i == idx ? FontWeight.w700 : FontWeight.w500,
+                          style: PqText.text(compact ? 13 : 14,
+                              i == idx ? FontWeight.w700 : FontWeight.w500,
                               c: i == idx ? pq.text : pq.textMuted),
                           child: Text(labelOf(values[i]),
                               maxLines: 1, overflow: TextOverflow.ellipsis),
@@ -502,7 +507,11 @@ class PqChip extends StatelessWidget {
     this.icon,
     this.selectedWeight = FontWeight.w700,
     this.weight = FontWeight.w500,
+    this.height = 40,
   });
+
+  /// Высота: 40 — фильтры, 36 — второй уровень вкладок (макет MedRatingMix).
+  final double height;
 
   final String label;
   final bool selected;
@@ -523,11 +532,11 @@ class PqChip extends StatelessWidget {
       scale: .96,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        height: 40,
-        padding: const EdgeInsets.symmetric(horizontal: 14),
+        height: height,
+        padding: EdgeInsets.symmetric(horizontal: height < 40 ? 16 : 14),
         decoration: BoxDecoration(
           color: selected ? pq.chipActiveBg : pq.surface,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(height / 2),
           border: Border.all(color: selected ? pq.chipActiveBg : pq.border),
         ),
         child: Row(mainAxisSize: MainAxisSize.min, children: [

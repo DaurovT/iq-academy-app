@@ -13,6 +13,9 @@ _MedrepMetrics _$MedrepMetricsFromJson(Map<String, dynamic> json) =>
       checksCount: (json['checksCount'] as num).toInt(),
       approvedPacksSum: (json['approvedPacksSum'] as num).toInt(),
       questsDone: (json['questsDone'] as num).toInt(),
+      recipesCount: (json['recipesCount'] as num?)?.toInt(),
+      approvedRecipes: (json['approvedRecipes'] as num?)?.toInt(),
+      recipePacksSum: (json['recipePacksSum'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$MedrepMetricsToJson(_MedrepMetrics instance) =>
@@ -22,6 +25,9 @@ Map<String, dynamic> _$MedrepMetricsToJson(_MedrepMetrics instance) =>
       'checksCount': instance.checksCount,
       'approvedPacksSum': instance.approvedPacksSum,
       'questsDone': instance.questsDone,
+      'recipesCount': instance.recipesCount,
+      'approvedRecipes': instance.approvedRecipes,
+      'recipePacksSum': instance.recipePacksSum,
     };
 
 const _$AttributionModeEnumMap = {

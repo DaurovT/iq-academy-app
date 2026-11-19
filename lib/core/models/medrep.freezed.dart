@@ -15,7 +15,11 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MedrepMetrics {
 
- AttributionMode get mode; int get pharmCount; int get checksCount; int get approvedPacksSum; int get questsDone;
+ AttributionMode get mode; int get pharmCount; int get checksCount; int get approvedPacksSum; int get questsDone;/// Бланки врачей команды за период (docs/server-todo.md, «Бланки в
+/// статистике медпреда»). null — сервер ещё не отдаёт: плитки и вкладки
+/// «Бланки» в приложении скрыты.
+ int? get recipesCount; int? get approvedRecipes;/// Упаковки из одобренных бланков по препаратам компании медпреда.
+ int? get recipePacksSum;
 /// Create a copy of MedrepMetrics
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +32,16 @@ $MedrepMetricsCopyWith<MedrepMetrics> get copyWith => _$MedrepMetricsCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MedrepMetrics&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.pharmCount, pharmCount) || other.pharmCount == pharmCount)&&(identical(other.checksCount, checksCount) || other.checksCount == checksCount)&&(identical(other.approvedPacksSum, approvedPacksSum) || other.approvedPacksSum == approvedPacksSum)&&(identical(other.questsDone, questsDone) || other.questsDone == questsDone));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MedrepMetrics&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.pharmCount, pharmCount) || other.pharmCount == pharmCount)&&(identical(other.checksCount, checksCount) || other.checksCount == checksCount)&&(identical(other.approvedPacksSum, approvedPacksSum) || other.approvedPacksSum == approvedPacksSum)&&(identical(other.questsDone, questsDone) || other.questsDone == questsDone)&&(identical(other.recipesCount, recipesCount) || other.recipesCount == recipesCount)&&(identical(other.approvedRecipes, approvedRecipes) || other.approvedRecipes == approvedRecipes)&&(identical(other.recipePacksSum, recipePacksSum) || other.recipePacksSum == recipePacksSum));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,mode,pharmCount,checksCount,approvedPacksSum,questsDone);
+int get hashCode => Object.hash(runtimeType,mode,pharmCount,checksCount,approvedPacksSum,questsDone,recipesCount,approvedRecipes,recipePacksSum);
 
 @override
 String toString() {
-  return 'MedrepMetrics(mode: $mode, pharmCount: $pharmCount, checksCount: $checksCount, approvedPacksSum: $approvedPacksSum, questsDone: $questsDone)';
+  return 'MedrepMetrics(mode: $mode, pharmCount: $pharmCount, checksCount: $checksCount, approvedPacksSum: $approvedPacksSum, questsDone: $questsDone, recipesCount: $recipesCount, approvedRecipes: $approvedRecipes, recipePacksSum: $recipePacksSum)';
 }
 
 
@@ -48,7 +52,7 @@ abstract mixin class $MedrepMetricsCopyWith<$Res>  {
   factory $MedrepMetricsCopyWith(MedrepMetrics value, $Res Function(MedrepMetrics) _then) = _$MedrepMetricsCopyWithImpl;
 @useResult
 $Res call({
- AttributionMode mode, int pharmCount, int checksCount, int approvedPacksSum, int questsDone
+ AttributionMode mode, int pharmCount, int checksCount, int approvedPacksSum, int questsDone, int? recipesCount, int? approvedRecipes, int? recipePacksSum
 });
 
 
@@ -65,14 +69,17 @@ class _$MedrepMetricsCopyWithImpl<$Res>
 
 /// Create a copy of MedrepMetrics
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? mode = null,Object? pharmCount = null,Object? checksCount = null,Object? approvedPacksSum = null,Object? questsDone = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? mode = null,Object? pharmCount = null,Object? checksCount = null,Object? approvedPacksSum = null,Object? questsDone = null,Object? recipesCount = freezed,Object? approvedRecipes = freezed,Object? recipePacksSum = freezed,}) {
   return _then(_self.copyWith(
 mode: null == mode ? _self.mode : mode // ignore: cast_nullable_to_non_nullable
 as AttributionMode,pharmCount: null == pharmCount ? _self.pharmCount : pharmCount // ignore: cast_nullable_to_non_nullable
 as int,checksCount: null == checksCount ? _self.checksCount : checksCount // ignore: cast_nullable_to_non_nullable
 as int,approvedPacksSum: null == approvedPacksSum ? _self.approvedPacksSum : approvedPacksSum // ignore: cast_nullable_to_non_nullable
 as int,questsDone: null == questsDone ? _self.questsDone : questsDone // ignore: cast_nullable_to_non_nullable
-as int,
+as int,recipesCount: freezed == recipesCount ? _self.recipesCount : recipesCount // ignore: cast_nullable_to_non_nullable
+as int?,approvedRecipes: freezed == approvedRecipes ? _self.approvedRecipes : approvedRecipes // ignore: cast_nullable_to_non_nullable
+as int?,recipePacksSum: freezed == recipePacksSum ? _self.recipePacksSum : recipePacksSum // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 
@@ -157,10 +164,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( AttributionMode mode,  int pharmCount,  int checksCount,  int approvedPacksSum,  int questsDone)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( AttributionMode mode,  int pharmCount,  int checksCount,  int approvedPacksSum,  int questsDone,  int? recipesCount,  int? approvedRecipes,  int? recipePacksSum)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MedrepMetrics() when $default != null:
-return $default(_that.mode,_that.pharmCount,_that.checksCount,_that.approvedPacksSum,_that.questsDone);case _:
+return $default(_that.mode,_that.pharmCount,_that.checksCount,_that.approvedPacksSum,_that.questsDone,_that.recipesCount,_that.approvedRecipes,_that.recipePacksSum);case _:
   return orElse();
 
 }
@@ -178,10 +185,10 @@ return $default(_that.mode,_that.pharmCount,_that.checksCount,_that.approvedPack
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( AttributionMode mode,  int pharmCount,  int checksCount,  int approvedPacksSum,  int questsDone)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( AttributionMode mode,  int pharmCount,  int checksCount,  int approvedPacksSum,  int questsDone,  int? recipesCount,  int? approvedRecipes,  int? recipePacksSum)  $default,) {final _that = this;
 switch (_that) {
 case _MedrepMetrics():
-return $default(_that.mode,_that.pharmCount,_that.checksCount,_that.approvedPacksSum,_that.questsDone);case _:
+return $default(_that.mode,_that.pharmCount,_that.checksCount,_that.approvedPacksSum,_that.questsDone,_that.recipesCount,_that.approvedRecipes,_that.recipePacksSum);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +205,10 @@ return $default(_that.mode,_that.pharmCount,_that.checksCount,_that.approvedPack
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( AttributionMode mode,  int pharmCount,  int checksCount,  int approvedPacksSum,  int questsDone)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( AttributionMode mode,  int pharmCount,  int checksCount,  int approvedPacksSum,  int questsDone,  int? recipesCount,  int? approvedRecipes,  int? recipePacksSum)?  $default,) {final _that = this;
 switch (_that) {
 case _MedrepMetrics() when $default != null:
-return $default(_that.mode,_that.pharmCount,_that.checksCount,_that.approvedPacksSum,_that.questsDone);case _:
+return $default(_that.mode,_that.pharmCount,_that.checksCount,_that.approvedPacksSum,_that.questsDone,_that.recipesCount,_that.approvedRecipes,_that.recipePacksSum);case _:
   return null;
 
 }
@@ -213,7 +220,7 @@ return $default(_that.mode,_that.pharmCount,_that.checksCount,_that.approvedPack
 @JsonSerializable()
 
 class _MedrepMetrics implements MedrepMetrics {
-  const _MedrepMetrics({required this.mode, required this.pharmCount, required this.checksCount, required this.approvedPacksSum, required this.questsDone});
+  const _MedrepMetrics({required this.mode, required this.pharmCount, required this.checksCount, required this.approvedPacksSum, required this.questsDone, this.recipesCount, this.approvedRecipes, this.recipePacksSum});
   factory _MedrepMetrics.fromJson(Map<String, dynamic> json) => _$MedrepMetricsFromJson(json);
 
 @override final  AttributionMode mode;
@@ -221,6 +228,13 @@ class _MedrepMetrics implements MedrepMetrics {
 @override final  int checksCount;
 @override final  int approvedPacksSum;
 @override final  int questsDone;
+/// Бланки врачей команды за период (docs/server-todo.md, «Бланки в
+/// статистике медпреда»). null — сервер ещё не отдаёт: плитки и вкладки
+/// «Бланки» в приложении скрыты.
+@override final  int? recipesCount;
+@override final  int? approvedRecipes;
+/// Упаковки из одобренных бланков по препаратам компании медпреда.
+@override final  int? recipePacksSum;
 
 /// Create a copy of MedrepMetrics
 /// with the given fields replaced by the non-null parameter values.
@@ -235,16 +249,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MedrepMetrics&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.pharmCount, pharmCount) || other.pharmCount == pharmCount)&&(identical(other.checksCount, checksCount) || other.checksCount == checksCount)&&(identical(other.approvedPacksSum, approvedPacksSum) || other.approvedPacksSum == approvedPacksSum)&&(identical(other.questsDone, questsDone) || other.questsDone == questsDone));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MedrepMetrics&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.pharmCount, pharmCount) || other.pharmCount == pharmCount)&&(identical(other.checksCount, checksCount) || other.checksCount == checksCount)&&(identical(other.approvedPacksSum, approvedPacksSum) || other.approvedPacksSum == approvedPacksSum)&&(identical(other.questsDone, questsDone) || other.questsDone == questsDone)&&(identical(other.recipesCount, recipesCount) || other.recipesCount == recipesCount)&&(identical(other.approvedRecipes, approvedRecipes) || other.approvedRecipes == approvedRecipes)&&(identical(other.recipePacksSum, recipePacksSum) || other.recipePacksSum == recipePacksSum));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,mode,pharmCount,checksCount,approvedPacksSum,questsDone);
+int get hashCode => Object.hash(runtimeType,mode,pharmCount,checksCount,approvedPacksSum,questsDone,recipesCount,approvedRecipes,recipePacksSum);
 
 @override
 String toString() {
-  return 'MedrepMetrics(mode: $mode, pharmCount: $pharmCount, checksCount: $checksCount, approvedPacksSum: $approvedPacksSum, questsDone: $questsDone)';
+  return 'MedrepMetrics(mode: $mode, pharmCount: $pharmCount, checksCount: $checksCount, approvedPacksSum: $approvedPacksSum, questsDone: $questsDone, recipesCount: $recipesCount, approvedRecipes: $approvedRecipes, recipePacksSum: $recipePacksSum)';
 }
 
 
@@ -255,7 +269,7 @@ abstract mixin class _$MedrepMetricsCopyWith<$Res> implements $MedrepMetricsCopy
   factory _$MedrepMetricsCopyWith(_MedrepMetrics value, $Res Function(_MedrepMetrics) _then) = __$MedrepMetricsCopyWithImpl;
 @override @useResult
 $Res call({
- AttributionMode mode, int pharmCount, int checksCount, int approvedPacksSum, int questsDone
+ AttributionMode mode, int pharmCount, int checksCount, int approvedPacksSum, int questsDone, int? recipesCount, int? approvedRecipes, int? recipePacksSum
 });
 
 
@@ -272,14 +286,17 @@ class __$MedrepMetricsCopyWithImpl<$Res>
 
 /// Create a copy of MedrepMetrics
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? mode = null,Object? pharmCount = null,Object? checksCount = null,Object? approvedPacksSum = null,Object? questsDone = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? mode = null,Object? pharmCount = null,Object? checksCount = null,Object? approvedPacksSum = null,Object? questsDone = null,Object? recipesCount = freezed,Object? approvedRecipes = freezed,Object? recipePacksSum = freezed,}) {
   return _then(_MedrepMetrics(
 mode: null == mode ? _self.mode : mode // ignore: cast_nullable_to_non_nullable
 as AttributionMode,pharmCount: null == pharmCount ? _self.pharmCount : pharmCount // ignore: cast_nullable_to_non_nullable
 as int,checksCount: null == checksCount ? _self.checksCount : checksCount // ignore: cast_nullable_to_non_nullable
 as int,approvedPacksSum: null == approvedPacksSum ? _self.approvedPacksSum : approvedPacksSum // ignore: cast_nullable_to_non_nullable
 as int,questsDone: null == questsDone ? _self.questsDone : questsDone // ignore: cast_nullable_to_non_nullable
-as int,
+as int,recipesCount: freezed == recipesCount ? _self.recipesCount : recipesCount // ignore: cast_nullable_to_non_nullable
+as int?,approvedRecipes: freezed == approvedRecipes ? _self.approvedRecipes : approvedRecipes // ignore: cast_nullable_to_non_nullable
+as int?,recipePacksSum: freezed == recipePacksSum ? _self.recipePacksSum : recipePacksSum // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 
@@ -1967,7 +1984,7 @@ as bool?,
 /// @nodoc
 mixin _$Leaderboard {
 
- AttributionMode get mode; String get metric;// 'checks' | 'pharm' | 'quests'
+ AttributionMode get mode; String get metric;// 'checks' | 'pharm' | 'quests' | 'recipes'
  List<LeaderRow> get items; int get myRank; String? get company;
 /// Create a copy of Leaderboard
 /// with the given fields replaced by the non-null parameter values.
@@ -2171,9 +2188,9 @@ class _Leaderboard implements Leaderboard {
 
 @override final  AttributionMode mode;
 @override final  String metric;
-// 'checks' | 'pharm' | 'quests'
+// 'checks' | 'pharm' | 'quests' | 'recipes'
  final  List<LeaderRow> _items;
-// 'checks' | 'pharm' | 'quests'
+// 'checks' | 'pharm' | 'quests' | 'recipes'
 @override List<LeaderRow> get items {
   if (_items is EqualUnmodifiableListView) return _items;
   // ignore: implicit_dynamic_type

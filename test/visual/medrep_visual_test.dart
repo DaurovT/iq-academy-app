@@ -48,6 +48,23 @@ void main() {
   shot('MedPhChecks', 874, 1, const MedrepPharmacistChecksScreen(telegramId: 100),
       overrides: medrepOverrides(now: DateTime(2026, 7, 3, 12)));
   shot('MedRating', 940, 3, const LeaderboardScreen());
+  // Бланки врачей: смешанная команда и команда только из врачей.
+  shot('MedHomeBlanks', 1530, 0, const MedrepHome(),
+      overrides: medrepOverrides(m: metricsBlanks));
+  shot('MedHomeDoctors', 1100, 0, const MedrepHome(),
+      overrides: medrepOverrides(m: metricsBlanks, withTeam: doctorsTeam));
+  shot('MedRatingBlanks', 940, 3, const LeaderboardScreen(),
+      overrides: medrepOverrides(m: metricsBlanks, withTeam: doctorsTeam));
+  shot('MedRatingMixed', 940, 3, const LeaderboardScreen(),
+      overrides: medrepOverrides(m: metricsBlanks));
+  shot('MedRatingTeam', 940, 3, const LeaderboardScreen(),
+      overrides: medrepOverrides(m: metricsBlanks), before: (t) async {
+    await t.pump(const Duration(milliseconds: 300));
+    await t.tap(find.text('Моя команда'));
+    await t.pump(const Duration(milliseconds: 300));
+    await t.tap(find.text('Врачи'));
+    await t.pump(const Duration(milliseconds: 300));
+  });
   shot('MedNotRanked', 900, 3, const LeaderboardScreen(),
       overrides: medrepOverrides(myRank: 0));
   shot('MedQuests', 1100, 2, const MedrepQuestsScreen());
