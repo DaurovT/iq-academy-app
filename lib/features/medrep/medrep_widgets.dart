@@ -4,9 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../core/auth/auth_controller.dart';
 import '../../core/design/design.dart';
 import '../../core/format.dart';
 import '../../core/l10n/l10n.dart';
+import '../../core/models/medrep.dart';
 
 /// Общие виджеты раздела «Роль медпреда» (редизайн 1.2).
 
@@ -811,3 +813,52 @@ String medDayMonth(String iso) {
   return '${d.day.toString().padLeft(2, '0')}.${d.month.toString().padLeft(2, '0')}';
 }
 
+
+// ── Рейтинг: общие места при равенстве ────────────────────────────────────
+
+/// Рейтинг для показа: места «как в спорте» — при равном значении место
+/// общее (1, 2, 2, 4), ваше место считается так же. Сервер нумерует подряд,
+/// и при всех нулях медпред видел «35 место, до 34 места ещё 0 чеков».
+/// [myName] — имя из аккаунта: сервер в своей строке отдаёт «Вы» вместо имени,
+/// а приложение рисует «Вы · {имя}» (получалось «Siz · Вы»).
+({Leaderboard board, LeaderRow? me, LeaderRow? above, int gap}) medLeaderView(
+  Leaderboard b, {
+  String? myName,
+}) {
+  const placeholders = {'вы', 'siz', 'you', 'сиз', 'шумо', 'сіз'};
+  final items = <LeaderRow>[];
+  for (final r in b.items) {
+    final rank = 1 + b.items.where((x) => x.value > r.value).length;
+    var name = r.name;
+    if (r.isMe == true &&
+        (name.trim().isEmpty || placeholders.contains(name.trim().toLowerCase())) &&
+        (myName?.trim().isNotEmpty ?? false)) {
+      name = myName!.trim();
+    }
+    items.add(r.copyWith(rank: rank, name: name));
+  }
+  // «Вы» — по флагу isMe, иначе по месту от сервера.
+  final idx = b.items.indexWhere((r) => r.isMe == true);
+  final meIdx = idx >= 0
+      ? idx
+      : (b.myRank > 0 && b.myRank <= items.length ? b.myRank - 1 : -1);
+  final me = meIdx >= 0 ? items[meIdx] : null;
+  // Ближайший сверху — последний с бо́льшим значением.
+  final above = me == null
+      ? null
+      : items.where((r) => r.value > me.value).lastOrNull;
+  final gap = above == null || me == null ? 0 : above.value - me.value;
+  final myRank = me?.rank ?? b.myRank;
+  return (board: b.copyWith(items: items, myRank: myRank), me: me, above: above, gap: gap);
+}
+
+/// Короткое имя из аккаунта для своей строки рейтинга: «Дауров Тимур …» →
+/// «Дауров Т.».
+String? medMyName(WidgetRef ref) {
+  final full =
+      ref.read(authControllerProvider).asData?.value.account?.fullName.trim() ?? '';
+  if (full.isEmpty) return null;
+  final parts = full.split(RegExp(r'\s+'));
+  if (parts.length < 2) return parts.first;
+  return '${parts[0]} ${parts[1].characters.first}.';
+}

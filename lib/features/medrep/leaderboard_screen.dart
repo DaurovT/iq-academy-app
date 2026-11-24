@@ -276,9 +276,11 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
     return '${parts[0]} ${parts[1].characters.first}.';
   }
 
-  Widget _content(BuildContext context, Leaderboard? b) {
+  Widget _content(BuildContext context, Leaderboard? raw) {
     final pq = context.pq;
     final l = context.l10n;
+    final view = raw == null ? null : medLeaderView(raw, myName: medMyName(ref));
+    final b = view?.board;
     final ranked = b != null && b.myRank > 0 && b.items.isNotEmpty;
     // Атрибуцию в подзаголовке не показываем — как на главной.
     final subtitle = b == null
@@ -338,12 +340,11 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
 
     final rank = b.myRank;
     final items = b.items;
-    final me = items.where((r) => r.isMe == true).firstOrNull ??
-        (rank <= items.length ? items[rank - 1] : null);
-    final above = rank >= 2 && rank - 2 < items.length ? items[rank - 2] : null;
-    final gap = above == null || me == null
-        ? 0
-        : (above.value - me.value).clamp(0, 1 << 31);
+    final me = view!.me;
+    final above = view.above;
+    final gap = view.gap;
+    // Строки — до «вас + 2» по позиции в списке (места при равенстве общие).
+    final myIndex = me == null ? rank - 1 : items.indexOf(me);
 
     return PqStagger(gap: 16, children: [
       ...header,
@@ -354,7 +355,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
       // Под пьедесталом — места с 4-го до «вы + 2» (минимум три строки).
       if (items.length > 3)
         Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-          for (var i = 3; i < items.length && i < (rank + 2).clamp(6, 1 << 20); i++) ...[
+          for (var i = 3; i < items.length && i < (myIndex + 3).clamp(6, 1 << 20); i++) ...[
             if (i > 3) const SizedBox(height: 8),
             _RankRow(
               row: items[i],
@@ -363,11 +364,15 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
             ),
           ],
         ]),
-      Text(
-        above == null ? l.medrepLeader : l.medrepGapText(rank - 1, _count(gap)),
-        textAlign: TextAlign.center,
-        style: PqText.text(14, FontWeight.w400, c: pq.textMuted),
-      ),
+      // «Вы лидер» — только если у вас не ноль; при всех нулях подсказки нет.
+      if (above != null || (me?.value ?? 0) > 0)
+        Text(
+          above == null
+              ? l.medrepLeader
+              : l.medrepGapText(above.rank, _count(gap)),
+          textAlign: TextAlign.center,
+          style: PqText.text(14, FontWeight.w400, c: pq.textMuted),
+        ),
     ]);
   }
 }

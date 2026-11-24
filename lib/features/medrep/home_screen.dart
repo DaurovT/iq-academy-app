@@ -429,15 +429,16 @@ class _RatingCard extends StatelessWidget {
     final pq = context.pq;
     final l = context.l10n;
     final muted = medHeroMuted(pq);
-    final rank = board.myRank;
-    final items = board.items;
-    final me = items.where((r) => r.isMe == true).firstOrNull ??
-        (rank <= items.length ? items[rank - 1] : null);
-    final above = rank >= 2 && rank - 2 < items.length ? items[rank - 2] : null;
+    // Места при равенстве общие (medLeaderView).
+    final view = medLeaderView(board);
+    final rank = view.board.myRank;
+    final items = view.board.items;
+    final me = view.me;
+    final above = view.above;
     final progress = above == null || above.value <= 0
         ? 1.0
         : ((me?.value ?? 0) / above.value).clamp(0.0, 1.0);
-    final gap = above == null ? 0 : (above.value - (me?.value ?? 0)).clamp(0, 1 << 31);
+    final gap = view.gap;
 
     return MedHeroCard(
       padding: const EdgeInsets.all(18),
