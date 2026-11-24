@@ -5777,4 +5777,23 @@ class AppLocalizationsUz extends AppLocalizations {
   @override
   String get regCodeLatinOnly =>
       'Klaviaturani lotin (inglizcha) tiliga o‘tkazing — kod so‘zida faqat lotin harflari';
+
+  @override
+  String updateAvailable(String version) {
+    return 'Yangi versiya mavjud: $version';
+  }
+
+  @override
+  String get updateAction => 'Yangilash';
+
+  @override
+  String get medrepNotRankedChecks =>
+      'Hozir jamoangizda 0 ta chek. Birinchi tasdiqlangan chekdan keyin topda o‘rin paydo bo‘ladi';
+
+  @override
+  String get medrepNotRankedBlanks =>
+      'Hozir jamoangizda 0 ta tasdiqlangan blanka. Birinchi tasdiqlangan blankadan keyin topda o‘rin paydo bo‘ladi';
+
+  @override
+  String get medrepNotRankedShort => 'O‘rinsiz';
 }

@@ -9,6 +9,7 @@ import '../../core/uploads/upload_queue.dart';
 import '../tour/tour_controller.dart';
 import '../tour/tour_overlay.dart';
 import 'nav_config.dart';
+import 'update_banner.dart';
 
 /// Оболочка приложения: контент + нижняя навигация под активную роль.
 /// Свою шапку (AppBar) рисует каждый экран — так у него свой заголовок и
@@ -108,6 +109,13 @@ class AppShell extends ConsumerWidget {
                   : TourAnchor(target: target, radius: 16, child: item);
             },
           ),
+        ),
+        // «Доступна новая версия» — над нижним меню.
+        Positioned(
+          left: 16,
+          right: 16,
+          bottom: 84 + MediaQuery.paddingOf(context).bottom,
+          child: const UpdateBanner(),
         ),
         // Обучающий тур — поверх экрана и нижнего меню.
         const Positioned.fill(child: TourOverlay()),

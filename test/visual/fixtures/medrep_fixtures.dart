@@ -275,6 +275,7 @@ List<Override> medrepOverrides({
   DateTime? now,
   MedrepMetrics m = metrics,
   MedrepTeam? withTeam,
+  Leaderboard? lb,
 }) => [
   authControllerProvider.overrideWith(_Auth.new),
   appModulesProvider.overrideWith(_Modules.new),
@@ -284,10 +285,28 @@ List<Override> medrepOverrides({
   medrepMetricsProvider.overrideWith((ref, p) async => m),
   medrepCodeProvider.overrideWith((_) async => medrepCode),
   medrepTeamProvider.overrideWith((_) async => withTeam ?? team(pf: pf)),
-  leaderboardProvider.overrideWith((ref, m) async => board(myRank: myRank)),
+  leaderboardProvider.overrideWith((ref, m) async => lb ?? board(myRank: myRank)),
   companiesProvider.overrideWith((_) async => const <Company>[]),
   medrepQuestsProvider.overrideWith((_) async => quests),
   pharmacistDetailProvider.overrideWith((ref, id) async => pharmacist),
   doctorDetailProvider.overrideWith((ref, id) async => doctor),
   referralsProvider.overrideWith((_) async => referrals),
 ];
+
+/// Медпред в рейтинге с нулём (как Мафтуна по чекам 24.11.2026): сервер
+/// отдаёт его строку с 0 — в приложении он «без места».
+Leaderboard boardZero() => Leaderboard(
+      mode: AttributionMode.shared,
+      metric: 'checks',
+      myRank: 14,
+      company: 'Bionorica SE',
+      items: [
+        const LeaderRow(rank: 1, name: 'Абдурахмон', value: 626),
+        const LeaderRow(rank: 2, name: 'Дилфуза Б.', value: 499),
+        const LeaderRow(rank: 3, name: 'Махфуза Б.', value: 435),
+        const LeaderRow(rank: 4, name: 'Лобар Маматова', value: 379),
+        for (var i = 5; i <= 13; i++) LeaderRow(rank: i, name: 'Медпред $i', value: 14 - i),
+        const LeaderRow(rank: 14, name: 'Вы', value: 0, isMe: true),
+        const LeaderRow(rank: 14, name: 'Аллома', value: 0),
+      ],
+    );

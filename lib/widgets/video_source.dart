@@ -3,11 +3,15 @@ library;
 
 /// Приводит ссылку к встраиваемому виду (Vimeo/YouTube → embed-плеер).
 String embedUrl(String url) {
-  final vimeo = RegExp(r'vimeo\.com/(?:video/)?(\d+)').firstMatch(url);
+  final vimeo = RegExp(r'vimeo\.com/(?:video/)?(\d+)(?:/([0-9a-zA-Z]+))?')
+      .firstMatch(url);
   if (vimeo != null) {
-    // приватный хеш (`?h=...`) обязателен для видео с ограниченным доступом —
-    // без него Vimeo отвечает «Because of its privacy settings...»
-    final h = RegExp(r'[?&]h=([0-9a-zA-Z]+)').firstMatch(url)?.group(1);
+    // Ключ закрытого видео обязателен — без него Vimeo отвечает «Because of
+    // its privacy settings, this video cannot be played here». Он приходит
+    // как `?h=…` или сегментом пути: `vimeo.com/928873498/f468bbcba0`
+    // (так выглядят ссылки «по ссылке» в Vimeo; жалоба 25.11.2026).
+    final h = RegExp(r'[?&]h=([0-9a-zA-Z]+)').firstMatch(url)?.group(1) ??
+        vimeo.group(2);
     final hash = h != null ? '&h=$h' : '';
     return 'https://player.vimeo.com/video/${vimeo.group(1)}'
         '?autoplay=1&playsinline=1&title=0&byline=0$hash';

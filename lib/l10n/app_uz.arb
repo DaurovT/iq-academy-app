@@ -2273,5 +2273,10 @@
   "profileCodeSend": "Yuborish",
   "profileCodeSentPharm": "So‘rov yuborildi — medpred uni tasdiqlaydi",
   "profileCodeSentDoctor": "Siz medpred jamoasidasiz",
-  "regCodeLatinOnly": "Klaviaturani lotin (inglizcha) tiliga o‘tkazing — kod so‘zida faqat lotin harflari"
+  "regCodeLatinOnly": "Klaviaturani lotin (inglizcha) tiliga o‘tkazing — kod so‘zida faqat lotin harflari",
+  "updateAvailable": "Yangi versiya mavjud: {version}",
+  "updateAction": "Yangilash",
+  "medrepNotRankedChecks": "Hozir jamoangizda 0 ta chek. Birinchi tasdiqlangan chekdan keyin topda o‘rin paydo bo‘ladi",
+  "medrepNotRankedBlanks": "Hozir jamoangizda 0 ta tasdiqlangan blanka. Birinchi tasdiqlangan blankadan keyin topda o‘rin paydo bo‘ladi",
+  "medrepNotRankedShort": "O‘rinsiz"
 }

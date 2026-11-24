@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -12,10 +13,25 @@ import 'models/common.dart';
 ///
 /// Нет данных (офлайн, первый запуск) → показываем всё: лучше лишний раздел, чем пустое меню.
 class AppModules {
-  const AppModules(this._map);
+  const AppModules(this._map, {this.versions = const {}});
   static const empty = AppModules({});
 
   final Map<String, ({bool visible, List<String> hiddenRoles})> _map;
+
+  /// Версии приложения из админки (docs/SERVER_TASKS.md, задача 9):
+  /// `{"ios": {"latest": "1.2.6", "min": "1.2.0"}, "android": {...}}`.
+  final Map<String, ({String? latest, String? min})> versions;
+
+  ({String? latest, String? min}) get _platformVersions {
+    final key = defaultTargetPlatform == TargetPlatform.iOS ? 'ios' : 'android';
+    return versions[key] ?? (latest: null, min: null);
+  }
+
+  /// Последняя версия в магазине для этой платформы (или null).
+  String? get latestVersion => _platformVersions.latest;
+
+  /// Минимальная поддерживаемая версия: ниже — экран «Нужно обновить приложение».
+  String? get minVersion => _platformVersions.min;
 
   bool isVisible(String key, Role? role) {
     final m = _map[key];
@@ -26,12 +42,21 @@ class AppModules {
 
   static AppModules fromJson(Map<String, dynamic> j) {
     final mods = (j['modules'] as Map?) ?? const {};
+    final vers = (j['appVersions'] as Map?) ?? const {};
+    String? s(Object? v) => v is String && v.trim().isNotEmpty ? v.trim() : null;
     return AppModules({
       for (final e in mods.entries)
         e.key as String: (
           visible: (e.value as Map)['visible'] != false,
           hiddenRoles: ((e.value as Map)['hiddenRoles'] as List? ?? const []).cast<String>(),
         ),
+    }, versions: {
+      for (final e in vers.entries)
+        if (e.value is Map)
+          e.key as String: (
+            latest: s((e.value as Map)['latest']),
+            min: s((e.value as Map)['min']),
+          ),
     });
   }
 
@@ -39,6 +64,10 @@ class AppModules {
         'modules': {
           for (final e in _map.entries)
             e.key: {'visible': e.value.visible, 'hiddenRoles': e.value.hiddenRoles},
+        },
+        'appVersions': {
+          for (final e in versions.entries)
+            e.key: {'latest': e.value.latest, 'min': e.value.min},
         },
       };
 }
@@ -138,4 +167,29 @@ class ModuleGate extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) =>
       ref.moduleVisible(module) ? child : const SizedBox.shrink();
+}
+
+/// Сравнение версий «1.2.10» и «1.2.9» по числам; нечисловые части — 0.
+int compareVersions(String a, String b) {
+  List<int> parts(String v) =>
+      v.split(RegExp(r'[.+-]')).map((x) => int.tryParse(x) ?? 0).toList();
+  final pa = parts(a), pb = parts(b);
+  for (var i = 0; i < 3; i++) {
+    final x = i < pa.length ? pa[i] : 0, y = i < pb.length ? pb[i] : 0;
+    if (x != y) return x.compareTo(y);
+  }
+  return 0;
+}
+
+/// Установленная версия ниже минимальной из админки → нужно обновиться.
+/// Без версии сборки (отладка, тесты) проверка не срабатывает.
+bool needsForceUpdate(AppModules m, String current) {
+  final min = m.minVersion;
+  return current.isNotEmpty && min != null && compareVersions(current, min) < 0;
+}
+
+/// В магазине есть версия новее установленной → мягкая подсказка.
+bool hasNewerVersion(AppModules m, String current) {
+  final latest = m.latestVersion;
+  return current.isNotEmpty && latest != null && compareVersions(current, latest) < 0;
 }

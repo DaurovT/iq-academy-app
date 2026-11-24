@@ -5759,4 +5759,23 @@ class AppLocalizationsKy extends AppLocalizations {
   @override
   String get regCodeLatinOnly =>
       'Клавиатураны англис тилине которуңуз — коддук сөздө латын тамгалары гана';
+
+  @override
+  String updateAvailable(String version) {
+    return 'Жаңы версия бар: $version';
+  }
+
+  @override
+  String get updateAction => 'Жаңыртуу';
+
+  @override
+  String get medrepNotRankedChecks =>
+      'Азыр командаңызда 0 чек. Топтогу орун биринчи ырасталган чектен кийин пайда болот';
+
+  @override
+  String get medrepNotRankedBlanks =>
+      'Азыр командаңызда 0 ырасталган бланк. Топтогу орун биринчи ырасталган бланктан кийин пайда болот';
+
+  @override
+  String get medrepNotRankedShort => 'Орунсуз';
 }

@@ -5767,4 +5767,23 @@ class AppLocalizationsTg extends AppLocalizations {
   @override
   String get regCodeLatinOnly =>
       'Клавиатураро ба англисӣ гузаронед — дар калимаи рамзӣ танҳо ҳарфҳои лотинӣ';
+
+  @override
+  String updateAvailable(String version) {
+    return 'Версияи нав дастрас аст: $version';
+  }
+
+  @override
+  String get updateAction => 'Навсозӣ';
+
+  @override
+  String get medrepNotRankedChecks =>
+      'Ҳоло дастаи шумо 0 чек дорад. Ҷой дар топ пас аз аввалин чеки тасдиқшуда пайдо мешавад';
+
+  @override
+  String get medrepNotRankedBlanks =>
+      'Ҳоло дастаи шумо 0 бланки тасдиқшуда дорад. Ҷой дар топ пас аз аввалин бланки тасдиқшуда пайдо мешавад';
+
+  @override
+  String get medrepNotRankedShort => 'Бе ҷой';
 }

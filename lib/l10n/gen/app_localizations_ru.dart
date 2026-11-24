@@ -5968,4 +5968,23 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get regCodeLatinOnly =>
       'Переключите клавиатуру на английскую — в кодовом слове только латинские буквы';
+
+  @override
+  String updateAvailable(String version) {
+    return 'Доступна новая версия $version';
+  }
+
+  @override
+  String get updateAction => 'Обновить';
+
+  @override
+  String get medrepNotRankedChecks =>
+      'Сейчас у вашей команды 0 чеков. Место в топе появится после первого одобренного чека';
+
+  @override
+  String get medrepNotRankedBlanks =>
+      'Сейчас у вашей команды 0 одобренных бланков. Место в топе появится после первого одобренного бланка';
+
+  @override
+  String get medrepNotRankedShort => 'Без места';
 }

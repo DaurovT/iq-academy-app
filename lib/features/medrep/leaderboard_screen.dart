@@ -56,20 +56,16 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
     final hasPharm = team?.pharmacists.isNotEmpty ?? false;
     _mixed = hasDoctors && hasPharm;
     final onlyDoctors = hasDoctors && !hasPharm && blanks;
-    // Фармацевты — «Чеки», «Фармацевты»; врачи — «Бланки», «Врачи»;
-    // «Квесты» — всем.
-    final withDoctors = blanks && hasDoctors;
-    final withPharm = !onlyDoctors;
-    _metrics = [
-      if (withPharm) 'checks',
-      if (withDoctors) 'recipes',
-      if (withPharm) 'pharm',
-      if (withDoctors) 'doctors',
-      'quests',
-    ];
+    // Два отдельных топа медпредов — по чекам и по бланкам (решение
+    // 24.11.2026). «Бланки» — когда сервер их считает.
+    _metrics = ['checks', if (blanks) 'recipes'];
+    // По умолчанию — топ, где у медпреда больше активности.
+    final allMetrics = ref.watch(medrepMetricsProvider('all')).asData?.value;
+    final preferBlanks =
+        blanks && (onlyDoctors || medPrefersBlanks(allMetrics));
     _metric = _picked != null && _metrics.contains(_picked)
         ? _picked!
-        : (onlyDoctors ? 'recipes' : 'checks');
+        : (preferBlanks ? 'recipes' : 'checks');
     final teamView = _mixed && _teamScope;
     final provider = leaderboardProvider(_metric);
     final board = ref.watch(provider);
@@ -164,14 +160,14 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
         ]);
     return [
       PqPageTitle(l.leaderboardTitle, subtitle: subtitle),
-      if (!_mixed)
+      if (!_mixed && _metrics.length > 1)
         PqSegmented<String>(
           values: _metrics,
           selected: _metric,
           labelOf: _tabLabel,
           onChanged: (v) => setState(() => _picked = v),
         )
-      else
+      else if (_mixed)
         Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
           PqSegmented<bool>(
             values: const [false, true],
@@ -179,12 +175,14 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
             labelOf: (v) => v ? l.medrepRatingMyTeam : l.medrepRatingMedreps,
             onChanged: (v) => setState(() => _teamScope = v),
           ),
-          const SizedBox(height: 12),
-          if (_teamScope)
+          if (_teamScope) ...[
+            const SizedBox(height: 12),
             chips(const ['pharm', 'doctors'], _teamTab,
-                (v) => setState(() => _teamTab = v))
-          else
+                (v) => setState(() => _teamTab = v)),
+          ] else if (_metrics.length > 1) ...[
+            const SizedBox(height: 12),
             chips(_metrics, _metric, (v) => setState(() => _picked = v)),
+          ],
         ]),
     ];
   }
@@ -280,8 +278,13 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
     final pq = context.pq;
     final l = context.l10n;
     final view = raw == null ? null : medLeaderView(raw, myName: medMyName(ref));
-    final b = view?.board;
-    final ranked = b != null && b.myRank > 0 && b.items.isNotEmpty;
+    // В топе — только медпреды с результатом. С нулём в этом топе медпред
+    // «без места» (решение 24.11.2026): чеков 0 — без места в топе по
+    // чекам, при этом в топе по бланкам у него своё место.
+    final b = view?.board.copyWith(
+        items: [for (final r in view.board.items) if (r.value > 0) r]);
+    final myRow = (view?.me?.value ?? 0) > 0 ? view!.me : null;
+    final ranked = b != null && myRow != null && b.items.isNotEmpty;
     // Атрибуцию в подзаголовке не показываем — как на главной.
     final subtitle = b == null
         ? null
@@ -320,7 +323,7 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
     if (!ranked) {
       return PqStagger(gap: 16, children: [
         ...header,
-        const _NotRankedCard(),
+        _NotRankedCard(blanks: _metric == 'recipes' && !_teamScope),
         PqListCard(children: [
           for (var i = 0; i < b.items.length && i < 5; i++)
             MedPersonRow(
@@ -338,13 +341,12 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
       ]);
     }
 
-    final rank = b.myRank;
     final items = b.items;
-    final me = view!.me;
-    final above = view.above;
+    final me = myRow;
+    final above = view!.above;
     final gap = view.gap;
     // Строки — до «вас + 2» по позиции в списке (места при равенстве общие).
-    final myIndex = me == null ? rank - 1 : items.indexOf(me);
+    final myIndex = items.indexOf(me);
 
     return PqStagger(gap: 16, children: [
       ...header,
@@ -364,9 +366,8 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
             ),
           ],
         ]),
-      // «Вы лидер» — только если у вас не ноль; при всех нулях подсказки нет.
-      if (above != null || (me?.value ?? 0) > 0)
-        Text(
+      // Сюда попадают только медпреды с результатом (ноль — «без места»).
+      Text(
           above == null
               ? l.medrepLeader
               : l.medrepGapText(above.rank, _count(gap)),
@@ -578,7 +579,10 @@ class _RankRow extends StatelessWidget {
 // ── Нет в рейтинге ──────────────────────────────────────────────────────
 
 class _NotRankedCard extends StatelessWidget {
-  const _NotRankedCard();
+  const _NotRankedCard({this.blanks = false});
+
+  /// Топ по бланкам — свой текст («0 одобренных бланков»).
+  final bool blanks;
 
   @override
   Widget build(BuildContext context) {
@@ -607,7 +611,7 @@ class _NotRankedCard extends StatelessWidget {
                 Text(l.medrepNotRankedTitle,
                     style: PqText.heading(17, FontWeight.w700, c: pq.text)),
                 const SizedBox(height: 2),
-                Text(l.medrepNotRankedText,
+                Text(blanks ? l.medrepNotRankedBlanks : l.medrepNotRankedChecks,
                     style: PqText.body(c: pq.textSecondary)),
               ]),
             ),

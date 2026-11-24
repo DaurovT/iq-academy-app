@@ -3724,5 +3724,17 @@
   "profileCodeSend": "Отправить",
   "profileCodeSentPharm": "Заявка отправлена — медпред подтвердит её",
   "profileCodeSentDoctor": "Вы в команде медпреда",
-  "regCodeLatinOnly": "Переключите клавиатуру на английскую — в кодовом слове только латинские буквы"
+  "regCodeLatinOnly": "Переключите клавиатуру на английскую — в кодовом слове только латинские буквы",
+  "updateAvailable": "Доступна новая версия {version}",
+  "@updateAvailable": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "updateAction": "Обновить",
+  "medrepNotRankedChecks": "Сейчас у вашей команды 0 чеков. Место в топе появится после первого одобренного чека",
+  "medrepNotRankedBlanks": "Сейчас у вашей команды 0 одобренных бланков. Место в топе появится после первого одобренного бланка",
+  "medrepNotRankedShort": "Без места"
 }

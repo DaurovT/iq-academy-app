@@ -5754,4 +5754,23 @@ class AppLocalizationsKk extends AppLocalizations {
   @override
   String get regCodeLatinOnly =>
       'Пернетақтаны ағылшын тіліне ауыстырыңыз — кодтық сөзде тек латын әріптері';
+
+  @override
+  String updateAvailable(String version) {
+    return 'Жаңа нұсқа қолжетімді: $version';
+  }
+
+  @override
+  String get updateAction => 'Жаңарту';
+
+  @override
+  String get medrepNotRankedChecks =>
+      'Қазір командаңызда 0 чек. Топтағы орын алғашқы расталған чектен кейін пайда болады';
+
+  @override
+  String get medrepNotRankedBlanks =>
+      'Қазір командаңызда 0 расталған бланк. Топтағы орын алғашқы расталған бланктен кейін пайда болады';
+
+  @override
+  String get medrepNotRankedShort => 'Орынсыз';
 }

@@ -8,15 +8,19 @@ import '../../../core/legal.dart';
 import '../login/auth_ui.dart';
 import 'app_version.dart';
 
-/// Ссылка на приложение в сторе. Android — по applicationId; для iOS нужен
-/// числовой id из App Store Connect: `--dart-define=APP_STORE_URL=…`
-/// (без него откроется сайт).
-const _appStoreUrl = String.fromEnvironment('APP_STORE_URL');
+/// Ссылка на приложение в магазине: Android — по applicationId, iOS — по id
+/// из App Store Connect (6814779676). `--dart-define=APP_STORE_URL=…` —
+/// заменить ссылку iOS. На вебе — сайт.
+const _appStoreUrl = String.fromEnvironment(
+  'APP_STORE_URL',
+  defaultValue: 'https://apps.apple.com/app/id6814779676',
+);
 const _playStoreUrl = 'https://play.google.com/store/apps/details?id=uz.iqacademy.platform_app';
 
-String _storeUrl() {
-  if (_appStoreUrl.isNotEmpty) return _appStoreUrl;
-  if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) return _playStoreUrl;
+String appStoreUrl() {
+  if (kIsWeb) return kSiteBaseUrl;
+  if (defaultTargetPlatform == TargetPlatform.android) return _playStoreUrl;
+  if (defaultTargetPlatform == TargetPlatform.iOS) return _appStoreUrl;
   return kSiteBaseUrl;
 }
 
@@ -95,7 +99,7 @@ class ForceUpdateScreen extends StatelessWidget {
                     icon: PqIcons.download,
                     onPressed:
                         () =>
-                            launchUrl(Uri.parse(_storeUrl()), mode: LaunchMode.externalApplication),
+                            launchUrl(Uri.parse(appStoreUrl()), mode: LaunchMode.externalApplication),
                   ),
                   if (caption != null) ...[
                     const SizedBox(height: 14),

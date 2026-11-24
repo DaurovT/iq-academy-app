@@ -67,6 +67,8 @@ void main() {
   });
   shot('MedNotRanked', 900, 3, const LeaderboardScreen(),
       overrides: medrepOverrides(myRank: 0));
+  shot('MedRatingZero', 900, 3, const LeaderboardScreen(),
+      overrides: medrepOverrides(lb: boardZero()));
   shot('MedQuests', 1100, 2, const MedrepQuestsScreen());
   shot('MedQuestDetail', 1100, 2, const MedrepQuestDetailScreen(questId: 1));
   shot('MedPending', 874, 0, const ReferralsScreen());

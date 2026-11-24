@@ -862,3 +862,11 @@ String? medMyName(WidgetRef ref) {
   if (parts.length < 2) return parts.first;
   return '${parts[0]} ${parts[1].characters.first}.';
 }
+
+/// Бланков у медпреда больше, чем чеков (за всё время) → рейтинг и карточка
+/// на главной по бланкам. Без данных — по чекам, как раньше.
+bool medPrefersBlanks(MedrepMetrics? m) {
+  if (m == null || m.recipesCount == null) return false;
+  final blanks = m.approvedRecipes ?? m.recipesCount ?? 0;
+  return blanks > m.checksCount;
+}

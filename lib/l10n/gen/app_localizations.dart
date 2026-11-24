@@ -9505,6 +9505,36 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Переключите клавиатуру на английскую — в кодовом слове только латинские буквы'**
   String get regCodeLatinOnly;
+
+  /// No description provided for @updateAvailable.
+  ///
+  /// In ru, this message translates to:
+  /// **'Доступна новая версия {version}'**
+  String updateAvailable(String version);
+
+  /// No description provided for @updateAction.
+  ///
+  /// In ru, this message translates to:
+  /// **'Обновить'**
+  String get updateAction;
+
+  /// No description provided for @medrepNotRankedChecks.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сейчас у вашей команды 0 чеков. Место в топе появится после первого одобренного чека'**
+  String get medrepNotRankedChecks;
+
+  /// No description provided for @medrepNotRankedBlanks.
+  ///
+  /// In ru, this message translates to:
+  /// **'Сейчас у вашей команды 0 одобренных бланков. Место в топе появится после первого одобренного бланка'**
+  String get medrepNotRankedBlanks;
+
+  /// No description provided for @medrepNotRankedShort.
+  ///
+  /// In ru, this message translates to:
+  /// **'Без места'**
+  String get medrepNotRankedShort;
 }
 
 class _AppLocalizationsDelegate

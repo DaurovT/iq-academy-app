@@ -168,8 +168,14 @@ class _MedrepHomeState extends ConsumerState<MedrepHome> {
     // команде есть врачи. Команда только из врачей — рейтинг по бланкам.
     final blanks = metrics.asData?.value.recipesCount != null &&
         team.doctors.isNotEmpty;
-    final ratingMetric =
-        blanks && team.pharmacists.isEmpty ? 'recipes' : 'checks';
+    // Рейтинг — там, где у медпреда больше активности: у Мафтуны (3
+    // фармацевта, 0 чеков, 58 одобренных бланков) раньше показывалось
+    // «35 место по чекам».
+    final ratingMetric = blanks &&
+            (team.pharmacists.isEmpty ||
+                medPrefersBlanks(ref.watch(medrepMetricsProvider('all')).asData?.value))
+        ? 'recipes'
+        : 'checks';
     final showRating = ref.moduleVisible('leaderboard');
     final board = showRating
         ? ref.watch(leaderboardProvider(ratingMetric)).asData?.value
@@ -212,7 +218,10 @@ class _MedrepHomeState extends ConsumerState<MedrepHome> {
           onRetry: () => ref.invalidate(medrepMetricsProvider(_period)),
         ),
       ]),
-      if (board != null && board.myRank > 0 && board.items.isNotEmpty)
+      // Карточка места — только если в этом топе у медпреда не ноль.
+      if (board != null &&
+          board.items.isNotEmpty &&
+          (medLeaderView(board).me?.value ?? 0) > 0)
         _RatingCard(board: board, blanks: ratingMetric == 'recipes'),
       if (showPortfolio && (topPharm.isNotEmpty || topDocs.isNotEmpty))
         Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [

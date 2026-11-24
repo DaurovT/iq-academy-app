@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../features/shared/onboarding/app_version.dart';
 import '../auth/auth_controller.dart';
 import '../../features/shell/app_shell.dart';
 import 'routes/auth_routes.dart';
@@ -67,6 +69,12 @@ final routerProvider = Provider<GoRouter>((ref) {
       if (auth.isLoading) return loc == '/splash' ? null : '/splash';
 
       final s = auth.asData?.value ?? const AuthState();
+
+      // Версия ниже минимальной из админки → экран обязательного обновления.
+      final cfg = ref.read(appModulesProvider).asData?.value;
+      if (cfg != null && needsForceUpdate(cfg, kAppVersion)) {
+        return loc == '/force-update' ? null : '/force-update?min=${cfg.minVersion}';
+      }
 
       if (!s.isAuthed) return isGuestPath(loc) ? null : '/login';
       if (s.needsRole) return loc == '/role' ? null : '/role';
